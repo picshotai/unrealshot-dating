@@ -549,7 +549,7 @@ export function CreateModelClient() {
                                 <div className="mb-6">
                                     <div className="flex justify-between items-center mb-3">
                                         <label className="text-sm font-medium text-pink-400">
-                                            👩 Woman Photos
+                                            Person-1 Photos
                                         </label>
                                         <span className={`text-xs font-mono px-2 py-0.5 rounded-full ${womanPreviews.length >= 3 ? 'bg-green-500/10 text-green-500' : 'bg-zinc-800 text-zinc-400'
                                             }`}>
@@ -646,7 +646,7 @@ export function CreateModelClient() {
                                 <div className="mb-6">
                                     <div className="flex justify-between items-center mb-3">
                                         <label className="text-sm font-medium text-blue-400">
-                                            👨 Man Photos
+                                            Person-2 Photos
                                         </label>
                                         <span className={`text-xs font-mono px-2 py-0.5 rounded-full ${manPreviews.length >= 3 ? 'bg-green-500/10 text-green-500' : 'bg-zinc-800 text-zinc-400'
                                             }`}>
