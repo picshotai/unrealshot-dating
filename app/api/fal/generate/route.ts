@@ -90,6 +90,9 @@ export async function POST(request: NextRequest) {
             case "9:16":
                 imageSize = "portrait_16_9";  // Tall portrait (phone screen)
                 break;
+            case "16:9":
+                imageSize = "landscape_16_9"; // Wide landscape
+                break;
             case "3:4":
                 imageSize = "portrait_4_3";   // Standard portrait
                 break;

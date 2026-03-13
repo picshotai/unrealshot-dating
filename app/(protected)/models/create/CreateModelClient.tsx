@@ -336,7 +336,7 @@ export function CreateModelClient() {
                     </div>
                     <h1 className="text-2xl font-bold text-white mb-2">Train Your Model</h1>
                     <p className="text-zinc-400 text-sm">
-                        {modelMode === 'couple' ? 'Create photos of you and your partner' : 'Upload reference photos to create your AI model'}
+                        {modelMode === 'couple' ? 'Create photos of you and a friend or partner' : 'Upload reference photos to create your AI model'}
                     </p>
                 </div>
 
@@ -360,7 +360,7 @@ export function CreateModelClient() {
                             }`}
                     >
                         <Users className="w-4 h-4" />
-                        Couple
+                        Duo
                     </button>
                 </div>
 

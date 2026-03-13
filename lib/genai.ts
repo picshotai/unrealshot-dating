@@ -3,9 +3,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { REFERENCE_PROMPTS } from "./prompts";
 import { COUPLE_REFERENCE_PROMPTS } from "./couple-prompts";
-import { putR2Object } from './r2';
-import { createClient } from '@/utils/supabase/server';
-import { hasCredits, deductCredits } from '@/lib/credits';
+
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -49,9 +47,9 @@ export async function enhancePrompt(
       - ${examples}
       
       INSTRUCTIONS:
-      1. Analyze the user's idea he want an photoshoot for: "${userPrompt}"
+      1. Analyze the user's idea he/she want an photoshoot for: "${userPrompt}"
       2. Write a single, detailed image generation prompt.
-      3. The subject is ${gender}.
+      3. The subjects are ${gender}.
       4. IMPORTANT: The lighting MUST match the ${lighting === 'NIGHT' ? 'NIGHT/ARTIFICIAL' : 'DAYLIGHT/NATURAL'} setting specified above by the user.
       5. Incorporate the hyper realistic style of the attached best, curated REFERENCE EXAMPLES (camera angle, texture, camera composition, The poses).
       6. Explicitly state: "Keep facial identity consistent with reference photos."
@@ -59,7 +57,7 @@ export async function enhancePrompt(
     `;
 
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-2.5-flash-lite',
             contents: `Generate the prompt for: ${userPrompt}`,
             config: {
                 systemInstruction: systemInstruction,
@@ -111,7 +109,7 @@ export async function enhanceCouplePrompt(
       INSTRUCTIONS:
       1. Analyze the user's idea what they are looking to generate: "${userPrompt}"
       2. Write a single, detailed image generation prompt for the couple photoshoot.
-      3. The subjects are a man and a woman together (romantic couple).
+      3. The subjects are gender to eb decided based on user prompt context.
       4. IMPORTANT: The lighting in the prompt MUST match the ${lighting === 'NIGHT' ? 'NIGHT/ARTIFICIAL' : 'DAYLIGHT/NATURAL'} setting.
       5. Focus on natural interaction, body language, and connection between them.
       6. Explicitly state: "Keep both faces' identities consistent with reference photos."
@@ -119,7 +117,7 @@ export async function enhanceCouplePrompt(
     `;
 
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-2.5-flash-lite',
             contents: `Generate a couple photoshoot prompt for: ${userPrompt}`,
             config: {
                 systemInstruction: systemInstruction,
