@@ -45,26 +45,35 @@ const legacyCheckoutSchema = z.object({
     returnUrl: z.string().url("Return URL must be a valid URL").optional(),
 });
 
-// Fetch pricing plan from database
+// Fetch pricing plan from database or fallback to single Dating Shoot plan
 async function getPricingPlan(planId: string, supabase: any) {
-  const { data: plan, error } = await supabase
+  const envProductId = process.env.DODO_PRODUCT_ID || process.env.DODO_DATING_PRODUCT_ID;
+
+  const { data: plan } = await supabase
     .from('dodo_pricing_plans')
     .select('*')
-    .eq('id', planId)
     .eq('is_active', true)
-    .single();
+    .maybeSingle();
 
-  if (error || !plan) {
-    throw new Error('Invalid plan ID or plan not found');
+  if (plan) {
+    return {
+      id: plan.id,
+      name: plan.name,
+      price: parseFloat(plan.price),
+      credits: plan.credits,
+      productId: envProductId || plan.dodo_product_id,
+      currency: plan.currency || 'USD'
+    };
   }
 
+  // Fallback default for Complete Dating Shoot ($59)
   return {
-    id: plan.id,
-    name: plan.name,
-    price: parseFloat(plan.price),
-    credits: plan.credits,
-    productId: plan.dodo_product_id,
-    currency: plan.currency
+    id: planId || 'dating-pack-59',
+    name: '100 Dating Photoshoot Pack',
+    price: 59,
+    credits: 30,
+    productId: envProductId || 'p_dating_59',
+    currency: 'USD'
   };
 }
 

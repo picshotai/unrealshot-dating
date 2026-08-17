@@ -1,41 +1,25 @@
 import type React from "react"
 import { Button } from "./ui/Button"
 import Link from "next/link"
+import { Check, ShieldCheck, Sparkles, Zap } from "lucide-react"
 
-const plans = [
-    {
-        name: "STANDARD ROLL",
-        subtitle: "15 Exposures.",
-        price: "$8.99",
-        priceNote: "/ roll",
-        features: [
-            "15 Hyper-Realistic Photos",
-            "4 Film Modes Included",
-            "Nano-Texture Engine",
-            "Auto-Delete Privacy",
-            "Commercial License",
-        ],
-        cta: "Buy Standard Roll",
-        isPopular: false,
-    },
-    {
-        name: "PRO ROLL",
-        subtitle: "50 Exposures.",
-        price: "$18.99",
-        priceNote: "/ roll",
-        badge: "BEST VALUE",
-        features: [
-            "50 Hyper-Realistic Photos ",
-            "Best Value ($0.37 per photo)",
-            "4 Film Modes Included",
-            "Perfect for Couples & Solos",
-            "Nano-Texture Engine",
-            "Auto-Delete Privacy",
-        ],
-        cta: "Buy Pro Roll",
-        isPopular: true,
-    },
-]
+const datingPlan = {
+    name: "COMPLETE DATING SHOOT",
+    subtitle: "100 High-Converting Photos across 5 Styles.",
+    price: "$59",
+    priceNote: "one-time payment",
+    badge: "THE COMPLETE OVERHAUL",
+    features: [
+        "100 Ultra-Realistic Dating Photos (20 per style)",
+        "5 Proven Archetypes: Anchor, Social, Travel, Active & Street",
+        "30 Custom Regeneration Credits Included",
+        "Fast ~90-Minute Delivery",
+        "No Awkward Gym Selfies or Stiff AI Mannequin Poses",
+        "Instant ZIP Download with Organized Style Folders",
+        "Full Commercial Rights & 100% Privacy Auto-Delete",
+    ],
+    cta: "Get Your Dating Photos ($59)",
+}
 
 interface PricingProps {
     asH1?: boolean; // When true, renders main heading as H1 (for dedicated pricing page)
@@ -44,112 +28,86 @@ interface PricingProps {
 export const Pricing: React.FC<PricingProps> = ({ asH1 = false }) => {
     const HeadingTag = asH1 ? 'h1' : 'h2';
     return (
-        <section className="border-b border-foreground/10">
-            {/* Plans Grid */}
-            <div className="grid md:grid-cols-2">
-                {/* Left: Title + Standard Plan */}
-                <div className="p-8 md:p-12 md:border-r border-foreground/10">
-                    {/* Section Title */}
-                    <div className="mb-12">
-                        <div className="font-mono text-xs text-foreground/40 mb-4">
-                            PRICING // SINGLE_PAYMENT
-                        </div>
-                        <HeadingTag className="font-display text-4xl md:text-5xl font-bold uppercase leading-[0.95] mb-3">
-                            Pick Your<br />
-                            <span className="text-foreground/30">Film Roll.</span>
-                        </HeadingTag>
-                        <p className="font-mono text-foreground/60 text-sm">
-                            No subscriptions. Pay once, own forever.
-                        </p>
-                    </div>
-
-                    {/* Standard Plan */}
-                    <div className="border border-foreground/20 p-6 md:p-8">
-                        <div className="mb-6">
-                            <h3 className="font-display text-xl md:text-2xl font-bold uppercase mb-1">
-                                {plans[0].name}
-                            </h3>
-                            <p className="font-mono text-sm text-foreground/50">{plans[0].subtitle}</p>
-                        </div>
-
-                        <div className="flex items-baseline mb-6">
-                            <span className="font-display text-4xl md:text-5xl font-bold text-white">
-                                {plans[0].price}
-                            </span>
-                            <span className="font-mono text-foreground/50 ml-2">{plans[0].priceNote}</span>
-                        </div>
-
-                        <ul className="space-y-3 font-mono text-sm mb-8">
-                            {plans[0].features.map((feature, i) => (
-                                <li key={i} className="flex items-start text-foreground/70">
-                                    <span className="w-1.5 h-1.5 bg-foreground/40 mr-3 mt-1.5 flex-shrink-0"></span>
-                                    {feature}
-                                </li>
-                            ))}
-                        </ul>
-
-                        <Link href="/login">
-                            <Button size="lg" variant="outline" className="w-full">
-                                {plans[0].cta} →
-                            </Button>
-                        </Link>
-                    </div>
+        <section className="border-b border-foreground/10 py-16 px-4 md:px-8 max-w-6xl mx-auto">
+            {/* Section Header */}
+            <div className="text-center max-w-2xl mx-auto mb-12">
+                <div className="font-mono text-xs text-accent uppercase tracking-widest mb-3 flex items-center justify-center gap-2">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    PRICING // SINGLE OVERHAUL PACK
                 </div>
+                <HeadingTag className="font-display text-4xl md:text-5xl font-bold uppercase leading-[0.95] mb-4">
+                    Upgrade Your Dating Profile.<br />
+                    <span className="text-foreground/40">In 90 Minutes.</span>
+                </HeadingTag>
+                <p className="font-mono text-foreground/60 text-sm md:text-base">
+                    No subscriptions. No recurring traps. Just 100 high-converting photos ready for Hinge, Tinder & Bumble.
+                </p>
+            </div>
 
-                {/* Right: Pro Plan (Featured) */}
-                <div className="p-8 md:p-12 bg-[#0a0a0a] relative overflow-hidden">
-                    {/* Grid Background */}
-                    <div
-                        className="absolute inset-0 opacity-5 pointer-events-none"
-                        style={{
-                            backgroundImage:
-                                "linear-gradient(#EBEBEB 1px, transparent 1px), linear-gradient(90deg, #EBEBEB 1px, transparent 1px)",
-                            backgroundSize: "40px 40px",
-                        }}
-                    ></div>
+            {/* Single Featured Plan Card */}
+            <div className="max-w-2xl mx-auto bg-[#0a0a0a] border border-accent/40 rounded-2xl p-8 md:p-12 relative overflow-hidden shadow-2xl">
+                {/* Subtle Grid Background */}
+                <div
+                    className="absolute inset-0 opacity-5 pointer-events-none"
+                    style={{
+                        backgroundImage:
+                            "linear-gradient(#EBEBEB 1px, transparent 1px), linear-gradient(90deg, #EBEBEB 1px, transparent 1px)",
+                        backgroundSize: "40px 40px",
+                    }}
+                ></div>
 
-                    <div className="relative z-10">
-                        {/* Badge */}
-                        <div className="inline-block bg-accent text-background font-mono text-[10px] font-bold px-2 py-1 uppercase tracking-widest mb-6">
-                            {plans[1].badge}
+                <div className="relative z-10">
+                    {/* Badge */}
+                    <div className="flex items-center justify-between gap-4 mb-6">
+                        <div className="inline-block bg-accent text-background font-mono text-xs font-bold px-3 py-1 uppercase tracking-widest rounded">
+                            {datingPlan.badge}
                         </div>
+                        <span className="font-mono text-xs text-foreground/40 flex items-center gap-1">
+                            <Zap className="w-3.5 h-3.5 text-accent" /> ~90 Min Delivery
+                        </span>
+                    </div>
 
-                        {/* Plan Name & Subtitle */}
-                        <div className="mb-6">
-                            <h3 className="font-display text-xl md:text-2xl font-bold uppercase mb-1">
-                                {plans[1].name}
-                            </h3>
-                            <p className="font-mono text-sm text-foreground/50">{plans[1].subtitle}</p>
-                        </div>
+                    {/* Plan Name & Subtitle */}
+                    <div className="mb-6">
+                        <h3 className="font-display text-2xl md:text-3xl font-bold uppercase mb-1 text-white">
+                            {datingPlan.name}
+                        </h3>
+                        <p className="font-mono text-sm text-foreground/60">{datingPlan.subtitle}</p>
+                    </div>
 
-                        {/* Price */}
-                        <div className="flex items-baseline mb-6">
-                            <span className="font-display text-4xl md:text-5xl font-bold text-white">
-                                {plans[1].price}
-                            </span>
-                            <span className="font-mono text-foreground/50 ml-2">{plans[1].priceNote}</span>
-                        </div>
+                    {/* Price */}
+                    <div className="flex items-baseline mb-8 pb-6 border-b border-foreground/10">
+                        <span className="font-display text-5xl md:text-6xl font-bold text-white tracking-tight">
+                            {datingPlan.price}
+                        </span>
+                        <span className="font-mono text-foreground/50 ml-3 text-sm">{datingPlan.priceNote}</span>
+                        <span className="ml-auto font-mono text-xs text-accent bg-accent/10 px-2.5 py-1 rounded border border-accent/20">
+                            $0.59 / photo
+                        </span>
+                    </div>
 
-                        {/* Features */}
-                        <ul className="space-y-3 font-mono text-sm mb-8">
-                            {plans[1].features.map((feature, i) => (
-                                <li key={i} className="flex items-start text-foreground/80">
-                                    <span className="w-1.5 h-1.5 bg-accent mr-3 mt-1.5 flex-shrink-0"></span>
-                                    {feature}
-                                </li>
-                            ))}
-                        </ul>
+                    {/* Features List */}
+                    <ul className="space-y-3.5 font-mono text-sm mb-10">
+                        {datingPlan.features.map((feature, i) => (
+                            <li key={i} className="flex items-start text-foreground/90 gap-3">
+                                <span className="w-5 h-5 rounded-full bg-accent/20 text-accent flex items-center justify-center shrink-0 mt-0.5">
+                                    <Check className="w-3.5 h-3.5" />
+                                </span>
+                                <span>{feature}</span>
+                            </li>
+                        ))}
+                    </ul>
 
-                        {/* CTA Button */}
-                        <Link href="/login">
-                            <Button size="lg" variant="primary" className="w-full">
-                                {plans[1].cta} →
-                            </Button>
-                        </Link>
+                    {/* CTA Button */}
+                    <Link href="/dating-shoot" className="block w-full">
+                        <Button size="lg" variant="primary" className="w-full text-base py-6 font-bold uppercase tracking-wider">
+                            {datingPlan.cta} →
+                        </Button>
+                    </Link>
 
-                        <p className="text-center font-mono text-[10px] text-foreground/30 mt-4">
-                            SECURE PAYMENT // 100% MONEY-BACK GUARANTEE
-                        </p>
+                    <div className="flex items-center justify-center gap-2 text-center font-mono text-xs text-foreground/40 mt-5">
+                        <ShieldCheck className="w-4 h-4 text-accent" />
+                        <span>SECURE CHECKOUT // POWERED BY DODOPAYMENTS</span>
                     </div>
                 </div>
             </div>

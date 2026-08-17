@@ -1,64 +1,16 @@
-import { Metadata } from 'next'
+import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-// Removed Alert in favor of a site-consistent muted card banner
-import { MessageSquare, CreditCard, Star, Check } from 'lucide-react';
+import { Sparkles, Check, ShieldCheck, Zap } from 'lucide-react';
 import DodoCheckoutButton from '@/components/dodopayments/DodoCheckoutButton';
-import { pricingPlanService } from '@/lib/pricing-plans';
-import { commonPageMetadata } from '@/lib/seo'
-import { StructuredData } from '@/components/seo/StructuredData'
-import { generateProductSchema } from '@/lib/seo'
-import Image from 'next/image'
-import Link from 'next/link'
-import FeedbackForm from "@/components/FeedbackForm"
+import { commonPageMetadata } from '@/lib/seo';
 import { ShineBorder } from "@/components/ui/shine-border";
 
-export const metadata: Metadata = commonPageMetadata.buyCredits()
-
-// Utility functions
-function formatPrice(price: number | string, currency: string = 'USD'): string {
-  const numPrice = typeof price === 'string' ? parseFloat(price) : price;
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: currency,
-  }).format(numPrice);
-}
-
-function formatCredits(credits: number): string {
-  return new Intl.NumberFormat('en-US').format(credits);
-}
-
-// Normalize plan names to avoid casing/spacing mismatches
-function normalizePlanName(name: string) {
-  return name.trim().toLowerCase();
-}
-
-function getDisplayName(name: string) {
-  const n = normalizePlanName(name);
-  if (n === 'basic pack' || n === 'starter') {
-    return 'Standard Roll';
-  }
-  if (n === 'premium pack' || n === 'pro') {
-    return 'Pro Roll';
-  }
-  return name;
-}
-
-type PricingPlan = {
-  id: string;
-  name: string;
-  description: string | null;
-  price: number;
-  credits: number;
-  currency: string;
-  creditsPerDollar: number;
-  isPopular?: boolean;
-};
+export const metadata: Metadata = commonPageMetadata.buyCredits();
 
 export default async function BuyCreditsPage() {
-  // Server-side authentication check
   const supabase = await createClient();
   const { data: { user }, error } = await supabase.auth.getUser();
 
@@ -66,192 +18,106 @@ export default async function BuyCreditsPage() {
     redirect('/login?redirect=/buy-credits');
   }
 
-  // Server-side data fetching - no loading states needed
-  let plans: PricingPlan[] = [];
-  try {
-    const plansData = await pricingPlanService.getPlansWithValue();
-    plans = plansData.map((plan, index) => ({
-      id: plan.id,
-      name: plan.name,
-      description: plan.description,
-      price: parseFloat(plan.price.toString()),
-      credits: plan.credits,
-      currency: plan.currency,
-      creditsPerDollar: plan.creditsPerDollar,
-      isPopular: index === 1 // Make second plan popular
-    }));
-  } catch (error) {
-    console.error('Error loading pricing plans:', error);
-    // Handle error gracefully - could redirect to error page or show empty state
-  }
+  // Fetch plan from database if present, otherwise default to $59 Dating Pack
+  const { data: dbPlan } = await supabase
+    .from('dodo_pricing_plans')
+    .select('*')
+    .eq('is_active', true)
+    .maybeSingle();
 
-  // Plan feature bullets (aligned with landing page Pricing component)
-  const starterFeatures = [
-    "15 Hyper-Realistic Photos",
-    "4 Film Modes Included",
-    "Nano-Texture Engine",
-    "Auto-Delete Privacy",
-    "Commercial License"
-  ];
-
-  const proFeatures = [
-    "50 Hyper-Realistic Photos",
-    "Best Value ($0.37 per photo)",
-    "Perfect for Couples & Solos",
-    "4 Film Modes Included",
-    "Nano-Texture Engine",
-    "Auto-Delete Privacy"
-  ];
-
-  // Use normalized keys so minor plan name differences don't break mapping
-  const featuresByPlanName: Record<string, string[]> = {
-    starter: starterFeatures,
-    pro: proFeatures,
-    // Map current Supabase plan names (as shown in UI)
-    'basic pack': starterFeatures,
-    'premium pack': proFeatures,
+  const plan = {
+    id: dbPlan?.id || 'dating-pack-59',
+    name: dbPlan?.name || '100 Dating Photoshoot Pack',
+    price: dbPlan ? parseFloat(dbPlan.price.toString()) : 59,
+    credits: dbPlan?.credits || 30,
+    currency: dbPlan?.currency || 'USD',
   };
 
+  const features = [
+    "100 Ultra-Realistic Dating Photos (20 per style)",
+    "5 Proven Archetypes: Anchor, Social, Travel, Active & Street",
+    "30 Custom Regeneration Credits Included",
+    "Fast ~90-Minute Delivery",
+    "No Awkward Gym Selfies or Stiff AI Mannequin Poses",
+    "Instant ZIP Download with Organized Style Folders",
+    "Full Commercial Rights & 100% Privacy Auto-Delete",
+  ];
+
   return (
-    <>
-      {plans.length > 0 && (
-        <StructuredData
-          data={JSON.parse(generateProductSchema({
-            name: 'Credit Packages',
-            description: 'Purchase credits to unlock premium features',
-            price: plans[0]?.price || 0,
-            currency: plans[0]?.currency || 'USD',
-            features: ['Premium Features', 'Extended Usage Limits', 'Priority Support']
-          }))}
-        />
-      )}
-      <div className="container mx-auto px-4 py-8 text-center">
-        
-        {/* 
-        <div className="mx-auto mb-6 max-w-3xl">
-          <div className="relative rounded-lg border border-primary/10 bg-muted/30 p-4 text-left md:text-center">
-            <p className="text-xs font-semibold uppercase tracking-wider text-primary">Exclusive Offer</p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Hey friend, use code
-              <Badge variant="outline" className="mx-2 font-mono">WELCOME</Badge>
-              to get <span className="font-semibold text-primary">10% off</span> your first pack!
-              <span className="ml-1">Limited time for new users.</span>
-            </p>
-            <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} borderWidth={2} />
-          </div>
-        </div> 
-        */}
-
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-4">Pick Your Film Roll</h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            No subscriptions. Pay once, own forever. Hyper-realistic photos, not plastic AI.
-          </p>
-        </div>
-
-        {plans.length === 0 ? (
-          <div className="text-center py-12">
-            <CreditCard className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-            <h3 className="text-lg font-semibold mb-2">No pricing plans available</h3>
-            <p className="text-muted-foreground">Please check back later or contact support.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            {plans.map((plan) => (
-              <Card key={plan.id} className={`relative ${plan.isPopular ? '' : ''}`}>
-                {plan.isPopular && <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />}
-                {(() => {
-                  const normalized = normalizePlanName(plan.name);
-                  const showRecommended = normalized === 'basic pack' || normalized === 'starter';
-                  const showBestValue = plan.isPopular && !showRecommended;
-                  return (showRecommended || showBestValue) ? (
-                    <Badge className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-primary">
-                      <Star className="h-3 w-3 mr-1" />
-                      {showRecommended ? 'Recommended' : 'Best Value'}
-                    </Badge>
-                  ) : null;
-                })()}
-
-                <CardHeader className="text-center">
-                  <CardTitle className="text-xl">{getDisplayName(plan.name)}</CardTitle>
-                  {plan.description && (
-                    <CardDescription>{plan.description}</CardDescription>
-                  )}
-                  <div className="mt-4">
-                    <div className="text-3xl font-bold">
-                      {formatPrice(plan.price, plan.currency)}
-                    </div>
-                    {(() => {
-                      const normalized = normalizePlanName(plan.name);
-                      if (normalized === 'basic pack' || normalized === 'starter') {
-                        return (
-                          <div className="text-sm text-muted-foreground">$0.99 per photo</div>
-                        );
-                      }
-                      if (normalized === 'premium pack' || normalized === 'pro') {
-                        return (
-                          <div className="text-sm text-muted-foreground">$0.79 per photo (Save 20%)</div>
-                        );
-                      }
-                      return null;
-                    })()}
-                  </div>
-                </CardHeader>
-
-                <CardContent className="pb-2">
-                  <ul className="space-y-2 text-sm">
-                    {(() => {
-                      const normalized = normalizePlanName(plan.name);
-                      const featureList =
-                        featuresByPlanName[normalized] ||
-                        // Fallback by credits if name mapping changes
-                        (plan.credits <= 30 ? starterFeatures : proFeatures);
-                      return featureList.map((feature, idx) => (
-                        <li key={`${plan.id}-${idx}`} className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-[#111827]" />
-                          <span className="text-muted-foreground">{feature}</span>
-                        </li>
-                      ));
-                    })()}
-                  </ul>
-                </CardContent
-                >
-
-                <CardFooter>
-                  <DodoCheckoutButton
-                    planId={plan.id}
-                    userId={user?.id || ''}
-                    amount={plan.price}
-                    credits={plan.credits}
-                    planName={plan.name}
-                    className="w-full border border-input bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer"
-                  >
-                    {(() => {
-                      const normalized = normalizePlanName(plan.name);
-                      if (normalized === 'basic pack' || normalized === 'starter') {
-                        return 'Buy Standard Roll →';
-                      }
-                      if (normalized === 'premium pack' || normalized === 'pro') {
-                        return 'Buy Pro Roll →';
-                      }
-                      return 'Buy Pack';
-                    })()}
-                  </DodoCheckoutButton>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        )}
-
-
-        <p className="text-center  text-gray-600 text-base leading-relaxed mt-8">
-          Payments are processed securely with
-          <Link href="https://dodopayments.com" className="text-[#ff6f00] font-medium">
-            <Image src="/dodo-logo.png" alt="dodopayments" width={96} height={96} className="inline-block ml-1 bg-black" />
-          </Link>
+    <div className="container mx-auto px-4 py-12 max-w-4xl text-center">
+      <div className="text-center mb-10">
+        <Badge variant="outline" className="mb-3 px-3 py-1 font-mono text-xs uppercase tracking-widest border-accent/40 text-accent">
+          <Sparkles className="w-3 h-3 mr-1.5 inline" />
+          Single Overhaul Package
+        </Badge>
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
+          100 Photos. 5 Archetypes.
+        </h1>
+        <p className="text-muted-foreground max-w-xl mx-auto text-sm md:text-base">
+          Pay once, own forever. Delivered in ~90 minutes directly to your dashboard.
         </p>
       </div>
-      <FeedbackForm userId={user.id} />
-    </>
+
+      <div className="max-w-xl mx-auto">
+        <Card className="relative bg-zinc-950 border-zinc-800 text-left overflow-hidden shadow-2xl">
+          <ShineBorder shineColor={["#A07CFE", "#FE8FB5", "#FFBE7B"]} />
+          
+          <CardHeader className="text-center pb-4 pt-8">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <Badge className="bg-white text-black font-semibold text-xs uppercase tracking-wider">
+                Full Photoshoot Pack
+              </Badge>
+            </div>
+            <CardTitle className="text-2xl font-bold text-white mt-1">
+              Complete Dating Photoshoot
+            </CardTitle>
+            <CardDescription className="text-zinc-400 text-sm">
+              100 photos across 5 high-converting styles
+            </CardDescription>
+
+            <div className="mt-6 flex items-baseline justify-center gap-2">
+              <span className="text-5xl font-bold tracking-tight text-white">
+                ${plan.price}
+              </span>
+              <span className="text-zinc-400 text-sm font-mono">one-time</span>
+              <span className="ml-2 text-xs bg-accent/10 text-accent border border-accent/20 px-2 py-0.5 rounded font-mono">
+                $0.59 / photo
+              </span>
+            </div>
+          </CardHeader>
+
+          <CardContent className="px-6 md:px-8 py-6 border-t border-zinc-800/80">
+            <ul className="space-y-3.5 text-sm">
+              {features.map((feature, i) => (
+                <li key={i} className="flex items-start gap-3 text-zinc-300">
+                  <span className="w-5 h-5 rounded-full bg-white/10 text-white flex items-center justify-center shrink-0 mt-0.5">
+                    <Check className="w-3.5 h-3.5" />
+                  </span>
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+
+          <CardFooter className="flex flex-col gap-4 px-6 md:px-8 pb-8 pt-2">
+            <DodoCheckoutButton
+              planId={plan.id}
+              userId={user.id}
+              amount={plan.price}
+              credits={plan.credits}
+              planName={plan.name}
+              className="w-full bg-white text-black hover:bg-zinc-200 py-6 text-base font-bold uppercase tracking-wider transition-all"
+            >
+              Get Your 100 Photos (${plan.price}) →
+            </DodoCheckoutButton>
+
+            <div className="flex items-center justify-center gap-2 text-xs text-zinc-500 font-mono">
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span>Secure checkout powered by DodoPayments</span>
+            </div>
+          </CardFooter>
+        </Card>
+      </div>
+    </div>
   );
 }
