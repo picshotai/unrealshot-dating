@@ -13,7 +13,6 @@ Wedge: sell **profile performance**, not photo count. 100 photos across 5 archet
 ## 3. The 5-Bucket Matrix (unchanged — your spec, locked)
 
 20 generations per bucket × 5 = 100. Anchor Portrait / Social Candid / Travel Lifestyle / Active Vitality / Casual Streetwear.
-
 ---
 
 ## 4. Core Flow — 4 Stages (rebuilt per your updates)
