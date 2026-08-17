@@ -32,15 +32,15 @@ export async function signInWithMagicLink(
     }
   }
 
-  const supabase = await createClient()
-
   try {
+    const supabase = await createClient()
+    const captchaToken = formData.get('cf-turnstile-response') as string | null
     const { data, error } = await supabase.auth.signInWithOtp({
       email,
       options: {
         shouldCreateUser: true,
         emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/dashboard`,
-        captchaToken: formData.get('cf-turnstile-response') as string,
+        ...(captchaToken ? { captchaToken } : {}),
       },
     })
 

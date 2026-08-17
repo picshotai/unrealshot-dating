@@ -8,7 +8,6 @@ import { useEffect, useState } from "react"
 import { Loader2 } from "lucide-react"
 import { signInWithMagicLink, signInWithGoogle } from "./actions"
 import { CSRFProvider, CSRFInput } from "@/components/csrf-provider"
-import { Turnstile } from "@marsidev/react-turnstile"
 import Image from "next/image"
 import Link from "next/link"
 import { Navbar } from "@/components/pfplanding/Navbar"
@@ -155,19 +154,6 @@ function LoginFormWithSearchParams() {
                   required
                   className="w-full bg-[#0a0a0a] border border-foreground/20 text-foreground placeholder:text-foreground/30 px-4 py-3 font-mono text-sm focus:outline-none focus:border-accent transition-colors"
                 />
-              </div>
-
-              <div className="flex justify-center my-4">
-                <Turnstile
-                  siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
-                  onSuccess={(token) => {
-                    const input = document.getElementById('cf-turnstile-response') as HTMLInputElement;
-                    if (input) input.value = token;
-                  }}
-                  options={{ theme: 'dark' }}
-                  className="mx-auto"
-                />
-                <input type="hidden" name="cf-turnstile-response" id="cf-turnstile-response" />
               </div>
 
               <MagicLinkSubmit />
