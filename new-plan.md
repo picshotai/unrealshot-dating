@@ -17,7 +17,6 @@ Wedge: sell **profile performance**, not photo count. 100 photos across 5 archet
 ## 4. Core Flow — 4 Stages (rebuilt per your updates)
 
 ### Stage A — Intake & Upload Guide (BUILD, simplified)
-
 - **Max 6 photo uploads.** Hard cap. No auto quality checker, no Google GenAI.
 - Replace auto-rejection with a **strict visual upload guide** shown in the UI before the dropzone unlocks. User must check a "I've read the guide" checkbox to proceed.
 - Guide content (rendered as 6 illustrated do/don't cards):
