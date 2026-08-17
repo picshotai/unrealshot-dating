@@ -16,6 +16,59 @@ function extractR2Key(uri: string): string | null {
     return match ? match[1] : null;
 }
 
+// PATCH: Update model fields (status, name)
+export async function PATCH(
+    request: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
+    const supabase = await createClient();
+    const { id: modelId } = await params;
+
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { data: model, error: modelError } = await supabase
+        .from("models")
+        .select("id, user_id")
+        .eq("id", modelId)
+        .single();
+
+    if (modelError || !model) {
+        return NextResponse.json({ error: "Model not found" }, { status: 404 });
+    }
+    if (model.user_id !== user.id) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    try {
+        const body = await request.json();
+        const updates: Record<string, string> = {};
+        if (typeof body.status === "string") updates.status = body.status;
+        if (typeof body.name === "string") updates.name = body.name;
+
+        if (Object.keys(updates).length === 0) {
+            return NextResponse.json({ error: "No valid fields" }, { status: 400 });
+        }
+
+        const { data: updated, error: updateError } = await supabase
+            .from("models")
+            .update(updates)
+            .eq("id", modelId)
+            .select()
+            .single();
+
+        if (updateError) {
+            return NextResponse.json({ error: "Failed to update model" }, { status: 500 });
+        }
+
+        return NextResponse.json({ model: updated });
+    } catch {
+        return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+    }
+}
+
 // DELETE: Delete a model and all associated data
 export async function DELETE(
     request: NextRequest,

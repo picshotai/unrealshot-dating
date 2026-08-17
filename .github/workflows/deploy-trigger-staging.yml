@@ -1,0 +1,34 @@
+name: Deploy Trigger.dev (staging)
+
+# Manual only — pick a branch/commit in the Actions UI
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: trigger-staging-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy tasks to Trigger.dev (staging)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy Trigger.dev (staging)
+        env:
+          TRIGGER_ACCESS_TOKEN: ${{ secrets.TRIGGER_ACCESS_TOKEN }}
+          TRIGGER_PROJECT_REF: ${{ secrets.TRIGGER_PROJECT_REF }}
+        run: npm run trigger:deploy:staging

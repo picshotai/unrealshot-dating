@@ -370,6 +370,204 @@ export interface Database {
           }
         ]
       }
+      prompt_library: {
+        Row: {
+          id: string
+          bucket: string
+          slot: number
+          prompt_template: string
+          style_modifiers: Json
+          posing_cues: Json
+          params: Json
+          is_active: boolean
+          version: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          bucket: string
+          slot: number
+          prompt_template: string
+          style_modifiers?: Json
+          posing_cues?: Json
+          params?: Json
+          is_active?: boolean
+          version?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          bucket?: string
+          slot?: number
+          prompt_template?: string
+          style_modifiers?: Json
+          posing_cues?: Json
+          params?: Json
+          is_active?: boolean
+          version?: number
+          created_at?: string
+        }
+        Relationships: []
+      }
+      user_preferences: {
+        Row: {
+          id: string
+          user_id: string
+          vibe: string
+          style: string
+          hobby_text: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          vibe: string
+          style: string
+          hobby_text?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          vibe?: string
+          style?: string
+          hobby_text?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_preferences_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      user_shoot_orders: {
+        Row: {
+          id: string
+          user_id: string
+          model_id: number
+          preferences_id: string | null
+          status: string
+          trigger_run_id: string | null
+          custom_credits_remaining: number
+          photos_target: number
+          fal_cost_cents: number
+          refund_state: string
+          created_at: string
+          ready_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          model_id: number
+          preferences_id?: string | null
+          status?: string
+          trigger_run_id?: string | null
+          custom_credits_remaining?: number
+          photos_target?: number
+          fal_cost_cents?: number
+          refund_state?: string
+          created_at?: string
+          ready_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          model_id?: number
+          preferences_id?: string | null
+          status?: string
+          trigger_run_id?: string | null
+          custom_credits_remaining?: number
+          photos_target?: number
+          fal_cost_cents?: number
+          refund_state?: string
+          created_at?: string
+          ready_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_shoot_orders_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_shoot_orders_model_id_fkey"
+            columns: ["model_id"]
+            referencedRelation: "models"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      order_photos: {
+        Row: {
+          id: string
+          order_id: string
+          bucket: string
+          slot: number
+          prompt_template: string
+          status: string
+          fal_request_id: string | null
+          image_url: string | null
+          attempt_count: number
+          failed_reason: string | null
+          fal_cost_cents: number
+          deterministic_id: string | null
+          aesthetic_score: number | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          order_id: string
+          bucket: string
+          slot: number
+          prompt_template: string
+          status?: string
+          fal_request_id?: string | null
+          image_url?: string | null
+          attempt_count?: number
+          failed_reason?: string | null
+          fal_cost_cents?: number
+          deterministic_id?: string | null
+          aesthetic_score?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          order_id?: string
+          bucket?: string
+          slot?: number
+          prompt_template?: string
+          status?: string
+          fal_request_id?: string | null
+          image_url?: string | null
+          attempt_count?: number
+          failed_reason?: string | null
+          fal_cost_cents?: number
+          deterministic_id?: string | null
+          aesthetic_score?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_photos_order_id_fkey"
+            columns: ["order_id"]
+            referencedRelation: "user_shoot_orders"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       one_day_followup_emails: {
         Row: {
           created_at: string

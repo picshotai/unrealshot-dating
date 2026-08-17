@@ -1,0 +1,45 @@
+name: Deploy Trigger.dev (prod)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "trigger/**"
+      - "trigger.config.ts"
+      - "lib/dating/**"
+      - "lib/r2.ts"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/deploy-trigger-prod.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: trigger-prod-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy tasks to Trigger.dev
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy Trigger.dev (prod)
+        env:
+          TRIGGER_ACCESS_TOKEN: ${{ secrets.TRIGGER_ACCESS_TOKEN }}
+          # Optional: only if project ref is not hard-coded in trigger.config.ts
+          TRIGGER_PROJECT_REF: ${{ secrets.TRIGGER_PROJECT_REF }}
+        run: npm run trigger:deploy

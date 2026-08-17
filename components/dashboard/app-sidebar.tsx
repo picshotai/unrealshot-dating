@@ -122,10 +122,15 @@ export function AppSidebar({
 
   const navItems = React.useMemo(() => [
     {
-      title: "Generate Photos",
-      url: "/dashboard",
+      title: "Dating Photoshoot",
+      url: "/dating-shoot",
       icon: WandSparklesIcon,
       isActive: true,
+    },
+    {
+      title: "Create Model",
+      url: "/models/create",
+      icon: ImagePlus,
     },
     {
       title: "My Gallery",
@@ -137,7 +142,6 @@ export function AppSidebar({
       url: "/models",
       icon: DatabaseBackup,
     },
-
   ], [])
 
   return (
