@@ -119,8 +119,12 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
     );
   };
 
+  const hasSelectedInterests =
+    interests.length > 0 || hobbyText.trim().length > 0;
+  const canSubmit = Boolean(selectedModelId) && hasSelectedInterests && !isLoading;
+
   const handleSubmit = () => {
-    if (!selectedModelId) return;
+    if (!canSubmit || !selectedModelId) return;
     onSubmit({
       modelId: selectedModelId,
       interests,
@@ -332,8 +336,16 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                 <h2 className="text-xs sm:text-sm font-medium text-zinc-200">
                   What do you actually do?
                 </h2>
-                <span className="text-[11px] text-zinc-500 font-mono">
-                  {interests.length > 0 ? `${interests.length} selected` : 'Select what you do'}
+                <span
+                  className={`text-[11px] font-mono ${
+                    hasSelectedInterests
+                      ? 'text-zinc-400'
+                      : 'text-amber-400 font-medium'
+                  }`}
+                >
+                  {interests.length > 0
+                    ? `${interests.length} selected`
+                    : 'Select at least 1 activity'}
                 </span>
               </div>
               <p className="text-[11px] text-zinc-500 mt-0.5">
@@ -350,7 +362,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                     onClick={() => toggleInterest(chip.id)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all flex items-center gap-1.5 active:scale-95 ${
                       isActive
-                        ? 'bg-white text-black border-white font-semibold'
+                        ? 'bg-white text-black border-white font-semibold shadow-sm'
                         : 'bg-zinc-950/80 text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200'
                     }`}
                   >
@@ -382,7 +394,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                     onClick={() => toggleExclusion(chip.id)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all flex items-center gap-1.5 active:scale-95 ${
                       isActive
-                        ? 'bg-red-500/10 text-red-400 border-red-500/30'
+                        ? 'bg-red-500/10 text-red-400 border-red-500/30 font-semibold'
                         : 'bg-zinc-950/80 text-zinc-500 border-zinc-800 hover:border-zinc-700 hover:text-zinc-300'
                     }`}
                   >
@@ -403,7 +415,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                 Custom Specific Hobbies <span className="text-zinc-500 font-normal">(Optional)</span>
               </h2>
               <p className="text-[11px] text-zinc-500 mt-0.5">
-                Add any niche interests separated by commas.
+                Add any niche interests separated by commas, only one word each.
               </p>
             </div>
             <input
@@ -445,14 +457,22 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
 
             <Button
               onClick={handleSubmit}
-              disabled={isLoading || !selectedModelId}
-              className="w-full sm:w-auto bg-white text-black hover:bg-zinc-200 font-semibold text-xs sm:text-sm h-10 px-6 rounded-lg shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2"
+              disabled={!canSubmit}
+              className={`w-full sm:w-auto font-semibold text-xs sm:text-sm h-10 px-6 rounded-lg transition-all active:scale-95 flex items-center justify-center gap-2 ${
+                canSubmit
+                  ? 'bg-white text-black hover:bg-zinc-200 shadow-sm cursor-pointer'
+                  : 'bg-zinc-900 text-zinc-500 border border-zinc-800 cursor-not-allowed opacity-60'
+              }`}
             >
               {isLoading ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
                   Generating Photoshoot...
                 </>
+              ) : !hasSelectedInterests ? (
+                <>Select At Least 1 Activity</>
+              ) : !selectedModelId ? (
+                <>Select Face Model</>
               ) : (
                 <>
                   Start 100-Photo Shoot
