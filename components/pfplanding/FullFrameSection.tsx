@@ -1,6 +1,5 @@
 "use client"
 import type React from "react"
-import { useEffect, useState } from "react"
 
 const COLUMN_1_IMAGES = [
     { src: "/showcase10.png", aspect: "aspect-[3/4]" },
@@ -23,46 +22,49 @@ export const FullFrameSection: React.FC = () => {
         <section className="h-screen min-h-[800px] grid md:grid-cols-2 border-b border-foreground/10 bg-[#080808] overflow-hidden">
             {/* Copy Side (Left) */}
             <div className="flex flex-col justify-center p-8 md:p-20 border-r border-foreground/10 relative z-10 bg-[#080808]">
-                <h2 className="font-display text-4xl md:text-6xl font-bold uppercase mb-8">
-                    STOP BEING GHOSTED.
-                    <span className="text-foreground/50"> START BEING FOLLOWED.</span>
+                <div className="font-mono text-[10px] text-accent uppercase tracking-widest mb-3">
+                    SWIPING PSYCHOLOGY // APP OPTIMIZED
+                </div>
+                <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold uppercase mb-6 leading-tight">
+                    BUILT FOR HINGE, <br />
+                    <span className="text-foreground/40">BUMBLE & TINDER.</span>
                 </h2>
 
-                <p className="font-mono text-foreground/70 mb-10 text-sm md:text-base max-w-md leading-relaxed">
-                    Stop posting stiff, corporate headshots on apps meant for real life. We generate candid, lifestyle photos that look like <strong className="text-white">your best friend took them on a night out.</strong>
+                <p className="font-mono text-foreground/70 mb-8 text-xs sm:text-sm max-w-md leading-relaxed">
+                    Dating app swipers penalize low-effort selfies and stiff corporate headshots. Unrealshot produces the exact visual signals modern dating profiles reward:
                 </p>
 
-                <div className="space-y-6">
+                <div className="space-y-4">
                     <div className="flex items-center gap-4 group">
                         <div className="w-8 h-8 flex items-center justify-center border border-foreground/20 font-mono text-xs text-accent">
                             01
                         </div>
-                        <div className="font-mono text-sm uppercase text-foreground/60 group-hover:text-foreground transition-colors">
-                            Ditch the stiff, corporate headshot look.
+                        <div className="font-mono text-xs sm:text-sm uppercase text-foreground/70 group-hover:text-foreground transition-colors">
+                            Native dating app crops (tall portrait & full vertical).
                         </div>
                     </div>
                     <div className="flex items-center gap-4 group">
                         <div className="w-8 h-8 flex items-center justify-center border border-foreground/20 font-mono text-xs text-accent">
                             02
                         </div>
-                        <div className="font-mono text-sm uppercase text-foreground/60 group-hover:text-foreground transition-colors">
-                            Authentic vibes that get more matches.
+                        <div className="font-mono text-xs sm:text-sm uppercase text-foreground/70 group-hover:text-foreground transition-colors">
+                            Real-world plausibility with natural phone-grade lighting.
                         </div>
                     </div>
                     <div className="flex items-center gap-4 group">
                         <div className="w-8 h-8 flex items-center justify-center border border-foreground/20 font-mono text-xs text-accent">
                             03
                         </div>
-                        <div className="font-mono text-sm uppercase text-foreground/60 group-hover:text-foreground transition-colors">
-                            Candid shots your friends will believe.
+                        <div className="font-mono text-xs sm:text-sm uppercase text-foreground/70 group-hover:text-foreground transition-colors">
+                            100 unique outfits — shows range across every photo.
                         </div>
                     </div>
                     <div className="flex items-center gap-4 group">
                         <div className="w-8 h-8 flex items-center justify-center border border-foreground/20 font-mono text-xs text-accent">
                             04
                         </div>
-                        <div className="font-mono text-sm uppercase text-foreground/60 group-hover:text-foreground transition-colors">
-                            Flawless skin, natural grain, zero "plastic."
+                        <div className="font-mono text-xs sm:text-sm uppercase text-foreground/70 group-hover:text-foreground transition-colors">
+                            Zero fake background extras — clean focus on you alone.
                         </div>
                     </div>
                 </div>
@@ -74,7 +76,7 @@ export const FullFrameSection: React.FC = () => {
                 {/* Context Overlay */}
                 <div className="absolute top-4 right-4 z-20 font-mono text-[10px] text-foreground/30 text-right mix-blend-difference">
                     SCROLL_AXIS: Y-VERTICAL <br />
-                    GRID_LAYOUT: MASONRY
+                    APP_CROPS: 4:5 / 9:16
                 </div>
 
                 {/* Gradient Masks (Top/Bottom) */}

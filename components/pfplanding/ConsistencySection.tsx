@@ -11,16 +11,19 @@ export const ConsistencySection: React.FC = () => {
             <div className="container mx-auto px-6 relative z-10">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
                     <div>
+                        <div className="font-mono text-[10px] text-accent uppercase tracking-widest mb-3">
+                            FACIAL IDENTITY // ZERO GLITCHING
+                        </div>
                         <h2 className="font-display text-4xl md:text-5xl font-bold uppercase mb-4 leading-none">
-                            NO SHAPESHIFTING.  <span className="text-accent">JUST YOU.</span>
+                            NO SHAPESHIFTING. <span className="text-accent">ONE PERSON: YOU.</span>
                         </h2>
-                        <p className="font-mono text-foreground/60 max-w-xl text-sm md:text-base">
-                            Other AI generators hallucinate new faces when you change the angle or lighting. We don't. Whether you’re laughing in a taxi or eating under neon lights, <strong className="text-foreground">your identity stays locked</strong>. No AI cousins. No glitchy lookalikes. Just you.
+                        <p className="font-mono text-foreground/60 max-w-xl text-sm md:text-base leading-relaxed">
+                            Generic AI generators hallucinate a different face the moment the angle or lighting shifts. Unrealshot locks your facial identity from 4–6 reference selfies across all 100 photos. <strong className="text-foreground">One person in every frame: him</strong>. No weird AI lookalikes. No awkward background extras. Just you on your best days.
                         </p>
                     </div>
                     <div className="font-mono text-[10px] md:text-xs text-accent text-right">
-                        SUBJECT_CONSISTENCY: LOCKED <br />
-                        VARIANCE: &lt;0.2%
+                        IDENTITY_LOCK: ENFORCED <br />
+                        BACKGROUND_EXTRAS: 0 (SOLO FRAMES)
                     </div>
                 </div>
 
@@ -31,9 +34,9 @@ export const ConsistencySection: React.FC = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {[
-                            { title: 'MACRO_SCAN // PORES_VISIBLE', img: '/pores-visible.png' },
-                            { title: 'FULL_BODY // CONTEXT_AWARE', img: '/images/full-body-photo.webp' },
-                            { title: 'PROFILE // OFF_AXIS', img: '/profile.png' }
+                            { title: 'FRONTAL OPENER // EYE-LEVEL ENGAGEMENT', img: '/pores-visible.png' },
+                            { title: 'FULL BODY // CONTEXT-AWARE POSTURE', img: '/images/full-body-photo.webp' },
+                            { title: 'OFF-AXIS CANDID // NATURAL PROFILE', img: '/profile.png' }
                         ].map((item, i) => (
                             <div key={i} className="relative group">
                                 {/* Image Container */}

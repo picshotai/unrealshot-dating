@@ -62,19 +62,18 @@ export interface OrganizationSchema {
 
 // Default SEO Configuration
 export const defaultSEO: SEOConfig = {
-  title: 'The #1 Realistic AI Photoshoot Generator | Unrealshot AI',
-  description: "Stop scrolling through photos you don't love. Unrealshot turns your selfies into a stunning, realistic AI photoshoot. Get the perfect shot for every profile, from professional headshots to dating pics.",
+  title: 'AI Dating Photos Generator for Tinder, Hinge & Bumble | Unrealshot AI',
+  description: 'Get 100 realistic AI dating photos pre-sorted into 5 profile lineup roles from 4–6 selfies. 100 distinct outfits, locations, and lighting setups with zero repeats.',
   keywords: [
-    'AI photoshoot generator',
-    'AI headshot generator',
-    'realistic AI photos',
-    'AI photos from selfies',
-    'professional AI photos',
-    'AI photo generator',
-    'AI portraits',
-    'studio-quality AI',
-    'LinkedIn headshot',
-    'dating profile picture'
+    'AI dating photos',
+    'AI dating photoshoot',
+    'dating profile pictures',
+    'Tinder AI photos',
+    'Hinge profile pictures',
+    'Bumble dating photos',
+    'best AI dating photo generator',
+    'realistic AI dating pictures',
+    'candid dating photos'
   ],  
     author: 'Unrealshot AI',
   siteUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://www.unrealshot.com',

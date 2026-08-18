@@ -1,35 +1,35 @@
-// FAQ data - used by both FAQ component and structured data schema
+// FAQ data - used by both FAQ component and structured data schema for SEO & LLM citations
 export const faqData = [
     {
-        q: "How does AI model training work?",
-        a: "Upload 4-5 clear photos of yourself. Our AI learns your unique facial features and creates a personalized model. Training takes about 30-45 minutes using H100 GPU clusters for maximum quality.",
+        q: "Will all 100 photos really have different outfits and locations?",
+        a: "Yes. Unlike other tools that generate multiple photos in the same repeated scenes, our delivery engine enforces that every single photo in your 100-pack has a distinct outfit, a distinct location, and a distinct lighting setup. Zero duplicates.",
     },
     {
-        q: "What are the 5 film modes?",
-        a: "Night Flash (hard shadows, flash photography), Golden Hour (warm sunlight), Gritty Vintage (B&W street style), Cine Shoot (cinematic look), and Headshot (professional LinkedIn-style portraits).",
+        q: "How is this different from hiring a dating photographer?",
+        a: "A traditional dating photographer costs $300–$800, takes 2–3 weeks, and forces you to do awkward outfit changes in public restrooms for 10–15 usable shots. Unrealshot delivers 100 unique photos in 100 different environments in about 90 minutes from 4–6 everyday selfies.",
     },
     {
-        q: "Why don't these look like typical AI photos?",
-        a: "We use a Nano-Texture Engine that focuses on real skin texture, natural lighting dynamics, and candid expressions. No plastic AI look—just hyper-realistic results.",
+        q: "Will the photos actually look like me?",
+        a: "Yes. We use your 4–6 reference selfies to lock your facial geometry, jawline, eye shape, and skin tone across all 100 shots. We accept minor variance on a few frames, which is why we include 30 free individual re-shoots.",
     },
     {
-        q: "How long does photo generation take?",
-        a: "Each photo generates in under 60 seconds. Describe your scene, pick your film mode and lighting, and watch the magic happen.",
+        q: "What if there are individual photos I don't like?",
+        a: "Every order includes 30 free custom re-shoots. You can re-generate any individual frame with a single click to get new variations while keeping the rest of your 100-pack intact.",
     },
     {
-        q: "Do I own the photos? Can I use them commercially?",
-        a: "Yes! You get full commercial license for all generated photos. Use them for LinkedIn, dating apps, business websites, or anywhere else.",
+        q: "Are AI photos allowed on Hinge, Tinder, and Bumble?",
+        a: "Yes, dating apps allow photos that accurately represent your real appearance. Because Unrealshot focuses on natural lighting, realistic focal lengths, and zero plastic smoothing, your photos present an honest, believable likeness.",
     },
     {
-        q: "What happens to my photos after I'm done?",
-        a: "We auto-delete all your uploaded photos and AI models after 7 days for your privacy. You can also request immediate deletion anytime.",
+        q: "What are the 5 profile lineup roles?",
+        a: "Your delivery arrives pre-organized into the 5 essential dating profile slots: Your Opener (first photo scroll-stopper), Your Full Body (head-to-toe shot), What You Do (your actual hobbies), Out in the World (candid lifestyle), and The Rest (profile depth).",
     },
     {
-        q: "Is this a subscription?",
-        a: "No subscriptions. We offer one-time film roll purchases: Standard Roll (10 photos) or Pro Roll (25 photos). Credits never expire.",
+        q: "Can I exclude things I don't do (like holding drinks or pets)?",
+        a: "Yes. During intake, you can exclude up to 4 specific categories: alcoholic drinks in hand, dogs/pets, bicycles, and team sports.",
     },
     {
-        q: "Can I get a refund?",
-        a: "Yes! We offer refunds for technical issues, undelivered service, or duplicate charges within 7 days. Check our refund policy for details.",
+        q: "How is my privacy protected?",
+        a: "Your uploaded selfies and generated models are strictly private, never shared or used for third-party training, and are automatically deleted from our servers after 7 days.",
     },
-]
+];
