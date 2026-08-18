@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   ArrowRight,
   X,
   Loader2,
   CheckCircle2,
   AlertCircle,
+  ChevronDown,
   Image as ImageIcon,
-  Sliders,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -59,6 +59,25 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
   const [interests, setInterests] = useState<InterestId[]>([]);
   const [excludeTags, setExcludeTags] = useState<ExcludableTag[]>([]);
   const [hobbyText, setHobbyText] = useState('');
+  const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const currentModel =
+    models.find((m) => m.id === selectedModelId) || models[0];
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsModelDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const toggleInterest = (id: InterestId) => {
     setInterests((prev) =>
@@ -84,24 +103,135 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground py-6 sm:py-10 px-4 sm:px-6">
+    <div className="min-h-screen bg-background text-foreground py-6 sm:py-8 px-4 sm:px-6">
       <div className="max-w-2xl mx-auto space-y-6">
-        {/* Studio Header Bar */}
+        {/* Top Header Bar with Integrated Face Model Selector */}
         <div className="flex items-center justify-between pb-4 border-b border-zinc-800/80">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300">
-              <Sliders className="w-4 h-4" strokeWidth={1.5} />
-            </div>
-            <div>
-              <h1 className="text-sm font-semibold text-white tracking-tight">
-                New Photoshoot
-              </h1>
-              <p className="text-[11px] text-zinc-500 font-mono">
-                100 photos · 5 lineup profile roles
-              </p>
-            </div>
+          {/* Model Display / Dropdown Selector */}
+          <div className="relative" ref={dropdownRef}>
+            {models.length > 1 ? (
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
+                  className="flex items-center gap-3 p-1.5 pr-3 rounded-lg border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800/80 hover:border-zinc-700 transition-all text-left group"
+                >
+                  <div className="w-9 h-9 rounded-full overflow-hidden bg-zinc-800 border border-zinc-700/80 shrink-0">
+                    {currentModel?.samples?.[0]?.uri ? (
+                      <img
+                        src={currentModel.samples[0].uri}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-zinc-500">
+                        <ImageIcon className="w-4 h-4" />
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-semibold text-white tracking-tight">
+                        {currentModel?.name || 'Select Model'}
+                      </span>
+                      <ChevronDown
+                        className={`w-3.5 h-3.5 text-zinc-400 transition-transform duration-200 ${
+                          isModelDropdownOpen ? 'rotate-180 text-white' : ''
+                        }`}
+                        strokeWidth={1.5}
+                      />
+                    </div>
+                    <p className="text-[10px] text-zinc-500 font-mono">
+                      {currentModel?.samples?.length || 0} sample photos · Switch
+                    </p>
+                  </div>
+                </button>
+
+                {/* Dropdown Menu */}
+                {isModelDropdownOpen && (
+                  <div className="absolute left-0 top-full mt-2 w-72 bg-zinc-950 border border-zinc-800 rounded-lg p-1.5 shadow-2xl z-30 space-y-1 animate-in fade-in zoom-in-95 duration-150">
+                    <div className="px-2.5 py-1 text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
+                      Select Face Model ({models.length})
+                    </div>
+                    {models.map((model) => {
+                      const isActive = selectedModelId === model.id;
+                      const avatar = model.samples?.[0]?.uri;
+                      return (
+                        <button
+                          key={model.id}
+                          type="button"
+                          onClick={() => {
+                            onSelectModel(model.id);
+                            setIsModelDropdownOpen(false);
+                          }}
+                          className={`w-full flex items-center gap-2.5 p-2 rounded-lg text-left transition-all ${
+                            isActive
+                              ? 'bg-zinc-900 text-white font-semibold'
+                              : 'text-zinc-400 hover:bg-zinc-900/60 hover:text-zinc-200'
+                          }`}
+                        >
+                          <div className="w-7 h-7 rounded-full overflow-hidden bg-zinc-800 border border-zinc-700 shrink-0">
+                            {avatar ? (
+                              <img
+                                src={avatar}
+                                alt=""
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-zinc-500">
+                                <ImageIcon className="w-3.5 h-3.5" />
+                              </div>
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs truncate">{model.name || 'Model'}</p>
+                            <p className="text-[10px] text-zinc-500 font-mono">
+                              {model.samples?.length || 0} samples
+                            </p>
+                          </div>
+                          {isActive && (
+                            <CheckCircle2 className="w-3.5 h-3.5 text-white shrink-0" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Single Model Header Display */
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full overflow-hidden bg-zinc-800 border border-zinc-700/80 shrink-0">
+                  {currentModel?.samples?.[0]?.uri ? (
+                    <img
+                      src={currentModel.samples[0].uri}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-zinc-500">
+                      <ImageIcon className="w-4 h-4" />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold text-white tracking-tight">
+                      {currentModel?.name || 'Trained Face Model'}
+                    </span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-zinc-900 text-zinc-400 border border-zinc-800">
+                      Active
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-zinc-500 font-mono">
+                    {currentModel?.samples?.length || 0} training samples
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
+          {/* Right Action: Cancel Button */}
           {showCancel && (
             <button
               onClick={onCancel}
@@ -112,62 +242,10 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
           )}
         </div>
 
-        {/* Form Container */}
-        <div className="space-y-6">
-          {/* 1. Model Selection */}
-          <div className="space-y-2.5">
-            <label className="text-xs font-medium text-zinc-300">
-              Face Model
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {models.map((model) => {
-                const isActive = selectedModelId === model.id;
-                const avatarUrl = model.samples?.[0]?.uri;
-                return (
-                  <button
-                    key={model.id}
-                    onClick={() => onSelectModel(model.id)}
-                    className={`flex items-center gap-3 p-3 rounded-lg border text-left transition-all active:scale-[0.99] ${
-                      isActive
-                        ? 'bg-zinc-900 border-white text-white'
-                        : 'bg-zinc-950/70 border-zinc-800/90 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
-                    }`}
-                  >
-                    <div className="w-9 h-9 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-zinc-700">
-                      {avatarUrl ? (
-                        <img
-                          src={avatarUrl}
-                          alt=""
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-zinc-500">
-                          <ImageIcon className="w-4 h-4" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-semibold text-white truncate">
-                        {model.name || 'Trained Model'}
-                      </p>
-                      <p className="text-[11px] text-zinc-500 font-mono">
-                        {model.samples?.length || 0} samples
-                      </p>
-                    </div>
-                    {isActive && (
-                      <CheckCircle2
-                        className="w-4 h-4 text-white shrink-0"
-                        strokeWidth={2}
-                      />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* 2. Wardrobe Tone */}
-          <div className="space-y-2.5">
+        {/* Configuration Form Body */}
+        <div className="space-y-5">
+          {/* 1. Wardrobe Tone */}
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-xs font-medium text-zinc-300">
                 Primary Wardrobe Look
@@ -206,8 +284,8 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
             </div>
           </div>
 
-          {/* 3. Activities & Lifestyle */}
-          <div className="space-y-2.5">
+          {/* 2. Activities & Lifestyle */}
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-xs font-medium text-zinc-300">
                 Activities & Interests
@@ -239,8 +317,8 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
             </div>
           </div>
 
-          {/* 4. Exclusions */}
-          <div className="space-y-2.5">
+          {/* 3. Exclusions */}
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-xs font-medium text-zinc-300">
                 Leave Out <span className="text-zinc-500 font-normal">(Optional)</span>
@@ -269,7 +347,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
             </div>
           </div>
 
-          {/* 5. Custom Hobbies Input */}
+          {/* 4. Custom Specific Hobbies */}
           <div className="space-y-2">
             <label className="text-xs font-medium text-zinc-300">
               Custom Specific Hobbies{' '}
