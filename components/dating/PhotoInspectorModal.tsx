@@ -8,20 +8,26 @@ import {
   ChevronLeft,
   ChevronRight,
   Sparkles,
-  Zap,
-  CheckCircle2,
   Loader2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  LINEUP_LABELS,
+  LINEUP_HINTS,
+  lineupRoleFor,
+  type LineupRole,
+} from '@/lib/dating/lineup';
+import type { DatingBucket } from '@/lib/dating/types';
 
 export interface PhotoItem {
   id: string;
   slot: number;
-  bucket: string;
+  bucket: DatingBucket;
   imageUrl: string;
   imageWidth?: number | null;
   imageHeight?: number | null;
-  bucketLabel?: string;
+  role?: LineupRole;
+  roleLabel?: string;
   roleHint?: string;
 }
 
@@ -36,40 +42,12 @@ interface PhotoInspectorModalProps {
   customCreditsRemaining: number;
 }
 
-const BUCKET_METADATA: Record<
-  string,
-  { label: string; tag: string; hint: string; color: string }
-> = {
-  anchor: {
-    label: 'The Anchor Portrait',
-    tag: 'Your Opener',
-    hint: 'Trust + facial clarity. Lead your dating profile with this photo — clear eye contact, warm natural smile.',
-    color: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30',
-  },
-  social: {
-    label: 'The Social Candid',
-    tag: 'Social Proof',
-    hint: 'Warmth + approachable energy. Looks like a candid shot taken across the table by a friend at a cafe or lounge.',
-    color: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-  },
-  travel: {
-    label: 'The Travel Lifestyle',
-    tag: 'Adventure & Depth',
-    hint: 'Worldliness + lifestyle. Natural environmental storytelling without stiff tourist posing.',
-    color: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-  },
-  active: {
-    label: 'The Active Vitality',
-    tag: 'Momentum & Fitness',
-    hint: 'Natural athleticism without gym-mirror ego. Outdoor motion, trail walks, or recreational energy.',
-    color: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
-  },
-  street: {
-    label: 'The Casual Streetwear',
-    tag: 'Effortless Style',
-    hint: 'Urban confidence + clean fit. Textures, layers, and natural daylight city vibes.',
-    color: 'bg-sky-500/20 text-sky-300 border-sky-500/30',
-  },
+const ROLE_COLORS: Record<LineupRole, string> = {
+  opener: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+  fullBody: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40',
+  whatYouDo: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+  outThere: 'bg-sky-500/20 text-sky-300 border-sky-500/40',
+  more: 'bg-zinc-800 text-zinc-300 border-zinc-700',
 };
 
 export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
@@ -118,12 +96,10 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
 
   if (!isOpen || !photo) return null;
 
-  const bucketInfo = BUCKET_METADATA[photo.bucket.toLowerCase()] || {
-    label: photo.bucketLabel || photo.bucket,
-    tag: 'Dating Photo',
-    hint: 'High-converting dating photo curated for your profile.',
-    color: 'bg-zinc-800 text-zinc-300 border-zinc-700',
-  };
+  const role = photo.role || lineupRoleFor(photo);
+  const roleLabel = LINEUP_LABELS[role] || 'Dating Photo';
+  const roleHint = LINEUP_HINTS[role] || 'High-converting dating profile photo.';
+  const colorClass = ROLE_COLORS[role] || 'bg-zinc-800 text-zinc-300 border-zinc-700';
 
   const isMock = photo.imageUrl.startsWith('data:image/svg+xml');
 
@@ -154,7 +130,7 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
           <div className="relative max-w-full max-h-[70vh] aspect-[4/5] flex items-center justify-center overflow-hidden rounded-xl shadow-2xl border border-zinc-800/80 bg-zinc-900">
             <img
               src={photo.imageUrl}
-              alt={`${bucketInfo.label} - Photo #${photo.slot}`}
+              alt={`${roleLabel} - Photo #${photo.slot}`}
               className="w-full h-full object-cover select-none"
             />
 
@@ -185,9 +161,9 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span
-                className={`text-xs font-mono font-medium px-2.5 py-1 rounded-full border ${bucketInfo.color}`}
+                className={`text-xs font-mono font-medium px-2.5 py-1 rounded-full border ${colorClass}`}
               >
-                {bucketInfo.tag}
+                {roleLabel.toUpperCase()}
               </span>
               <button
                 onClick={onClose}
@@ -199,16 +175,16 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
 
             <div>
               <h3 className="text-xl font-bold text-white tracking-tight">
-                {bucketInfo.label}
+                {roleLabel}
               </h3>
               <p className="text-xs text-zinc-400 font-mono mt-0.5">
-                Photo #{photo.slot} in your collection
+                Photo #{photo.slot} in your photoshoot
               </p>
             </div>
 
             <div className="p-3.5 bg-zinc-900/60 border border-zinc-800 rounded-xl">
-              <p className="text-xs text-zinc-300 leading-relaxed">
-                {bucketInfo.hint}
+              <p className="text-xs text-zinc-300 leading-relaxed font-sans">
+                {roleHint}
               </p>
             </div>
           </div>
@@ -218,7 +194,7 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
             {/* Download Button */}
             <a
               href={photo.imageUrl}
-              download={`dating-photo-${photo.bucket}-${photo.slot}.${isMock ? 'svg' : 'png'}`}
+              download={`dating-photo-${role}-${photo.slot}.${isMock ? 'svg' : 'png'}`}
               target="_blank"
               rel="noreferrer"
               className="w-full"
@@ -242,7 +218,7 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
               {isRegenerating ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  Generating New Variation...
+                  Generating Variation...
                 </>
               ) : (
                 <>

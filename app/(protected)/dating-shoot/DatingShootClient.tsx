@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
 import JSZip from 'jszip';
 import {
   Loader2,
@@ -20,8 +19,15 @@ import {
   type StylePref,
 } from '@/lib/dating/types';
 import { type InterestId } from '@/lib/dating/interests';
+import {
+  groupByLineup,
+  lineupRoleFor,
+  LINEUP_LABELS,
+  LINEUP_HINTS,
+  type LineupRole,
+} from '@/lib/dating/lineup';
 import { StudioHeader } from '@/components/dating/StudioHeader';
-import { ArchetypePillNav, type ArchetypeFilter } from '@/components/dating/ArchetypePillNav';
+import { LineupPillNav, type LineupFilter } from '@/components/dating/LineupPillNav';
 import {
   PhotoInspectorModal,
   type PhotoItem,
@@ -70,14 +76,6 @@ type StatusResponse = {
   progressPercent: number;
 };
 
-const BUCKET_LABELS: Record<string, string> = {
-  anchor: 'The Anchor Portrait',
-  social: 'The Social Candid',
-  travel: 'The Travel Lifestyle',
-  active: 'The Active Vitality',
-  street: 'The Casual Streetwear',
-};
-
 export function DatingShootClient({
   models,
   orders,
@@ -97,7 +95,7 @@ export function DatingShootClient({
     initialOrderId || orders[0]?.id || null
   );
   const [status, setStatus] = useState<StatusResponse | null>(null);
-  const [activeTab, setActiveTab] = useState<ArchetypeFilter>('all');
+  const [activeTab, setActiveTab] = useState<LineupFilter>('all');
 
   // Modals state
   const [isIntakeOpen, setIsIntakeOpen] = useState(false);
@@ -220,22 +218,54 @@ export function DatingShootClient({
     }
   };
 
-  // Flat list of all photos
+  // Flat list of all photos mapped with Lineup Roles
   const allPhotos: PhotoItem[] = useMemo(() => {
     if (!status?.byBucket) return [];
     return DATING_BUCKETS.flatMap((bucket) =>
-      (status.byBucket[bucket]?.photos || []).map((photo) => ({
-        ...photo,
-        bucket,
-        bucketLabel: BUCKET_LABELS[bucket] || bucket,
-      }))
+      (status.byBucket[bucket]?.photos || []).map((photo) => {
+        const role = lineupRoleFor({
+          bucket,
+          slot: photo.slot,
+          imageWidth: photo.imageWidth,
+          imageHeight: photo.imageHeight,
+        });
+        return {
+          ...photo,
+          bucket,
+          role,
+          roleLabel: LINEUP_LABELS[role],
+          roleHint: LINEUP_HINTS[role],
+        };
+      })
     );
   }, [status]);
+
+  // Grouping by Lineup Sections
+  const lineupSections = useMemo(() => {
+    return groupByLineup(allPhotos);
+  }, [allPhotos]);
+
+  // Counts by role
+  const roleCounts: Record<LineupRole, number> = useMemo(() => {
+    const counts: Record<LineupRole, number> = {
+      opener: 0,
+      fullBody: 0,
+      whatYouDo: 0,
+      outThere: 0,
+      more: 0,
+    };
+    for (const p of allPhotos) {
+      if (p.role) {
+        counts[p.role] = (counts[p.role] || 0) + 1;
+      }
+    }
+    return counts;
+  }, [allPhotos]);
 
   // Photos filtered by active tab
   const displayedPhotos = useMemo(() => {
     if (activeTab === 'all') return allPhotos;
-    return allPhotos.filter((p) => p.bucket === activeTab);
+    return allPhotos.filter((p) => p.role === activeTab);
   }, [allPhotos, activeTab]);
 
   // Open Lightbox Modal for a photo
@@ -244,7 +274,7 @@ export function DatingShootClient({
     setIsInspectorOpen(true);
   };
 
-  // ZIP Download Generator
+  // ZIP Download Generator organized by Lineup folders
   const downloadAllZip = async () => {
     if (!status || !activeOrderId) return;
     setZipLoading(true);
@@ -255,17 +285,14 @@ export function DatingShootClient({
       let count = 0;
       const totalToDownload = status.counts.completed;
 
-      for (const bucket of DATING_BUCKETS) {
-        const bucketData = status.byBucket[bucket];
-        if (!bucketData) continue;
-
-        const folderName = BUCKET_LABELS[bucket].replace(/\s+/g, '-');
+      for (const [index, section] of lineupSections.entries()) {
+        const folderName = `${String(index + 1).padStart(2, '0')}-${section.label.replace(/\s+/g, '-')}`;
         const folder = zip.folder(folderName);
 
-        for (const [position, photo] of bucketData.photos.entries()) {
+        for (const [position, photo] of section.photos.entries()) {
           count++;
           setZipProgress(`Adding ${count} of ${totalToDownload} photos...`);
-          const base = `Photo-${String(position + 1).padStart(2, '0')}`;
+          const base = `${String(position + 1).padStart(2, '0')}`;
 
           try {
             if (photo.imageUrl.startsWith('data:')) {
@@ -316,7 +343,7 @@ export function DatingShootClient({
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         {/* 1. Studio Header & Controls */}
         <StudioHeader
           models={models}
@@ -342,89 +369,185 @@ export function DatingShootClient({
           isRetryLoading={loading}
         />
 
-        {/* 2. Archetype Filter Bar */}
+        {/* 2. Lineup Role Filter Tabs */}
         {status && (
-          <ArchetypePillNav
+          <LineupPillNav
             activeTab={activeTab}
             onTabChange={setActiveTab}
-            countsByBucket={status.byBucket}
+            roleCounts={roleCounts}
             totalCompleted={status.counts.completed}
           />
         )}
 
         {/* 3. Photo Gallery Grid */}
         {displayedPhotos.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
-            {displayedPhotos.map((p) => {
-              const isMock = p.imageUrl.startsWith('data:image/svg+xml');
-              const isThisRegenerating = regenLoadingId === p.id;
-
-              return (
-                <div
-                  key={p.id}
-                  onClick={() => openInspector(p)}
-                  className="group relative aspect-[4/5] rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800/80 hover:border-zinc-500 shadow-md transition-all duration-200 cursor-pointer select-none"
-                >
-                  {/* Photo Display */}
-                  <img
-                    src={p.imageUrl}
-                    alt={`${p.bucketLabel} #${p.slot}`}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    loading="lazy"
-                  />
-
-                  {/* Top Slot Pill */}
-                  <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono px-2 py-0.5 rounded-full z-10">
-                    #{p.slot}
+          activeTab === 'all' ? (
+            /* Curated Lineup View (Grouped by Job) */
+            <div className="space-y-10">
+              {lineupSections.map((section) => (
+                <div key={section.role} className="space-y-3">
+                  <div className="flex items-baseline justify-between border-b border-zinc-800/80 pb-2">
+                    <div className="flex items-center gap-2.5">
+                      <h3 className="text-base font-bold text-white">
+                        {section.label}
+                      </h3>
+                      <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400">
+                        {section.photos.length}
+                      </span>
+                    </div>
+                    <span className="text-xs text-zinc-500 font-mono hidden sm:inline">
+                      {section.hint}
+                    </span>
                   </div>
 
-                  {/* Hover Overlay with Quick Actions */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-3 flex flex-col justify-between z-20">
-                    {/* Top Right Zoom Icon */}
-                    <div className="flex justify-end">
-                      <div className="w-7 h-7 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center border border-white/10">
-                        <Maximize2 className="w-3.5 h-3.5" />
-                      </div>
-                    </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
+                    {section.photos.map((p) => {
+                      const isMock = p.imageUrl.startsWith('data:image/svg+xml');
+                      const isThisRegenerating = regenLoadingId === p.id;
 
-                    {/* Bottom Action Buttons */}
-                    <div
-                      className="space-y-1.5"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <div className="text-[11px] font-medium text-white truncate drop-shadow">
-                        {p.bucketLabel}
-                      </div>
+                      return (
+                        <div
+                          key={p.id}
+                          onClick={() => openInspector(p)}
+                          className="group relative aspect-[4/5] rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800/80 hover:border-zinc-500 shadow-md transition-all duration-200 cursor-pointer select-none"
+                        >
+                          {/* Photo Display */}
+                          <img
+                            src={p.imageUrl}
+                            alt={`${section.label} #${p.slot}`}
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            loading="lazy"
+                          />
 
-                      <div className="flex gap-1.5">
-                        <a
-                          href={p.imageUrl}
-                          download={`dating-photo-${p.bucket}-${p.slot}.${isMock ? 'svg' : 'png'}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="flex-1 flex items-center justify-center gap-1 text-[11px] font-medium bg-white text-black hover:bg-zinc-200 rounded-lg py-1.5 transition-colors"
-                        >
-                          <Download className="w-3 h-3" /> Save
-                        </a>
-                        <button
-                          onClick={() => handleRegenerate(p.id)}
-                          disabled={isThisRegenerating}
-                          className="flex-1 flex items-center justify-center gap-1 text-[11px] font-medium bg-zinc-800/90 hover:bg-zinc-700 text-white rounded-lg py-1.5 border border-zinc-700 transition-colors"
-                        >
-                          {isThisRegenerating ? (
-                            <Loader2 className="w-3 h-3 animate-spin" />
-                          ) : (
-                            <RefreshCw className="w-3 h-3" />
-                          )}
-                          Regen
-                        </button>
-                      </div>
-                    </div>
+                          {/* Top Slot Pill */}
+                          <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono px-2 py-0.5 rounded-full z-10">
+                            #{p.slot}
+                          </div>
+
+                          {/* Hover Overlay with Quick Actions */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-3 flex flex-col justify-between z-20">
+                            {/* Top Right Zoom Icon */}
+                            <div className="flex justify-end">
+                              <div className="w-7 h-7 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center border border-white/10">
+                                <Maximize2 className="w-3.5 h-3.5" />
+                              </div>
+                            </div>
+
+                            {/* Bottom Action Buttons */}
+                            <div
+                              className="space-y-1.5"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <div className="text-[11px] font-medium text-white truncate drop-shadow">
+                                {section.label}
+                              </div>
+
+                              <div className="flex gap-1.5">
+                                <a
+                                  href={p.imageUrl}
+                                  download={`dating-photo-${section.role}-${p.slot}.${isMock ? 'svg' : 'png'}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="flex-1 flex items-center justify-center gap-1 text-[11px] font-medium bg-white text-black hover:bg-zinc-200 rounded-lg py-1.5 transition-colors"
+                                >
+                                  <Download className="w-3 h-3" /> Save
+                                </a>
+                                <button
+                                  onClick={() => handleRegenerate(p.id)}
+                                  disabled={isThisRegenerating}
+                                  className="flex-1 flex items-center justify-center gap-1 text-[11px] font-medium bg-zinc-800/90 hover:bg-zinc-700 text-white rounded-lg py-1.5 border border-zinc-700 transition-colors"
+                                >
+                                  {isThisRegenerating ? (
+                                    <Loader2 className="w-3 h-3 animate-spin" />
+                                  ) : (
+                                    <RefreshCw className="w-3 h-3" />
+                                  )}
+                                  Regen
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          ) : (
+            /* Single Role Filtered View */
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
+              {displayedPhotos.map((p) => {
+                const isMock = p.imageUrl.startsWith('data:image/svg+xml');
+                const isThisRegenerating = regenLoadingId === p.id;
+
+                return (
+                  <div
+                    key={p.id}
+                    onClick={() => openInspector(p)}
+                    className="group relative aspect-[4/5] rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800/80 hover:border-zinc-500 shadow-md transition-all duration-200 cursor-pointer select-none"
+                  >
+                    {/* Photo Display */}
+                    <img
+                      src={p.imageUrl}
+                      alt={`${p.roleLabel} #${p.slot}`}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                    />
+
+                    {/* Top Slot Pill */}
+                    <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono px-2 py-0.5 rounded-full z-10">
+                      #{p.slot}
+                    </div>
+
+                    {/* Hover Overlay with Quick Actions */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-3 flex flex-col justify-between z-20">
+                      {/* Top Right Zoom Icon */}
+                      <div className="flex justify-end">
+                        <div className="w-7 h-7 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center border border-white/10">
+                          <Maximize2 className="w-3.5 h-3.5" />
+                        </div>
+                      </div>
+
+                      {/* Bottom Action Buttons */}
+                      <div
+                        className="space-y-1.5"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div className="text-[11px] font-medium text-white truncate drop-shadow">
+                          {p.roleLabel}
+                        </div>
+
+                        <div className="flex gap-1.5">
+                          <a
+                            href={p.imageUrl}
+                            download={`dating-photo-${p.role}-${p.slot}.${isMock ? 'svg' : 'png'}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex-1 flex items-center justify-center gap-1 text-[11px] font-medium bg-white text-black hover:bg-zinc-200 rounded-lg py-1.5 transition-colors"
+                          >
+                            <Download className="w-3 h-3" /> Save
+                          </a>
+                          <button
+                            onClick={() => handleRegenerate(p.id)}
+                            disabled={isThisRegenerating}
+                            className="flex-1 flex items-center justify-center gap-1 text-[11px] font-medium bg-zinc-800/90 hover:bg-zinc-700 text-white rounded-lg py-1.5 border border-zinc-700 transition-colors"
+                          >
+                            {isThisRegenerating ? (
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                            ) : (
+                              <RefreshCw className="w-3 h-3" />
+                            )}
+                            Regen
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )
         ) : isDeveloping ? (
           /* Developing Empty Shimmer Grid */
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
@@ -450,7 +573,7 @@ export function DatingShootClient({
               Ready for Your Dating Photoshoot?
             </h3>
             <p className="text-zinc-400 text-sm mb-6 max-w-md mx-auto">
-              Generate 100 hyper-realistic dating photos across 5 proven archetypes (Anchor, Social, Travel, Active, and Streetwear).
+              Generate 100 hyper-realistic dating photos structured into high-converting profile roles (Your Opener, Full Body, What You Do, Out in the World, and The Rest).
             </p>
             <Button
               onClick={() => setIsIntakeOpen(true)}
