@@ -4,14 +4,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import JSZip from 'jszip';
 import {
   Loader2,
-  Sparkles,
   Download,
   RefreshCw,
   Maximize2,
   Image as ImageIcon,
-  Plus,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import {
   DATING_BUCKETS,
   type DatingBucket,
@@ -32,7 +29,7 @@ import {
   PhotoInspectorModal,
   type PhotoItem,
 } from '@/components/dating/PhotoInspectorModal';
-import { StudioIntakeModal } from '@/components/dating/StudioIntakeModal';
+import { StudioIntakeView } from '@/components/dating/StudioIntakeView';
 
 type Model = {
   id: number;
@@ -97,8 +94,10 @@ export function DatingShootClient({
   const [status, setStatus] = useState<StatusResponse | null>(null);
   const [activeTab, setActiveTab] = useState<LineupFilter>('all');
 
-  // Modals state
-  const [isIntakeOpen, setIsIntakeOpen] = useState(false);
+  // If no orders exist, we force the intake view open.
+  const hasOrders = orders.length > 0 || activeOrderId !== null;
+  const [isIntakeOpen, setIsIntakeOpen] = useState(!hasOrders);
+  
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
 
@@ -341,9 +340,27 @@ export function DatingShootClient({
   const isDeveloping =
     status?.order.status === 'developing' || status?.order.status === 'queued';
 
+  // If intake is open, show the full-page modern setup view instead of the dashboard.
+  if (isIntakeOpen) {
+    return (
+      <StudioIntakeView
+        models={models}
+        selectedModelId={modelId}
+        onSelectModel={setModelId}
+        onSubmit={handleLaunchShoot}
+        onCancel={() => setIsIntakeOpen(false)}
+        isLoading={loading}
+        creditError={creditError}
+        generalError={error}
+        showCancel={hasOrders}
+      />
+    );
+  }
+
+  // Otherwise, render the main Studio dashboard
   return (
     <div className="min-h-screen bg-background text-foreground pb-20">
-      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         {/* 1. Studio Header & Controls */}
         <StudioHeader
           models={models}
@@ -383,19 +400,19 @@ export function DatingShootClient({
         {displayedPhotos.length > 0 ? (
           activeTab === 'all' ? (
             /* Curated Lineup View (Grouped by Job) */
-            <div className="space-y-10">
+            <div className="space-y-12 pt-4">
               {lineupSections.map((section) => (
-                <div key={section.role} className="space-y-3">
-                  <div className="flex items-baseline justify-between border-b border-zinc-800/80 pb-2">
+                <div key={section.role} className="space-y-4">
+                  <div className="flex items-baseline justify-between border-b border-zinc-800/80 pb-3">
                     <div className="flex items-center gap-2.5">
-                      <h3 className="text-base font-bold text-white">
+                      <h3 className="text-xl font-semibold text-white tracking-tight">
                         {section.label}
                       </h3>
-                      <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-400">
                         {section.photos.length}
                       </span>
                     </div>
-                    <span className="text-xs text-zinc-500 font-mono hidden sm:inline">
+                    <span className="text-xs text-zinc-500 font-sans hidden sm:inline">
                       {section.hint}
                     </span>
                   </div>
@@ -420,7 +437,7 @@ export function DatingShootClient({
                           />
 
                           {/* Top Slot Pill */}
-                          <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono px-2 py-0.5 rounded-full z-10">
+                          <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono px-2 py-0.5 rounded z-10">
                             #{p.slot}
                           </div>
 
@@ -429,7 +446,7 @@ export function DatingShootClient({
                             {/* Top Right Zoom Icon */}
                             <div className="flex justify-end">
                               <div className="w-7 h-7 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center border border-white/10">
-                                <Maximize2 className="w-3.5 h-3.5" />
+                                <Maximize2 className="w-3.5 h-3.5" strokeWidth={1.5} />
                               </div>
                             </div>
 
@@ -450,7 +467,7 @@ export function DatingShootClient({
                                   rel="noreferrer"
                                   className="flex-1 flex items-center justify-center gap-1 text-[11px] font-medium bg-white text-black hover:bg-zinc-200 rounded-lg py-1.5 transition-colors"
                                 >
-                                  <Download className="w-3 h-3" /> Save
+                                  <Download className="w-3 h-3" strokeWidth={1.5} /> Save
                                 </a>
                                 <button
                                   onClick={() => handleRegenerate(p.id)}
@@ -460,7 +477,7 @@ export function DatingShootClient({
                                   {isThisRegenerating ? (
                                     <Loader2 className="w-3 h-3 animate-spin" />
                                   ) : (
-                                    <RefreshCw className="w-3 h-3" />
+                                    <RefreshCw className="w-3 h-3" strokeWidth={1.5} />
                                   )}
                                   Regen
                                 </button>
@@ -476,7 +493,7 @@ export function DatingShootClient({
             </div>
           ) : (
             /* Single Role Filtered View */
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4 pt-4">
               {displayedPhotos.map((p) => {
                 const isMock = p.imageUrl.startsWith('data:image/svg+xml');
                 const isThisRegenerating = regenLoadingId === p.id;
@@ -496,7 +513,7 @@ export function DatingShootClient({
                     />
 
                     {/* Top Slot Pill */}
-                    <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono px-2 py-0.5 rounded-full z-10">
+                    <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono px-2 py-0.5 rounded z-10">
                       #{p.slot}
                     </div>
 
@@ -505,7 +522,7 @@ export function DatingShootClient({
                       {/* Top Right Zoom Icon */}
                       <div className="flex justify-end">
                         <div className="w-7 h-7 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center border border-white/10">
-                          <Maximize2 className="w-3.5 h-3.5" />
+                          <Maximize2 className="w-3.5 h-3.5" strokeWidth={1.5} />
                         </div>
                       </div>
 
@@ -526,7 +543,7 @@ export function DatingShootClient({
                             rel="noreferrer"
                             className="flex-1 flex items-center justify-center gap-1 text-[11px] font-medium bg-white text-black hover:bg-zinc-200 rounded-lg py-1.5 transition-colors"
                           >
-                            <Download className="w-3 h-3" /> Save
+                            <Download className="w-3 h-3" strokeWidth={1.5} /> Save
                           </a>
                           <button
                             onClick={() => handleRegenerate(p.id)}
@@ -536,7 +553,7 @@ export function DatingShootClient({
                             {isThisRegenerating ? (
                               <Loader2 className="w-3 h-3 animate-spin" />
                             ) : (
-                              <RefreshCw className="w-3 h-3" />
+                              <RefreshCw className="w-3 h-3" strokeWidth={1.5} />
                             )}
                             Regen
                           </button>
@@ -550,59 +567,40 @@ export function DatingShootClient({
           )
         ) : isDeveloping ? (
           /* Developing Empty Shimmer Grid */
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4 pt-4">
             {Array.from({ length: 10 }).map((_, i) => (
               <div
                 key={i}
                 className="aspect-[4/5] rounded-2xl bg-zinc-900/60 border border-zinc-800 animate-pulse flex flex-col items-center justify-center p-4 text-center"
               >
-                <ImageIcon className="w-6 h-6 text-zinc-700 mb-2" />
+                <ImageIcon className="w-6 h-6 text-zinc-700 mb-2" strokeWidth={1.5} />
                 <span className="text-xs text-zinc-600 font-mono">
                   Developing photo #{i + 1}...
                 </span>
               </div>
             ))}
           </div>
-        ) : (
-          /* Empty / Welcome State */
-          <div className="max-w-xl mx-auto my-12 text-center p-8 bg-zinc-950 border border-zinc-800/80 rounded-3xl shadow-xl">
-            <div className="w-14 h-14 rounded-2xl bg-accent/10 border border-accent/20 text-accent flex items-center justify-center mx-auto mb-4">
-              <Sparkles className="w-7 h-7" />
-            </div>
-            <h3 className="text-xl font-bold text-white mb-2">
-              Ready for Your Dating Photoshoot?
-            </h3>
-            <p className="text-zinc-400 text-sm mb-6 max-w-md mx-auto">
-              Generate 100 hyper-realistic dating photos structured into high-converting profile roles (Your Opener, Full Body, What You Do, Out in the World, and The Rest).
-            </p>
-            <Button
-              onClick={() => setIsIntakeOpen(true)}
-              className="bg-white text-black hover:bg-zinc-200 font-bold px-6 py-5 rounded-lg shadow-lg transition-all active:scale-95"
-            >
-              <Plus className="w-4 h-4 mr-2" strokeWidth={1.5} /> Start Photoshoot (100 Photos)
-            </Button>
-          </div>
-        )}
+        ) : null}
 
         {/* 4. Past Shoots Drawer / History */}
         {orders.length > 1 && (
-          <div className="pt-8 border-t border-zinc-900">
-            <h3 className="text-xs font-mono uppercase tracking-widest text-zinc-500 mb-3">
+          <div className="pt-12 border-t border-zinc-900 mt-12">
+            <h3 className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-4">
               Previous Photoshoots ({orders.length})
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
               {orders.map((o) => (
                 <button
                   key={o.id}
                   onClick={() => setActiveOrderId(o.id)}
-                  className={`text-left p-3.5 rounded-xl border transition-all text-xs flex items-center justify-between ${
+                  className={`text-left p-4 rounded-xl border transition-all flex items-center justify-between ${
                     activeOrderId === o.id
-                      ? 'border-accent bg-accent/5 text-white'
-                      : 'border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:text-white hover:border-zinc-700'
+                      ? 'border-white bg-zinc-900 text-white'
+                      : 'border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white hover:border-zinc-700 hover:bg-zinc-900'
                   }`}
                 >
                   <div>
-                    <div className="font-semibold capitalize text-white mb-0.5">
+                    <div className="font-semibold text-sm capitalize text-white mb-0.5">
                       {o.status.replace('_', ' ')}
                     </div>
                     <div className="text-[11px] text-zinc-500 font-mono">
@@ -613,8 +611,8 @@ export function DatingShootClient({
                       })}
                     </div>
                   </div>
-                  <span className="text-[11px] font-mono text-zinc-500">
-                    {o.custom_credits_remaining} credits
+                  <span className="text-[11px] font-mono text-zinc-500 bg-zinc-900 px-2 py-1 rounded">
+                    {o.custom_credits_remaining} cr
                   </span>
                 </button>
               ))}
@@ -633,19 +631,6 @@ export function DatingShootClient({
         onRegenerate={handleRegenerate}
         isRegenerating={regenLoadingId === selectedPhoto?.id}
         customCreditsRemaining={status?.order.custom_credits_remaining || 0}
-      />
-
-      {/* 6. Studio Intake Modal */}
-      <StudioIntakeModal
-        isOpen={isIntakeOpen}
-        onClose={() => setIsIntakeOpen(false)}
-        models={models}
-        selectedModelId={modelId}
-        onSelectModel={setModelId}
-        onSubmit={handleLaunchShoot}
-        isLoading={loading}
-        creditError={creditError}
-        generalError={error}
       />
     </div>
   );
