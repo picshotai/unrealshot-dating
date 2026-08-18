@@ -153,8 +153,7 @@ export function CreateModelClient() {
       const uploadPromises = images.map(async (file, i) => {
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('modelId', String(modelId));
-        formData.append('index', String(i));
+        formData.append('filename', file.name);
 
         setUploadProgress((prev) => {
           if (!prev) return null;
@@ -165,7 +164,7 @@ export function CreateModelClient() {
 
         try {
           const result = await uploadWithProgress(
-            '/api/models/upload',
+            `/api/models/${modelId}/samples`,
             formData,
             (percent) => {
               setUploadProgress((prev) => {
