@@ -4,14 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "trigger/**"
-      - "trigger.config.ts"
-      - "lib/dating/**"
-      - "lib/r2.ts"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/deploy-trigger-prod.yml"
   workflow_dispatch:
 
 concurrency:
