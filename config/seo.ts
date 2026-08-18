@@ -344,6 +344,7 @@ export const robotsConfig = {
       '/account/',
       '/settings/',
       '/admin/',
+      '/landing-draft',
     ],
   },
   sitemap: `${defaultSEO.siteUrl}/sitemap.xml`,
