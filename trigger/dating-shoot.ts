@@ -19,7 +19,7 @@ import { sendDatingShootReadyNotification } from "@/lib/dating/notifications";
 import {
   DATING_BUCKETS,
   MIN_COMPLETE_THRESHOLD,
-  PHOTOS_PER_BUCKET,
+  SLOTS_PER_BUCKET,
   type DatingBucket,
 } from "@/lib/dating/types";
 
@@ -39,7 +39,13 @@ export type GenerateSingleImagePayload = {
   batchId: string; // = orderId
   modelId: number;
   bucket: DatingBucket;
-  index: number; // 0..19
+  index: number; // 0-based slot index, 0..SLOTS_PER_BUCKET-1
+  /**
+   * Set by the orchestrator in sample mode. Sample mode used to key off "slot
+   * 1", which stopped being reliable once a delivery drew 20 of 26 slots and
+   * slot 1 could simply not be selected.
+   */
+  useMock?: boolean;
   prompt: string;
   referenceImageUrls: string[];
   /** Authored output size. Omitted on legacy rows; resolved from the prompt. */
@@ -92,8 +98,12 @@ export const generateSingleDatingImage = task({
       imageHeight,
     } = payload;
 
-    if (index < 0 || index >= PHOTOS_PER_BUCKET) {
-      throw new Error(`Invalid index ${index}; expected 0..${PHOTOS_PER_BUCKET - 1}`);
+    // Bounds follow the library, not the delivery size. A delivery is 20 photos
+    // per bucket but it draws them from 26 slots, so indexes run to 25 and this
+    // check rejected roughly a quarter of every order while it read
+    // PHOTOS_PER_BUCKET.
+    if (index < 0 || index >= SLOTS_PER_BUCKET) {
+      throw new Error(`Invalid index ${index}; expected 0..${SLOTS_PER_BUCKET - 1}`);
     }
 
     const deterministicId = makeDeterministicPhotoId(batchId, bucket, index);
@@ -101,7 +111,7 @@ export const generateSingleDatingImage = task({
 
     // Check test mode (mock / sample / off)
     const testMode = getDatingTestMode();
-    const useMock = shouldUseMockForSlot(testMode, slot);
+    const useMock = payload.useMock ?? shouldUseMockForSlot(testMode, slot);
 
     // Fast path: already successfully completed → zero GPU cost
     const { data: existing } = await db
@@ -402,6 +412,22 @@ export const datingPhotoshootOrchestrator = task({
       }
     }
 
+    // Sample mode renders one real photo per bucket. It used to be "slot 1",
+    // which broke silently once a delivery drew 20 of 26 slots and slot 1 might
+    // not be among them — a sample run could produce no real photos at all.
+    // The orchestrator can see the whole order, so it picks the first row of
+    // each bucket that this delivery actually contains.
+    const orchestratorTestMode = getDatingTestMode();
+    const realIds = new Set<string>();
+    if (orchestratorTestMode === "sample") {
+      for (const bucket of DATING_BUCKETS) {
+        const first = incomplete
+          .filter((row) => row.bucket === bucket)
+          .sort((a, b) => a.slot - b.slot)[0];
+        if (first) realIds.add(String(first.id));
+      }
+    }
+
     // Build child payloads — only incomplete
     const childPayloads = incomplete.map((row) => {
       const index = slotToIndex(row.slot);
@@ -417,6 +443,12 @@ export const datingPhotoshootOrchestrator = task({
           referenceImageUrls,
           imageWidth: row.image_width,
           imageHeight: row.image_height,
+          useMock:
+            orchestratorTestMode === "mock"
+              ? true
+              : orchestratorTestMode === "sample"
+                ? !realIds.has(String(row.id))
+                : false,
         } satisfies GenerateSingleImagePayload,
         options: {
           // Same key → Trigger.dev will not spawn a second successful run

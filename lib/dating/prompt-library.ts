@@ -2,7 +2,6 @@ import { deriveRatioLabel } from "./aspect-ratio";
 import {
   DATING_BUCKETS,
   EXCLUDABLE_TAGS,
-  PHOTOS_PER_BUCKET,
   SLOTS_PER_BUCKET,
   TOTAL_PHOTOS,
   type DatingBucket,
