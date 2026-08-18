@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import JSZip from 'jszip';
 import {
   Loader2,
   Download,
@@ -280,6 +279,7 @@ export function DatingShootClient({
     setZipProgress('Creating ZIP archive...');
 
     try {
+      const JSZip = (await import('jszip')).default;
       const zip = new JSZip();
       let count = 0;
       const totalToDownload = status.counts.completed;
