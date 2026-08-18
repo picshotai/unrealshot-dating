@@ -54,7 +54,7 @@ function parseArguments(): ExportArguments {
       readArgument("hobby") ?? "rock climbing and landscape photography",
     output:
       readArgument("output") ??
-      "docs/generated/dating-prompts-v4.json",
+      "docs/generated/dating-prompts-v5.json",
   };
 }
 
