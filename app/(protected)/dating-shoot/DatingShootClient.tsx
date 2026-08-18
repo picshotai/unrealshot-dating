@@ -1,33 +1,32 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import JSZip from 'jszip';
+import {
+  Loader2,
+  Sparkles,
+  Download,
+  RefreshCw,
+  Maximize2,
+  Image as ImageIcon,
+  Plus,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DATING_BUCKETS,
-  SHOOT_CREDIT_COST,
   type DatingBucket,
   type ExcludableTag,
   type StylePref,
 } from '@/lib/dating/types';
+import { type InterestId } from '@/lib/dating/interests';
+import { StudioHeader } from '@/components/dating/StudioHeader';
+import { ArchetypePillNav, type ArchetypeFilter } from '@/components/dating/ArchetypePillNav';
 import {
-  DRESS_OPTIONS,
-  EXCLUSION_CHIPS,
-  INTEREST_CHIPS,
-  type InterestId,
-} from '@/lib/dating/interests';
-import { groupByLineup } from '@/lib/dating/lineup';
-import {
-  Loader2,
-  Download,
-  RefreshCw,
-  Sparkles,
-  CheckCircle2,
-  AlertCircle,
-  Archive,
-} from 'lucide-react';
-
+  PhotoInspectorModal,
+  type PhotoItem,
+} from '@/components/dating/PhotoInspectorModal';
+import { StudioIntakeModal } from '@/components/dating/StudioIntakeModal';
 
 type Model = {
   id: number;
@@ -71,6 +70,14 @@ type StatusResponse = {
   progressPercent: number;
 };
 
+const BUCKET_LABELS: Record<string, string> = {
+  anchor: 'The Anchor Portrait',
+  social: 'The Social Candid',
+  travel: 'The Travel Lifestyle',
+  active: 'The Active Vitality',
+  street: 'The Casual Streetwear',
+};
+
 export function DatingShootClient({
   models,
   orders,
@@ -86,26 +93,35 @@ export function DatingShootClient({
   const [modelId, setModelId] = useState<number | null>(
     initialModelId || models[0]?.id || null
   );
-  const [interests, setInterests] = useState<InterestId[]>([]);
-  const [dress, setDress] = useState<StylePref>('casual');
-  const [excludeTags, setExcludeTags] = useState<ExcludableTag[]>([]);
-  const [hobbyText, setHobbyText] = useState('');
   const [activeOrderId, setActiveOrderId] = useState<string | null>(
     initialOrderId || orders[0]?.id || null
   );
   const [status, setStatus] = useState<StatusResponse | null>(null);
+  const [activeTab, setActiveTab] = useState<ArchetypeFilter>('all');
+
+  // Modals state
+  const [isIntakeOpen, setIsIntakeOpen] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
+  const [isInspectorOpen, setIsInspectorOpen] = useState(false);
+
+  // Operation loaders
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [regenLoading, setRegenLoading] = useState<string | null>(null);
-  const [zipLoading, setZipLoading] = useState(false);
-  const [zipProgress, setZipProgress] = useState<string>('');
   const [creditError, setCreditError] = useState('');
+  const [regenLoadingId, setRegenLoadingId] = useState<string | null>(null);
+  const [zipLoading, setZipLoading] = useState(false);
+  const [zipProgress, setZipProgress] = useState('');
 
+  // Status Polling
   const fetchStatus = useCallback(async (orderId: string) => {
-    const res = await fetch(`/api/dating-shoot/run-status?orderId=${orderId}`);
-    if (!res.ok) return;
-    const data = await res.json();
-    setStatus(data);
+    try {
+      const res = await fetch(`/api/dating-shoot/run-status?orderId=${orderId}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      setStatus(data);
+    } catch (e) {
+      console.warn('Failed to poll status:', e);
+    }
   }, []);
 
   useEffect(() => {
@@ -117,51 +133,59 @@ export function DatingShootClient({
     return () => clearInterval(interval);
   }, [activeOrderId, fetchStatus]);
 
-  const startShoot = async () => {
-    if (!modelId) {
-      setError('Select or create a model first');
-      return;
-    }
-    if (loading) return; // a second click must not start a second shoot
+  // Launch New Shoot
+  const handleLaunchShoot = async (params: {
+    modelId: number;
+    interests: InterestId[];
+    dress: StylePref;
+    excludeTags: ExcludableTag[];
+    hobbyText: string;
+  }) => {
     setLoading(true);
     setError('');
     setCreditError('');
+
     try {
       const res = await fetch('/api/dating-shoot/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          modelId,
-          interests,
-          dress,
-          excludeTags,
-          hobbyText: hobbyText.trim() || null,
+          modelId: params.modelId,
+          interests: params.interests,
+          dress: params.dress,
+          excludeTags: params.excludeTags,
+          hobbyText: params.hobbyText.trim() || null,
         }),
       });
+
       const data = await res.json();
+
       if (!res.ok) {
         if (data.code === 'insufficient_credits') {
           setCreditError(data.error);
           return;
         }
         if (data.code === 'order_in_progress' && data.orderId) {
-          // Show the shoot that is already running rather than an error.
           setActiveOrderId(data.orderId);
           await fetchStatus(data.orderId);
+          setIsIntakeOpen(false);
           return;
         }
-        throw new Error(data.error || 'Failed to start shoot');
+        throw new Error(data.error || 'Failed to start photoshoot');
       }
+
       setActiveOrderId(data.orderId);
       await fetchStatus(data.orderId);
+      setIsIntakeOpen(false);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed');
+      setError(e instanceof Error ? e.message : 'Failed to launch shoot');
     } finally {
       setLoading(false);
     }
   };
 
-  const retryFailed = async () => {
+  // Retry Failed
+  const handleRetryFailed = async () => {
     if (!activeOrderId) return;
     setLoading(true);
     try {
@@ -176,9 +200,10 @@ export function DatingShootClient({
     }
   };
 
-  const regenerate = async (photoId: string) => {
+  // Regenerate Single Photo
+  const handleRegenerate = async (photoId: string) => {
     if (!activeOrderId) return;
-    setRegenLoading(photoId);
+    setRegenLoadingId(photoId);
     try {
       const res = await fetch('/api/dating-shoot/regenerate', {
         method: 'POST',
@@ -187,22 +212,39 @@ export function DatingShootClient({
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Regenerate failed');
-      setTimeout(() => fetchStatus(activeOrderId), 3000);
+      setTimeout(() => fetchStatus(activeOrderId), 2500);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Regenerate failed');
     } finally {
-      setRegenLoading(null);
+      setRegenLoadingId(null);
     }
   };
 
-  const allPhotos = DATING_BUCKETS.flatMap((bucket) =>
-    (status?.byBucket?.[bucket]?.photos || []).map((photo) => ({
-      ...photo,
-      bucket,
-    }))
-  );
-  const lineup = groupByLineup(allPhotos);
+  // Flat list of all photos
+  const allPhotos: PhotoItem[] = useMemo(() => {
+    if (!status?.byBucket) return [];
+    return DATING_BUCKETS.flatMap((bucket) =>
+      (status.byBucket[bucket]?.photos || []).map((photo) => ({
+        ...photo,
+        bucket,
+        bucketLabel: BUCKET_LABELS[bucket] || bucket,
+      }))
+    );
+  }, [status]);
 
+  // Photos filtered by active tab
+  const displayedPhotos = useMemo(() => {
+    if (activeTab === 'all') return allPhotos;
+    return allPhotos.filter((p) => p.bucket === activeTab);
+  }, [allPhotos, activeTab]);
+
+  // Open Lightbox Modal for a photo
+  const openInspector = (photo: PhotoItem) => {
+    setSelectedPhoto(photo);
+    setIsInspectorOpen(true);
+  };
+
+  // ZIP Download Generator
   const downloadAllZip = async () => {
     if (!status || !activeOrderId) return;
     setZipLoading(true);
@@ -213,17 +255,17 @@ export function DatingShootClient({
       let count = 0;
       const totalToDownload = status.counts.completed;
 
-      // Folders follow the lineup, not the internal buckets. A user unzipping
-      // "The-Anchor-Portrait" learns nothing; "01-Your-opener" tells him which
-      // photo to lead with.
-      for (const [index, section] of lineup.entries()) {
-        const folderName = `${String(index + 1).padStart(2, '0')}-${section.label.replace(/\s+/g, '-')}`;
+      for (const bucket of DATING_BUCKETS) {
+        const bucketData = status.byBucket[bucket];
+        if (!bucketData) continue;
+
+        const folderName = BUCKET_LABELS[bucket].replace(/\s+/g, '-');
         const folder = zip.folder(folderName);
 
-        for (const [position, photo] of section.photos.entries()) {
+        for (const [position, photo] of bucketData.photos.entries()) {
           count++;
           setZipProgress(`Adding ${count} of ${totalToDownload} photos...`);
-          const base = `${String(position + 1).padStart(2, '0')}`;
+          const base = `Photo-${String(position + 1).padStart(2, '0')}`;
 
           try {
             if (photo.imageUrl.startsWith('data:')) {
@@ -271,362 +313,217 @@ export function DatingShootClient({
 
   const isDeveloping =
     status?.order.status === 'developing' || status?.order.status === 'queued';
-  const isReady =
-    status?.order.status === 'ready' || status?.order.status === 'partial_failed';
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-white mb-1">Dating Photoshoot</h1>
-        <p className="text-zinc-400 text-sm">
-          100 photos. No two share an outfit or a light. One person in every
-          frame — you.
-        </p>
-      </div>
+    <div className="min-h-screen bg-background text-foreground pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        {/* 1. Studio Header & Controls */}
+        <StudioHeader
+          models={models}
+          selectedModelId={modelId}
+          onSelectModel={setModelId}
+          status={
+            status
+              ? {
+                  orderStatus: status.order.status,
+                  completed: status.counts.completed,
+                  total: status.counts.total,
+                  progressPercent: status.progressPercent,
+                  customCreditsRemaining: status.order.custom_credits_remaining,
+                  failedCount: status.counts.failed,
+                }
+              : null
+          }
+          onOpenNewShoot={() => setIsIntakeOpen(true)}
+          onDownloadZip={downloadAllZip}
+          isZipLoading={zipLoading}
+          zipProgress={zipProgress}
+          onRetryFailed={handleRetryFailed}
+          isRetryLoading={loading}
+        />
 
-      {/* New order form */}
-      {!isDeveloping && (
-        <div className="bg-zinc-900 border border-zinc-700 rounded-2xl p-6 space-y-5">
-          <h2 className="text-white font-semibold flex items-center gap-2">
-            <Sparkles className="w-4 h-4" /> Start a new shoot
-          </h2>
+        {/* 2. Archetype Filter Bar */}
+        {status && (
+          <ArchetypePillNav
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            countsByBucket={status.byBucket}
+            totalCompleted={status.counts.completed}
+          />
+        )}
 
-          <div>
-            <label className="text-xs text-zinc-500 mb-2 block">Model</label>
-            {models.length === 0 ? (
-              <Link
-                href="/models/create"
-                className="text-sm text-white underline"
-              >
-                Create your model first →
-              </Link>
-            ) : (
-              <select
-                value={modelId ?? ''}
-                onChange={(e) => setModelId(Number(e.target.value))}
-                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm"
-              >
-                {models.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.name || `Model ${m.id}`} ({m.samples?.length || 0} photos)
-                  </option>
-                ))}
-              </select>
-            )}
-          </div>
+        {/* 3. Photo Gallery Grid */}
+        {displayedPhotos.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
+            {displayedPhotos.map((p) => {
+              const isMock = p.imageUrl.startsWith('data:image/svg+xml');
+              const isThisRegenerating = regenLoadingId === p.id;
 
-          <div className="space-y-5">
-            <div>
-              <label className="text-sm text-white font-medium block">
-                What do you actually do?
-              </label>
-              <p className="text-xs text-zinc-500 mt-0.5 mb-3">
-                Tap anything that fits. This decides what you are doing in the
-                photos, not how many you get.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {INTEREST_CHIPS.map((chip) => {
-                  const on = interests.includes(chip.id);
-                  return (
-                    <button
-                      key={chip.id}
-                      type="button"
-                      aria-pressed={on}
-                      onClick={() =>
-                        setInterests((prev) =>
-                          prev.includes(chip.id)
-                            ? prev.filter((id) => id !== chip.id)
-                            : [...prev, chip.id]
-                        )
-                      }
-                      className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
-                        on
-                          ? 'bg-white text-black border-white'
-                          : 'bg-zinc-800 text-zinc-300 border-zinc-700 hover:border-zinc-500'
-                      }`}
-                    >
-                      <span aria-hidden="true">{chip.emoji}</span> {chip.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+              return (
+                <div
+                  key={p.id}
+                  onClick={() => openInspector(p)}
+                  className="group relative aspect-[4/5] rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800/80 hover:border-zinc-500 shadow-md transition-all duration-200 cursor-pointer select-none"
+                >
+                  {/* Photo Display */}
+                  <img
+                    src={p.imageUrl}
+                    alt={`${p.bucketLabel} #${p.slot}`}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    loading="lazy"
+                  />
 
-            <div>
-              <label className="text-sm text-white font-medium block">
-                Every shoot covers all three looks. Which should we lead with?
-              </label>
-              <p className="text-xs text-zinc-500 mt-0.5 mb-3">
-                About two thirds in your pick, the rest mixed across the other
-                two — a profile of one outfit reads flat.
-              </p>
-              <div className="grid grid-cols-3 gap-3">
-                {DRESS_OPTIONS.map((option) => {
-                  const on = dress === option.id;
-                  return (
-                    <button
-                      key={option.id}
-                      type="button"
-                      aria-pressed={on}
-                      onClick={() => setDress(option.id)}
-                      className={`text-left rounded-xl border p-3 transition-colors ${
-                        on
-                          ? 'border-white bg-white/5 ring-1 ring-white'
-                          : 'border-zinc-700 hover:border-zinc-500'
-                      }`}
-                    >
-                      <div className="text-sm text-white">{option.label}</div>
-                      <div className="text-[11px] text-zinc-500 leading-tight mt-0.5">
-                        {option.hint}
+                  {/* Top Slot Pill */}
+                  <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono px-2 py-0.5 rounded-full z-10">
+                    #{p.slot}
+                  </div>
+
+                  {/* Hover Overlay with Quick Actions */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-3 flex flex-col justify-between z-20">
+                    {/* Top Right Zoom Icon */}
+                    <div className="flex justify-end">
+                      <div className="w-7 h-7 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center border border-white/10">
+                        <Maximize2 className="w-3.5 h-3.5" />
                       </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+                    </div>
 
-            <div>
-              <label className="text-sm text-white font-medium block">
-                Anything to leave out?{' '}
-                <span className="text-zinc-500 font-normal">(optional)</span>
-              </label>
-              <p className="text-xs text-zinc-500 mt-0.5 mb-3">
-                We will keep these out entirely. A photo with a dog you do not
-                own is one you cannot post.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {EXCLUSION_CHIPS.map((chip) => {
-                  const on = excludeTags.includes(chip.id);
-                  return (
-                    <button
-                      key={chip.id}
-                      type="button"
-                      aria-pressed={on}
-                      onClick={() =>
-                        setExcludeTags((prev) =>
-                          prev.includes(chip.id)
-                            ? prev.filter((id) => id !== chip.id)
-                            : [...prev, chip.id]
-                        )
-                      }
-                      className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
-                        on
-                          ? 'bg-amber-400/20 text-amber-200 border-amber-400/60'
-                          : 'bg-zinc-800 text-zinc-300 border-zinc-700 hover:border-zinc-500'
-                      }`}
+                    {/* Bottom Action Buttons */}
+                    <div
+                      className="space-y-1.5"
+                      onClick={(e) => e.stopPropagation()}
                     >
-                      <span aria-hidden="true">{chip.emoji}</span> {chip.label}
-                      {on && <span className="ml-1 text-xs">excluded</span>}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+                      <div className="text-[11px] font-medium text-white truncate drop-shadow">
+                        {p.bucketLabel}
+                      </div>
 
-            <div>
-              <label className="text-sm text-white font-medium block">
-                Anything else you are into?{' '}
-                <span className="text-zinc-500 font-normal">(optional)</span>
-              </label>
-              <input
-                value={hobbyText}
-                onChange={(e) => setHobbyText(e.target.value)}
-                placeholder="e.g. bouldering, film photography, playing bass"
-                className="mt-2 w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm"
-              />
-            </div>
-          </div>
-
-          {error && (
-            <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-              {error}
-            </div>
-          )}
-
-          <Button
-            onClick={startShoot}
-            disabled={loading || !modelId}
-            className="w-full sm:w-auto bg-white text-black hover:bg-zinc-200"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin mr-2" /> Starting...
-              </>
-            ) : (
-              `Generate 100 photos — ${SHOOT_CREDIT_COST} credits`
-            )}
-          </Button>
-          {creditError && (
-            <p className="text-xs text-amber-400">
-              {creditError}{' '}
-              <Link href="/buy-credits" className="underline">
-                Top up
-              </Link>
-            </p>
-          )}
-        </div>
-      )}
-
-      {/* Active order status */}
-      {status && (
-        <div className="space-y-6">
-          <div className="bg-zinc-900 border border-zinc-700 rounded-2xl p-6">
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  {isReady ? (
-                    <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  ) : isDeveloping ? (
-                    <Loader2 className="w-5 h-5 text-white animate-spin" />
-                  ) : (
-                    <AlertCircle className="w-5 h-5 text-amber-500" />
-                  )}
-                  <h2 className="text-white font-semibold capitalize">
-                    {status.order.status.replace('_', ' ')}
-                  </h2>
+                      <div className="flex gap-1.5">
+                        <a
+                          href={p.imageUrl}
+                          download={`dating-photo-${p.bucket}-${p.slot}.${isMock ? 'svg' : 'png'}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex-1 flex items-center justify-center gap-1 text-[11px] font-medium bg-white text-black hover:bg-zinc-200 rounded-lg py-1.5 transition-colors"
+                        >
+                          <Download className="w-3 h-3" /> Save
+                        </a>
+                        <button
+                          onClick={() => handleRegenerate(p.id)}
+                          disabled={isThisRegenerating}
+                          className="flex-1 flex items-center justify-center gap-1 text-[11px] font-medium bg-zinc-800/90 hover:bg-zinc-700 text-white rounded-lg py-1.5 border border-zinc-700 transition-colors"
+                        >
+                          {isThisRegenerating ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <RefreshCw className="w-3 h-3" />
+                          )}
+                          Regen
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-zinc-500 text-sm mt-1">
-                  {status.counts.completed} of {status.counts.total} photos ·{' '}
-                  {status.order.custom_credits_remaining} custom credits left
-                </p>
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                {status.counts.completed > 0 && (
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={downloadAllZip}
-                    disabled={zipLoading}
-                    className="bg-white text-black hover:bg-zinc-200 font-medium"
-                  >
-                    {zipLoading ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        {zipProgress || 'Creating ZIP...'}
-                      </>
-                    ) : (
-                      <>
-                        <Archive className="w-4 h-4 mr-2" />
-                        Download All (ZIP)
-                      </>
-                    )}
-                  </Button>
-                )}
-                {status.counts.failed > 0 && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={retryFailed}
-                    disabled={loading}
-                    className="border-zinc-700"
-                  >
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                    Retry {status.counts.failed} failed
-                  </Button>
-                )}
-              </div>
-            </div>
-
-            <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
+              );
+            })}
+          </div>
+        ) : isDeveloping ? (
+          /* Developing Empty Shimmer Grid */
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
+            {Array.from({ length: 10 }).map((_, i) => (
               <div
-                className="h-full bg-white transition-all duration-500"
-                style={{ width: `${status.progressPercent}%` }}
-              />
-            </div>
-            <p className="text-xs text-zinc-500 mt-2">
-              {status.progressPercent}% developed ({status.counts.completed} photos ready)
-              {isDeveloping && ' · refreshing every 5s'}
-            </p>
-          </div>
-
-          {/* Delivery, grouped by the job each photo does */}
-          <div className="space-y-8">
-            {lineup.length === 0 ? (
-              <div className="text-zinc-600 text-sm py-12 text-center border border-dashed border-zinc-800 rounded-xl">
-                {isDeveloping
-                  ? 'Photos will appear here as they develop...'
-                  : 'No photos yet'}
-              </div>
-            ) : (
-              lineup.map((section) => (
-                <div key={section.role}>
-                  <div className="flex items-baseline gap-3 mb-1">
-                    <h3 className="text-white font-semibold">{section.label}</h3>
-                    <span className="text-xs text-zinc-600">
-                      {section.photos.length}
-                    </span>
-                  </div>
-                  <p className="text-zinc-500 text-sm mb-4">{section.hint}</p>
-
-                  <div className="columns-2 gap-3 sm:columns-3 md:columns-4">
-                    {section.photos.map((p) => (
-                      <div
-                        key={p.id}
-                        className="relative mb-3 break-inside-avoid overflow-hidden rounded-lg bg-zinc-900 group"
-                      >
-                        <img
-                          src={p.imageUrl}
-                          alt={section.label}
-                          className="block h-auto w-full"
-                        />
-                        <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-                          <a
-                            href={p.imageUrl}
-                            download
-                            target="_blank"
-                            rel="noreferrer"
-                            className="flex-1 flex items-center justify-center gap-1 text-xs bg-white/10 hover:bg-white/20 text-white rounded py-1.5"
-                          >
-                            <Download className="w-3 h-3" /> Save
-                          </a>
-                          <button
-                            onClick={() => regenerate(p.id)}
-                            disabled={regenLoading === p.id}
-                            className="flex-1 flex items-center justify-center gap-1 text-xs bg-white/10 hover:bg-white/20 text-white rounded py-1.5"
-                          >
-                            {regenLoading === p.id ? (
-                              <Loader2 className="w-3 h-3 animate-spin" />
-                            ) : (
-                              <RefreshCw className="w-3 h-3" />
-                            )}
-                            Regen
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Past orders */}
-      {orders.length > 0 && (
-        <div>
-          <h3 className="text-sm text-zinc-500 mb-3">Your orders</h3>
-          <div className="space-y-2">
-            {orders.map((o) => (
-              <button
-                key={o.id}
-                onClick={() => setActiveOrderId(o.id)}
-                className={`w-full text-left px-4 py-3 rounded-lg border text-sm ${
-                  activeOrderId === o.id
-                    ? 'border-white/30 bg-zinc-800 text-white'
-                    : 'border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white'
-                }`}
+                key={i}
+                className="aspect-[4/5] rounded-2xl bg-zinc-900/60 border border-zinc-800 animate-pulse flex flex-col items-center justify-center p-4 text-center"
               >
-                <span className="capitalize">{o.status.replace('_', ' ')}</span>
-                <span className="mx-2 text-zinc-600">·</span>
-                <span className="text-zinc-500">
-                  {new Date(o.created_at).toLocaleDateString()}
+                <ImageIcon className="w-6 h-6 text-zinc-700 mb-2" />
+                <span className="text-xs text-zinc-600 font-mono">
+                  Developing photo #{i + 1}...
                 </span>
-              </button>
+              </div>
             ))}
           </div>
-        </div>
-      )}
+        ) : (
+          /* Empty / Welcome State */
+          <div className="max-w-xl mx-auto my-12 text-center p-8 bg-zinc-950 border border-zinc-800/80 rounded-3xl shadow-xl">
+            <div className="w-14 h-14 rounded-2xl bg-accent/10 border border-accent/20 text-accent flex items-center justify-center mx-auto mb-4">
+              <Sparkles className="w-7 h-7" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">
+              Ready for Your Dating Photoshoot?
+            </h3>
+            <p className="text-zinc-400 text-sm mb-6 max-w-md mx-auto">
+              Generate 100 hyper-realistic dating photos across 5 proven archetypes (Anchor, Social, Travel, Active, and Streetwear).
+            </p>
+            <Button
+              onClick={() => setIsIntakeOpen(true)}
+              className="bg-white text-black hover:bg-zinc-200 font-bold px-6 py-5 rounded-xl shadow-lg transition-all active:scale-95"
+            >
+              <Plus className="w-4 h-4 mr-2" /> Start Photoshoot (100 Photos)
+            </Button>
+          </div>
+        )}
+
+        {/* 4. Past Shoots Drawer / History */}
+        {orders.length > 1 && (
+          <div className="pt-8 border-t border-zinc-900">
+            <h3 className="text-xs font-mono uppercase tracking-widest text-zinc-500 mb-3">
+              Previous Photoshoots ({orders.length})
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+              {orders.map((o) => (
+                <button
+                  key={o.id}
+                  onClick={() => setActiveOrderId(o.id)}
+                  className={`text-left p-3.5 rounded-xl border transition-all text-xs flex items-center justify-between ${
+                    activeOrderId === o.id
+                      ? 'border-accent bg-accent/5 text-white'
+                      : 'border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:text-white hover:border-zinc-700'
+                  }`}
+                >
+                  <div>
+                    <div className="font-semibold capitalize text-white mb-0.5">
+                      {o.status.replace('_', ' ')}
+                    </div>
+                    <div className="text-[11px] text-zinc-500 font-mono">
+                      {new Date(o.created_at).toLocaleDateString(undefined, {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}
+                    </div>
+                  </div>
+                  <span className="text-[11px] font-mono text-zinc-500">
+                    {o.custom_credits_remaining} credits
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* 5. Full-Screen Photo Inspector Lightbox Modal */}
+      <PhotoInspectorModal
+        isOpen={isInspectorOpen}
+        onClose={() => setIsInspectorOpen(false)}
+        photo={selectedPhoto}
+        photos={displayedPhotos}
+        onSelectPhoto={setSelectedPhoto}
+        onRegenerate={handleRegenerate}
+        isRegenerating={regenLoadingId === selectedPhoto?.id}
+        customCreditsRemaining={status?.order.custom_credits_remaining || 0}
+      />
+
+      {/* 6. Studio Intake Modal */}
+      <StudioIntakeModal
+        isOpen={isIntakeOpen}
+        onClose={() => setIsIntakeOpen(false)}
+        models={models}
+        selectedModelId={modelId}
+        onSelectModel={setModelId}
+        onSubmit={handleLaunchShoot}
+        isLoading={loading}
+        creditError={creditError}
+        generalError={error}
+      />
     </div>
   );
 }
