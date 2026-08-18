@@ -416,6 +416,7 @@ export interface Database {
           vibe: string
           style: string
           interests: string[] | null
+          exclude_tags: string[] | null
           hobby_text: string | null
           created_at: string
           updated_at: string
@@ -426,6 +427,7 @@ export interface Database {
           vibe: string
           style: string
           interests?: string[] | null
+          exclude_tags?: string[] | null
           hobby_text?: string | null
           created_at?: string
           updated_at?: string
@@ -436,6 +438,7 @@ export interface Database {
           vibe?: string
           style?: string
           interests?: string[] | null
+          exclude_tags?: string[] | null
           hobby_text?: string | null
           created_at?: string
           updated_at?: string

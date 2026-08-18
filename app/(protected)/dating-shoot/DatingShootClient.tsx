@@ -8,10 +8,12 @@ import {
   DATING_BUCKETS,
   SHOOT_CREDIT_COST,
   type DatingBucket,
+  type ExcludableTag,
   type StylePref,
 } from '@/lib/dating/types';
 import {
   DRESS_OPTIONS,
+  EXCLUSION_CHIPS,
   INTEREST_CHIPS,
   type InterestId,
 } from '@/lib/dating/interests';
@@ -27,16 +29,6 @@ import {
   FlaskConical,
 } from 'lucide-react';
 
-/**
- * Placeholder until three real frames from a delivery replace them. Even as
- * swatches this reads as choosing between looks rather than between the words
- * casual / sharp / street.
- */
-const DRESS_SWATCHES: Record<string, string> = {
-  casual: 'linear-gradient(160deg, #b8a88f 0%, #6f6552 60%, #2f2c26 100%)',
-  sharp: 'linear-gradient(160deg, #6b7079 0%, #3a3f47 60%, #17191d 100%)',
-  street: 'linear-gradient(160deg, #8a5a44 0%, #46362f 60%, #1c1917 100%)',
-};
 
 type Model = {
   id: number;
@@ -97,6 +89,7 @@ export function DatingShootClient({
   );
   const [interests, setInterests] = useState<InterestId[]>([]);
   const [dress, setDress] = useState<StylePref>('casual');
+  const [excludeTags, setExcludeTags] = useState<ExcludableTag[]>([]);
   const [hobbyText, setHobbyText] = useState('');
   const [activeOrderId, setActiveOrderId] = useState<string | null>(
     initialOrderId || orders[0]?.id || null
@@ -142,6 +135,7 @@ export function DatingShootClient({
           modelId,
           interests,
           dress,
+          excludeTags,
           hobbyText: hobbyText.trim() || null,
         }),
       });
@@ -361,10 +355,11 @@ export function DatingShootClient({
 
             <div>
               <label className="text-sm text-white font-medium block">
-                How do you dress?
+                Every shoot covers all three looks. Which should we lead with?
               </label>
               <p className="text-xs text-zinc-500 mt-0.5 mb-3">
-                Pick the one closest to your actual wardrobe.
+                About two thirds in your pick, the rest mixed across the other
+                two — a profile of one outfit reads flat.
               </p>
               <div className="grid grid-cols-3 gap-3">
                 {DRESS_OPTIONS.map((option) => {
@@ -375,30 +370,54 @@ export function DatingShootClient({
                       type="button"
                       aria-pressed={on}
                       onClick={() => setDress(option.id)}
-                      className={`text-left rounded-xl overflow-hidden border transition-colors ${
+                      className={`text-left rounded-xl border p-3 transition-colors ${
                         on
-                          ? 'border-white ring-1 ring-white'
+                          ? 'border-white bg-white/5 ring-1 ring-white'
                           : 'border-zinc-700 hover:border-zinc-500'
                       }`}
                     >
-                      {option.previewImage ? (
-                        <img
-                          src={option.previewImage}
-                          alt={option.label}
-                          className="aspect-[3/4] w-full object-cover"
-                        />
-                      ) : (
-                        <div
-                          className="aspect-[3/4] w-full"
-                          style={{ background: DRESS_SWATCHES[option.id] }}
-                        />
-                      )}
-                      <div className="p-2">
-                        <div className="text-sm text-white">{option.label}</div>
-                        <div className="text-[11px] text-zinc-500 leading-tight">
-                          {option.hint}
-                        </div>
+                      <div className="text-sm text-white">{option.label}</div>
+                      <div className="text-[11px] text-zinc-500 leading-tight mt-0.5">
+                        {option.hint}
                       </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm text-white font-medium block">
+                Anything to leave out?{' '}
+                <span className="text-zinc-500 font-normal">(optional)</span>
+              </label>
+              <p className="text-xs text-zinc-500 mt-0.5 mb-3">
+                We will keep these out entirely. A photo with a dog you do not
+                own is one you cannot post.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {EXCLUSION_CHIPS.map((chip) => {
+                  const on = excludeTags.includes(chip.id);
+                  return (
+                    <button
+                      key={chip.id}
+                      type="button"
+                      aria-pressed={on}
+                      onClick={() =>
+                        setExcludeTags((prev) =>
+                          prev.includes(chip.id)
+                            ? prev.filter((id) => id !== chip.id)
+                            : [...prev, chip.id]
+                        )
+                      }
+                      className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        on
+                          ? 'bg-amber-400/20 text-amber-200 border-amber-400/60'
+                          : 'bg-zinc-800 text-zinc-300 border-zinc-700 hover:border-zinc-500'
+                      }`}
+                    >
+                      <span aria-hidden="true">{chip.emoji}</span> {chip.label}
+                      {on && <span className="ml-1 text-xs">excluded</span>}
                     </button>
                   );
                 })}

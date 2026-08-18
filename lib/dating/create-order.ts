@@ -18,6 +18,7 @@ import { refundShootCredits, spendShootCredits } from "./credits-gate";
 import {
   ACTIVE_ORDER_STATUSES,
   CUSTOM_CREDITS_DEFAULT,
+  type ExcludableTag,
   SHOOT_CREDIT_COST,
   TOTAL_PHOTOS,
   type StylePref,
@@ -45,6 +46,8 @@ export type CreateOrderInput = {
   /** How he dresses, answered with pictures rather than the word "style". */
   dress?: StylePref;
   hobbyText?: string | null;
+  /** Content he asked us to leave out: dog, alcohol, bicycle, team sport. */
+  excludeTags?: ExcludableTag[];
   /** Legacy callers may still send a locked vibe/style; both become a lean. */
   vibe?: Vibe;
   style?: StylePref;
@@ -56,7 +59,14 @@ export type CreateOrderInput = {
  */
 export async function createDatingShootOrder(input: CreateOrderInput) {
   const db = createAdminClient();
-  const { userId, modelId, interests = [], dress, hobbyText } = input;
+  const {
+    userId,
+    modelId,
+    interests = [],
+    dress,
+    hobbyText,
+    excludeTags = [],
+  } = input;
 
   // A locked vibe/style from an older client is honoured as a strong lean so
   // in-flight sessions keep working, but nothing locks the delivery any more.
@@ -132,6 +142,7 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
           vibe,
           style,
           interests: interests.length > 0 ? interests : null,
+        exclude_tags: excludeTags.length > 0 ? excludeTags : null,
           hobby_text: hobby,
           updated_at: new Date().toISOString(),
         },
@@ -172,7 +183,7 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
     // vibe and style. Each photo gets its own vibe, style and variant, which is
     // what lets a single delivery reach ~95% of the library's locations instead
     // of 33%. Seeded from batchId, so retries and paid regenerations are stable.
-    const plan = planDelivery(batchId, bias);
+    const plan = planDelivery(batchId, bias, { excludeTags });
     assertDeliveryUnique(plan);
 
     const finalRows = plan.map((entry) => {

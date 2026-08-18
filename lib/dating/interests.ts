@@ -1,5 +1,5 @@
 import type { DeliveryBias } from "./select-delivery";
-import type { StylePref, Vibe } from "./types";
+import type { ExcludableTag, StylePref, Vibe } from "./types";
 
 /**
  * The two questions the shoot screen asks.
@@ -56,26 +56,34 @@ export const INTEREST_CHIPS: InterestChip[] = [
 ];
 
 /**
- * The second question. Asked with pictures, because people cannot classify
- * themselves from the words "casual", "sharp" or "street" but recognise their
- * own wardrobe on sight.
+ * The second question, and the wording matters more than the weighting did.
  *
- * `previewImage` is deliberately empty for now — these should be three real
- * frames pulled from a delivery once there is output worth showing. Until then
- * the screen falls back to a colour swatch, which still reads as a choice
- * between three looks rather than three jargon words.
+ * Asking "how do you dress?" reads as a description of him, so he expects every
+ * photo to match and 65% is a broken promise. The screen now states that a shoot
+ * covers all three looks and asks only which to lead with, which is both true
+ * and the better product: a hundred photos in one outfit reads flat, so the
+ * range is the point rather than a shortfall to apologise for.
  */
 export type DressOption = {
   id: StylePref;
   label: string;
   hint: string;
-  previewImage?: string;
 };
 
 export const DRESS_OPTIONS: DressOption[] = [
-  { id: "casual", label: "Casual", hint: "Henleys, knits, denim" },
-  { id: "sharp", label: "Sharp", hint: "Tailoring, coats, collars" },
+  { id: "casual", label: "Casual", hint: "Henleys, knits, denim, boots" },
+  { id: "sharp", label: "Sharp", hint: "Tailoring, coats, collars, leather" },
   { id: "street", label: "Street", hint: "Jackets, layers, sneakers" },
+];
+
+/** The four things a user can ask us to keep out of his delivery. */
+export type ExclusionChip = { id: ExcludableTag; label: string; emoji: string };
+
+export const EXCLUSION_CHIPS: ExclusionChip[] = [
+  { id: "alcohol", label: "Drinks in hand", emoji: "🍷" },
+  { id: "dog", label: "Dogs", emoji: "🐕" },
+  { id: "bicycle", label: "Bikes", emoji: "🚲" },
+  { id: "teamSport", label: "Team sport", emoji: "⚽" },
 ];
 
 const CHIP_BY_ID = new Map(INTEREST_CHIPS.map((chip) => [chip.id, chip]));
@@ -87,10 +95,15 @@ export function isInterestId(value: unknown): value is InterestId {
 const VIBES: readonly Vibe[] = ["urban", "outdoorsy", "homebody"];
 const STYLES: readonly StylePref[] = ["casual", "sharp", "street"];
 
-/** Preference is a lean, never a lock, so the delivery still spans the library. */
-const PREFERRED = 0.5;
-const SECOND = 0.3;
-const THIRD = 0.2;
+/**
+ * Preference is a lean, never a lock. The screen tells him every shoot covers
+ * all three looks and asks only which to lead with, so 65% comfortably
+ * over-delivers on "lead with" while the rest keeps the range that makes a
+ * profile read as a life rather than a uniform.
+ */
+const PREFERRED = 0.65;
+const SECOND = 0.2;
+const THIRD = 0.15;
 
 function normalise<T extends string>(
   keys: readonly T[],
@@ -148,7 +161,8 @@ export function dominantStyle(bias: DeliveryBias): StylePref {
 }
 
 /**
- * The free-text hobby feeds the 12 `{{hobby}}` prompt alternatives. When the
+ * The free-text hobby feeds the `{{hobby}}` prompt alternatives, which now sit
+ * on ten slots rather than four, so the answer reaches ten photos. When the
  * user only tapped chips, the chip labels stand in so those slots still fire.
  */
 export function resolveHobbyText(

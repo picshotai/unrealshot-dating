@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-18T12:50:27.571Z",
+  "generatedAt": "2026-08-18T13:04:20.444Z",
   "libraryVersion": 5,
   "note": "The prompt field is the exact compiled string sent to fal. No action, pose, camera, lighting, realism, or composition fragments are added after this export.",
   "preferences": {
@@ -939,9 +939,9 @@
         "width": 1512,
         "height": 2688
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 159,
-      "prompt": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At a broad urban park path, wearing a rust merino tee with charcoal joggers, and worn trail shoes. He reaches a flatter stretch and loosens one pack strap with his thumb. He smiles to the lens while his breathing settles. Fifteen metres behind him, a park kiosk, benches and a bright open lawn blur gently with the movement of the air. Morning sun sits low behind him and rims his shoulders and the back of his head, while the pale path in front bounces enough light to hold his face a stop under it. A 9:16 three-quarter burst photograph with ordinary perspective, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture."
+      "usesHobbyAlternative": true,
+      "wordCount": 128,
+      "prompt": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. He pauses in the middle of rock climbing and landscape photography with both hands still resting on what he is doing. He glances to the lens and holds it a moment. Nine metres of the venue open behind him and settle into soft tone. A broad source ahead of him and above lights his face frontally, with the depth behind falling away darker. A 9:16 three-quarter burst photograph with ordinary perspective, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture."
     },
     {
       "id": "active-03-a",
@@ -984,9 +984,9 @@
         "width": 1728,
         "height": 2304
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 143,
-      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At a marked hill trail, wearing an ecru tee under a light navy windshirt, and brown walking boots. He turns a shoe over in one hand to check the sole, sets his foot back down, and stays seated. His eyes stay on the shoe, past the lens. switchbacks, scrub and a hazy skyline sit twenty-five metres beyond him, dropping into soft outdoor depth. High flat overcast lights him from directly above, leaving a soft shadow in his eye sockets and a clean edge along the top of each shoulder. A 3:4 medium portrait taken during the activity, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
+      "usesHobbyAlternative": true,
+      "wordCount": 112,
+      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. He rests both forearms on whatever rock climbing and landscape photography has him working at and takes a breath. He turns to the lens. The room or ground behind him falls away thirteen metres into quiet blur. Soft light from above and behind rims his shoulders while his face rides on light returning off the surface in front. A 3:4 medium portrait taken during the activity, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
     },
     {
       "id": "active-06-c",
@@ -1029,9 +1029,9 @@
         "width": 2304,
         "height": 1728
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 147,
-      "prompt": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At a forest exercise clearing, wearing a moss long-sleeve with black trail trousers, and grey running sneakers. He stands with both hands braced above his knees after the effort, then straightens as his breathing settles. He looks up to the lens smiling. Eighteen metres back, log seating, a timber post and thick woodland lose their edges while the ground between stays readable. Midday sun sits high above and slightly ahead, catching his brow, nose and shoulders and leaving the underside of his jaw in shadow. A 4:3 environmental action frame that explains the activity, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple."
+      "usesHobbyAlternative": true,
+      "wordCount": 120,
+      "prompt": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. He finishes a run of rock climbing and landscape photography and lets both hands drop, breathing out. He looks to the lens with it still settling. Eighteen metres of the venue sit behind him, blurred but clearly a real place. Light arrives from ahead and above at an angle, giving short controlled shadows under his brow and nose. A 4:3 environmental action frame that explains the activity, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple."
     },
     {
       "id": "active-09-c",
@@ -1074,9 +1074,9 @@
         "width": 1512,
         "height": 2688
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 166,
-      "prompt": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At a riverside running route, wearing a black training half-zip with grey shorts, and grey running sneakers. He slows to a jog and pulls the hem of his top up to wipe his forehead with one hand. He looks to the lens as he lets it fall. The path opens twelve metres behind him to a towpath, moored barges and warehouse fronts, which soften as the ground falls away. The sun sits low and directly behind him, burning through the edge of his hair and shoulders, while his face sits a full stop darker on ambient sky light alone. A 9:16 handheld full-body frame from a safe practical distance, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture."
+      "usesHobbyAlternative": true,
+      "wordCount": 121,
+      "prompt": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. He sets up for rock climbing and landscape photography, placing things with both hands until they sit right. He looks to the lens once they do. Eleven metres behind him the space drops into soft depth. A bright opening ahead lights his face fully from the front while the interior behind reads much darker. A 9:16 handheld full-body frame from a safe practical distance, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture."
     },
     {
       "id": "active-12-b",
@@ -1104,9 +1104,9 @@
         "width": 2304,
         "height": 1728
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 142,
-      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At a shaded city-park bench, wearing a mustard long-sleeve with dark shorts, and worn trail shoes. He finishes drinking, wipes his mouth on the back of one wrist, and caps the bottle. He looks to the lens before rejoining the path. The ground runs back ten metres to a plane-tree canopy, a drinking fountain and a lit path, held just out of focus. Dappled shade from above breaks the light into small moving patches across his shoulders and arms, leaving his face mostly in the cooler shaded value. A 4:3 environmental portrait with natural outdoor depth, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
+      "usesHobbyAlternative": true,
+      "wordCount": 110,
+      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. He straightens up from rock climbing and landscape photography and rolls one shoulder out, the other hand still on the work. He turns to the lens. Fourteen metres back the surroundings settle into soft shape. Light comes from behind and above, edging his outline, with his face lit softly by what bounces back off the room. A 4:3 environmental portrait with natural outdoor depth, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
     },
     {
       "id": "active-14-b",
@@ -1149,9 +1149,9 @@
         "width": 1512,
         "height": 2688
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 144,
-      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At a landscaped hill path, wearing a moss long-sleeve with black trail trousers, and grey running sneakers. He pauses on the rise, rests one forearm across the rail and shakes out the other hand. He smiles to the lens. Eighteen metres back, terraced planting, a handrail and the city spread below lose their edges while the ground between stays readable. Bright open sky above the rise lights him from overhead and a little in front, with a clean falloff down his chest and a short shadow at his feet. A 9:16 full-body documentary photograph with balanced ground contact, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
+      "usesHobbyAlternative": true,
+      "wordCount": 114,
+      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. He packs one thing away from rock climbing and landscape photography with both hands and pauses with it held. He looks to the lens. Behind him the venue recedes twenty metres, its own furniture softening as it goes. Soft frontal light reaches him over the camera position and lands evenly, with the depth behind a stop or more darker. A 9:16 full-body documentary photograph with balanced ground contact, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
     },
     {
       "id": "active-17-a",
@@ -5081,9 +5081,9 @@
         "width": 1512,
         "height": 2688
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 167,
-      "prompt": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At a broad urban park path, wearing a cream cotton tee under a light stone shell, and black training sneakers. He steps up onto a solid rock in the path, one hand dropping to it for balance, and settles his weight. His eyes stay on his footing, past the lens. Eighteen metres back, a park kiosk, benches and a bright open lawn lose their edges while the ground between stays readable. Morning sun sits low behind him and rims his shoulders and the back of his head, while the pale path in front bounces enough light to hold his face a stop under it. A 9:16 three-quarter action frame with the face fully visible, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple."
+      "usesHobbyAlternative": true,
+      "wordCount": 129,
+      "prompt": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. Partway through rock climbing and landscape photography, he steadies the work with one hand and makes a small correction with the other. He looks up to the lens as it comes right. The space carries on eleven metres behind him, its own surfaces soft and legible. Light falls from above and slightly to his left, modelling his brow and leaving the far cheek a stop darker. A 9:16 three-quarter action frame with the face fully visible, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple."
     },
     {
       "id": "active-02-b",
@@ -5096,9 +5096,9 @@
         "width": 1512,
         "height": 2688
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 159,
-      "prompt": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At a broad urban park path, wearing a rust merino tee with charcoal joggers, and worn trail shoes. He reaches a flatter stretch and loosens one pack strap with his thumb. He smiles to the lens while his breathing settles. Fifteen metres behind him, a park kiosk, benches and a bright open lawn blur gently with the movement of the air. Morning sun sits low behind him and rims his shoulders and the back of his head, while the pale path in front bounces enough light to hold his face a stop under it. A 9:16 three-quarter burst photograph with ordinary perspective, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture."
+      "usesHobbyAlternative": true,
+      "wordCount": 128,
+      "prompt": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. He pauses in the middle of rock climbing and landscape photography with both hands still resting on what he is doing. He glances to the lens and holds it a moment. Nine metres of the venue open behind him and settle into soft tone. A broad source ahead of him and above lights his face frontally, with the depth behind falling away darker. A 9:16 three-quarter burst photograph with ordinary perspective, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture."
     },
     {
       "id": "active-02-c",
@@ -5111,9 +5111,9 @@
         "width": 1512,
         "height": 2688
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 156,
-      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At a broad urban park path, wearing a black training half-zip with grey shorts, and grey running sneakers. He pauses at the bend and lifts one hand to point out the route ahead, then lets it drop. He follows his own gesture, off past the lens. Thirty metres out, a park kiosk, benches and a bright open lawn settle into pale distance while his own footing stays sharp. Morning sun sits low behind him and rims his shoulders and the back of his head, while the pale path in front bounces enough light to hold his face a stop under it. A 9:16 three-quarter photograph with activity context behind him, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
+      "usesHobbyAlternative": true,
+      "wordCount": 115,
+      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. He sets something down with both hands at a natural break in rock climbing and landscape photography and straightens his back. He finds the lens as he does. Behind him the working space recedes fourteen metres into gentle blur. Light comes across him from the right at head height, raking the texture of his sleeves and leaving a clean falloff. A 9:16 three-quarter photograph with activity context behind him, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
     },
     {
       "id": "active-03-a",
@@ -5216,9 +5216,9 @@
         "width": 1728,
         "height": 2304
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 147,
-      "prompt": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At a marked hill trail, wearing a mustard long-sleeve with dark shorts, and worn trail shoes. He sits on the bench to retie one shoe, pulling the knot firm with both hands. He looks up to the lens before standing. The ground runs back ten metres to switchbacks, scrub and a hazy skyline, held just out of focus. High flat overcast lights him from directly above, leaving a soft shadow in his eye sockets and a clean edge along the top of each shoulder. A 3:4 medium action frame that keeps active joints whole, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple."
+      "usesHobbyAlternative": true,
+      "wordCount": 120,
+      "prompt": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. He crouches to adjust something for rock climbing and landscape photography, one hand braced and the other working. He looks to the lens as he rises. The venue runs back sixteen metres behind him, softening as it goes. Overhead light pools on his hair and shoulders while the ground bounces a weaker fill up under his jaw. A 3:4 medium action frame that keeps active joints whole, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple."
     },
     {
       "id": "active-05-b",
@@ -5231,9 +5231,9 @@
         "width": 1728,
         "height": 2304
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 154,
-      "prompt": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At a marked hill trail, wearing a stone-grey hoodie with black joggers, and grey running sneakers. He rests one foot on the bench and works the lace through his fingers. He smiles to the lens at a remark from off frame. The path opens twelve metres behind him to switchbacks, scrub and a hazy skyline, which soften as the ground falls away. High flat overcast lights him from directly above, leaving a soft shadow in his eye sockets and a clean edge along the top of each shoulder. A 3:4 medium snapshot that keeps the face identifiable, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture."
+      "usesHobbyAlternative": true,
+      "wordCount": 124,
+      "prompt": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. He checks his grip before the next part of rock climbing and landscape photography, turning his hands over once. He looks up to the lens. Ten metres back, the space behind him holds soft, ordinary detail. A window or opening to his left carries the light across that side of his face, with the other side on bounce. A 3:4 medium snapshot that keeps the face identifiable, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture."
     },
     {
       "id": "active-05-c",
@@ -5246,9 +5246,9 @@
         "width": 1728,
         "height": 2304
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 143,
-      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At a marked hill trail, wearing an ecru tee under a light navy windshirt, and brown walking boots. He turns a shoe over in one hand to check the sole, sets his foot back down, and stays seated. His eyes stay on the shoe, past the lens. switchbacks, scrub and a hazy skyline sit twenty-five metres beyond him, dropping into soft outdoor depth. High flat overcast lights him from directly above, leaving a soft shadow in his eye sockets and a clean edge along the top of each shoulder. A 3:4 medium portrait taken during the activity, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
+      "usesHobbyAlternative": true,
+      "wordCount": 112,
+      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. He rests both forearms on whatever rock climbing and landscape photography has him working at and takes a breath. He turns to the lens. The room or ground behind him falls away thirteen metres into quiet blur. Soft light from above and behind rims his shoulders while his face rides on light returning off the surface in front. A 3:4 medium portrait taken during the activity, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
     },
     {
       "id": "active-06-a",
@@ -5351,9 +5351,9 @@
         "width": 2304,
         "height": 1728
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 147,
-      "prompt": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At a forest exercise clearing, wearing a moss long-sleeve with black trail trousers, and grey running sneakers. He stands with both hands braced above his knees after the effort, then straightens as his breathing settles. He looks up to the lens smiling. Eighteen metres back, log seating, a timber post and thick woodland lose their edges while the ground between stays readable. Midday sun sits high above and slightly ahead, catching his brow, nose and shoulders and leaving the underside of his jaw in shadow. A 4:3 environmental action frame that explains the activity, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple."
+      "usesHobbyAlternative": true,
+      "wordCount": 120,
+      "prompt": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. He finishes a run of rock climbing and landscape photography and lets both hands drop, breathing out. He looks to the lens with it still settling. Eighteen metres of the venue sit behind him, blurred but clearly a real place. Light arrives from ahead and above at an angle, giving short controlled shadows under his brow and nose. A 4:3 environmental action frame that explains the activity, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple."
     },
     {
       "id": "active-08-b",
@@ -5366,9 +5366,9 @@
         "width": 2304,
         "height": 1728
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 147,
-      "prompt": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At a forest exercise clearing, wearing an oat hoodie with charcoal joggers, and brown walking boots. He walks out the last stretch with his hands laced behind his head. He slows beside the lens with a relaxed post-run expression. Fifteen metres behind him, log seating, a timber post and thick woodland blur gently with the movement of the air. Midday sun sits high above and slightly ahead, catching his brow, nose and shoulders and leaving the underside of his jaw in shadow. A 4:3 environmental snapshot that includes the path, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture."
+      "usesHobbyAlternative": true,
+      "wordCount": 123,
+      "prompt": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. He wipes his palms and takes hold again for the next part of rock climbing and landscape photography. He glances to the lens between the two. The space opens twelve metres behind him and loses its edges. A strong source behind him edges his hair and shoulders, with his face carried a stop under it on ambient fill. A 4:3 environmental snapshot that includes the path, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture."
     },
     {
       "id": "active-08-c",
@@ -5381,9 +5381,9 @@
         "width": 2304,
         "height": 1728
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 142,
-      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At a forest exercise clearing, wearing a rust technical tee with dark shorts, and black training sneakers. He lowers a bottle after a drink and screws the cap back on with both hands. He grins to the lens at the question about the run. Thirty metres out, log seating, a timber post and thick woodland settle into pale distance while his own footing stays sharp. Midday sun sits high above and slightly ahead, catching his brow, nose and shoulders and leaving the underside of his jaw in shadow. A 4:3 environmental portrait with natural outdoor depth, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
+      "usesHobbyAlternative": true,
+      "wordCount": 107,
+      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. He steps back from rock climbing and landscape photography to look at what he has done, one hand still resting on it. He turns to the lens. Fifteen metres back the surroundings soften into plain tone. Even light reaches him from the whole space above, leaving a gentle shadow only beneath his chin. A 4:3 environmental portrait with natural outdoor depth, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
     },
     {
       "id": "active-09-a",
@@ -5486,9 +5486,9 @@
         "width": 1512,
         "height": 2688
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 149,
-      "prompt": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At a riverside running route, wearing a rust merino tee with charcoal joggers, and worn trail shoes. He runs the long straight with the light behind him, arms swinging economically. His focus stays down the path, past the lens. The ground runs back ten metres to a towpath, moored barges and warehouse fronts, held just out of focus. The sun sits low and directly behind him, burning through the edge of his hair and shoulders, while his face sits a full stop darker on ambient sky light alone. A 9:16 full-body action frame from sideline height, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple."
+      "usesHobbyAlternative": true,
+      "wordCount": 113,
+      "prompt": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. He carries something across for rock climbing and landscape photography, both hands occupied and his weight shifting. He looks to the lens mid-step. The venue runs seventeen metres back and softens by layers. Light comes low from his right and rakes across him, catching the edge of his jaw and one forearm. A 9:16 full-body action frame from sideline height, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple."
     },
     {
       "id": "active-11-b",
@@ -5501,9 +5501,9 @@
         "width": 1512,
         "height": 2688
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 166,
-      "prompt": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At a riverside running route, wearing a black training half-zip with grey shorts, and grey running sneakers. He slows to a jog and pulls the hem of his top up to wipe his forehead with one hand. He looks to the lens as he lets it fall. The path opens twelve metres behind him to a towpath, moored barges and warehouse fronts, which soften as the ground falls away. The sun sits low and directly behind him, burning through the edge of his hair and shoulders, while his face sits a full stop darker on ambient sky light alone. A 9:16 handheld full-body frame from a safe practical distance, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture."
+      "usesHobbyAlternative": true,
+      "wordCount": 121,
+      "prompt": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. He sets up for rock climbing and landscape photography, placing things with both hands until they sit right. He looks to the lens once they do. Eleven metres behind him the space drops into soft depth. A bright opening ahead lights his face fully from the front while the interior behind reads much darker. A 9:16 handheld full-body frame from a safe practical distance, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture."
     },
     {
       "id": "active-11-c",
@@ -5516,9 +5516,9 @@
         "width": 1512,
         "height": 2688
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 144,
-      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At a riverside running route, wearing a forest-green tee with sand hiking trousers, and brown walking boots. He stops to check a watch on his wrist, thumb on the bezel, then drops the arm. He smiles to the lens at the split. a towpath, moored barges and warehouse fronts sit twenty-five metres beyond him, dropping into soft outdoor depth. The sun sits low and directly behind him, burning through the edge of his hair and shoulders, while his face sits a full stop darker on ambient sky light alone. A 9:16 full-body documentary photograph with balanced ground contact, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
+      "usesHobbyAlternative": true,
+      "wordCount": 111,
+      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. He kneels to reach something low in rock climbing and landscape photography, one palm flat for balance. He looks up to the lens. Behind him the working area carries on twelve metres, gently out of focus. Overhead light drops onto his head and shoulders, with a soft upward fill off the floor keeping his eyes readable. A 9:16 full-body documentary photograph with balanced ground contact, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
     },
     {
       "id": "active-12-a",
@@ -5576,9 +5576,9 @@
         "width": 2304,
         "height": 1728
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 158,
-      "prompt": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At a shaded city-park bench, wearing a bone tee with slate running shorts, and brown walking boots. He fills a bottle at the fountain, closes it firmly with both hands, and slides it into a side pocket. His eyes stay on the pocket, past the lens. The path opens twelve metres behind him to a plane-tree canopy, a drinking fountain and a lit path, which soften as the ground falls away. Dappled shade from above breaks the light into small moving patches across his shoulders and arms, leaving his face mostly in the cooler shaded value. A 4:3 environmental action frame that explains the activity, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple."
+      "usesHobbyAlternative": true,
+      "wordCount": 117,
+      "prompt": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. He holds the position rock climbing and landscape photography actually puts him in and takes one steady breath. He meets the lens and leaves everything as it was. The venue opens nineteen metres behind him into soft, honest depth. Light from above and one side models his face, leaving the far cheek in quiet shadow. A 4:3 environmental action frame that explains the activity, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple."
     },
     {
       "id": "active-13-b",
@@ -5591,9 +5591,9 @@
         "width": 2304,
         "height": 1728
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 151,
-      "prompt": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At a shaded city-park bench, wearing a teal training top with charcoal joggers, and black training sneakers. He waits for the bottle to fill with one hand under it, watching the water run over his fingers. He smiles to the lens. a plane-tree canopy, a drinking fountain and a lit path sit twenty-five metres beyond him, dropping into soft outdoor depth. Dappled shade from above breaks the light into small moving patches across his shoulders and arms, leaving his face mostly in the cooler shaded value. A 4:3 environmental snapshot that includes the path, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture."
+      "usesHobbyAlternative": true,
+      "wordCount": 122,
+      "prompt": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. He adjusts something small with his fingers partway through rock climbing and landscape photography and sets it back. He looks up to the lens. Ten metres of the space behind him blur into ordinary background. A source close on his left throws warm light across that side of his face and falls off quickly to the right. A 4:3 environmental snapshot that includes the path, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture."
     },
     {
       "id": "active-13-c",
@@ -5606,9 +5606,9 @@
         "width": 2304,
         "height": 1728
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 142,
-      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At a shaded city-park bench, wearing a mustard long-sleeve with dark shorts, and worn trail shoes. He finishes drinking, wipes his mouth on the back of one wrist, and caps the bottle. He looks to the lens before rejoining the path. The ground runs back ten metres to a plane-tree canopy, a drinking fountain and a lit path, held just out of focus. Dappled shade from above breaks the light into small moving patches across his shoulders and arms, leaving his face mostly in the cooler shaded value. A 4:3 environmental portrait with natural outdoor depth, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
+      "usesHobbyAlternative": true,
+      "wordCount": 110,
+      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. He straightens up from rock climbing and landscape photography and rolls one shoulder out, the other hand still on the work. He turns to the lens. Fourteen metres back the surroundings settle into soft shape. Light comes from behind and above, edging his outline, with his face lit softly by what bounces back off the room. A 4:3 environmental portrait with natural outdoor depth, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
     },
     {
       "id": "active-14-a",
@@ -5711,9 +5711,9 @@
         "width": 1512,
         "height": 2688
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 153,
-      "prompt": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At a landscaped hill path, wearing an indigo long-sleeve with stone shorts, and black training sneakers. He works up the stepped path with one hand on the handrail and a steady rhythm. His focus stays a few steps ahead, past the lens. Fifteen metres behind him, terraced planting, a handrail and the city spread below blur gently with the movement of the air. Bright open sky above the rise lights him from overhead and a little in front, with a clean falloff down his chest and a short shadow at his feet. A 9:16 full-body action frame from sideline height, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple."
+      "usesHobbyAlternative": true,
+      "wordCount": 121,
+      "prompt": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. He is well into rock climbing and landscape photography with both hands busy and his attention on the work. He lifts his eyes to the lens while his hands keep going. The place runs back sixteen metres and softens into depth. Light falls from overhead and slightly ahead, catching his brow and shoulders and leaving his jaw underneath in shadow. A 9:16 full-body action frame from sideline height, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple."
     },
     {
       "id": "active-16-b",
@@ -5726,9 +5726,9 @@
         "width": 1512,
         "height": 2688
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 164,
-      "prompt": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At a landscaped hill path, wearing a faded navy tee with grey training shorts, and worn trail shoes. He reaches the top, drops both hands to his hips, and turns to face the way he came. He looks to the lens as his breathing comes back. Thirty metres out, terraced planting, a handrail and the city spread below settle into pale distance while his own footing stays sharp. Bright open sky above the rise lights him from overhead and a little in front, with a clean falloff down his chest and a short shadow at his feet. A 9:16 handheld full-body frame from a safe practical distance, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture."
+      "usesHobbyAlternative": true,
+      "wordCount": 125,
+      "prompt": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. He pauses over rock climbing and landscape photography, both hands resting either side of it while he thinks the next part through. He glances to the lens. Twelve metres behind him the space loses detail into soft tone. A wide source to his side splits his face cleanly, one half lit and the other holding on room bounce. A 9:16 handheld full-body frame from a safe practical distance, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture."
     },
     {
       "id": "active-16-c",
@@ -5741,9 +5741,9 @@
         "width": 1512,
         "height": 2688
       },
-      "usesHobbyAlternative": false,
-      "wordCount": 144,
-      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At a landscaped hill path, wearing a moss long-sleeve with black trail trousers, and grey running sneakers. He pauses on the rise, rests one forearm across the rail and shakes out the other hand. He smiles to the lens. Eighteen metres back, terraced planting, a handrail and the city spread below lose their edges while the ground between stays readable. Bright open sky above the rise lights him from overhead and a little in front, with a clean falloff down his chest and a short shadow at his feet. A 9:16 full-body documentary photograph with balanced ground contact, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
+      "usesHobbyAlternative": true,
+      "wordCount": 114,
+      "prompt": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. He packs one thing away from rock climbing and landscape photography with both hands and pauses with it held. He looks to the lens. Behind him the venue recedes twenty metres, its own furniture softening as it goes. Soft frontal light reaches him over the camera position and lands evenly, with the depth behind a stop or more darker. A 9:16 full-body documentary photograph with balanced ground contact, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast."
     },
     {
       "id": "active-17-a",

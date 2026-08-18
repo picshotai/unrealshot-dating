@@ -7045,6 +7045,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "Morning sun sits low behind him and rims his shoulders and the back of his head, while the pale path in front bounces enough light to hold his face a stop under it.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He steps up onto a solid rock in the path, one hand dropping to it for balance, and settles his weight. His eyes stay on his footing, past the lens. Eighteen metres back, {{backdrop}} lose their edges while the ground between stays readable. Morning sun sits low behind him and rims his shoulders and the back of his head, while the pale path in front bounces enough light to hold his face a stop under it. A 9:16 three-quarter action frame with the face fully visible, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
+    "hobbyPromptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. Partway through {{hobby}}, he steadies the work with one hand and makes a small correction with the other. He looks up to the lens as it comes right. The space carries on eleven metres behind him, its own surfaces soft and legible. Light falls from above and slightly to his left, modelling his brow and leaving the far cheek a stop darker. A 9:16 three-quarter action frame with the face fully visible, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
     "locations": {
       "urban": "a broad urban park path",
       "outdoorsy": "a lakeside trail",
@@ -7074,6 +7075,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "Morning sun sits low behind him and rims his shoulders and the back of his head, while the pale path in front bounces enough light to hold his face a stop under it.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He reaches a flatter stretch and loosens one pack strap with his thumb. He smiles to the lens while his breathing settles. Fifteen metres behind him, {{backdrop}} blur gently with the movement of the air. Morning sun sits low behind him and rims his shoulders and the back of his head, while the pale path in front bounces enough light to hold his face a stop under it. A 9:16 three-quarter burst photograph with ordinary perspective, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
+    "hobbyPromptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. He pauses in the middle of {{hobby}} with both hands still resting on what he is doing. He glances to the lens and holds it a moment. Nine metres of the venue open behind him and settle into soft tone. A broad source ahead of him and above lights his face frontally, with the depth behind falling away darker. A 9:16 three-quarter burst photograph with ordinary perspective, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
     "locations": {
       "urban": "a broad urban park path",
       "outdoorsy": "a lakeside trail",
@@ -7103,6 +7105,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "Morning sun sits low behind him and rims his shoulders and the back of his head, while the pale path in front bounces enough light to hold his face a stop under it.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He pauses at the bend and lifts one hand to point out the route ahead, then lets it drop. He follows his own gesture, off past the lens. Thirty metres out, {{backdrop}} settle into pale distance while his own footing stays sharp. Morning sun sits low behind him and rims his shoulders and the back of his head, while the pale path in front bounces enough light to hold his face a stop under it. A 9:16 three-quarter photograph with activity context behind him, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
+    "hobbyPromptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. He sets something down with both hands at a natural break in {{hobby}} and straightens his back. He finds the lens as he does. Behind him the working space recedes fourteen metres into gentle blur. Light comes across him from the right at head height, raking the texture of his sleeves and leaving a clean falloff. A 9:16 three-quarter photograph with activity context behind him, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
       "urban": "a broad urban park path",
       "outdoorsy": "a lakeside trail",
@@ -7306,6 +7309,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "High flat overcast lights him from directly above, leaving a soft shadow in his eye sockets and a clean edge along the top of each shoulder.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He sits on the bench to retie one shoe, pulling the knot firm with both hands. He looks up to the lens before standing. The ground runs back ten metres to {{backdrop}}, held just out of focus. High flat overcast lights him from directly above, leaving a soft shadow in his eye sockets and a clean edge along the top of each shoulder. A 3:4 medium action frame that keeps active joints whole, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
+    "hobbyPromptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. He crouches to adjust something for {{hobby}}, one hand braced and the other working. He looks to the lens as he rises. The venue runs back sixteen metres behind him, softening as it goes. Overhead light pools on his hair and shoulders while the ground bounces a weaker fill up under his jaw. A 3:4 medium action frame that keeps active joints whole, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
     "locations": {
       "urban": "a marked hill trail",
       "outdoorsy": "a wooded mountain path",
@@ -7335,6 +7339,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "High flat overcast lights him from directly above, leaving a soft shadow in his eye sockets and a clean edge along the top of each shoulder.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He rests one foot on the bench and works the lace through his fingers. He smiles to the lens at a remark from off frame. The path opens twelve metres behind him to {{backdrop}}, which soften as the ground falls away. High flat overcast lights him from directly above, leaving a soft shadow in his eye sockets and a clean edge along the top of each shoulder. A 3:4 medium snapshot that keeps the face identifiable, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
+    "hobbyPromptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. He checks his grip before the next part of {{hobby}}, turning his hands over once. He looks up to the lens. Ten metres back, the space behind him holds soft, ordinary detail. A window or opening to his left carries the light across that side of his face, with the other side on bounce. A 3:4 medium snapshot that keeps the face identifiable, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
     "locations": {
       "urban": "a marked hill trail",
       "outdoorsy": "a wooded mountain path",
@@ -7364,6 +7369,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "High flat overcast lights him from directly above, leaving a soft shadow in his eye sockets and a clean edge along the top of each shoulder.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He turns a shoe over in one hand to check the sole, sets his foot back down, and stays seated. His eyes stay on the shoe, past the lens. {{backdrop}} sit twenty-five metres beyond him, dropping into soft outdoor depth. High flat overcast lights him from directly above, leaving a soft shadow in his eye sockets and a clean edge along the top of each shoulder. A 3:4 medium portrait taken during the activity, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
+    "hobbyPromptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. He rests both forearms on whatever {{hobby}} has him working at and takes a breath. He turns to the lens. The room or ground behind him falls away thirteen metres into quiet blur. Soft light from above and behind rims his shoulders while his face rides on light returning off the surface in front. A 3:4 medium portrait taken during the activity, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
       "urban": "a marked hill trail",
       "outdoorsy": "a wooded mountain path",
@@ -7573,6 +7579,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "Midday sun sits high above and slightly ahead, catching his brow, nose and shoulders and leaving the underside of his jaw in shadow.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He stands with both hands braced above his knees after the effort, then straightens as his breathing settles. He looks up to the lens smiling. Eighteen metres back, {{backdrop}} lose their edges while the ground between stays readable. Midday sun sits high above and slightly ahead, catching his brow, nose and shoulders and leaving the underside of his jaw in shadow. A 4:3 environmental action frame that explains the activity, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
+    "hobbyPromptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. He finishes a run of {{hobby}} and lets both hands drop, breathing out. He looks to the lens with it still settling. Eighteen metres of the venue sit behind him, blurred but clearly a real place. Light arrives from ahead and above at an angle, giving short controlled shadows under his brow and nose. A 4:3 environmental action frame that explains the activity, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
     "locations": {
       "urban": "a forest exercise clearing",
       "outdoorsy": "a lodge deck beside trees",
@@ -7602,6 +7609,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "Midday sun sits high above and slightly ahead, catching his brow, nose and shoulders and leaving the underside of his jaw in shadow.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He walks out the last stretch with his hands laced behind his head. He slows beside the lens with a relaxed post-run expression. Fifteen metres behind him, {{backdrop}} blur gently with the movement of the air. Midday sun sits high above and slightly ahead, catching his brow, nose and shoulders and leaving the underside of his jaw in shadow. A 4:3 environmental snapshot that includes the path, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
+    "hobbyPromptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. He wipes his palms and takes hold again for the next part of {{hobby}}. He glances to the lens between the two. The space opens twelve metres behind him and loses its edges. A strong source behind him edges his hair and shoulders, with his face carried a stop under it on ambient fill. A 4:3 environmental snapshot that includes the path, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
     "locations": {
       "urban": "a forest exercise clearing",
       "outdoorsy": "a lodge deck beside trees",
@@ -7631,6 +7639,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "Midday sun sits high above and slightly ahead, catching his brow, nose and shoulders and leaving the underside of his jaw in shadow.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He lowers a bottle after a drink and screws the cap back on with both hands. He grins to the lens at the question about the run. Thirty metres out, {{backdrop}} settle into pale distance while his own footing stays sharp. Midday sun sits high above and slightly ahead, catching his brow, nose and shoulders and leaving the underside of his jaw in shadow. A 4:3 environmental portrait with natural outdoor depth, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
+    "hobbyPromptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. He steps back from {{hobby}} to look at what he has done, one hand still resting on it. He turns to the lens. Fifteen metres back the surroundings soften into plain tone. Even light reaches him from the whole space above, leaving a gentle shadow only beneath his chin. A 4:3 environmental portrait with natural outdoor depth, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
       "urban": "a forest exercise clearing",
       "outdoorsy": "a lodge deck beside trees",
@@ -7834,6 +7843,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "The sun sits low and directly behind him, burning through the edge of his hair and shoulders, while his face sits a full stop darker on ambient sky light alone.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He runs the long straight with the light behind him, arms swinging economically. His focus stays down the path, past the lens. The ground runs back ten metres to {{backdrop}}, held just out of focus. The sun sits low and directly behind him, burning through the edge of his hair and shoulders, while his face sits a full stop darker on ambient sky light alone. A 9:16 full-body action frame from sideline height, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
+    "hobbyPromptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. He carries something across for {{hobby}}, both hands occupied and his weight shifting. He looks to the lens mid-step. The venue runs seventeen metres back and softens by layers. Light comes low from his right and rakes across him, catching the edge of his jaw and one forearm. A 9:16 full-body action frame from sideline height, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
     "locations": {
       "urban": "a riverside running route",
       "outdoorsy": "a golden-hour trail path",
@@ -7863,6 +7873,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "The sun sits low and directly behind him, burning through the edge of his hair and shoulders, while his face sits a full stop darker on ambient sky light alone.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He slows to a jog and pulls the hem of his top up to wipe his forehead with one hand. He looks to the lens as he lets it fall. The path opens twelve metres behind him to {{backdrop}}, which soften as the ground falls away. The sun sits low and directly behind him, burning through the edge of his hair and shoulders, while his face sits a full stop darker on ambient sky light alone. A 9:16 handheld full-body frame from a safe practical distance, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
+    "hobbyPromptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. He sets up for {{hobby}}, placing things with both hands until they sit right. He looks to the lens once they do. Eleven metres behind him the space drops into soft depth. A bright opening ahead lights his face fully from the front while the interior behind reads much darker. A 9:16 handheld full-body frame from a safe practical distance, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
     "locations": {
       "urban": "a riverside running route",
       "outdoorsy": "a golden-hour trail path",
@@ -7892,6 +7903,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "The sun sits low and directly behind him, burning through the edge of his hair and shoulders, while his face sits a full stop darker on ambient sky light alone.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He stops to check a watch on his wrist, thumb on the bezel, then drops the arm. He smiles to the lens at the split. {{backdrop}} sit twenty-five metres beyond him, dropping into soft outdoor depth. The sun sits low and directly behind him, burning through the edge of his hair and shoulders, while his face sits a full stop darker on ambient sky light alone. A 9:16 full-body documentary photograph with balanced ground contact, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
+    "hobbyPromptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. He kneels to reach something low in {{hobby}}, one palm flat for balance. He looks up to the lens. Behind him the working area carries on twelve metres, gently out of focus. Overhead light drops onto his head and shoulders, with a soft upward fill off the floor keeping his eyes readable. A 9:16 full-body documentary photograph with balanced ground contact, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
       "urban": "a riverside running route",
       "outdoorsy": "a golden-hour trail path",
@@ -8008,6 +8020,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "Dappled shade from above breaks the light into small moving patches across his shoulders and arms, leaving his face mostly in the cooler shaded value.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He fills a bottle at the fountain, closes it firmly with both hands, and slides it into a side pocket. His eyes stay on the pocket, past the lens. The path opens twelve metres behind him to {{backdrop}}, which soften as the ground falls away. Dappled shade from above breaks the light into small moving patches across his shoulders and arms, leaving his face mostly in the cooler shaded value. A 4:3 environmental action frame that explains the activity, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
+    "hobbyPromptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. He holds the position {{hobby}} actually puts him in and takes one steady breath. He meets the lens and leaves everything as it was. The venue opens nineteen metres behind him into soft, honest depth. Light from above and one side models his face, leaving the far cheek in quiet shadow. A 4:3 environmental action frame that explains the activity, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
     "locations": {
       "urban": "a shaded city-park bench",
       "outdoorsy": "a trailhead rest bench",
@@ -8037,6 +8050,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "Dappled shade from above breaks the light into small moving patches across his shoulders and arms, leaving his face mostly in the cooler shaded value.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He waits for the bottle to fill with one hand under it, watching the water run over his fingers. He smiles to the lens. {{backdrop}} sit twenty-five metres beyond him, dropping into soft outdoor depth. Dappled shade from above breaks the light into small moving patches across his shoulders and arms, leaving his face mostly in the cooler shaded value. A 4:3 environmental snapshot that includes the path, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
+    "hobbyPromptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. He adjusts something small with his fingers partway through {{hobby}} and sets it back. He looks up to the lens. Ten metres of the space behind him blur into ordinary background. A source close on his left throws warm light across that side of his face and falls off quickly to the right. A 4:3 environmental snapshot that includes the path, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
     "locations": {
       "urban": "a shaded city-park bench",
       "outdoorsy": "a trailhead rest bench",
@@ -8066,6 +8080,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "Dappled shade from above breaks the light into small moving patches across his shoulders and arms, leaving his face mostly in the cooler shaded value.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He finishes drinking, wipes his mouth on the back of one wrist, and caps the bottle. He looks to the lens before rejoining the path. The ground runs back ten metres to {{backdrop}}, held just out of focus. Dappled shade from above breaks the light into small moving patches across his shoulders and arms, leaving his face mostly in the cooler shaded value. A 4:3 environmental portrait with natural outdoor depth, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
+    "hobbyPromptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. He straightens up from {{hobby}} and rolls one shoulder out, the other hand still on the work. He turns to the lens. Fourteen metres back the surroundings settle into soft shape. Light comes from behind and above, edging his outline, with his face lit softly by what bounces back off the room. A 4:3 environmental portrait with natural outdoor depth, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
       "urban": "a shaded city-park bench",
       "outdoorsy": "a trailhead rest bench",
@@ -8271,6 +8286,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "Bright open sky above the rise lights him from overhead and a little in front, with a clean falloff down his chest and a short shadow at his feet.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He works up the stepped path with one hand on the handrail and a steady rhythm. His focus stays a few steps ahead, past the lens. Fifteen metres behind him, {{backdrop}} blur gently with the movement of the air. Bright open sky above the rise lights him from overhead and a little in front, with a clean falloff down his chest and a short shadow at his feet. A 9:16 full-body action frame from sideline height, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
+    "hobbyPromptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. He is well into {{hobby}} with both hands busy and his attention on the work. He lifts his eyes to the lens while his hands keep going. The place runs back sixteen metres and softens into depth. Light falls from overhead and slightly ahead, catching his brow and shoulders and leaving his jaw underneath in shadow. A 9:16 full-body action frame from sideline height, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
     "locations": {
       "urban": "a landscaped hill path",
       "outdoorsy": "a moderate mountain trail",
@@ -8300,6 +8316,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "Bright open sky above the rise lights him from overhead and a little in front, with a clean falloff down his chest and a short shadow at his feet.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He reaches the top, drops both hands to his hips, and turns to face the way he came. He looks to the lens as his breathing comes back. Thirty metres out, {{backdrop}} settle into pale distance while his own footing stays sharp. Bright open sky above the rise lights him from overhead and a little in front, with a clean falloff down his chest and a short shadow at his feet. A 9:16 handheld full-body frame from a safe practical distance, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
+    "hobbyPromptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. He pauses over {{hobby}}, both hands resting either side of it while he thinks the next part through. He glances to the lens. Twelve metres behind him the space loses detail into soft tone. A wide source to his side splits his face cleanly, one half lit and the other holding on room bounce. A 9:16 handheld full-body frame from a safe practical distance, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
     "locations": {
       "urban": "a landscaped hill path",
       "outdoorsy": "a moderate mountain trail",
@@ -8329,6 +8346,7 @@ export const DATING_PROMPTS = [
     "tags": [],
     "light": "Bright open sky above the rise lights him from overhead and a little in front, with a clean falloff down his chest and a short shadow at his feet.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He pauses on the rise, rests one forearm across the rail and shakes out the other hand. He smiles to the lens. Eighteen metres back, {{backdrop}} lose their edges while the ground between stays readable. Bright open sky above the rise lights him from overhead and a little in front, with a clean falloff down his chest and a short shadow at his feet. A 9:16 full-body documentary photograph with balanced ground contact, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
+    "hobbyPromptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. He packs one thing away from {{hobby}} with both hands and pauses with it held. He looks to the lens. Behind him the venue recedes twenty metres, its own furniture softening as it goes. Soft frontal light reaches him over the camera position and lands evenly, with the depth behind a stop or more darker. A 9:16 full-body documentary photograph with balanced ground contact, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
       "urban": "a landscaped hill path",
       "outdoorsy": "a moderate mountain trail",
@@ -11650,6 +11668,8 @@ const LIGHT_DIRECTION_PATTERN =
 const FOOTWEAR_PATTERN =
   /\b(shoes|boots|sneakers|trainers|loafers|sandals|derbies|brogues|chukkas|high-tops|oxfords|moccasins|runners)\b/;
 
+/** Slots that offer a hobby alternative, and so how many hobby photos land. */
+const HOBBY_SLOT_COUNT = 10;
 const MAX_OUTFIT_REPEATS = 4;
 const MAX_COLOUR_SHARE = 0.2;
 
@@ -11956,9 +11976,23 @@ export function assertLibraryComplete(): void {
 
   assertExclusionCapacity();
 
-  if (hobbyPromptCount !== 12) {
+  // A delivery draws one variant per slot, so the number of slots carrying a
+  // hobby alternative is exactly how many hobby photos a user receives. Four
+  // slots meant the question he answered changed four photos out of a hundred.
+  const hobbySlots = new Set(
+    DATING_PROMPTS.filter(
+      (p): p is typeof p & { hobbyPromptTemplate: string } =>
+        "hobbyPromptTemplate" in p && Boolean(p.hobbyPromptTemplate)
+    ).map((p) => `${p.bucket}-${p.slot}`)
+  );
+  if (hobbySlots.size !== HOBBY_SLOT_COUNT) {
     throw new Error(
-      `Prompt library has ${hobbyPromptCount} hobby alternatives; expected 12`
+      `Library has hobby alternatives on ${hobbySlots.size} slots; expected ${HOBBY_SLOT_COUNT}`
+    );
+  }
+  if (hobbyPromptCount !== HOBBY_SLOT_COUNT * 3) {
+    throw new Error(
+      `Prompt library has ${hobbyPromptCount} hobby alternatives; expected ${HOBBY_SLOT_COUNT * 3}`
     );
   }
 }

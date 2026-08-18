@@ -118,73 +118,147 @@ function definitionFor(
   return found;
 }
 
+export type PlanOptions = {
+  /** Content the user asked us to leave out. */
+  excludeTags?: readonly string[];
+};
+
+/** True when every variant of a slot carries something the user excluded. */
+function slotIsBlocked(
+  bucket: DatingBucket,
+  slot: number,
+  excluded: readonly string[]
+): boolean {
+  if (excluded.length === 0) return false;
+  return getPromptVariants(bucket, slot).every((p) =>
+    p.tags.some((tag) => excluded.includes(tag))
+  );
+}
+
 export function planDelivery(
   batchId: string,
-  bias: DeliveryBias
+  bias: DeliveryBias,
+  options: PlanOptions = {}
 ): DeliverySlot[] {
+  const excluded = options.excludeTags ?? [];
   const vibeOrder = byWeight(VIBES, bias.vibe);
   const styleOrder = byWeight(STYLES, bias.style);
-  const plan: DeliverySlot[] = [];
-  const usedOutfits = new Set<string>();
+
+  type Candidate = { bucket: DatingBucket; slot: number; vibe: Vibe };
+  const selected: Candidate[] = [];
+  /** Usable candidates a bucket did not need, kept to cover another's shortfall. */
+  const spare: Candidate[] = [];
+  let shortfall = 0;
 
   for (const bucket of DATING_BUCKETS) {
     // Every slot in a group takes a different vibe, which is what makes the
-    // locations unique. That yields 26 candidates per bucket, of which the
-    // delivery uses 20 — and the six-slot surplus is what finally lets the
-    // user's preference show. When all 26 had to be used, the vibe mix was
-    // forced almost even no matter what he asked for.
-    const candidates: Array<{ slot: number; vibe: Vibe }> = [];
+    // locations unique. That yields up to 26 candidates per bucket, of which the
+    // delivery uses 20 — and the surplus is what lets the user's preference
+    // show. When all 26 had to be used, the vibe mix was forced almost even no
+    // matter what he asked for.
+    const candidates: Candidate[] = [];
     for (const group of locationGroups(bucket)) {
       const rotation = stableHash(`${batchId}:${bucket}:${group[0]}`) % 2;
       const remaining = vibeOrder.slice(1);
       if (rotation === 1) remaining.reverse();
       const groupVibes = [vibeOrder[0], ...remaining];
       group.forEach((slot, indexInGroup) => {
-        candidates.push({ slot, vibe: groupVibes[indexInGroup] });
+        // A slot whose every variant carries excluded content is unavailable.
+        // Dropping it here is what keeps a dog out of the delivery of a man who
+        // told us he has no dog.
+        if (slotIsBlocked(bucket, slot, excluded)) return;
+        candidates.push({ bucket, slot, vibe: groupVibes[indexInGroup] });
       });
     }
 
-    const chosen = [...candidates]
+    const ranked = candidates.sort((a, b) => {
+      const weight = (bias.vibe[b.vibe] ?? 0) - (bias.vibe[a.vibe] ?? 0);
+      if (weight !== 0) return weight;
+      // stable, batch-dependent tie-break so two orders differ
+      return (
+        (stableHash(`${batchId}:${bucket}:${a.slot}`) % 1000) -
+        (stableHash(`${batchId}:${bucket}:${b.slot}`) % 1000)
+      );
+    });
+
+    selected.push(...ranked.slice(0, PHOTOS_PER_BUCKET));
+    spare.push(...ranked.slice(PHOTOS_PER_BUCKET));
+    shortfall += Math.max(0, PHOTOS_PER_BUCKET - ranked.length);
+  }
+
+  // Exclusions do not fall evenly. Dog and team sport both land in `active`,
+  // which can take it from 26 usable slots to 18, so a filtered delivery is made
+  // whole from whichever buckets had slots to spare. The bucket balance drifts —
+  // a man who excludes dogs gets a few more street and travel photos — which is
+  // the honest trade for keeping 100 photos in 100 different places.
+  if (shortfall > 0) {
+    const backfill = spare
       .sort((a, b) => {
         const weight = (bias.vibe[b.vibe] ?? 0) - (bias.vibe[a.vibe] ?? 0);
         if (weight !== 0) return weight;
-        // stable, batch-dependent tie-break so two orders differ
         return (
-          (stableHash(`${batchId}:${bucket}:${a.slot}`) % 1000) -
-          (stableHash(`${batchId}:${bucket}:${b.slot}`) % 1000)
+          (stableHash(`${batchId}:fill:${a.bucket}:${a.slot}`) % 1000) -
+          (stableHash(`${batchId}:fill:${b.bucket}:${b.slot}`) % 1000)
         );
       })
-      .slice(0, PHOTOS_PER_BUCKET)
-      .sort((a, b) => a.slot - b.slot);
+      .slice(0, shortfall);
 
-    for (const { slot, vibe } of chosen) {
-      // Style is drawn per photo from the weighting, so a 50/30/20 preference
-      // produces roughly that mix rather than collapsing onto the favourite.
-      const seed = stableHash(`${batchId}:${bucket}:${slot}`);
-      const target = weightedPick(seed, styleOrder, bias.style);
-      const pairings: Array<{ style: StylePref; variant: DatingPromptVariant }> = [];
-      for (const style of [target, ...styleOrder.filter((s) => s !== target)]) {
-        for (let offset = 0; offset < VARIANTS.length; offset += 1) {
-          pairings.push({
-            style,
-            variant: VARIANTS[(seed + offset) % VARIANTS.length],
-          });
-        }
-      }
-
-      const choice =
-        pairings.find(
-          (pairing) =>
-            !usedOutfits.has(
-              definitionFor(bucket, slot, pairing.variant).outfits[pairing.style]
-            )
-        ) ?? pairings[0];
-
-      usedOutfits.add(
-        definitionFor(bucket, slot, choice.variant).outfits[choice.style]
+    if (backfill.length < shortfall) {
+      throw new Error(
+        `Exclusions [${excluded.join(", ")}] leave only ${
+          selected.length + backfill.length
+        } usable slots; a delivery needs ${TOTAL_PHOTOS}`
       );
-      plan.push({ bucket, slot, variant: choice.variant, vibe, style: choice.style });
     }
+    selected.push(...backfill);
+  }
+
+  // Style and variant are resolved last, once the final set of slots is known,
+  // so outfit uniqueness holds across backfilled entries too.
+  const plan: DeliverySlot[] = [];
+  const usedOutfits = new Set<string>();
+
+  const ordered = selected.sort(
+    (a, b) =>
+      DATING_BUCKETS.indexOf(a.bucket) - DATING_BUCKETS.indexOf(b.bucket) ||
+      a.slot - b.slot
+  );
+
+  for (const { bucket, slot, vibe } of ordered) {
+    // Style is drawn per photo from the weighting, so a 65/20/15 preference
+    // produces roughly that mix rather than collapsing onto the favourite.
+    const seed = stableHash(`${batchId}:${bucket}:${slot}`);
+    const target = weightedPick(seed, styleOrder, bias.style);
+    const pairings: Array<{ style: StylePref; variant: DatingPromptVariant }> = [];
+    for (const style of [target, ...styleOrder.filter((s) => s !== target)]) {
+      for (let offset = 0; offset < VARIANTS.length; offset += 1) {
+        pairings.push({
+          style,
+          variant: VARIANTS[(seed + offset) % VARIANTS.length],
+        });
+      }
+    }
+
+    const allowed = pairings.filter(
+      ({ variant }) =>
+        !definitionFor(bucket, slot, variant).tags.some((tag) =>
+          excluded.includes(tag)
+        )
+    );
+    const usable = allowed.length > 0 ? allowed : pairings;
+
+    const choice =
+      usable.find(
+        (pairing) =>
+          !usedOutfits.has(
+            definitionFor(bucket, slot, pairing.variant).outfits[pairing.style]
+          )
+      ) ?? usable[0];
+
+    usedOutfits.add(
+      definitionFor(bucket, slot, choice.variant).outfits[choice.style]
+    );
+    plan.push({ bucket, slot, variant: choice.variant, vibe, style: choice.style });
   }
 
   if (plan.length !== TOTAL_PHOTOS) {
@@ -257,4 +331,64 @@ export function summariseDelivery(plan: DeliverySlot[]) {
       100
     ).toFixed(0)}%`,
   };
+}
+
+/**
+ * Picks a replacement shot for one photo the user asked to redo.
+ *
+ * Regeneration used to re-send the stored prompt, so a man who disliked a photo
+ * spent a credit and received the same shot back. The surplus slots exist for
+ * exactly this: the replacement comes from a slot in the same bucket that this
+ * delivery has not used, so he gets a different place, outfit and light rather
+ * than another roll of the same dice.
+ *
+ * Returns null when the bucket has nothing unused left, which the caller should
+ * treat as "reuse the original" rather than as a failure.
+ */
+export function planReplacement(
+  batchId: string,
+  bias: DeliveryBias,
+  bucket: DatingBucket,
+  usedSlots: readonly number[],
+  attempt: number,
+  options: PlanOptions = {}
+): DeliverySlot | null {
+  const excluded = options.excludeTags ?? [];
+  const vibeOrder = byWeight(VIBES, bias.vibe);
+  const styleOrder = byWeight(STYLES, bias.style);
+
+  const available: Array<{ slot: number; vibe: Vibe }> = [];
+  for (const group of locationGroups(bucket)) {
+    const rotation = stableHash(`${batchId}:${bucket}:${group[0]}`) % 2;
+    const remaining = vibeOrder.slice(1);
+    if (rotation === 1) remaining.reverse();
+    const groupVibes = [vibeOrder[0], ...remaining];
+    group.forEach((slot, indexInGroup) => {
+      if (usedSlots.includes(slot)) return;
+      if (slotIsBlocked(bucket, slot, excluded)) return;
+      available.push({ slot, vibe: groupVibes[indexInGroup] });
+    });
+  }
+
+  if (available.length === 0) return null;
+
+  // `attempt` walks the list so a second regeneration of the same photo lands
+  // somewhere new again rather than repeating the first replacement.
+  const seed = stableHash(`${batchId}:${bucket}:replace:${attempt}`);
+  const pick = available[seed % available.length];
+
+  const styleSeed = stableHash(`${batchId}:${bucket}:${pick.slot}:${attempt}`);
+  const style = weightedPick(styleSeed, styleOrder, bias.style);
+  const clean = VARIANTS.filter(
+    (v) =>
+      !definitionFor(bucket, pick.slot, v).tags.some((t) => excluded.includes(t))
+  );
+  // Index within the surviving variants, not within three — fewer than three
+  // survive whenever the slot carries excluded content on some of them.
+  const variant =
+    clean.length > 0
+      ? clean[styleSeed % clean.length]
+      : VARIANTS[styleSeed % VARIANTS.length];
+
+  return { bucket, slot: pick.slot, variant, vibe: pick.vibe, style };
 }

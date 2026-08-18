@@ -1,19 +1,6 @@
 export const DATING_ASPECT_RATIOS = ["9:16", "3:4", "4:3"] as const;
 
 export type DatingAspectRatio = (typeof DATING_ASPECT_RATIOS)[number];
-export type DatingFalImageSize =
-  | "portrait_16_9"
-  | "portrait_4_3"
-  | "landscape_4_3";
-
-const FAL_IMAGE_SIZE_BY_RATIO: Record<
-  DatingAspectRatio,
-  DatingFalImageSize
-> = {
-  "9:16": "portrait_16_9",
-  "3:4": "portrait_4_3",
-  "4:3": "landscape_4_3",
-};
 
 const ASPECT_RATIO_PATTERN = /\b(?:9:16|3:4|4:3)\b/g;
 
@@ -38,11 +25,6 @@ export function resolveDatingAspectRatio(prompt: string): DatingAspectRatio {
   return unique[0];
 }
 
-export function resolveDatingFalImageSize(
-  prompt: string
-): DatingFalImageSize {
-  return FAL_IMAGE_SIZE_BY_RATIO[resolveDatingAspectRatio(prompt)];
-}
 
 export type DatingImageDimensions = { width: number; height: number };
 

@@ -3,6 +3,11 @@ import { createClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { generateSingleDatingImage } from "@/trigger/dating-shoot";
 import { makeDeterministicPhotoId, slotToIndex } from "@/lib/dating/deterministic-id";
+import { planReplacement } from "@/lib/dating/select-delivery";
+import { deriveBias } from "@/lib/dating/interests";
+import { compileDatingPrompt } from "@/lib/dating/prompt-params";
+import { getPromptVariants } from "@/lib/dating/prompt-library";
+import type { ExcludableTag, StylePref } from "@/lib/dating/types";
 import type { DatingBucket } from "@/lib/dating/types";
 
 export const dynamic = "force-dynamic";
@@ -103,6 +108,58 @@ export async function POST(request: NextRequest) {
       photo.deterministic_id ||
       makeDeterministicPhotoId(orderId, photo.bucket, index);
 
+    // Regeneration used to re-send the stored prompt, so a user who disliked a
+    // photo paid a credit and received the same shot. Draw a shot this delivery
+    // has not used instead: different place, outfit and light.
+    const { data: prefs } = await admin
+      .from("user_preferences")
+      .select("interests, style, exclude_tags")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    const { data: siblings } = await admin
+      .from("order_photos")
+      .select("slot")
+      .eq("order_id", orderId)
+      .eq("bucket", photo.bucket);
+
+    const excludeTags = (prefs?.exclude_tags ?? []) as ExcludableTag[];
+    const bias = deriveBias(
+      (prefs?.interests ?? []) as never,
+      (prefs?.style ?? "casual") as StylePref
+    );
+    const usedSlots = (siblings ?? []).map((row) => row.slot as number);
+    // Attempts differ so a second redo of the same photo lands somewhere new.
+    const attempt = Date.now();
+    const replacement = planReplacement(
+      orderId,
+      bias,
+      photo.bucket as DatingBucket,
+      usedSlots,
+      attempt,
+      { excludeTags }
+    );
+
+    let prompt = photo.prompt_template as string;
+    let imageWidth = photo.image_width as number | null;
+    let imageHeight = photo.image_height as number | null;
+
+    if (replacement) {
+      const definition = getPromptVariants(
+        replacement.bucket,
+        replacement.slot
+      ).find((candidate) => candidate.variant === replacement.variant);
+      if (definition) {
+        prompt = compileDatingPrompt(definition, {
+          vibe: replacement.vibe,
+          style: replacement.style,
+          hobby: null,
+        });
+        imageWidth = definition.imageSize.width;
+        imageHeight = definition.imageSize.height;
+      }
+    }
+
     // Clear completed so child re-generates (upsert will overwrite)
     await admin
       .from("order_photos")
@@ -112,6 +169,12 @@ export async function POST(request: NextRequest) {
         fal_request_id: null,
         failed_reason: null,
         aesthetic_score: null,
+        // The row records the shot it will actually be, so a retry of the
+        // regeneration reproduces the replacement rather than the original.
+        prompt_template: prompt,
+        image_width: imageWidth,
+        image_height: imageHeight,
+        slot: replacement?.slot ?? photo.slot,
         updated_at: new Date().toISOString(),
       })
       .eq("id", photoId);
@@ -124,10 +187,10 @@ export async function POST(request: NextRequest) {
         modelId: order.model_id,
         bucket: photo.bucket as DatingBucket,
         index,
-        prompt: photo.prompt_template,
+        prompt,
         referenceImageUrls,
-        imageWidth: photo.image_width,
-        imageHeight: photo.image_height,
+        imageWidth,
+        imageHeight,
       },
       {
         idempotencyKey: `${deterministicId}_regen_${Date.now()}`,

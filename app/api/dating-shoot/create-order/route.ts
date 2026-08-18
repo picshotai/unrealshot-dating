@@ -5,7 +5,12 @@ import {
   DatingOrderError,
 } from "@/lib/dating/create-order";
 import { isInterestId, type InterestId } from "@/lib/dating/interests";
-import type { StylePref, Vibe } from "@/lib/dating/types";
+import {
+  EXCLUDABLE_TAGS,
+  type ExcludableTag,
+  type StylePref,
+  type Vibe,
+} from "@/lib/dating/types";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -26,7 +31,8 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { modelId, interests, dress, hobbyText, vibe, style } = body;
+    const { modelId, interests, dress, hobbyText, excludeTags, vibe, style } =
+      body;
 
     if (!modelId || typeof modelId !== "number") {
       return NextResponse.json({ error: "modelId is required" }, { status: 400 });
@@ -37,6 +43,12 @@ export async function POST(request: NextRequest) {
     // neither locks the delivery any more.
     const cleanInterests: InterestId[] = Array.isArray(interests)
       ? interests.filter(isInterestId)
+      : [];
+
+    const cleanExclusions: ExcludableTag[] = Array.isArray(excludeTags)
+      ? excludeTags.filter((tag: unknown): tag is ExcludableTag =>
+          (EXCLUDABLE_TAGS as readonly string[]).includes(tag as string)
+        )
       : [];
 
     if (dress !== undefined && !STYLES.includes(dress)) {
@@ -68,6 +80,7 @@ export async function POST(request: NextRequest) {
       userId: user.id,
       modelId,
       interests: cleanInterests,
+      excludeTags: cleanExclusions,
       dress: (dress as StylePref | undefined) ?? undefined,
       vibe: (vibe as Vibe | undefined) ?? undefined,
       style: (style as StylePref | undefined) ?? undefined,
