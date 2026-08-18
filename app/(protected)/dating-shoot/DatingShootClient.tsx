@@ -279,7 +279,10 @@ export function DatingShootClient({
     setZipProgress('Creating ZIP archive...');
 
     try {
-      const JSZip = (await import('jszip')).default;
+      // Use pre-bundled browser distribution of JSZip to avoid webpack node-polyfill resolution issues
+      // @ts-ignore
+      const JSZipModule = await import('jszip/dist/jszip.min.js');
+      const JSZip = JSZipModule.default || JSZipModule;
       const zip = new JSZip();
       let count = 0;
       const totalToDownload = status.counts.completed;
