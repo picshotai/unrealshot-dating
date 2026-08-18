@@ -22,13 +22,19 @@ export default async function DatingShootPage({
 
   const params = await searchParams;
 
+  // Fetch all trained models for this user
   const { data: models } = await supabase
     .from("models")
     .select("id, name, status, samples(uri)")
     .eq("user_id", user.id)
-    .eq("type", "Male")
     .order("created_at", { ascending: false });
 
+  // Gate /dating-shoot: If the user has no trained models, redirect to onboarding /model creation
+  if (!models || models.length === 0) {
+    redirect("/models/create");
+  }
+
+  // Fetch previous shoot orders
   const { data: orders } = await supabase
     .from("user_shoot_orders")
     .select("id, status, model_id, custom_credits_remaining, created_at, ready_at")
