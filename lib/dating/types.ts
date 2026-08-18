@@ -36,6 +36,13 @@ export type OrderStatus =
 
 export type PhotoStatus = "pending" | "in_progress" | "completed" | "failed";
 
+/**
+ * The library holds more slots than a delivery uses. The surplus is what lets
+ * an exclusion ("no dog photos", "no alcohol") drop a slot and refill from an
+ * unused one, so the delivery keeps 100 photos in 100 different locations
+ * instead of repeating a place or quietly shrinking.
+ */
+export const SLOTS_PER_BUCKET = 26;
 export const PHOTOS_PER_BUCKET = 20;
 export const TOTAL_PHOTOS = 100;
 export const CUSTOM_CREDITS_DEFAULT = 30;

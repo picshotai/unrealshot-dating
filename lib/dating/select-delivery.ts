@@ -7,6 +7,7 @@ import {
 import {
   DATING_BUCKETS,
   PHOTOS_PER_BUCKET,
+  SLOTS_PER_BUCKET,
   TOTAL_PHOTOS,
   type DatingBucket,
   type StylePref,
@@ -22,15 +23,17 @@ import {
  * instead, and guarantees the delivery contains no repeated location, outfit or
  * lighting setup.
  *
- * On the tension between variety and preference: each location group holds
- * exactly one location per vibe, so covering 20 distinct locations from a
- * bucket's 7 groups forces all three vibes into play at roughly equal counts.
- * Variety and "make it all urban" cannot both be satisfied. The resolution here
- * is that preference decides *which slots* receive the preferred vibe — the
- * earliest slot of every group, which is also where the strongest, most-used
- * photos live — while the remainder spans everything. Style carries no such
- * constraint (60 outfits are reachable per bucket for 20 slots) so preference
- * applies to it in full.
+ * Variety and preference used to be in direct conflict. Each location group
+ * holds exactly one location per vibe, so when a bucket had 20 slots for 20
+ * photos, covering them all forced every vibe into play at roughly equal counts
+ * — a man who said "urban" still got a third of his photos on a mountain, and
+ * nothing in the weighting could change it.
+ *
+ * Growing each bucket to 26 slots resolved it. The delivery now picks the best
+ * 20 of 26 candidates, so six can be dropped, and dropping the least-preferred
+ * vibes is what makes the preference visible: an outdoorsy answer lands around
+ * 45 outdoorsy photos against 12 urban, rather than 35 against 33. The surplus
+ * is also what absorbs content exclusions without repeating a location.
  */
 
 export type DeliveryBias = {
@@ -91,7 +94,7 @@ function weightedPick<T extends string>(
 /** Slots sharing one `locations` object, in slot order. */
 function locationGroups(bucket: DatingBucket): number[][] {
   const groups = new Map<string, number[]>();
-  for (let slot = 1; slot <= PHOTOS_PER_BUCKET; slot += 1) {
+  for (let slot = 1; slot <= SLOTS_PER_BUCKET; slot += 1) {
     const [definition] = getPromptVariants(bucket, slot);
     const key = JSON.stringify(definition.locations);
     const existing = groups.get(key);
@@ -125,47 +128,62 @@ export function planDelivery(
   const usedOutfits = new Set<string>();
 
   for (const bucket of DATING_BUCKETS) {
+    // Every slot in a group takes a different vibe, which is what makes the
+    // locations unique. That yields 26 candidates per bucket, of which the
+    // delivery uses 20 — and the six-slot surplus is what finally lets the
+    // user's preference show. When all 26 had to be used, the vibe mix was
+    // forced almost even no matter what he asked for.
+    const candidates: Array<{ slot: number; vibe: Vibe }> = [];
     for (const group of locationGroups(bucket)) {
-      // Every slot in a group takes a different vibe, which is what makes the
-      // locations unique. The preferred vibe lands on the group's first slot;
-      // the rest rotate by batch so two orders differ.
       const rotation = stableHash(`${batchId}:${bucket}:${group[0]}`) % 2;
       const remaining = vibeOrder.slice(1);
       if (rotation === 1) remaining.reverse();
       const groupVibes = [vibeOrder[0], ...remaining];
-
       group.forEach((slot, indexInGroup) => {
-        const vibe = groupVibes[indexInGroup];
-
-        // Style is drawn per photo from the weighting, so a 50/30/20 preference
-        // produces roughly that mix rather than collapsing onto the favourite.
-        // Ordering candidates by preference alone would only ever reach the
-        // second style when all three variants of the first collided.
-        const seed = stableHash(`${batchId}:${bucket}:${slot}`);
-        const target = weightedPick(seed, styleOrder, bias.style);
-        const candidates: Array<{ style: StylePref; variant: DatingPromptVariant }> = [];
-        for (const style of [target, ...styleOrder.filter((s) => s !== target)]) {
-          for (let offset = 0; offset < VARIANTS.length; offset += 1) {
-            candidates.push({
-              style,
-              variant: VARIANTS[(seed + offset) % VARIANTS.length],
-            });
-          }
-        }
-
-        const choice =
-          candidates.find(
-            (candidate) =>
-              !usedOutfits.has(
-                definitionFor(bucket, slot, candidate.variant).outfits[candidate.style]
-              )
-          ) ?? candidates[0];
-
-        usedOutfits.add(
-          definitionFor(bucket, slot, choice.variant).outfits[choice.style]
-        );
-        plan.push({ bucket, slot, variant: choice.variant, vibe, style: choice.style });
+        candidates.push({ slot, vibe: groupVibes[indexInGroup] });
       });
+    }
+
+    const chosen = [...candidates]
+      .sort((a, b) => {
+        const weight = (bias.vibe[b.vibe] ?? 0) - (bias.vibe[a.vibe] ?? 0);
+        if (weight !== 0) return weight;
+        // stable, batch-dependent tie-break so two orders differ
+        return (
+          (stableHash(`${batchId}:${bucket}:${a.slot}`) % 1000) -
+          (stableHash(`${batchId}:${bucket}:${b.slot}`) % 1000)
+        );
+      })
+      .slice(0, PHOTOS_PER_BUCKET)
+      .sort((a, b) => a.slot - b.slot);
+
+    for (const { slot, vibe } of chosen) {
+      // Style is drawn per photo from the weighting, so a 50/30/20 preference
+      // produces roughly that mix rather than collapsing onto the favourite.
+      const seed = stableHash(`${batchId}:${bucket}:${slot}`);
+      const target = weightedPick(seed, styleOrder, bias.style);
+      const pairings: Array<{ style: StylePref; variant: DatingPromptVariant }> = [];
+      for (const style of [target, ...styleOrder.filter((s) => s !== target)]) {
+        for (let offset = 0; offset < VARIANTS.length; offset += 1) {
+          pairings.push({
+            style,
+            variant: VARIANTS[(seed + offset) % VARIANTS.length],
+          });
+        }
+      }
+
+      const choice =
+        pairings.find(
+          (pairing) =>
+            !usedOutfits.has(
+              definitionFor(bucket, slot, pairing.variant).outfits[pairing.style]
+            )
+        ) ?? pairings[0];
+
+      usedOutfits.add(
+        definitionFor(bucket, slot, choice.variant).outfits[choice.style]
+      );
+      plan.push({ bucket, slot, variant: choice.variant, vibe, style: choice.style });
     }
   }
 
