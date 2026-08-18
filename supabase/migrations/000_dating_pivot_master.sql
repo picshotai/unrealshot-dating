@@ -240,10 +240,6 @@ create table if not exists public.order_photos (
   bucket text not null check (bucket in ('anchor', 'social', 'travel', 'active', 'street')),
   slot int not null check (slot >= 1 and slot <= 20),
   prompt_template text not null,
-  -- Authored output size for this shot. Null on rows allocated before v4
-  -- sizing shipped; those fall back to the ratio parsed from prompt_template.
-  image_width int,
-  image_height int,
   status text not null default 'pending' check (status in (
     'pending',
     'in_progress',
