@@ -671,6 +671,14 @@ export interface Database {
         Args: { user_id: string; amount: number }
         Returns: void
       }
+      spend_credits: {
+        Args: { p_user_id: string; p_amount: number }
+        Returns: number | null
+      }
+      refund_credits: {
+        Args: { p_user_id: string; p_amount: number }
+        Returns: number
+      }
       get_eligible_users: {
         Args: Record<PropertyKey, never>
         Returns: { id: string; email: string }[]

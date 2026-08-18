@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
-import { createDatingShootOrder } from "@/lib/dating/create-order";
+import {
+  createDatingShootOrder,
+  DatingOrderError,
+} from "@/lib/dating/create-order";
 import { isInterestId, type InterestId } from "@/lib/dating/interests";
 import type { StylePref, Vibe } from "@/lib/dating/types";
 
@@ -73,6 +76,17 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, ...result }, { status: 201 });
   } catch (error) {
+    // A refusal is not a fault. Insufficient credits and an already-running
+    // shoot are expected answers the client renders directly, so they get their
+    // own status codes rather than a 500 the user cannot act on.
+    if (error instanceof DatingOrderError) {
+      const status = error.code === "insufficient_credits" ? 402 : 409;
+      return NextResponse.json(
+        { error: error.message, code: error.code, ...error.detail },
+        { status }
+      );
+    }
+
     console.error("create-order failed:", error);
     return NextResponse.json(
       {

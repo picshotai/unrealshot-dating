@@ -14,13 +14,28 @@ import {
   resolveHobbyText,
   type InterestId,
 } from "./interests";
+import { refundShootCredits, spendShootCredits } from "./credits-gate";
 import {
+  ACTIVE_ORDER_STATUSES,
   CUSTOM_CREDITS_DEFAULT,
+  SHOOT_CREDIT_COST,
   TOTAL_PHOTOS,
   type StylePref,
   type Vibe,
 } from "./types";
 import { datingPhotoshootOrchestrator } from "@/trigger/dating-shoot";
+
+/** Refusals the API can translate into a status code, as distinct from faults. */
+export class DatingOrderError extends Error {
+  constructor(
+    message: string,
+    readonly code: "order_in_progress" | "insufficient_credits",
+    readonly detail: Record<string, unknown> = {}
+  ) {
+    super(message);
+    this.name = "DatingOrderError";
+  }
+}
 
 export type CreateOrderInput = {
   userId: string;
@@ -77,121 +92,157 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
 
   const referenceImageUrls = samples.map((s) => s.uri).filter(Boolean);
 
-  const { data: prefs, error: prefsErr } = await db
-    .from("user_preferences")
-    .upsert(
-      {
-        user_id: userId,
-        vibe,
-        style,
-        interests: interests.length > 0 ? interests : null,
-        hobby_text: hobby,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "user_id" }
-    )
-    .select()
-    .single();
-
-  if (prefsErr) {
-    throw new Error(`Failed to save preferences: ${prefsErr.message}`);
-  }
-
-  // Code is the prompt source of truth. Each order snapshots the exact compiled
-  // prompt into order_photos, so later library updates cannot change retries.
-  assertLibraryComplete();
-
-  // Create batch / order
-  const { data: order, error: orderErr } = await db
+  // One shoot at a time. Without this a double-click or a second tab starts two
+  // hundred-photo runs and charges twice.
+  const { data: running } = await db
     .from("user_shoot_orders")
-    .insert({
-      user_id: userId,
-      model_id: modelId,
-      preferences_id: prefs?.id ?? null,
-      status: "queued",
-      custom_credits_remaining: CUSTOM_CREDITS_DEFAULT,
-      photos_target: TOTAL_PHOTOS,
-    })
-    .select()
-    .single();
+    .select("id, status")
+    .eq("user_id", userId)
+    .in("status", [...ACTIVE_ORDER_STATUSES])
+    .limit(1);
 
-  if (orderErr || !order) {
-    throw new Error(`Failed to create order: ${orderErr?.message}`);
+  if (running && running.length > 0) {
+    throw new DatingOrderError(
+      "A shoot is already running. Wait for it to finish before starting another.",
+      "order_in_progress",
+      { orderId: running[0].id as string }
+    );
   }
 
-  const batchId = order.id as string;
-
-  // Plan all 100 photos together rather than looping buckets with one locked
-  // vibe and style. Each photo gets its own vibe, style and variant, which is
-  // what lets a single delivery reach ~95% of the library's locations instead
-  // of 33%. Seeded from batchId, so retries and paid regenerations are stable.
-  const plan = planDelivery(batchId, bias);
-  assertDeliveryUnique(plan);
-
-  const finalRows = plan.map((entry) => {
-    const prompt = getPromptVariants(entry.bucket, entry.slot).find(
-      (candidate) => candidate.variant === entry.variant
+  // Charge before any GPU work is dispatched. Charging afterwards means a crash
+  // between allocation and dispatch gives away a shoot. Every failure path from
+  // here on refunds.
+  const spend = await spendShootCredits(userId, SHOOT_CREDIT_COST);
+  if (!spend.ok) {
+    throw new DatingOrderError(
+      `This shoot costs ${SHOOT_CREDIT_COST} credits and you have ${spend.balance}.`,
+      "insufficient_credits",
+      { required: SHOOT_CREDIT_COST, balance: spend.balance }
     );
-    if (!prompt) {
-      throw new Error(
-        `Planned ${entry.bucket}:${entry.slot} variant ${entry.variant} is missing`
-      );
+  }
+
+  // Everything past the charge runs inside a refund boundary. If allocation or
+  // dispatch fails the user must not be left paying for a shoot that never ran.
+  try {
+    const { data: prefs, error: prefsErr } = await db
+      .from("user_preferences")
+      .upsert(
+        {
+          user_id: userId,
+          vibe,
+          style,
+          interests: interests.length > 0 ? interests : null,
+          hobby_text: hobby,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id" }
+      )
+      .select()
+      .single();
+
+    if (prefsErr) {
+      throw new Error(`Failed to save preferences: ${prefsErr.message}`);
     }
-    const filled = compileDatingPrompt(prompt, {
-      vibe: entry.vibe,
-      style: entry.style,
-      hobby,
+
+    // Code is the prompt source of truth. Each order snapshots the exact compiled
+    // prompt into order_photos, so later library updates cannot change retries.
+    assertLibraryComplete();
+
+    // Create batch / order
+    const { data: order, error: orderErr } = await db
+      .from("user_shoot_orders")
+      .insert({
+        user_id: userId,
+        model_id: modelId,
+        preferences_id: prefs?.id ?? null,
+        status: "queued",
+        custom_credits_remaining: CUSTOM_CREDITS_DEFAULT,
+        photos_target: TOTAL_PHOTOS,
+      })
+      .select()
+      .single();
+
+    if (orderErr || !order) {
+      throw new Error(`Failed to create order: ${orderErr?.message}`);
+    }
+
+    const batchId = order.id as string;
+
+    // Plan all 100 photos together rather than looping buckets with one locked
+    // vibe and style. Each photo gets its own vibe, style and variant, which is
+    // what lets a single delivery reach ~95% of the library's locations instead
+    // of 33%. Seeded from batchId, so retries and paid regenerations are stable.
+    const plan = planDelivery(batchId, bias);
+    assertDeliveryUnique(plan);
+
+    const finalRows = plan.map((entry) => {
+      const prompt = getPromptVariants(entry.bucket, entry.slot).find(
+        (candidate) => candidate.variant === entry.variant
+      );
+      if (!prompt) {
+        throw new Error(
+          `Planned ${entry.bucket}:${entry.slot} variant ${entry.variant} is missing`
+        );
+      }
+      const filled = compileDatingPrompt(prompt, {
+        vibe: entry.vibe,
+        style: entry.style,
+        hobby,
+      });
+      const index = slotToIndex(entry.slot);
+
+      return {
+        order_id: batchId,
+        bucket: entry.bucket,
+        slot: entry.slot,
+        prompt_template: filled,
+        // Snapshot the authored size so the shot renders at the resolution it
+        // was written for, and stays stable across retries and regenerations.
+        image_width: prompt.imageSize?.width ?? null,
+        image_height: prompt.imageSize?.height ?? null,
+        status: "pending" as const,
+        deterministic_id: makeDeterministicPhotoId(batchId, entry.bucket, index),
+      };
     });
-    const index = slotToIndex(entry.slot);
+
+    if (finalRows.length !== TOTAL_PHOTOS) {
+      await db.from("user_shoot_orders").delete().eq("id", batchId);
+      throw new Error(`Expected ${TOTAL_PHOTOS} rows, got ${finalRows.length}`);
+    }
+
+    const { error: photosErr } = await db.from("order_photos").insert(finalRows);
+    if (photosErr) {
+      await db.from("user_shoot_orders").delete().eq("id", batchId);
+      throw new Error(`Failed to allocate photos: ${photosErr.message}`);
+    }
+
+    // Kick off PARENT orchestrator only (children spawned inside)
+    const handle = await datingPhotoshootOrchestrator.trigger({
+      userId,
+      batchId,
+      modelId,
+      referenceImageUrls,
+    });
+
+    await db
+      .from("user_shoot_orders")
+      .update({
+        trigger_run_id: handle.id,
+        status: "developing",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", batchId);
 
     return {
-      order_id: batchId,
-      bucket: entry.bucket,
-      slot: entry.slot,
-      prompt_template: filled,
-      // Snapshot the authored size so the shot renders at the resolution it
-      // was written for, and stays stable across retries and regenerations.
-      image_width: prompt.imageSize?.width ?? null,
-      image_height: prompt.imageSize?.height ?? null,
-      status: "pending" as const,
-      deterministic_id: makeDeterministicPhotoId(batchId, entry.bucket, index),
+      orderId: batchId,
+      batchId,
+      triggerRunId: handle.id,
+      photosAllocated: finalRows.length,
     };
-  });
-
-  if (finalRows.length !== TOTAL_PHOTOS) {
-    await db.from("user_shoot_orders").delete().eq("id", batchId);
-    throw new Error(`Expected ${TOTAL_PHOTOS} rows, got ${finalRows.length}`);
+  } catch (error) {
+    await refundShootCredits(userId, SHOOT_CREDIT_COST);
+    throw error;
   }
-
-  const { error: photosErr } = await db.from("order_photos").insert(finalRows);
-  if (photosErr) {
-    await db.from("user_shoot_orders").delete().eq("id", batchId);
-    throw new Error(`Failed to allocate photos: ${photosErr.message}`);
-  }
-
-  // Kick off PARENT orchestrator only (children spawned inside)
-  const handle = await datingPhotoshootOrchestrator.trigger({
-    userId,
-    batchId,
-    modelId,
-    referenceImageUrls,
-  });
-
-  await db
-    .from("user_shoot_orders")
-    .update({
-      trigger_run_id: handle.id,
-      status: "developing",
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", batchId);
-
-  return {
-    orderId: batchId,
-    batchId,
-    triggerRunId: handle.id,
-    photosAllocated: finalRows.length,
-  };
 }
 
 /**

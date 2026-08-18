@@ -45,7 +45,24 @@ export type PhotoStatus = "pending" | "in_progress" | "completed" | "failed";
 export const SLOTS_PER_BUCKET = 26;
 export const PHOTOS_PER_BUCKET = 20;
 export const TOTAL_PHOTOS = 100;
+/**
+ * What one shoot costs the user. A shoot commits ~100 GPU generations, so this
+ * is the number that stops the pipeline being free. Override per environment
+ * with DATING_SHOOT_CREDIT_COST when pricing changes, without a code change.
+ */
+export const SHOOT_CREDIT_COST = Number(
+  process.env.DATING_SHOOT_CREDIT_COST ?? 100
+);
+
+/** Free regenerations included with a delivered shoot. */
 export const CUSTOM_CREDITS_DEFAULT = 30;
+
+/** Statuses that mean a shoot is already running for this user. */
+export const ACTIVE_ORDER_STATUSES = ["queued", "developing"] as const;
+
+/** Content a user can ask us to leave out of their delivery. */
+export const EXCLUDABLE_TAGS = ["alcohol", "dog", "bicycle", "teamSport"] as const;
+export type ExcludableTag = (typeof EXCLUDABLE_TAGS)[number];
 export const MIN_COMPLETE_THRESHOLD = 85;
 export const FAL_BATCH_SIZE = 5;
 export const FAL_BATCH_GAP_MS = 3000;

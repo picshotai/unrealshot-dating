@@ -5,8 +5,8 @@ import Link from 'next/link';
 import JSZip from 'jszip';
 import { Button } from '@/components/ui/button';
 import {
-  BUCKET_LABELS,
   DATING_BUCKETS,
+  SHOOT_CREDIT_COST,
   type DatingBucket,
   type StylePref,
 } from '@/lib/dating/types';
@@ -107,6 +107,7 @@ export function DatingShootClient({
   const [regenLoading, setRegenLoading] = useState<string | null>(null);
   const [zipLoading, setZipLoading] = useState(false);
   const [zipProgress, setZipProgress] = useState<string>('');
+  const [creditError, setCreditError] = useState('');
 
   const fetchStatus = useCallback(async (orderId: string) => {
     const res = await fetch(`/api/dating-shoot/run-status?orderId=${orderId}`);
@@ -129,8 +130,10 @@ export function DatingShootClient({
       setError('Select or create a model first');
       return;
     }
+    if (loading) return; // a second click must not start a second shoot
     setLoading(true);
     setError('');
+    setCreditError('');
     try {
       const res = await fetch('/api/dating-shoot/create-order', {
         method: 'POST',
@@ -143,7 +146,19 @@ export function DatingShootClient({
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to start shoot');
+      if (!res.ok) {
+        if (data.code === 'insufficient_credits') {
+          setCreditError(data.error);
+          return;
+        }
+        if (data.code === 'order_in_progress' && data.orderId) {
+          // Show the shoot that is already running rather than an error.
+          setActiveOrderId(data.orderId);
+          await fetchStatus(data.orderId);
+          return;
+        }
+        throw new Error(data.error || 'Failed to start shoot');
+      }
       setActiveOrderId(data.orderId);
       await fetchStatus(data.orderId);
     } catch (e) {
@@ -187,6 +202,14 @@ export function DatingShootClient({
     }
   };
 
+  const allPhotos = DATING_BUCKETS.flatMap((bucket) =>
+    (status?.byBucket?.[bucket]?.photos || []).map((photo) => ({
+      ...photo,
+      bucket,
+    }))
+  );
+  const lineup = groupByLineup(allPhotos);
+
   const downloadAllZip = async () => {
     if (!status || !activeOrderId) return;
     setZipLoading(true);
@@ -197,37 +220,35 @@ export function DatingShootClient({
       let count = 0;
       const totalToDownload = status.counts.completed;
 
-      for (const bucket of DATING_BUCKETS) {
-        const bucketData = status.byBucket[bucket];
-        if (!bucketData || !bucketData.photos.length) continue;
-
-        const folderName = `${BUCKET_LABELS[bucket].replace(/\s+/g, '-')}`;
+      // Folders follow the lineup, not the internal buckets. A user unzipping
+      // "The-Anchor-Portrait" learns nothing; "01-Your-opener" tells him which
+      // photo to lead with.
+      for (const [index, section] of lineup.entries()) {
+        const folderName = `${String(index + 1).padStart(2, '0')}-${section.label.replace(/\s+/g, '-')}`;
         const folder = zip.folder(folderName);
 
-        for (const photo of bucketData.photos) {
+        for (const [position, photo] of section.photos.entries()) {
           count++;
           setZipProgress(`Adding ${count} of ${totalToDownload} photos...`);
+          const base = `${String(position + 1).padStart(2, '0')}`;
 
           try {
             if (photo.imageUrl.startsWith('data:')) {
-              // Mock SVG / Data URI
               const isSvg = photo.imageUrl.includes('svg');
               if (isSvg) {
                 const svgText = decodeURIComponent(
                   photo.imageUrl.split(',')[1] || ''
                 );
-                folder?.file(`${bucket}_photo_${photo.slot}.svg`, svgText);
+                folder?.file(`${base}.svg`, svgText);
               } else {
                 const base64Data = photo.imageUrl.split(',')[1];
-                folder?.file(`${bucket}_photo_${photo.slot}.png`, base64Data, {
-                  base64: true,
-                });
+                folder?.file(`${base}.png`, base64Data, { base64: true });
               }
             } else {
               const res = await fetch(photo.imageUrl);
               if (res.ok) {
                 const blob = await res.blob();
-                folder?.file(`${bucket}_photo_${photo.slot}.png`, blob);
+                folder?.file(`${base}.png`, blob);
               }
             }
           } catch (err) {
@@ -259,13 +280,6 @@ export function DatingShootClient({
     status?.order.status === 'developing' || status?.order.status === 'queued';
   const isReady =
     status?.order.status === 'ready' || status?.order.status === 'partial_failed';
-  const allPhotos = DATING_BUCKETS.flatMap((bucket) =>
-    (status?.byBucket?.[bucket]?.photos || []).map((photo) => ({
-      ...photo,
-      bucket,
-    }))
-  );
-  const lineup = groupByLineup(allPhotos);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
@@ -421,13 +435,17 @@ export function DatingShootClient({
                 <Loader2 className="w-4 h-4 animate-spin mr-2" /> Starting...
               </>
             ) : (
-              'Generate 100 dating photos — $59'
+              `Generate 100 photos — ${SHOOT_CREDIT_COST} credits`
             )}
           </Button>
-          <p className="text-xs text-zinc-600">
-            Payment wiring can attach to Dodo later. For now this starts the
-            pipeline directly (dev mode).
-          </p>
+          {creditError && (
+            <p className="text-xs text-amber-400">
+              {creditError}{' '}
+              <Link href="/buy-credits" className="underline">
+                Top up
+              </Link>
+            </p>
+          )}
         </div>
       )}
 
