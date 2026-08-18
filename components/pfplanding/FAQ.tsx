@@ -11,7 +11,7 @@ export const FAQ: React.FC = () => {
             <div className="col-span-12 md:col-span-4 p-8 md:p-12 border-b md:border-b-0 md:border-r border-[#333] flex flex-col justify-between">
                 <div>
                     <h2 className="font-display text-5xl md:text-7xl font-bold uppercase leading-[1]">
-                        FAQs about <span className="text-transparent stroke-text-lime">PFPfor.ME</span>
+                        FAQs about <span className="text-transparent stroke-text-lime">UnrealShot AI</span>
                     </h2>
                     <p className="font-mono text-xs text-[#a4a4a4] mb-8">
                         Straight answers. No marketing fluff. <br/>

@@ -132,9 +132,9 @@ export const Hero: React.FC = () => {
                     Upload_Photos
                 </div>
                 </div>
-                <h3 className="font-display text-3xl uppercase mb-3 text-white">Provide Base Photos</h3>
+                <h3 className="font-display text-3xl uppercase mb-3 text-white">Upload 4&ndash;6 Selfies</h3>
                 <p className="font-mono text-[#a4a4a4] text-xs md:text-sm leading-relaxed">
-    Upload 4 different & clear photos of yourself (avoid only selfie). The AI learns your unique features to create your personal model.          </p>
+    Four to six clear photos of yourself, shot at different angles. That is the only work you do.          </p>
             </div>
         </div>
 
@@ -149,9 +149,9 @@ export const Hero: React.FC = () => {
                     Select_Style
                 </div>
                 </div>
-                <h3 className="font-display text-3xl uppercase mb-3 text-white">Pick Your Vibe</h3>
+                <h3 className="font-display text-3xl uppercase mb-3 text-white">Answer 3 Questions</h3>
                 <p className="font-mono text-[#a4a4a4] text-xs md:text-sm leading-relaxed">
-    Choose from 4 film modes: Night Flash, Golden Hour, Gritty Vintage, or Cineamtic Shoot. Set lighting and describe your scene.          </p>
+    Which look to lead with, what you actually do, and anything you want left out. Three taps.          </p>
             </div>
 
             {/* Node 3 (22.5% of total / 50% of parent) */}
@@ -164,7 +164,7 @@ export const Hero: React.FC = () => {
                 </div>
                 <h3 className="font-display text-3xl uppercase mb-3 text-white">Get Your Matches</h3>
                 <p className="font-mono text-[#a4a4a4] text-xs md:text-sm leading-relaxed">
-    Receive 20+ HD, photorealistic images in minutes. Ready to upload directly to Tinder, Hinge, or Bumble.          </p>
+    100 HD photos, sorted and ready to upload straight to Tinder, Hinge, or Bumble.          </p>
             </div>
         </div>
 

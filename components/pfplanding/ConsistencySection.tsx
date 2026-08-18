@@ -37,9 +37,9 @@ export const ConsistencySection: React.FC = () => {
                 {[
                     { 
                         id: "01",
-                        title: "The 'Social Proof' Shot", 
-                        problem: "PROBLEM: \"HE LOOKS LONELY\"", 
-                        desc: "Candid shots that imply you have a fun social circle.",
+                        title: "The 'Out In The World' Shot",
+                        problem: "PROBLEM: \"HE NEVER GOES ANYWHERE\"",
+                        desc: "You somewhere real, living a life. Not a studio backdrop.",
                         img: '/images/candid-solo.webp',
                     },
                     { 

@@ -110,12 +110,12 @@ export const MoatSection: React.FC = () => {
                             title: "Algorithm Hack", 
                             desc: "Apps push profiles with high engagement. Better photos stop the scroll, boosting your ELO score instantly." 
                         },
-                        { 
-                            title: "Anti-Ban Protection", 
-                            desc: "We add realistic noise, grain, and metadata to every photo. Passes AI-detection filters on Tinder, Hinge, and Bumble. 100% Safe." 
+                        {
+                            title: "Looks Like A Phone Took It",
+                            desc: "Real grain, real lighting, real skin. Not the plastic AI sheen everyone recognises instantly."
                         }
                     ].map((item, i) => {
-                        const isHighlight = item.title === "Anti-Ban Protection";
+                        const isHighlight = item.title === "Looks Like A Phone Took It";
                         return (
                             <div key={i} className={`group border-l-2 pl-6 py-2 transition-colors ${isHighlight ? 'border-[#CCFF00] bg-[#CCFF00]/5' : 'border-[#333] hover:border-[#CCFF00]'}`}>
                                 <h4 className={`font-display text-lg uppercase mb-2 transition-colors ${isHighlight ? 'text-[#CCFF00]' : 'text-white group-hover:text-[#CCFF00]'}`}>

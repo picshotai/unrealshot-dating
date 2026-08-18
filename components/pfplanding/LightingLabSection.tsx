@@ -61,7 +61,7 @@ export const LightingLabSection: React.FC = () => {
              The Hyper-realistic looks</div>
                     <h2 className="font-display text-5xl md:text-7xl font-bold uppercase leading-[0.9]">
                         Physics-Based Lighting<br/>
-                        <span className="text-transparent stroke-text-lime">to avoid AI detection</span>
+                        <span className="text-transparent stroke-text-lime">that reads as real</span>
                     </h2>
                     <p className="font-mono text-[#a4a4a4] text-sm leading-relaxed max-w-md">
                         Other AI tools just paste your face. We simulate real-world photography physics—<strong className="text-white">shutter speed, aperture, and film grain</strong>—to trick the eye into seeing reality.
