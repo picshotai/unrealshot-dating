@@ -109,6 +109,10 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
         bucket,
         slot,
         prompt_template: filled,
+        // Snapshot the authored size so the shot renders at the resolution it
+        // was written for, and stays stable across retries and regenerations.
+        image_width: prompt.imageSize?.width ?? null,
+        image_height: prompt.imageSize?.height ?? null,
         status: "pending" as const,
         deterministic_id: makeDeterministicPhotoId(batchId, bucket, index),
       });

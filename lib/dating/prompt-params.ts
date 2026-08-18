@@ -2,7 +2,12 @@ import type { DatingPromptDefinition } from "./prompt-library";
 import type { StylePref, Vibe } from "./types";
 
 const PLACEHOLDER_PATTERN = /\{\{([^}]+)\}\}/g;
-const ALLOWED_PLACEHOLDERS = new Set(["location", "outfit", "hobby"]);
+const ALLOWED_PLACEHOLDERS = new Set([
+  "location",
+  "backdrop",
+  "outfit",
+  "hobby",
+]);
 const MAX_HOBBY_LENGTH = 80;
 
 export type DatingPromptPreferences = {
@@ -45,10 +50,17 @@ export function compileDatingPrompt(
     if (token === "hobby" && !hobby) {
       throw new Error(`Prompt ${definition.id} requires a hobby value`);
     }
+    if (token === "backdrop" && !definition.backdrops) {
+      throw new Error(`Prompt ${definition.id} uses {{backdrop}} with no backdrops`);
+    }
   }
 
   const compiled = template
     .replaceAll("{{location}}", definition.locations[preferences.vibe])
+    .replaceAll(
+      "{{backdrop}}",
+      definition.backdrops?.[preferences.vibe] ?? ""
+    )
     .replaceAll("{{outfit}}", definition.outfits[preferences.style])
     .replaceAll("{{hobby}}", hobby ?? "")
     .replace(/\s+/g, " ")

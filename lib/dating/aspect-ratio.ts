@@ -43,3 +43,49 @@ export function resolveDatingFalImageSize(
 ): DatingFalImageSize {
   return FAL_IMAGE_SIZE_BY_RATIO[resolveDatingAspectRatio(prompt)];
 }
+
+export type DatingImageDimensions = { width: number; height: number };
+
+/**
+ * Dimensions used when a photo carries no authored size — legacy v3 rows and
+ * any order allocated before per-prompt sizing shipped.
+ */
+const DEFAULT_DIMENSIONS_BY_RATIO: Record<
+  DatingAspectRatio,
+  DatingImageDimensions
+> = {
+  "9:16": { width: 1512, height: 2688 },
+  "3:4": { width: 1536, height: 2048 },
+  "4:3": { width: 2304, height: 1728 },
+};
+
+function greatestCommonDivisor(a: number, b: number): number {
+  return b === 0 ? a : greatestCommonDivisor(b, a % b);
+}
+
+/**
+ * The ratio label a set of dimensions reduces to. v4 prompts state this label
+ * in their framing sentence, so it doubles as the library's consistency check.
+ */
+export function deriveRatioLabel({
+  width,
+  height,
+}: DatingImageDimensions): string {
+  const divisor = greatestCommonDivisor(width, height);
+  return `${width / divisor}:${height / divisor}`;
+}
+
+/**
+ * Output dimensions for a photo. v4 rows snapshot their authored size at
+ * allocation time; anything without one falls back to the ratio parsed out of
+ * its stored prompt text, which keeps historical orders resumable.
+ */
+export function resolveDatingImageDimensions(
+  prompt: string,
+  authored?: { width?: number | null; height?: number | null } | null
+): DatingImageDimensions {
+  if (authored?.width && authored?.height) {
+    return { width: authored.width, height: authored.height };
+  }
+  return DEFAULT_DIMENSIONS_BY_RATIO[resolveDatingAspectRatio(prompt)];
+}

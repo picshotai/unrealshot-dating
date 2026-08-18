@@ -3,7 +3,7 @@ import { fal } from "@fal-ai/client";
 import { putR2Object } from "@/lib/r2";
 import {
   resolveDatingAspectRatio,
-  resolveDatingFalImageSize,
+  resolveDatingImageDimensions,
 } from "@/lib/dating/aspect-ratio";
 import { getServiceDb } from "@/lib/dating/db";
 import {
@@ -42,6 +42,9 @@ export type GenerateSingleImagePayload = {
   index: number; // 0..19
   prompt: string;
   referenceImageUrls: string[];
+  /** Authored output size. Omitted on legacy rows; resolved from the prompt. */
+  imageWidth?: number | null;
+  imageHeight?: number | null;
 };
 
 export type GenerateSingleImageResult = {
@@ -85,6 +88,8 @@ export const generateSingleDatingImage = task({
       index,
       prompt,
       referenceImageUrls,
+      imageWidth,
+      imageHeight,
     } = payload;
 
     if (index < 0 || index >= PHOTOS_PER_BUCKET) {
@@ -189,7 +194,10 @@ export const generateSingleDatingImage = task({
         throw new Error("No reference image URLs");
       }
 
-      const imageSize = resolveDatingFalImageSize(prompt);
+      const imageSize = resolveDatingImageDimensions(prompt, {
+        width: imageWidth,
+        height: imageHeight,
+      });
       const result = await fal.subscribe(
         "fal-ai/bytedance/seedream/v4.5/edit",
         {
@@ -340,7 +348,9 @@ export const datingPhotoshootOrchestrator = task({
     // Load pre-allocated photo rows (created at order time with prompts filled)
     const { data: photoRows, error: photosErr } = await db
       .from("order_photos")
-      .select("id, bucket, slot, prompt_template, status, image_url, deterministic_id")
+      .select(
+        "id, bucket, slot, prompt_template, image_width, image_height, status, image_url, deterministic_id"
+      )
       .eq("order_id", batchId)
       .order("bucket", { ascending: true })
       .order("slot", { ascending: true });
@@ -402,6 +412,8 @@ export const datingPhotoshootOrchestrator = task({
           index,
           prompt: row.prompt_template,
           referenceImageUrls,
+          imageWidth: row.image_width,
+          imageHeight: row.image_height,
         } satisfies GenerateSingleImagePayload,
         options: {
           // Same key → Trigger.dev will not spawn a second successful run

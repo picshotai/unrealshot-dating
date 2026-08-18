@@ -54,7 +54,9 @@ export async function POST(request: NextRequest) {
 
     const { data: photo } = await admin
       .from("order_photos")
-      .select("id, bucket, slot, prompt_template, deterministic_id")
+      .select(
+        "id, bucket, slot, prompt_template, image_width, image_height, deterministic_id"
+      )
       .eq("id", photoId)
       .eq("order_id", orderId)
       .single();
@@ -124,6 +126,8 @@ export async function POST(request: NextRequest) {
         index,
         prompt: photo.prompt_template,
         referenceImageUrls,
+        imageWidth: photo.image_width,
+        imageHeight: photo.image_height,
       },
       {
         idempotencyKey: `${deterministicId}_regen_${Date.now()}`,

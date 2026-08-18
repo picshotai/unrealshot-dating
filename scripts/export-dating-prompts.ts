@@ -7,8 +7,9 @@ import {
   type DatingPromptDefinition,
 } from "../lib/dating/prompt-library";
 import {
+  deriveRatioLabel,
   resolveDatingAspectRatio,
-  resolveDatingFalImageSize,
+  resolveDatingImageDimensions,
 } from "../lib/dating/aspect-ratio";
 import { compileDatingPrompt } from "../lib/dating/prompt-params";
 import {
@@ -53,7 +54,7 @@ function parseArguments(): ExportArguments {
       readArgument("hobby") ?? "rock climbing and landscape photography",
     output:
       readArgument("output") ??
-      "docs/generated/dating-prompts-v3-final.json",
+      "docs/generated/dating-prompts-v4.json",
   };
 }
 
@@ -67,20 +68,22 @@ function compileForExport(
     hobby: args.hobby,
   });
   const aspectRatio = resolveDatingAspectRatio(prompt);
+  const authoredRatio = deriveRatioLabel(definition.imageSize);
 
-  if (aspectRatio !== definition.aspectRatio) {
+  if (aspectRatio !== authoredRatio) {
     throw new Error(
-      `${definition.id}: compiled ratio ${aspectRatio} does not match ${definition.aspectRatio}`
+      `${definition.id}: compiled ratio ${aspectRatio} does not match ${authoredRatio}`
     );
   }
 
   return {
     id: definition.id,
+    version: definition.version,
     bucket: definition.bucket,
     slot: definition.slot,
     variant: definition.variant,
     aspectRatio,
-    falImageSize: resolveDatingFalImageSize(prompt),
+    imageSize: resolveDatingImageDimensions(prompt, definition.imageSize),
     usesHobbyAlternative: Boolean(definition.hobbyPromptTemplate),
     wordCount: prompt.split(/\s+/).length,
     prompt,

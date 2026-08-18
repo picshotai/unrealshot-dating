@@ -14,6 +14,7 @@ import {
   AlertCircle,
   Check,
 } from 'lucide-react';
+import { POSE_GUIDES } from '@/components/dating/PoseGuides';
 
 const MAX_FILE_SIZE = 8 * 1024 * 1024;
 const MIN_PHOTOS = 4;
@@ -334,7 +335,44 @@ export function CreateModelClient() {
             </div>
 
             <div className="grid grid-cols-3 gap-3 mb-4">
-              {imagePreviews.map((preview, i) => {
+              {Array.from({ length: MAX_PHOTOS }).map((_, i) => {
+                const preview = imagePreviews[i];
+                const guide = POSE_GUIDES[i];
+
+                if (!preview) {
+                  if (isLoading) return null;
+                  return (
+                    <label
+                      key={guide?.key ?? `extra-${i}`}
+                      className="aspect-[3/4] border border-zinc-700 border-dashed rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-white/30 bg-zinc-800/50 px-1 text-center"
+                    >
+                      {guide ? (
+                        <>
+                          <guide.Icon className="w-11 h-11 text-zinc-500" />
+                          <span className="text-[10px] text-zinc-300 mt-1 font-medium">
+                            {guide.label}
+                          </span>
+                          <span className="text-[9px] text-zinc-500 leading-tight">
+                            {guide.hint}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="w-5 h-5 text-zinc-400 mb-1" />
+                          <span className="text-[10px] text-zinc-500">Any extra</span>
+                        </>
+                      )}
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept="image/*"
+                        multiple
+                        onChange={handleImageUpload}
+                      />
+                    </label>
+                  );
+                }
+
                 const status = uploadProgress?.statuses[i];
                 const percent = uploadProgress?.percentages[i] ?? 0;
                 const errorMsg = uploadProgress?.errors[i];
@@ -343,12 +381,17 @@ export function CreateModelClient() {
 
                 return (
                   <div
-                    key={i}
+                    key={guide?.key ?? `photo-${i}`}
                     className={`relative aspect-[3/4] rounded-lg overflow-hidden group ${
                       tooLarge ? 'ring-2 ring-red-500' : ''
                     }`}
                   >
                     <img src={preview} className="w-full h-full object-cover" alt="" />
+                    {guide && !isLoading && !tooLarge && (
+                      <span className="absolute top-1 left-1 text-[9px] px-1.5 py-0.5 rounded bg-black/60 text-zinc-200">
+                        {guide.label}
+                      </span>
+                    )}
                     {tooLarge && !isLoading && (
                       <div className="absolute inset-0 bg-red-900/80 flex flex-col items-center justify-center p-2">
                         <AlertCircle className="w-5 h-5 text-red-300 mb-1" />
@@ -395,23 +438,11 @@ export function CreateModelClient() {
                   </div>
                 );
               })}
-              {images.length < MAX_PHOTOS && !isLoading && (
-                <label className="aspect-[3/4] border border-zinc-700 border-dashed rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-white/30 bg-zinc-800/50">
-                  <Upload className="w-5 h-5 text-zinc-400 mb-1" />
-                  <span className="text-[10px] text-zinc-500">Add</span>
-                  <input
-                    type="file"
-                    className="hidden"
-                    accept="image/*"
-                    multiple
-                    onChange={handleImageUpload}
-                  />
-                </label>
-              )}
             </div>
 
             <p className="text-xs text-zinc-500 mb-4">
-              Min {MIN_PHOTOS}, max {MAX_PHOTOS}. Clear face photos only.
+              Min {MIN_PHOTOS}, max {MAX_PHOTOS}. Photos fill the slots in order —
+              matching the poses gives the shoot more angles to work from.
             </p>
 
             {error && (
