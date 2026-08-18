@@ -22,6 +22,8 @@ import { deriveBias, isInterestId } from "../lib/dating/interests";
 import {
   DATING_BUCKETS,
   PHOTOS_PER_BUCKET,
+  SLOTS_PER_BUCKET,
+  TOTAL_PHOTOS,
   type StylePref,
   type Vibe,
 } from "../lib/dating/types";
@@ -152,7 +154,11 @@ async function main() {
     compileForExport(definition, args)
   );
 
-  if (selectedOrderPrompts.length !== 100 || allVariantPrompts.length !== 300) {
+  const expectedVariants = DATING_BUCKETS.length * SLOTS_PER_BUCKET * 3;
+  if (
+    selectedOrderPrompts.length !== TOTAL_PHOTOS ||
+    allVariantPrompts.length !== expectedVariants
+  ) {
     throw new Error(
       `Unexpected export size: ${selectedOrderPrompts.length} selected, ` +
         `${allVariantPrompts.length} variants`
