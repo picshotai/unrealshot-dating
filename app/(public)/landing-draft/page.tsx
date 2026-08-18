@@ -282,8 +282,9 @@ export default function LandingDraft() {
             </p>
           </div>
 
-          {/* fanned stack of frames — sits inside the card so nothing clips */}
-          <div className="absolute right-4 top-[44%] w-44 h-48 pointer-events-none z-0">
+          {/* Fanned stack of frames. Decorative only, and hidden below lg —
+              on a narrow hero it lands on top of the paragraph. */}
+          <div className="hidden lg:block absolute right-4 top-[44%] w-44 h-48 pointer-events-none z-0">
             <div
               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-24 rounded-full blur-[50px] opacity-25"
               style={{ backgroundColor: ACCENT }}
