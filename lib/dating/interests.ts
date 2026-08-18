@@ -73,7 +73,7 @@ export type DressOption = {
 export const DRESS_OPTIONS: DressOption[] = [
   { id: "casual", label: "Casual", hint: "Henleys, knits, denim, boots" },
   { id: "sharp", label: "Sharp", hint: "Tailoring, coats, collars, leather" },
-  { id: "street", label: "Street", hint: "Jackets, layers, sneakers" },
+  { id: "street", label: "Street", hint: "Jackets, layers, modern sneakers" },
 ];
 
 /** The four things a user can ask us to keep out of his delivery. */

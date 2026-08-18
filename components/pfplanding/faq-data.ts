@@ -1,35 +1,39 @@
-// FAQ data - used by both FAQ component and structured data schema for SEO & LLM citations
+// FAQ data - used by both FAQ component and structured data schema
 export const faqData = [
     {
-        q: "Will all 100 photos really have different outfits and locations?",
-        a: "Yes. Unlike other tools that generate multiple photos in the same repeated scenes, our delivery engine enforces that every single photo in your 100-pack has a distinct outfit, a distinct location, and a distinct lighting setup. Zero duplicates.",
+        q: "Will people know I used AI?",
+        a: "Not unless you tell them. Unlike other apps that give you 'plastic skin' and 'dead eyes', UnrealShot AI is engineered for imperfection. We add film grain, motion blur, and realistic skin texture. Our photos are designed to pass the 'friend test'—if your best friend can't tell, your matches won't either.",
     },
     {
-        q: "How is this different from hiring a dating photographer?",
-        a: "A traditional dating photographer costs $300–$800, takes 2–3 weeks, and forces you to do awkward outfit changes in public restrooms for 10–15 usable shots. Unrealshot delivers 100 unique photos in 100 different environments in about 90 minutes from 4–6 everyday selfies.",
+        q: "Will I get banned for using this?",
+        a: "No. Dating apps ban 'catfishing' (fake people) and 'bots'. You are uploading photos of yourself, just with better lighting. Our system also embeds realistic camera metadata and noise patterns that bypass AI-detection filters on Tinder, Hinge, and Bumble. Your account is 100% safe.",
     },
     {
-        q: "Will the photos actually look like me?",
-        a: "Yes. We use your 4–6 reference selfies to lock your facial geometry, jawline, eye shape, and skin tone across all 100 shots. We accept minor variance on a few frames, which is why we include 30 free individual re-shoots.",
+        q: "Can I use these on Hinge, Tinder, and Bumble?",
+        a: "Absolutely. That is exactly what they are built for. The algorithm favors profiles with high-quality, varied photos. Our users typically see a 3x increase in match rate because their profiles signal 'high effort' and 'social proof' without looking staged.",
     },
     {
-        q: "What if there are individual photos I don't like?",
-        a: "Every order includes 30 free custom re-shoots. You can re-generate any individual frame with a single click to get new variations while keeping the rest of your 100-pack intact.",
+        q: "What if I don't look like my photos?",
+        a: "We train our models to be accurate, not just flattering. The goal is to make you look like your best self on your best day—good lighting, good angle, good outfit—not a different person. We avoid the 'yassified' filter look completely.",
     },
     {
-        q: "Are AI photos allowed on Hinge, Tinder, and Bumble?",
-        a: "Yes, dating apps allow photos that accurately represent your real appearance. Because Unrealshot focuses on natural lighting, realistic focal lengths, and zero plastic smoothing, your photos present an honest, believable likeness.",
+        q: "How does the 'Vibe' system work?",
+        a: "Instead of generic prompts, we use curated 'Vibe Styles'. Want a moody, flash-lit photo for your Hinge main? Choose 'The After Party'. Need a warm, approachable shot? Choose 'Golden Hour'. You control the aesthetic, we handle the lighting.",
     },
     {
-        q: "What are the 5 profile lineup roles?",
-        a: "Your delivery arrives pre-organized into the 5 essential dating profile slots: Your Opener (first photo scroll-stopper), Your Full Body (head-to-toe shot), What You Do (your actual hobbies), Out in the World (candid lifestyle), and The Rest (profile depth).",
+        q: "How many photos do I need to upload?",
+        a: "Just 10-20 clear selfies. You don't need professional headshots. In fact, simple selfies work best because they show your true facial structure. Our AI learns your face in about 30 minutes.",
     },
     {
-        q: "Can I exclude things I don't do (like holding drinks or pets)?",
-        a: "Yes. During intake, you can exclude up to 4 specific categories: alcoholic drinks in hand, dogs/pets, bicycles, and team sports.",
+        q: "Is this a subscription?",
+        a: "Yes, but you can cancel instantly. We offer a simple monthly plan because training AI models on high-end GPUs is expensive. Most users subscribe for one month, generate their perfect dating portfolio, and then cancel. We're cool with that.",
     },
     {
-        q: "How is my privacy protected?",
-        a: "Your uploaded selfies and generated models are strictly private, never shared or used for third-party training, and are automatically deleted from our servers after 7 days.",
+        q: "What about my privacy?",
+        a: "Your photos are yours. We auto-delete your uploaded photos and your custom AI model after 14 days of inactivity. We never sell your biometric data or use your face for anything other than generating your requested images.",
     },
-];
+    {
+        q: "Do you offer refunds?",
+        a: "Yes. If the AI completely messes up your face (it happens rarely, but it's tech), we'll refund you. We want you to be happy with your new profile, not ripped off.",
+    },
+]

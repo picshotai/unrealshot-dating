@@ -8,7 +8,7 @@ export const Footer: React.FC = () => {
                     <h3 className="font-display text-2xl font-bold uppercase mb-2">UnrealShot AI</h3>
                     <p className="font-mono text-xs text-foreground/40">
                         © 2025 UnrealShot AI. <br />
-                        DESIGNED FOR IMPERFECTION.
+                        DESIGNED FOR DATING APPS.
                     </p>
                 </div>
 

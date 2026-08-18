@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import {
   INTEREST_CHIPS,
   EXCLUSION_CHIPS,
+  DRESS_OPTIONS,
   type InterestId,
 } from '@/lib/dating/interests';
 import type { StylePref, ExcludableTag } from '@/lib/dating/types';
@@ -47,34 +48,25 @@ interface StudioIntakeViewProps {
   showCancel: boolean;
 }
 
-const WARDROBE_LOOKS: Array<{
-  id: StylePref;
-  label: string;
-  hint: string;
-  imageUrl: string;
-}> = [
-  {
-    id: 'casual',
-    label: 'Casual',
-    hint: 'Henleys, knits, denim, boots',
-    imageUrl:
-      'https://images.unsplash.com/photo-1516257984-b1b4d707412e?w=600&auto=format&fit=crop&q=80',
-  },
-  {
-    id: 'sharp',
-    label: 'Sharp',
-    hint: 'Tailoring, coats, collars, leather',
-    imageUrl:
-      'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&auto=format&fit=crop&q=80',
-  },
-  {
-    id: 'street',
-    label: 'Street',
-    hint: 'Jackets, layers, modern sneakers',
-    imageUrl:
-      'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=600&auto=format&fit=crop&q=80',
-  },
-];
+/**
+ * The picture for each wardrobe. Presentation only — the ids, labels and hints
+ * come from DRESS_OPTIONS so this screen cannot drift from the library the
+ * delivery is actually weighted against. Typed as a full Record, so adding a
+ * StylePref fails the build here instead of rendering a broken image.
+ */
+const WARDROBE_IMAGES: Record<StylePref, string> = {
+  casual:
+    'https://images.unsplash.com/photo-1516257984-b1b4d707412e?w=600&auto=format&fit=crop&q=80',
+  sharp:
+    'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&auto=format&fit=crop&q=80',
+  street:
+    'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=600&auto=format&fit=crop&q=80',
+};
+
+const WARDROBE_LOOKS = DRESS_OPTIONS.map((option) => ({
+  ...option,
+  imageUrl: WARDROBE_IMAGES[option.id],
+}));
 
 export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
   models,
@@ -301,11 +293,11 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                     Which look should we lead with?
                   </h2>
                   <span className="text-[11px] text-zinc-500 font-mono">
-                    Leads ~65% of shots
+                    All three included
                   </span>
                 </div>
                 <p className="text-[11px] text-zinc-500 mt-0.5">
-                  Sets the dominant wardrobe tone (~65%), balanced with the other two looks.
+                  Every shoot covers all three looks. This is the one it leans on.
                 </p>
               </div>
 
@@ -539,7 +531,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                     </div>
                     <div>
                       <div className="text-sm font-semibold text-white font-oxanium">
-                        {selectedWardrobe.label} (~65% Lead)
+                        {selectedWardrobe.label} lead
                       </div>
                       <div className="text-xs text-zinc-400">
                         {currentModel?.name || 'Trained Model'}

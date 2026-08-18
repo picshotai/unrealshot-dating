@@ -5,9 +5,7 @@ import { Hero } from '@/components/pfplanding/Hero';
 import { MoatSection } from '@/components/pfplanding/MoatSection';
 import { ConsistencySection } from '@/components/pfplanding/ConsistencySection';
 import { LightingLabSection } from '@/components/pfplanding/LightingLabSection';
-import { ProductSection } from '@/components/pfplanding/ProductSection';
 import { FullFrameSection } from '@/components/pfplanding/FullFrameSection';
-import { HowItWorks } from '@/components/pfplanding/HowItWorks';
 import { SocialProof } from '@/components/pfplanding/SocialProof';
 import { Pricing } from '@/components/pfplanding/Pricing';
 import { FAQ } from '@/components/pfplanding/FAQ';
@@ -26,14 +24,12 @@ export default function Home() {
     <div className="relative min-h-screen bg-transparent text-foreground">
 
       <Navbar />
-      <main className="pt-16">
+      <main>
         <Hero />
         <MoatSection />
         <ConsistencySection />
         <LightingLabSection />
-        <ProductSection />
         <FullFrameSection />
-        <HowItWorks />
         <SocialProof />
         <Pricing />
         <FAQ />
