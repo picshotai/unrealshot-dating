@@ -11732,6 +11732,9 @@ function assertBucketRules(
     }
 
     // The scene is the prompt plus everything the vibe tokens can inject.
+    // Outfits are deliberately excluded: garment names collide with people
+    // ("charcoal joggers" is a pair of trousers, worn in 38 outfits here), and
+    // scanning them would report a second person in every tracksuit.
     const scene = [
       prompt.promptTemplate,
       prompt.hobbyPromptTemplate ?? "",
