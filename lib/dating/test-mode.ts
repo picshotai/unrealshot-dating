@@ -30,11 +30,14 @@ export function shouldUseMockForSlot(testMode: DatingTestMode, slot: number): bo
 }
 
 const BUCKET_COLORS: Record<DatingBucket, { bg: string; accent: string; label: string }> = {
-  anchor: { bg: "#1e1b4b", accent: "#818cf8", label: "Anchor Portrait" },
-  social: { bg: "#14532d", accent: "#4ade80", label: "Social Candid" },
-  travel: { bg: "#78350f", accent: "#fbbf24", label: "Travel Lifestyle" },
-  active: { bg: "#831843", accent: "#f472b6", label: "Active Vitality" },
-  street: { bg: "#18181b", accent: "#a1a1aa", label: "Casual Streetwear" },
+  // Labelled by the job the photo does, matching what the delivery screen shows.
+  // These placeholders are what a sample run puts in front of you, so they
+  // should not be the last place the internal bucket names survive.
+  anchor: { bg: "#1e1b4b", accent: "#818cf8", label: "Your opener" },
+  social: { bg: "#14532d", accent: "#4ade80", label: "Evening out" },
+  travel: { bg: "#78350f", accent: "#fbbf24", label: "Out in the world" },
+  active: { bg: "#831843", accent: "#f472b6", label: "What you do" },
+  street: { bg: "#18181b", accent: "#a1a1aa", label: "On the street" },
 };
 
 /**

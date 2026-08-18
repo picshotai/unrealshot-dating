@@ -57,15 +57,17 @@ export async function sendDatingShootReadyNotification(
               Your 100 Dating Photos Are Ready! 🎉
             </h1>
             <p style="font-size: 15px; line-height: 1.6; color: #a1a1aa; margin-bottom: 24px;">
-              We just finished developing your 100 high-converting photos across all 5 archetypes:
+              A hundred photos, sorted into the lineup a profile actually needs.
+              No two share an outfit or a light, and there is one person in every
+              frame &mdash; you.
             </p>
             <div style="background-color: #27272a; border-radius: 12px; padding: 16px 20px; margin-bottom: 28px;">
               <ul style="margin: 0; padding-left: 20px; color: #e4e4e7; font-size: 14px; line-height: 1.8;">
-                <li><strong>Anchor Portraits:</strong> 20 clean, high-impact first impression shots</li>
-                <li><strong>Social Candids:</strong> 20 natural, friend-taken lifestyle shots</li>
-                <li><strong>Travel Lifestyle:</strong> 20 worldly, cinematic environmental portraits</li>
-                <li><strong>Active Vitality:</strong> 20 authentic movement and hobby captures</li>
-                <li><strong>Casual Streetwear:</strong> 20 stylish, effortless street candids</li>
+                <li><strong>Your opener:</strong> the clear, straight-to-camera shots to lead with</li>
+                <li><strong>Your full body:</strong> the ones people scroll for</li>
+                <li><strong>What you do:</strong> built around what you told us you are into</li>
+                <li><strong>Out in the world:</strong> a life happening outside the flat</li>
+                <li><strong>The rest:</strong> every one a different place, outfit and light</li>
               </ul>
             </div>
             <div style="text-align: center; margin-bottom: 28px;">
