@@ -1,7 +1,10 @@
 import { deriveRatioLabel } from "./aspect-ratio";
 import {
   DATING_BUCKETS,
+  EXCLUDABLE_TAGS,
+  PHOTOS_PER_BUCKET,
   SLOTS_PER_BUCKET,
+  TOTAL_PHOTOS,
   type DatingBucket,
   type StylePref,
   type Vibe,
@@ -1806,9 +1809,7 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [
-      "cooking"
-    ],
+    "tags": [],
     "light": "A window to his right is the only source, laying soft directional light along that side of his face while the room behind him falls away warm and dim.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He leans back against the counter with one hand resting on its edge and a cloth over the other forearm. He looks up to the lens between jobs. Three metres behind him, {{backdrop}} soften into warm domestic depth. A window to his right is the only source, laying soft directional light along that side of his face while the room behind him falls away warm and dim. A 3:4 waist-up frame at eye level, Fujifilm GFX 100S, 80mm, f/2.8, 1/250, ISO 200. Retain tonal variation, faint under-eye texture, varied beard density, and natural highlights, with skin that keeps its own grain.",
     "locations": {
@@ -1837,9 +1838,7 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [
-      "cooking"
-    ],
+    "tags": [],
     "light": "A window to his right is the only source, laying soft directional light along that side of his face while the room behind him falls away warm and dim.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He turns something in a pan with one hand, the other steadying the handle. He glances to the lens as it catches. Two metres back, {{backdrop}} sit close and gently out of focus. A window to his right is the only source, laying soft directional light along that side of his face while the room behind him falls away warm and dim. A 3:4 chest-up frame from across the counter, Canon R5, 85mm, f/2, 1/320, ISO 400. Keep real skin microtexture, grooming irregularities, soft highlight rolloff, and believable focus falloff, with pores and fine lines intact.",
     "locations": {
@@ -1868,9 +1867,7 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [
-      "cooking"
-    ],
+    "tags": [],
     "light": "A window to his right is the only source, laying soft directional light along that side of his face while the room behind him falls away warm and dim.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He sets a board down with both hands and wipes a palm on the cloth at his hip. He smiles off to his left, past the lens. Four metres behind him, {{backdrop}} fall away into soft interior tone. A window to his right is the only source, laying soft directional light along that side of his face while the room behind him falls away warm and dim. A 3:4 handheld medium portrait with slightly imperfect framing, handheld iPhone 15 Pro at 48mm equivalent, standard photo mode. Show distance-appropriate facial detail, flyaway hairs, and fabric creases, letting the lens render depth on its own.",
     "locations": {
@@ -1899,9 +1896,7 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [
-      "cooking"
-    ],
+    "tags": [],
     "light": "Low kitchen light comes from under a shelf ahead of him and catches his hands and jaw first, with daylight from a window behind him cooling his shoulders.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He rests both forearms on the counter with a cloth between his hands, taking a pause. He looks to the lens. Two and a half metres back, {{backdrop}} hold their shape under a light blur. Low kitchen light comes from under a shelf ahead of him and catches his hands and jaw first, with daylight from a window behind him cooling his shoulders. A 3:4 chest-up frame at eye level, Fujifilm GFX 100S, 80mm, f/2.8, 1/250, ISO 200. Retain tonal variation, faint under-eye texture, varied beard density, and natural highlights, with skin that keeps its own grain.",
     "locations": {
@@ -1930,9 +1925,7 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [
-      "cooking"
-    ],
+    "tags": [],
     "light": "Low kitchen light comes from under a shelf ahead of him and catches his hands and jaw first, with daylight from a window behind him cooling his shoulders.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He reaches up to a shelf with one hand and brings something down. His eyes stay on what he is holding, past the lens. Three metres behind him, {{backdrop}} drop into quiet shadow. Low kitchen light comes from under a shelf ahead of him and catches his hands and jaw first, with daylight from a window behind him cooling his shoulders. A 3:4 waist-up frame from the side, Canon R5, 85mm, f/2, 1/320, ISO 400. Keep real skin microtexture, grooming irregularities, soft highlight rolloff, and believable focus falloff, with pores and fine lines intact.",
     "locations": {
@@ -1961,9 +1954,7 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [
-      "cooking"
-    ],
+    "tags": [],
     "light": "Low kitchen light comes from under a shelf ahead of him and catches his hands and jaw first, with daylight from a window behind him cooling his shoulders.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He leans on one elbow at the end of the counter, the other hand loose. He laughs to the lens at a remark from off frame. Five metres back, {{backdrop}} recede into soft depth. Low kitchen light comes from under a shelf ahead of him and catches his hands and jaw first, with daylight from a window behind him cooling his shoulders. A 3:4 handheld chest-up portrait with casual headroom, handheld iPhone 15 Pro at 48mm equivalent, standard photo mode. Show distance-appropriate facial detail, flyaway hairs, and fabric creases, letting the lens render depth on its own.",
     "locations": {
@@ -1992,9 +1983,7 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [
-      "cooking"
-    ],
+    "tags": [],
     "light": "Overhead pendants sit just in front of him and throw light down onto his hair and brow, while the counter surface bounces a soft warm fill back up.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He stands at the end of the counter with a folded cloth in one hand, weight on one hip. He holds the lens easily. Four metres behind him, {{backdrop}} lose their edges. Overhead pendants sit just in front of him and throw light down onto his hair and brow, while the counter surface bounces a soft warm fill back up. A 3:4 knee-up frame at eye level, Fujifilm GFX 100S, 80mm, f/2.8, 1/250, ISO 200. Retain tonal variation, faint under-eye texture, varied beard density, and natural highlights, with skin that keeps its own grain.",
     "locations": {
@@ -2023,9 +2012,7 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [
-      "cooking"
-    ],
+    "tags": [],
     "light": "Overhead pendants sit just in front of him and throw light down onto his hair and brow, while the counter surface bounces a soft warm fill back up.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He pushes a drawer shut with one palm and straightens up. He turns to the lens as he does. Three metres back, {{backdrop}} sit softly out of focus. Overhead pendants sit just in front of him and throw light down onto his hair and brow, while the counter surface bounces a soft warm fill back up. A 3:4 waist-up frame at eye level, Canon R5, 85mm, f/2, 1/320, ISO 400. Keep real skin microtexture, grooming irregularities, soft highlight rolloff, and believable focus falloff, with pores and fine lines intact.",
     "locations": {
@@ -2054,9 +2041,7 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [
-      "cooking"
-    ],
+    "tags": [],
     "light": "Overhead pendants sit just in front of him and throw light down onto his hair and brow, while the counter surface bounces a soft warm fill back up.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He carries two plates through, one balanced on each hand, and pauses in the doorway. He looks to the lens. Six metres behind him, {{backdrop}} open out and go soft. Overhead pendants sit just in front of him and throw light down onto his hair and brow, while the counter surface bounces a soft warm fill back up. A 9:16 handheld full-length frame from a low natural height, handheld iPhone 15 Pro at 48mm equivalent, standard photo mode. Show distance-appropriate facial detail, flyaway hairs, and fabric creases, letting the lens render depth on its own.",
     "locations": {
@@ -2172,9 +2157,7 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [
-      "bicycle"
-    ],
+    "tags": [],
     "light": "Light comes from behind him through the open door and rims his shoulders and hair, with his face carried on the soft bounce off the wall he is facing.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He steps down out of the doorway with one hand still on the frame behind him. He looks to the lens mid-step. Six metres back, {{backdrop}} recede into an easy blur. Light comes from behind him through the open door and rims his shoulders and hair, with his face carried on the soft bounce off the wall he is facing. A 3:4 knee-up frame at eye level, Fujifilm GFX 100S, 80mm, f/2.8, 1/250, ISO 200. Retain tonal variation, faint under-eye texture, varied beard density, and natural highlights, with skin that keeps its own grain.",
     "locations": {
@@ -2203,9 +2186,7 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [
-      "bicycle"
-    ],
+    "tags": [],
     "light": "Light comes from behind him through the open door and rims his shoulders and hair, with his face carried on the soft bounce off the wall he is facing.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He stands just inside the threshold with a jacket over one forearm, half turned. His eyes go off to his left, past the lens. Three metres behind him, {{backdrop}} hold soft, ordinary detail. Light comes from behind him through the open door and rims his shoulders and hair, with his face carried on the soft bounce off the wall he is facing. A 3:4 chest-up frame at eye level, Canon R5, 85mm, f/2, 1/320, ISO 400. Keep real skin microtexture, grooming irregularities, soft highlight rolloff, and believable focus falloff, with pores and fine lines intact.",
     "locations": {
@@ -2234,9 +2215,7 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [
-      "bicycle"
-    ],
+    "tags": [],
     "light": "Light comes from behind him through the open door and rims his shoulders and hair, with his face carried on the soft bounce off the wall he is facing.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He holds the door open with one flat hand and waits there a moment. He looks to the lens. Four metres back, {{backdrop}} drop into shadow and soft edges. Light comes from behind him through the open door and rims his shoulders and hair, with his face carried on the soft bounce off the wall he is facing. A 3:4 handheld medium portrait with casual headroom, handheld iPhone 15 Pro at 48mm equivalent, standard photo mode. Show distance-appropriate facial detail, flyaway hairs, and fabric creases, letting the lens render depth on its own.",
     "locations": {
@@ -2352,7 +2331,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Two lanterns hang a metre and a half above the table and carry the whole scene, throwing light straight down so his cheekbones and the tops of his shoulders take it while his eye sockets sit in gentle shadow.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He leans back with one hand still resting on the table after delivering the punch line. He looks across to the lens as the laughter lands. A second glass and a used side plate sit across from him, with a jacket left over the back of the empty chair opposite. He sits at the near end of the table and {{backdrop}} fall away eight metres behind into soft shape. Two lanterns hang a metre and a half above the table and carry the whole scene, throwing light straight down so his cheekbones and the tops of his shoulders take it while his eye sockets sit in gentle shadow. A 4:3 waist-up documentary frame from across the table, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -2381,7 +2362,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Two lanterns hang a metre and a half above the table and carry the whole scene, throwing light straight down so his cheekbones and the tops of his shoulders take it while his eye sockets sit in gentle shadow. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He listens with both forearms on the table, trying to keep a straight face, and gives in. The laugh breaks as he turns to the lens. An open bottle and three glasses stand at his end of the table, two of them half finished. He holds the near ground and the room opens deeper into the frame, with {{backdrop}} seven metres beyond in soft light. Two lanterns hang a metre and a half above the table and carry the whole scene, throwing light straight down so his cheekbones and the tops of his shoulders take it while his eye sockets sit in gentle shadow. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him. A 3:4 chest-up frame from a neighbouring seat, Fujifilm X100V, 23mm, f/4, 1/125, ISO 800. Flash reveals honest texture, modest shine at the forehead, fabric creases, and the weave of the table top.",
     "locations": {
@@ -2497,7 +2480,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "A warm bulb over the service door sits behind his left shoulder and rims his hair and jaw, while the pale table top bounces just enough back up to open his face a stop under that rim.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He sets his cup down to answer a question, one hand still near the saucer. His attention stays off to his right, past the lens, on whoever asked. A phone face down, two glasses and a scatter of receipts sit between him and the empty seat opposite. The empty seats face him across the table, with {{backdrop}} ten metres back going soft. A warm bulb over the service door sits behind his left shoulder and rims his hair and jaw, while the pale table top bounces just enough back up to open his face a stop under that rim. A 4:3 waist-up snapshot with the venue still readable, handheld iPhone 15 Pro at 35mm equivalent, standard photo mode. Preserve distance-appropriate facial detail, slight gesture motion, and ordinary phone texture with true venue colour.",
     "locations": {
@@ -2526,7 +2511,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Strung bulbs run above and slightly ahead of him, dropping soft overlapping pools onto his forehead and forearms and leaving the underside of his chin in shadow.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He raises a small glass in one hand and rests the other on the table edge. He holds brief eye contact with the lens before drinking. An open bottle and three glasses stand at his end of the table, two of them half finished. He holds the near ground and the room opens deeper into the frame, with {{backdrop}} seven metres beyond in soft light. Strung bulbs run above and slightly ahead of him, dropping soft overlapping pools onto his forehead and forearms and leaving the underside of his chin in shadow. A 4:3 three-quarter frame at seated height, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -2555,7 +2542,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Strung bulbs run above and slightly ahead of him, dropping soft overlapping pools onto his forehead and forearms and leaving the underside of his chin in shadow. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He answers a toast by lifting his glass a little, keeping the gesture small. He smiles toward the lens as he lowers his hand. The table carries the middle of a shared meal: a board of food, spare cutlery and a chair angled away as if just left. He is closest to the lens with the room trailing back, and {{backdrop}} dissolve nine metres further off. Strung bulbs run above and slightly ahead of him, dropping soft overlapping pools onto his forehead and forearms and leaving the underside of his chin in shadow. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him. A 3:4 waist-up snapshot with his face near the visual centre, Fujifilm X100V, 23mm, f/4, 1/125, ISO 800. Flash reveals honest texture, modest shine at the forehead, fabric creases, and the weave of the table top.",
     "locations": {
@@ -2584,7 +2573,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Strung bulbs run above and slightly ahead of him, dropping soft overlapping pools onto his forehead and forearms and leaving the underside of his chin in shadow.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He sets one drink beside his plate and laughs, both hands still on the table. His eyes go to his left, past the lens, to whoever caused it. A second glass and a used side plate sit across from him, with a jacket left over the back of the empty chair opposite. He sits at the near end of the table and {{backdrop}} fall away eight metres behind into soft shape. Strung bulbs run above and slightly ahead of him, dropping soft overlapping pools onto his forehead and forearms and leaving the underside of his chin in shadow. A 4:3 three-quarter candid at seated height, handheld iPhone 15 Pro at 35mm equivalent, standard photo mode. Preserve distance-appropriate facial detail, slight gesture motion, and ordinary phone texture with true venue colour.",
     "locations": {
@@ -2642,7 +2633,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Low afternoon sun comes across the terrace from his right, raking one side of his face into clear relief while the shaded side holds detail on bounce off the render behind him. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He takes two drinks from the counter, one in each hand, and turns back toward the table. He looks back to the lens when his name is said. A phone face down, two glasses and a scatter of receipts sit between him and the empty seat opposite. The empty seats face him across the table, with {{backdrop}} ten metres back going soft. Low afternoon sun comes across the terrace from his right, raking one side of his face into clear relief while the shaded side holds detail on bounce off the render behind him. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him. A 4:3 medium photograph with hands and table objects fully supported, Fujifilm X100V, 23mm, f/4, 1/125, ISO 800. Flash reveals honest texture, modest shine at the forehead, fabric creases, and the weave of the table top.",
     "locations": {
@@ -2729,7 +2722,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "A wide bright sky above the open patio lights him evenly from overhead, with the pale paving throwing a soft upward fill under his jaw and brows. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He shifts along the bench to make room, one palm flat on the seat. The smile stays on the lens as the conversation resumes. A second glass and a used side plate sit across from him, with a jacket left over the back of the empty chair opposite. He sits at the near end of the table and {{backdrop}} fall away eight metres behind into soft shape. A wide bright sky above the open patio lights him evenly from overhead, with the pale paving throwing a soft upward fill under his jaw and brows. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him. A 9:16 full-body flash photograph with room at the edges, Fujifilm X100V, 23mm, f/4, 1/125, ISO 800. Flash reveals honest texture, modest shine at the forehead, fabric creases, and the weave of the table top.",
     "locations": {
@@ -2758,7 +2753,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "A wide bright sky above the open patio lights him evenly from overhead, with the pale paving throwing a soft upward fill under his jaw and brows.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He leans forward with forearms on his thighs to hear over the noise. He looks up to the lens with an open, amused expression. An open bottle and three glasses stand at his end of the table, two of them half finished. He holds the near ground and the room opens deeper into the frame, with {{backdrop}} seven metres beyond in soft light. A wide bright sky above the open patio lights him evenly from overhead, with the pale paving throwing a soft upward fill under his jaw and brows. A 9:16 full-body candid that keeps ordinary movement, handheld iPhone 15 Pro at 35mm equivalent, standard photo mode. Preserve distance-appropriate facial detail, slight gesture motion, and ordinary phone texture with true venue colour.",
     "locations": {
@@ -2787,7 +2784,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Warm light spills from the doorway behind the camera and lands flat across his face, while the darker depth behind him keeps the room's own shadows intact.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He gestures with one hand while speaking and keeps a glass low in the other. His eye contact stays just past the lens. A phone face down, two glasses and a scatter of receipts sit between him and the empty seat opposite. The empty seats face him across the table, with {{backdrop}} ten metres back going soft. Warm light spills from the doorway behind the camera and lands flat across his face, while the darker depth behind him keeps the room's own shadows intact. A 4:3 waist-up documentary frame from across the table, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -2874,7 +2873,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Candles and low table lamps sit below his eyeline and light him from underneath at close range, catching the underside of his brow and the bridge of his nose.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He stands from the table with one hand on its edge, ready to move. He looks back to the lens as his name is called after him. A second glass and a used side plate sit across from him, with a jacket left over the back of the empty chair opposite. He sits at the near end of the table and {{backdrop}} fall away eight metres behind into soft shape. Candles and low table lamps sit below his eyeline and light him from underneath at close range, catching the underside of his brow and the bridge of his nose. A 4:3 medium frame from the edge of the conversation, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -2903,7 +2904,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Candles and low table lamps sit below his eyeline and light him from underneath at close range, catching the underside of his brow and the bridge of his nose. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He comes back to the table carrying one small plate, steadying it with both hands. He smiles toward the lens as he reaches the table. An open bottle and three glasses stand at his end of the table, two of them half finished. He holds the near ground and the room opens deeper into the frame, with {{backdrop}} seven metres beyond in soft light. Candles and low table lamps sit below his eyeline and light him from underneath at close range, catching the underside of his brow and the bridge of his nose. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him. A 3:4 knee-up flash photograph with easy space around him, Fujifilm X100V, 23mm, f/4, 1/125, ISO 800. Flash reveals honest texture, modest shine at the forehead, fabric creases, and the weave of the table top.",
     "locations": {
@@ -3019,7 +3022,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "A single pendant hangs over the middle of the table between him and the camera, so his near side is bright and his far cheek falls off into the room's shadow.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He slides a plate to the middle of the table with one hand and leans back. The laugh goes to his right, past the lens. A phone face down, two glasses and a scatter of receipts sit between him and the empty seat opposite. The empty seats face him across the table, with {{backdrop}} ten metres back going soft. A single pendant hangs over the middle of the table between him and the camera, so his near side is bright and his far cheek falls off into the room's shadow. A 4:3 three-quarter candid at seated height, handheld iPhone 15 Pro at 35mm equivalent, standard photo mode. Preserve distance-appropriate facial detail, slight gesture motion, and ordinary phone texture with true venue colour.",
     "locations": {
@@ -3048,7 +3053,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "The last blue of the sky sits behind him and reads cool on his shoulders, while a warm heater element to his left carries the actual light on his face.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He walks between tables with one hand steadying a glass. He turns his head to the lens as his name is called. An open bottle and three glasses stand at his end of the table, two of them half finished. He holds the near ground and the room opens deeper into the frame, with {{backdrop}} seven metres beyond in soft light. The last blue of the sky sits behind him and reads cool on his shoulders, while a warm heater element to his left carries the actual light on his face. A 3:4 chest-up frame with a little out-of-focus foreground, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -3106,7 +3113,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "The last blue of the sky sits behind him and reads cool on his shoulders, while a warm heater element to his left carries the actual light on his face.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He steps around a pulled-out chair, one hand out for balance. His attention stays beside him, off to the left of the lens. A second glass and a used side plate sit across from him, with a jacket left over the back of the empty chair opposite. He sits at the near end of the table and {{backdrop}} fall away eight metres behind into soft shape. The last blue of the sky sits behind him and reads cool on his shoulders, while a warm heater element to his left carries the actual light on his face. A 3:4 chest-up candid with a soft out-of-focus railing at the near edge, handheld iPhone 15 Pro at 35mm equivalent, standard photo mode. Preserve distance-appropriate facial detail, slight gesture motion, and ordinary phone texture with true venue colour.",
     "locations": {
@@ -3135,7 +3144,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Backlit bottles behind the bar throw a warm halo through his hair from behind, and the bar top bounces a soft, weaker light back onto his chin and cheeks.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He keeps a drink low near the table with one hand and laughs at a remark. He looks to the lens as it lands. A coat is folded over the chair beside him and a second cup sits cooling within reach. The rest of the table runs a couple of metres past him, and {{backdrop}} drop off five metres behind them. Backlit bottles behind the bar throw a warm halo through his hair from behind, and the bar top bounces a soft, weaker light back onto his chin and cheeks. A 4:3 environmental frame that explains the gathering, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -3164,7 +3175,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Backlit bottles behind the bar throw a warm halo through his hair from behind, and the bar top bounces a soft, weaker light back onto his chin and cheeks. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He reaches across for a bottle opener and draws his hand back. He smiles toward the lens as he settles again. A phone face down, two glasses and a scatter of receipts sit between him and the empty seat opposite. The empty seats face him across the table, with {{backdrop}} ten metres back going soft. Backlit bottles behind the bar throw a warm halo through his hair from behind, and the bar top bounces a soft, weaker light back onto his chin and cheeks. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him. A 9:16 full-body flash photograph with room at the edges, Fujifilm X100V, 23mm, f/4, 1/125, ISO 800. Flash reveals honest texture, modest shine at the forehead, fabric creases, and the weave of the table top.",
     "locations": {
@@ -3193,7 +3206,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Backlit bottles behind the bar throw a warm halo through his hair from behind, and the bar top bounces a soft, weaker light back onto his chin and cheeks.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He stands at the bar with one elbow on it, a glass in the other hand. He reacts with a soft real laugh, eyes on the lens. Two more places are set along the table, one chair pushed back at an angle and a napkin dropped beside it. The table runs from the near corner into the room, with {{backdrop}} six metres back and well out of focus. Backlit bottles behind the bar throw a warm halo through his hair from behind, and the bar top bounces a soft, weaker light back onto his chin and cheeks. A 9:16 full-body candid that keeps ordinary movement, handheld iPhone 15 Pro at 35mm equivalent, standard photo mode. Preserve distance-appropriate facial detail, slight gesture motion, and ordinary phone texture with true venue colour.",
     "locations": {
@@ -3222,7 +3237,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "A shaded lamp on the wall to his right lights him from the side at head height, leaving a clean falloff across his nose onto the far cheek.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He leans in with one hand on the bar to hear over the room. He turns back with an animated reply aimed at the lens. The table carries the middle of a shared meal: a board of food, spare cutlery and a chair angled away as if just left. He is closest to the lens with the room trailing back, and {{backdrop}} dissolve nine metres further off. A shaded lamp on the wall to his right lights him from the side at head height, leaving a clean falloff across his nose onto the far cheek. A 4:3 waist-up documentary frame from across the table, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -3251,7 +3268,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "A shaded lamp on the wall to his right lights him from the side at head height, leaving a clean falloff across his nose onto the far cheek. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He settles at the end of the bar, both hands loose in front of him. He smiles to the lens before adding his own line. A second glass and a used side plate sit across from him, with a jacket left over the back of the empty chair opposite. He sits at the near end of the table and {{backdrop}} fall away eight metres behind into soft shape. A shaded lamp on the wall to his right lights him from the side at head height, leaving a clean falloff across his nose onto the far cheek. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him. A 3:4 chest-up frame from a neighbouring seat, Fujifilm X100V, 23mm, f/4, 1/125, ISO 800. Flash reveals honest texture, modest shine at the forehead, fabric creases, and the weave of the table top.",
     "locations": {
@@ -3280,7 +3299,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "A shaded lamp on the wall to his right lights him from the side at head height, leaving a clean falloff across his nose onto the far cheek.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He turns his stool toward the room, one hand flat on the counter. He listens with an amused expression, eyes off to the right of the lens. An open bottle and three glasses stand at his end of the table, two of them half finished. He holds the near ground and the room opens deeper into the frame, with {{backdrop}} seven metres beyond in soft light. A shaded lamp on the wall to his right lights him from the side at head height, leaving a clean falloff across his nose onto the far cheek. A 4:3 handheld medium shot from conversational distance, handheld iPhone 15 Pro at 35mm equivalent, standard photo mode. Preserve distance-appropriate facial detail, slight gesture motion, and ordinary phone texture with true venue colour.",
     "locations": {
@@ -3309,7 +3330,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Street light through the window sits low and behind him, edging his shoulder, while the room's warm interior light does the work on his face from the front.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He sits near the doorway after the rush, forearms loose on his knees. He looks up to the lens with a tired, happy grin. A phone face down, two glasses and a scatter of receipts sit between him and the empty seat opposite. The empty seats face him across the table, with {{backdrop}} ten metres back going soft. Street light through the window sits low and behind him, edging his shoulder, while the room's warm interior light does the work on his face from the front. A 4:3 medium frame from the edge of the conversation, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -3396,7 +3419,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Late sun comes through the tree canopy in broken patches and moves across his forehead and collar, leaving the rest of him in cool open shade.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He brings his hands together in one short clap at the end of a story. The laugh comes back forward to the lens. A second glass and a used side plate sit across from him, with a jacket left over the back of the empty chair opposite. He sits at the near end of the table and {{backdrop}} fall away eight metres behind into soft shape. Late sun comes through the tree canopy in broken patches and moves across his forehead and collar, leaving the rest of him in cool open shade. A 4:3 three-quarter frame at seated height, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -3425,7 +3450,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Late sun comes through the tree canopy in broken patches and moves across his forehead and collar, leaving the rest of him in cool open shade. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He reacts to an unexpected joke with both hands still near the bench. The open laugh goes straight to the lens. An open bottle and three glasses stand at his end of the table, two of them half finished. He holds the near ground and the room opens deeper into the frame, with {{backdrop}} seven metres beyond in soft light. Late sun comes through the tree canopy in broken patches and moves across his forehead and collar, leaving the rest of him in cool open shade. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him. A 3:4 waist-up snapshot with his face near the visual centre, Fujifilm X100V, 23mm, f/4, 1/125, ISO 800. Flash reveals honest texture, modest shine at the forehead, fabric creases, and the weave of the table top.",
     "locations": {
@@ -3541,7 +3568,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "An overcast sky lights the bench evenly from above with a slight lean from the left, and the light stone underfoot lifts a soft fill into his eye sockets.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He folds a paper bag closed, sets it aside, and brushes crumbs from his palm. He rejoins the conversation, eyes to the lens. A phone face down, two glasses and a scatter of receipts sit between him and the empty seat opposite. The empty seats face him across the table, with {{backdrop}} ten metres back going soft. An overcast sky lights the bench evenly from above with a slight lean from the left, and the light stone underfoot lifts a soft fill into his eye sockets. A 3:4 chest-up candid with a soft out-of-focus railing at the near edge, handheld iPhone 15 Pro at 35mm equivalent, standard photo mode. Preserve distance-appropriate facial detail, slight gesture motion, and ordinary phone texture with true venue colour.",
     "locations": {
@@ -3570,7 +3599,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Low golden light comes almost level from behind the far side of the square, rimming his hair and the edge of his ear, with his face carried on the warm bounce off the wall opposite.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He stands beside the bench, one hand shaping a point as he explains something. His attention stays just left of the lens. An open bottle and three glasses stand at his end of the table, two of them half finished. He holds the near ground and the room opens deeper into the frame, with {{backdrop}} seven metres beyond in soft light. Low golden light comes almost level from behind the far side of the square, rimming his hair and the edge of his ear, with his face carried on the warm bounce off the wall opposite. A 4:3 environmental frame that explains the gathering, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -3628,7 +3659,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Low golden light comes almost level from behind the far side of the square, rimming his hair and the edge of his ear, with his face carried on the warm bounce off the wall opposite.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He arrives, places his phone face down beside him, and rests both hands on his knees. He smiles to the lens as he settles. A second glass and a used side plate sit across from him, with a jacket left over the back of the empty chair opposite. He sits at the near end of the table and {{backdrop}} fall away eight metres behind into soft shape. Low golden light comes almost level from behind the far side of the square, rimming his hair and the edge of his ear, with his face carried on the warm bounce off the wall opposite. A 9:16 full-body candid that keeps ordinary movement, handheld iPhone 15 Pro at 35mm equivalent, standard photo mode. Preserve distance-appropriate facial detail, slight gesture motion, and ordinary phone texture with true venue colour.",
     "locations": {
@@ -3657,7 +3690,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Pendant lamps hang over the pass behind him and glow through the frame, while a wall sconce closer to the camera lights his face from the front left.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He lifts a glass in one hand, holds it a moment, and lowers it naturally. The brief eye contact goes to the lens. A coat is folded over the chair beside him and a second cup sits cooling within reach. The rest of the table runs a couple of metres past him, and {{backdrop}} drop off five metres behind them. Pendant lamps hang over the pass behind him and glow through the frame, while a wall sconce closer to the camera lights his face from the front left. A 4:3 waist-up documentary frame from across the table, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -3686,7 +3721,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Pendant lamps hang over the pass behind him and glow through the frame, while a wall sconce closer to the camera lights his face from the front left. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He raises the glass in one hand close to his chest. He smiles at the person opposite, just past the lens. A phone face down, two glasses and a scatter of receipts sit between him and the empty seat opposite. The empty seats face him across the table, with {{backdrop}} ten metres back going soft. Pendant lamps hang over the pass behind him and glow through the frame, while a wall sconce closer to the camera lights his face from the front left. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him. A 3:4 chest-up frame from a neighbouring seat, Fujifilm X100V, 23mm, f/4, 1/125, ISO 800. Flash reveals honest texture, modest shine at the forehead, fabric creases, and the weave of the table top.",
     "locations": {
@@ -3715,7 +3752,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Pendant lamps hang over the pass behind him and glow through the frame, while a wall sconce closer to the camera lights his face from the front left.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He sets a second glass down with one hand and keeps his own near the table. He laughs at the thanks, eyes coming to the lens. Two more places are set along the table, one chair pushed back at an angle and a napkin dropped beside it. The table runs from the near corner into the room, with {{backdrop}} six metres back and well out of focus. Pendant lamps hang over the pass behind him and glow through the frame, while a wall sconce closer to the camera lights his face from the front left. A 4:3 handheld medium shot from conversational distance, handheld iPhone 15 Pro at 35mm equivalent, standard photo mode. Preserve distance-appropriate facial detail, slight gesture motion, and ordinary phone texture with true venue colour.",
     "locations": {
@@ -3773,7 +3812,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Warm downlights sit directly overhead and pool on his hair and shoulders, with the table's pale surface throwing enough back up to keep his eyes readable. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He shifts one leg and drops a hand to the cushion to make room. He stays in the conversation, looking to the lens. A second glass and a used side plate sit across from him, with a jacket left over the back of the empty chair opposite. He sits at the near end of the table and {{backdrop}} fall away eight metres behind into soft shape. Warm downlights sit directly overhead and pool on his hair and shoulders, with the table's pale surface throwing enough back up to keep his eyes readable. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him. A 3:4 knee-up flash photograph with easy space around him, Fujifilm X100V, 23mm, f/4, 1/125, ISO 800. Flash reveals honest texture, modest shine at the forehead, fabric creases, and the weave of the table top.",
     "locations": {
@@ -3802,7 +3843,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Warm downlights sit directly overhead and pool on his hair and shoulders, with the table's pale surface throwing enough back up to keep his eyes readable.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He rests both hands away from his phone and turns toward the speaker. The smile arrives with his eyes on the lens. An open bottle and three glasses stand at his end of the table, two of them half finished. He holds the near ground and the room opens deeper into the frame, with {{backdrop}} seven metres beyond in soft light. Warm downlights sit directly overhead and pool on his hair and shoulders, with the table's pale surface throwing enough back up to keep his eyes readable. A 4:3 waist-up snapshot with the venue still readable, handheld iPhone 15 Pro at 35mm equivalent, standard photo mode. Preserve distance-appropriate facial detail, slight gesture motion, and ordinary phone texture with true venue colour.",
     "locations": {
@@ -3831,7 +3874,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Bright daylight from the open entrance behind the camera lands square on him, and the darker interior behind him holds its own deep shadow.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He waits against the wall with one thumb hooked in a pocket. He looks left, past the lens, at movement in the doorway. A phone face down, two glasses and a scatter of receipts sit between him and the empty seat opposite. The empty seats face him across the table, with {{backdrop}} ten metres back going soft. Bright daylight from the open entrance behind the camera lands square on him, and the darker interior behind him holds its own deep shadow. A 4:3 three-quarter frame at standing height, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -3918,7 +3963,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "A fire pit low and to his right throws unsteady warm light up across his jaw and cheek, while the sky above him has gone fully dark.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He lowers a small plate after a first taste, one hand under it. He looks up to the lens at the amused reaction. A second glass and a used side plate sit across from him, with a jacket left over the back of the empty chair opposite. He sits at the near end of the table and {{backdrop}} fall away eight metres behind into soft shape. A fire pit low and to his right throws unsteady warm light up across his jaw and cheek, while the sky above him has gone fully dark. A 3:4 chest-up frame with a little out-of-focus foreground, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -3947,7 +3994,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "A fire pit low and to his right throws unsteady warm light up across his jaw and cheek, while the sky above him has gone fully dark. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He turns the plate to a better angle, then draws it back carefully with both hands. He laughs at the answer, eyes to the lens. An open bottle and three glasses stand at his end of the table, two of them half finished. He holds the near ground and the room opens deeper into the frame, with {{backdrop}} seven metres beyond in soft light. A fire pit low and to his right throws unsteady warm light up across his jaw and cheek, while the sky above him has gone fully dark. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him. A 4:3 medium photograph with hands and table objects fully supported, Fujifilm X100V, 23mm, f/4, 1/125, ISO 800. Flash reveals honest texture, modest shine at the forehead, fabric creases, and the weave of the table top.",
     "locations": {
@@ -4063,7 +4112,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "A doorway of warm interior light behind his shoulder outlines him from behind, and a cooler porch bulb ahead picks up his face at three-quarters from the front.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He walks away from the entrance with both hands in his pockets at an easy pace. He turns to the lens while everyone keeps moving. A phone face down, two glasses and a scatter of receipts sit between him and the empty seat opposite. The empty seats face him across the table, with {{backdrop}} ten metres back going soft. A doorway of warm interior light behind his shoulder outlines him from behind, and a cooler porch bulb ahead picks up his face at three-quarters from the front. A 9:16 full-body candid that keeps ordinary movement, handheld iPhone 15 Pro at 35mm equivalent, standard photo mode. Preserve distance-appropriate facial detail, slight gesture motion, and ordinary phone texture with true venue colour.",
     "locations": {
@@ -4154,7 +4205,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Strung bulbs run along the parapet above and behind him, rimming his hair while the rooftop floor bounces a warmer, weaker light back onto his face.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He stands at the roof edge with both hands on the rail, taking in the view. He glances back to the lens over his shoulder. A second glass and a used side plate sit across from him, with a jacket left over the back of the empty chair opposite. He sits at the near end of the table and {{backdrop}} fall away eight metres behind into soft shape. Strung bulbs run along the parapet above and behind him, rimming his hair while the rooftop floor bounces a warmer, weaker light back onto his face. A 9:16 handheld full-length frame from a low natural height, handheld iPhone 15 Pro at 35mm equivalent, standard photo mode. Preserve distance-appropriate facial detail, slight gesture motion, and ordinary phone texture with true venue colour.",
     "locations": {
@@ -4183,7 +4236,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "A low table lantern sits just in front of him and lights him from below the eyeline, catching his jaw and the underside of his brow as the sky behind goes fully dark.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He rests one elbow on the counter with the other hand flat on it, half turned to the room. He holds the lens. A coat is folded over the chair beside him and a second cup sits cooling within reach. The rest of the table runs a couple of metres past him, and {{backdrop}} drop off five metres behind them. A low table lantern sits just in front of him and lights him from below the eyeline, catching his jaw and the underside of his brow as the sky behind goes fully dark. A 3:4 chest-up frame at eye level, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -4212,7 +4267,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "A low table lantern sits just in front of him and lights him from below the eyeline, catching his jaw and the underside of his brow as the sky behind goes fully dark. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He warms both hands over the fire bowl and straightens as the heat catches. He looks to the lens. A phone face down, two glasses and a scatter of receipts sit between him and the empty seat opposite. The empty seats face him across the table, with {{backdrop}} ten metres back going soft. A low table lantern sits just in front of him and lights him from below the eyeline, catching his jaw and the underside of his brow as the sky behind goes fully dark. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him. A 3:4 waist-up frame at eye level, Fujifilm X100V, 23mm, f/4, 1/125, ISO 800. Flash reveals honest texture, modest shine at the forehead, fabric creases, and the weave of the table top.",
     "locations": {
@@ -4299,7 +4356,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "City glow rises from the streets below and behind him and reads cool on his shoulders, while a warm heater to his left carries the light on his face. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He pulls his collar up against the night air with one hand and laughs at how cold it is. He looks to the lens through it. A second glass and a used side plate sit across from him, with a jacket left over the back of the empty chair opposite. He sits at the near end of the table and {{backdrop}} fall away eight metres behind into soft shape. City glow rises from the streets below and behind him and reads cool on his shoulders, while a warm heater to his left carries the light on his face. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him. A 3:4 chest-up frame at eye level, Fujifilm X100V, 23mm, f/4, 1/125, ISO 800. Flash reveals honest texture, modest shine at the forehead, fabric creases, and the weave of the table top.",
     "locations": {
@@ -4328,7 +4387,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "City glow rises from the streets below and behind him and reads cool on his shoulders, while a warm heater to his left carries the light on his face.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He leans on the rail with both forearms, one ankle crossed behind. He smiles off to his left, past the lens. An open bottle and three glasses stand at his end of the table, two of them half finished. He holds the near ground and the room opens deeper into the frame, with {{backdrop}} seven metres beyond in soft light. City glow rises from the streets below and behind him and reads cool on his shoulders, while a warm heater to his left carries the light on his face. A 3:4 handheld waist-up portrait held slightly off-centre, handheld iPhone 15 Pro at 35mm equivalent, standard photo mode. Preserve distance-appropriate facial detail, slight gesture motion, and ordinary phone texture with true venue colour.",
     "locations": {
@@ -4357,7 +4418,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Bare bulbs hang over the stalls just above head height and throw warm light straight down, catching his cheekbones and leaving his eyes softly shadowed.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He holds a paper tray level on one palm and steadies it with the other as the steam rises. He looks up to the lens. A phone face down, two glasses and a scatter of receipts sit between him and the empty seat opposite. The empty seats face him across the table, with {{backdrop}} ten metres back going soft. Bare bulbs hang over the stalls just above head height and throw warm light straight down, catching his cheekbones and leaving his eyes softly shadowed. A 3:4 waist-up frame from an ordinary kerbside distance, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -4444,7 +4507,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "A griddle and stall lamps glow low to his right and light him warmly from the side at chest height, with the street behind him staying dark.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He waits at the counter with both hands in his pockets while the order cooks. He looks to the lens as it comes up. A second glass and a used side plate sit across from him, with a jacket left over the back of the empty chair opposite. He sits at the near end of the table and {{backdrop}} fall away eight metres behind into soft shape. A griddle and stall lamps glow low to his right and light him warmly from the side at chest height, with the street behind him staying dark. A 3:4 waist-up frame at eye level, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -4473,7 +4538,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "A griddle and stall lamps glow low to his right and light him warmly from the side at chest height, with the street behind him staying dark. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He leans on the stall edge with one forearm, a folded napkin in the other hand. He smiles to the lens. An open bottle and three glasses stand at his end of the table, two of them half finished. He holds the near ground and the room opens deeper into the frame, with {{backdrop}} seven metres beyond in soft light. A griddle and stall lamps glow low to his right and light him warmly from the side at chest height, with the street behind him staying dark. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him. A 3:4 chest-up frame from the side, Fujifilm X100V, 23mm, f/4, 1/125, ISO 800. Flash reveals honest texture, modest shine at the forehead, fabric creases, and the weave of the table top.",
     "locations": {
@@ -4589,7 +4656,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "A lit awning above and ahead of him spills warm light down onto his face and shoulders, while the market behind him falls into grainy depth.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He steps out of the market lane with both hands in his pockets, jacket zipped. He turns to the lens as he goes. A phone face down, two glasses and a scatter of receipts sit between him and the empty seat opposite. The empty seats face him across the table, with {{backdrop}} ten metres back going soft. A lit awning above and ahead of him spills warm light down onto his face and shoulders, while the market behind him falls into grainy depth. A 3:4 handheld waist-up portrait from slightly above, handheld iPhone 15 Pro at 35mm equivalent, standard photo mode. Preserve distance-appropriate facial detail, slight gesture motion, and ordinary phone texture with true venue colour.",
     "locations": {
@@ -6880,7 +6949,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "dog"
+    ],
     "light": "Open daylight comes from a bright but clouded sky almost overhead, lighting him evenly with a soft shadow under his brow and the path throwing a weak fill back up.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He walks a dog at an easy pace, gathering the lead shorter in one hand as the path narrows. He looks down to the dog as it checks in, off past the lens. The path opens twelve metres behind him to {{backdrop}}, which soften as the ground falls away. Open daylight comes from a bright but clouded sky almost overhead, lighting him evenly with a soft shadow under his brow and the path throwing a weak fill back up. A 9:16 full-body action frame from sideline height, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
     "locations": {
@@ -6909,7 +6980,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "dog"
+    ],
     "light": "Open daylight comes from a bright but clouded sky almost overhead, lighting him evenly with a soft shadow under his brow and the path throwing a weak fill back up.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He waits while the dog investigates the verge, the loop of lead hanging from one hand. He glances to the lens with an affectionate expression. {{backdrop}} sit twenty-five metres beyond him, dropping into soft outdoor depth. Open daylight comes from a bright but clouded sky almost overhead, lighting him evenly with a soft shadow under his brow and the path throwing a weak fill back up. A 9:16 handheld full-body frame from a safe practical distance, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
     "locations": {
@@ -6938,7 +7011,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "dog"
+    ],
     "light": "Open daylight comes from a bright but clouded sky almost overhead, lighting him evenly with a soft shadow under his brow and the path throwing a weak fill back up.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He starts walking again as the dog catches up, letting the lead run loose through his fingers. He laughs to the lens as it pulls briefly ahead. The ground runs back ten metres to {{backdrop}}, held just out of focus. Open daylight comes from a bright but clouded sky almost overhead, lighting him evenly with a soft shadow under his brow and the path throwing a weak fill back up. A 9:16 full-body documentary photograph with balanced ground contact, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
@@ -7402,7 +7477,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "dog"
+    ],
     "light": "Bright sky sits behind him and reads much lighter than he does, with his face carried on the soft bounce off the open ground in front of him.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He sends a ball low along the grass, arm following through, and watches it go. His eyes track the throw, off past the lens. The path opens twelve metres behind him to {{backdrop}}, which soften as the ground falls away. Bright sky sits behind him and reads much lighter than he does, with his face carried on the soft bounce off the open ground in front of him. A 9:16 three-quarter action frame with the face fully visible, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
     "locations": {
@@ -7431,7 +7508,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "dog"
+    ],
     "light": "Bright sky sits behind him and reads much lighter than he does, with his face carried on the soft bounce off the open ground in front of him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He takes the returned ball, wipes it once against his thigh, and holds it in one hand beside his leg. He looks to the lens before the next throw. {{backdrop}} sit twenty-five metres beyond him, dropping into soft outdoor depth. Bright sky sits behind him and reads much lighter than he does, with his face carried on the soft bounce off the open ground in front of him. A 9:16 three-quarter burst photograph with ordinary perspective, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
     "locations": {
@@ -7460,7 +7539,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "dog"
+    ],
     "light": "Bright sky sits behind him and reads much lighter than he does, with his face carried on the soft bounce off the open ground in front of him.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He bends just enough to pick the ball up, straightens with it in one hand, and finds the dog already waiting. He laughs to the lens at its impatience. The ground runs back ten metres to {{backdrop}}, held just out of focus. Bright sky sits behind him and reads much lighter than he does, with his face carried on the soft bounce off the open ground in front of him. A 9:16 three-quarter photograph with activity context behind him, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
@@ -8156,7 +8237,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "bicycle"
+    ],
     "light": "Low sun comes from his right and slightly behind, catching the edge of his cheekbone and jaw while the front of his face rides on bounce off the ground.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He walks the bicycle beside him with one hand on the saddle and one on the bar. He looks to the lens as he passes. The path opens twelve metres behind him to {{backdrop}}, which soften as the ground falls away. Low sun comes from his right and slightly behind, catching the edge of his cheekbone and jaw while the front of his face rides on bounce off the ground. A 3:4 medium portrait taken during the activity, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
@@ -8482,7 +8565,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "teamSport"
+    ],
     "light": "A high bright overcast lights the whole field evenly from above, and the mown grass lifts a faint green fill under his chin.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He carries a ball loosely under one arm, the other hand swinging free as he walks off. He smiles to the lens. {{backdrop}} sit twenty-five metres beyond him, dropping into soft outdoor depth. A high bright overcast lights the whole field evenly from above, and the mown grass lifts a faint green fill under his chin. A 3:4 knee-up candid with small natural movement at the edges, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
     "hobbyPromptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. In a quiet moment during {{hobby}}, his hands rest on the equipment while he thinks the next part through. He glances to the lens. Eleven metres behind him the space carries on, softening into plain background tone. Daylight reaches him from above and slightly to one side, modelling his face and leaving a soft shadow down the far cheek, with the space behind him sitting a stop darker. A 3:4 knee-up candid with small natural movement at the edges, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
@@ -8977,7 +9062,7 @@ export const DATING_PROMPTS = [
       "teamSport"
     ],
     "light": "Bright open sky sits overhead and slightly ahead, lighting his face frontally with a short shadow under his brow and a clean edge on his shoulders.",
-    "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He tucks a ball under one arm and pulls the hem of his top up with one hand to wipe his face. He looks to the lens as it drops. Fifteen metres behind him, {{backdrop}} blur gently with the movement of the air. Bright open sky sits overhead and slightly ahead, lighting his face frontally with a short shadow under his brow and a clean edge on his shoulders. A 9:16 three-quarter photograph with activity context behind him, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
+    "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He pulls the hem of his top up with one hand to wipe his face, then lets it drop and rolls both shoulders out. He looks to the lens as he settles. Fifteen metres behind him, {{backdrop}} blur gently with the movement of the air. Bright open sky sits overhead and slightly ahead, lighting his face frontally with a short shadow under his brow and a clean edge on his shoulders. A 9:16 three-quarter photograph with activity context behind him, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
       "urban": "a floodlit outdoor court",
       "outdoorsy": "a grass pitch by the trees",
@@ -9066,7 +9151,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "teamSport"
+    ],
     "light": "Low light from the side of the playing area rakes across him at chest height, modelling one side of his face while the far side falls dark.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He ties a lace with both hands, one boot up on the low wall, then stands. He looks up to the lens as he straightens. The ground runs back ten metres to {{backdrop}}, held just out of focus. Low light from the side of the playing area rakes across him at chest height, modelling one side of his face while the far side falls dark. A 3:4 medium snapshot that keeps the face identifiable, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
@@ -9126,7 +9213,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "teamSport"
+    ],
     "light": "Late sun comes almost level from behind the far end of the ground, rimming his hair and shoulders, with his face lit softly from the front by the open sky.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He drops onto the bench, both forearms on his knees and hands hanging, spent. His eyes go across the pitch, past the lens. Fifteen metres behind him, {{backdrop}} blur gently with the movement of the air. Late sun comes almost level from behind the far end of the ground, rimming his hair and shoulders, with his face lit softly from the front by the open sky. A 4:3 environmental portrait with natural outdoor depth, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
     "locations": {
@@ -9155,7 +9244,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "teamSport"
+    ],
     "light": "Late sun comes almost level from behind the far end of the ground, rimming his hair and shoulders, with his face lit softly from the front by the open sky.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He pulls a jumper on over his head with both hands and shakes it down. He finds the lens as his head comes through. Thirty metres out, {{backdrop}} settle into pale distance while his own footing stays sharp. Late sun comes almost level from behind the far end of the ground, rimming his hair and shoulders, with his face lit softly from the front by the open sky. A 3:4 medium portrait taken during the activity, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
@@ -10663,7 +10754,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "bicycle"
+    ],
     "light": "Daylight reaches the platform from the open end ahead of him and lands frontally on his face, with the canopy above cutting a shadow across his forehead.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He stands beside a bicycle with one foot down and a hand on the bar, finishing a conversation. He looks to the lens as he rolls it forward. Twenty metres out, {{backdrop}} reduce to shape and glow while the pavement near him stays sharp. Daylight reaches the platform from the open end ahead of him and lands frontally on his face, with the canopy above cutting a shadow across his forehead. A 4:3 environmental portrait with reflections kept secondary, Leica Q2, 28mm, f/2.8, 1/250, auto ISO 800-3200. Retain distance-appropriate facial detail, fabric wear, true reflections, and available-light colour exactly as the street gives it.",
     "locations": {
@@ -10692,7 +10785,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "bicycle"
+    ],
     "light": "Daylight reaches the platform from the open end ahead of him and lands frontally on his face, with the canopy above cutting a shadow across his forehead.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He puts a lock back into a small bag and checks the wheel once with his fingers. He looks up to the lens. {{backdrop}} sit twelve metres back, their lamps and lit windows blooming gently out of focus. Daylight reaches the platform from the open end ahead of him and lands frontally on his face, with the canopy above cutting a shadow across his forehead. A 9:16 full-body night photograph with the face still readable, Sony A7S III, 35mm, f/2, 1/125, ISO 3200. Spread grain through shadows and background as well as skin, keeping mixed colour temperature and natural highlights.",
     "locations": {
@@ -10721,7 +10816,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "bicycle"
+    ],
     "light": "Daylight reaches the platform from the open end ahead of him and lands frontally on his face, with the canopy above cutting a shadow across his forehead.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He pauses at the bike rack with one hand on the saddle, mid-conversation. He smiles off to the right of the lens at the comment. Fifteen metres beyond him, {{backdrop}} smear into slow ambient movement. Daylight reaches the platform from the open end ahead of him and lands frontally on his face, with the canopy above cutting a shadow across his forehead. A 3:4 waist-up compact-camera frame at direct eye level, compact 35mm camera, f/4, 1/60, ISO 800, restrained direct flash. Flash reveals honest texture, modest shine, fabric creases, and one natural shadow cast behind him.",
     "locations": {
@@ -11622,6 +11719,15 @@ function assertBucketRules(
       ...Object.values(prompt.locations),
     ].join(" ");
 
+    for (const tag of prompt.tags) {
+      if (!(EXCLUDABLE_TAGS as readonly string[]).includes(tag)) {
+        throw new Error(
+          `Prompt ${prompt.id} carries tag "${tag}", which nothing can filter on; ` +
+            `a tag with nothing behind it is decoration`
+        );
+      }
+    }
+
     const texty = scene.match(TEXT_BEARING_PATTERN);
     if (texty) {
       throw new Error(
@@ -11707,6 +11813,48 @@ function assertBucketRules(
           `Bucket ${bucket} uses ${colour} in ${count} of ${outfits.length} ${style} outfits; cap is ${cap}`
         );
       }
+    }
+  }
+}
+
+/**
+ * A slot is usable when at least one of its variants carries none of the
+ * excluded tags. Scene-level: a beat with no dog in the words is still a dog
+ * photo if its location is "a city park dog run", so those slots are tagged
+ * whole.
+ */
+function usableSlotCount(bucket: DatingBucket, excluded: readonly string[]): number {
+  let usable = 0;
+  for (let slot = 1; slot <= SLOTS_PER_BUCKET; slot += 1) {
+    const variants = getPromptVariants(bucket, slot);
+    if (variants.some((p) => !p.tags.some((t) => excluded.includes(t)))) {
+      usable += 1;
+    }
+  }
+  return usable;
+}
+
+/**
+ * Whatever a user asks us to leave out, the library must still be able to field
+ * a full delivery. Checked across every combination rather than every tag alone,
+ * because individually harmless exclusions combine: each of these fits on its
+ * own, and dog plus team sport together takes `active` below a full bucket.
+ * The shortfall is covered from other buckets, so the requirement is a global
+ * one — enough usable slots overall, each with its own location.
+ */
+function assertExclusionCapacity(): void {
+  const tags = [...EXCLUDABLE_TAGS];
+  for (let mask = 0; mask < 1 << tags.length; mask += 1) {
+    const excluded = tags.filter((_, i) => mask & (1 << i));
+    const total = DATING_BUCKETS.reduce(
+      (sum, bucket) => sum + usableSlotCount(bucket, excluded),
+      0
+    );
+    if (total < TOTAL_PHOTOS) {
+      throw new Error(
+        `Excluding [${excluded.join(", ")}] leaves ${total} usable slots; ` +
+          `a delivery needs ${TOTAL_PHOTOS}`
+      );
     }
   }
 }
@@ -11805,6 +11953,8 @@ export function assertLibraryComplete(): void {
 
     assertBucketRules(bucket, bucketPrompts);
   }
+
+  assertExclusionCapacity();
 
   if (hobbyPromptCount !== 12) {
     throw new Error(
