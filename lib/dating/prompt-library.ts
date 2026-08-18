@@ -1806,7 +1806,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "cooking"
+    ],
     "light": "A window to his right is the only source, laying soft directional light along that side of his face while the room behind him falls away warm and dim.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He leans back against the counter with one hand resting on its edge and a cloth over the other forearm. He looks up to the lens between jobs. Three metres behind him, {{backdrop}} soften into warm domestic depth. A window to his right is the only source, laying soft directional light along that side of his face while the room behind him falls away warm and dim. A 3:4 waist-up frame at eye level, Fujifilm GFX 100S, 80mm, f/2.8, 1/250, ISO 200. Retain tonal variation, faint under-eye texture, varied beard density, and natural highlights, with skin that keeps its own grain.",
     "locations": {
@@ -1835,7 +1837,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "cooking"
+    ],
     "light": "A window to his right is the only source, laying soft directional light along that side of his face while the room behind him falls away warm and dim.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He turns something in a pan with one hand, the other steadying the handle. He glances to the lens as it catches. Two metres back, {{backdrop}} sit close and gently out of focus. A window to his right is the only source, laying soft directional light along that side of his face while the room behind him falls away warm and dim. A 3:4 chest-up frame from across the counter, Canon R5, 85mm, f/2, 1/320, ISO 400. Keep real skin microtexture, grooming irregularities, soft highlight rolloff, and believable focus falloff, with pores and fine lines intact.",
     "locations": {
@@ -1864,7 +1868,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "cooking"
+    ],
     "light": "A window to his right is the only source, laying soft directional light along that side of his face while the room behind him falls away warm and dim.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He sets a board down with both hands and wipes a palm on the cloth at his hip. He smiles off to his left, past the lens. Four metres behind him, {{backdrop}} fall away into soft interior tone. A window to his right is the only source, laying soft directional light along that side of his face while the room behind him falls away warm and dim. A 3:4 handheld medium portrait with slightly imperfect framing, handheld iPhone 15 Pro at 48mm equivalent, standard photo mode. Show distance-appropriate facial detail, flyaway hairs, and fabric creases, letting the lens render depth on its own.",
     "locations": {
@@ -1893,7 +1899,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "cooking"
+    ],
     "light": "Low kitchen light comes from under a shelf ahead of him and catches his hands and jaw first, with daylight from a window behind him cooling his shoulders.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He rests both forearms on the counter with a cloth between his hands, taking a pause. He looks to the lens. Two and a half metres back, {{backdrop}} hold their shape under a light blur. Low kitchen light comes from under a shelf ahead of him and catches his hands and jaw first, with daylight from a window behind him cooling his shoulders. A 3:4 chest-up frame at eye level, Fujifilm GFX 100S, 80mm, f/2.8, 1/250, ISO 200. Retain tonal variation, faint under-eye texture, varied beard density, and natural highlights, with skin that keeps its own grain.",
     "locations": {
@@ -1922,7 +1930,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "cooking"
+    ],
     "light": "Low kitchen light comes from under a shelf ahead of him and catches his hands and jaw first, with daylight from a window behind him cooling his shoulders.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He reaches up to a shelf with one hand and brings something down. His eyes stay on what he is holding, past the lens. Three metres behind him, {{backdrop}} drop into quiet shadow. Low kitchen light comes from under a shelf ahead of him and catches his hands and jaw first, with daylight from a window behind him cooling his shoulders. A 3:4 waist-up frame from the side, Canon R5, 85mm, f/2, 1/320, ISO 400. Keep real skin microtexture, grooming irregularities, soft highlight rolloff, and believable focus falloff, with pores and fine lines intact.",
     "locations": {
@@ -1951,7 +1961,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "cooking"
+    ],
     "light": "Low kitchen light comes from under a shelf ahead of him and catches his hands and jaw first, with daylight from a window behind him cooling his shoulders.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He leans on one elbow at the end of the counter, the other hand loose. He laughs to the lens at a remark from off frame. Five metres back, {{backdrop}} recede into soft depth. Low kitchen light comes from under a shelf ahead of him and catches his hands and jaw first, with daylight from a window behind him cooling his shoulders. A 3:4 handheld chest-up portrait with casual headroom, handheld iPhone 15 Pro at 48mm equivalent, standard photo mode. Show distance-appropriate facial detail, flyaway hairs, and fabric creases, letting the lens render depth on its own.",
     "locations": {
@@ -1980,7 +1992,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "cooking"
+    ],
     "light": "Overhead pendants sit just in front of him and throw light down onto his hair and brow, while the counter surface bounces a soft warm fill back up.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He stands at the end of the counter with a folded cloth in one hand, weight on one hip. He holds the lens easily. Four metres behind him, {{backdrop}} lose their edges. Overhead pendants sit just in front of him and throw light down onto his hair and brow, while the counter surface bounces a soft warm fill back up. A 3:4 knee-up frame at eye level, Fujifilm GFX 100S, 80mm, f/2.8, 1/250, ISO 200. Retain tonal variation, faint under-eye texture, varied beard density, and natural highlights, with skin that keeps its own grain.",
     "locations": {
@@ -2009,7 +2023,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "cooking"
+    ],
     "light": "Overhead pendants sit just in front of him and throw light down onto his hair and brow, while the counter surface bounces a soft warm fill back up.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He pushes a drawer shut with one palm and straightens up. He turns to the lens as he does. Three metres back, {{backdrop}} sit softly out of focus. Overhead pendants sit just in front of him and throw light down onto his hair and brow, while the counter surface bounces a soft warm fill back up. A 3:4 waist-up frame at eye level, Canon R5, 85mm, f/2, 1/320, ISO 400. Keep real skin microtexture, grooming irregularities, soft highlight rolloff, and believable focus falloff, with pores and fine lines intact.",
     "locations": {
@@ -2038,7 +2054,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "cooking"
+    ],
     "light": "Overhead pendants sit just in front of him and throw light down onto his hair and brow, while the counter surface bounces a soft warm fill back up.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He carries two plates through, one balanced on each hand, and pauses in the doorway. He looks to the lens. Six metres behind him, {{backdrop}} open out and go soft. Overhead pendants sit just in front of him and throw light down onto his hair and brow, while the counter surface bounces a soft warm fill back up. A 9:16 handheld full-length frame from a low natural height, handheld iPhone 15 Pro at 48mm equivalent, standard photo mode. Show distance-appropriate facial detail, flyaway hairs, and fabric creases, letting the lens render depth on its own.",
     "locations": {
@@ -2154,7 +2172,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "bicycle"
+    ],
     "light": "Light comes from behind him through the open door and rims his shoulders and hair, with his face carried on the soft bounce off the wall he is facing.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He steps down out of the doorway with one hand still on the frame behind him. He looks to the lens mid-step. Six metres back, {{backdrop}} recede into an easy blur. Light comes from behind him through the open door and rims his shoulders and hair, with his face carried on the soft bounce off the wall he is facing. A 3:4 knee-up frame at eye level, Fujifilm GFX 100S, 80mm, f/2.8, 1/250, ISO 200. Retain tonal variation, faint under-eye texture, varied beard density, and natural highlights, with skin that keeps its own grain.",
     "locations": {
@@ -2183,7 +2203,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "bicycle"
+    ],
     "light": "Light comes from behind him through the open door and rims his shoulders and hair, with his face carried on the soft bounce off the wall he is facing.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He stands just inside the threshold with a jacket over one forearm, half turned. His eyes go off to his left, past the lens. Three metres behind him, {{backdrop}} hold soft, ordinary detail. Light comes from behind him through the open door and rims his shoulders and hair, with his face carried on the soft bounce off the wall he is facing. A 3:4 chest-up frame at eye level, Canon R5, 85mm, f/2, 1/320, ISO 400. Keep real skin microtexture, grooming irregularities, soft highlight rolloff, and believable focus falloff, with pores and fine lines intact.",
     "locations": {
@@ -2212,7 +2234,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "bicycle"
+    ],
     "light": "Light comes from behind him through the open door and rims his shoulders and hair, with his face carried on the soft bounce off the wall he is facing.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He holds the door open with one flat hand and waits there a moment. He looks to the lens. Four metres back, {{backdrop}} drop into shadow and soft edges. Light comes from behind him through the open door and rims his shoulders and hair, with his face carried on the soft bounce off the wall he is facing. A 3:4 handheld medium portrait with casual headroom, handheld iPhone 15 Pro at 48mm equivalent, standard photo mode. Show distance-appropriate facial detail, flyaway hairs, and fabric creases, letting the lens render depth on its own.",
     "locations": {
@@ -4068,7 +4092,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Strung bulbs run along the parapet above and behind him, rimming his hair while the rooftop floor bounces a warmer, weaker light back onto his face.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He leans back against the parapet with one forearm along it and a glass low in the other hand. He looks to the lens as the night settles. An open bottle and three glasses stand at his end of the table, two of them half finished. He holds the near ground and the room opens deeper into the frame, with {{backdrop}} seven metres beyond in soft light. Strung bulbs run along the parapet above and behind him, rimming his hair while the rooftop floor bounces a warmer, weaker light back onto his face. A 3:4 waist-up frame at eye level, Sony A7S III, 35mm, f/2, 1/160, ISO 3200. Retain distance-appropriate facial detail, warm venue colour across his skin, fabric folds, and grain carried through shadow and background alike.",
     "locations": {
@@ -4097,7 +4123,9 @@ export const DATING_PROMPTS = [
       "width": 1536,
       "height": 2048
     },
-    "tags": [],
+    "tags": [
+      "alcohol"
+    ],
     "light": "Strung bulbs run along the parapet above and behind him, rimming his hair while the rooftop floor bounces a warmer, weaker light back onto his face. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He sets a glass down on the ledge with one hand and pushes both sleeves back. He turns to the lens. The table carries the middle of a shared meal: a board of food, spare cutlery and a chair angled away as if just left. He is closest to the lens with the room trailing back, and {{backdrop}} dissolve nine metres further off. Strung bulbs run along the parapet above and behind him, rimming his hair while the rooftop floor bounces a warmer, weaker light back onto his face. A modest direct flash from the camera adds a half stop of fill across his face and lays one soft shadow behind him. A 3:4 chest-up frame at eye level, Fujifilm X100V, 23mm, f/4, 1/125, ISO 800. Flash reveals honest texture, modest shine at the forehead, fabric creases, and the weave of the table top.",
     "locations": {
@@ -6331,8 +6359,8 @@ export const DATING_PROMPTS = [
       "height": 2688
     },
     "tags": [],
-    "light": "Hard midday sun comes almost straight down and the sand throws a strong second light back up, so his face is lit from above and below at once with very little shadow.",
-    "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He walks the tideline with his shoes hooked on two fingers and his other hand loose. He looks to the lens as a wave reaches his feet. Twenty metres behind him {{backdrop}} sit in gentle haze, the ground between them holding just enough detail to read. Hard midday sun comes almost straight down and the sand throws a strong second light back up, so his face is lit from above and below at once with very little shadow. A 9:16 full-body documentary frame with straight horizon lines, Leica Q2, 28mm, f/2.8, 1/250, ISO 400. Keep distance-appropriate facial detail, fabric wear, accurate hands, and real weather in the air.",
+    "light": "Hard midday sun comes almost straight down and the pale ground throws a strong second light back up, so his face is lit from above and below at once with very little shadow.",
+    "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He walks the water's edge with his shoes hooked on two fingers and his other hand loose. He looks to the lens as the water reaches his feet. Twenty metres behind him {{backdrop}} sit in gentle haze, the ground between them holding just enough detail to read. Hard midday sun comes almost straight down and the pale ground throws a strong second light back up, so his face is lit from above and below at once with very little shadow. A 9:16 full-body documentary frame with straight horizon lines, Leica Q2, 28mm, f/2.8, 1/250, ISO 400. Keep distance-appropriate facial detail, fabric wear, accurate hands, and real weather in the air.",
     "locations": {
       "urban": "a city beach promenade",
       "outdoorsy": "an open shoreline",
@@ -6360,8 +6388,8 @@ export const DATING_PROMPTS = [
       "height": 2304
     },
     "tags": [],
-    "light": "Hard midday sun comes almost straight down and the sand throws a strong second light back up, so his face is lit from above and below at once with very little shadow.",
-    "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He crouches at the water edge with one hand flat on the wet sand. His eyes stay on the water, past the lens. {{backdrop}} lie thirty metres past him, dropping into pale atmospheric distance while the near ground stays legible. Hard midday sun comes almost straight down and the sand throws a strong second light back up, so his face is lit from above and below at once with very little shadow. A 3:4 three-quarter portrait with moderate environmental separation, Canon R5, 50mm, f/2.8, 1/320, ISO 200. Retain complexion variation, beard detail, clothing folds, and believable focus falloff toward the distance.",
+    "light": "Hard midday sun comes almost straight down and the pale ground throws a strong second light back up, so his face is lit from above and below at once with very little shadow.",
+    "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He crouches at the water's edge with one hand flat on the damp ground. His eyes stay on the water, past the lens. {{backdrop}} lie thirty metres past him, dropping into pale atmospheric distance while the near ground stays legible. Hard midday sun comes almost straight down and the pale ground throws a strong second light back up, so his face is lit from above and below at once with very little shadow. A 3:4 three-quarter portrait with moderate environmental separation, Canon R5, 50mm, f/2.8, 1/320, ISO 200. Retain complexion variation, beard detail, clothing folds, and believable focus falloff toward the distance.",
     "locations": {
       "urban": "a city beach promenade",
       "outdoorsy": "an open shoreline",
@@ -6389,8 +6417,8 @@ export const DATING_PROMPTS = [
       "height": 1728
     },
     "tags": [],
-    "light": "Hard midday sun comes almost straight down and the sand throws a strong second light back up, so his face is lit from above and below at once with very little shadow.",
-    "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He stands with both hands on his hips facing the sea, then turns his head back. He finds the lens over his shoulder. The ground opens fifteen metres to a middle distance and carries on to {{backdrop}} some sixty metres out, softening by layers. Hard midday sun comes almost straight down and the sand throws a strong second light back up, so his face is lit from above and below at once with very little shadow. A 4:3 half-body portrait with the setting in quiet detail, Fujifilm GFX 100S, 45mm, f/4, 1/250, ISO 200. Preserve gentle skin texture, tonal variation, accurate scale between him and the place, and honest environmental detail.",
+    "light": "Hard midday sun comes almost straight down and the pale ground throws a strong second light back up, so his face is lit from above and below at once with very little shadow.",
+    "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He stands with both hands on his hips facing the water, then turns his head back. He finds the lens over his shoulder. The ground opens fifteen metres to a middle distance and carries on to {{backdrop}} some sixty metres out, softening by layers. Hard midday sun comes almost straight down and the pale ground throws a strong second light back up, so his face is lit from above and below at once with very little shadow. A 4:3 half-body portrait with the setting in quiet detail, Fujifilm GFX 100S, 45mm, f/4, 1/250, ISO 200. Preserve gentle skin texture, tonal variation, accurate scale between him and the place, and honest environmental detail.",
     "locations": {
       "urban": "a city beach promenade",
       "outdoorsy": "an open shoreline",
@@ -6418,8 +6446,8 @@ export const DATING_PROMPTS = [
       "height": 1728
     },
     "tags": [],
-    "light": "Low sun sits out over the water directly behind him, burning the horizon and rimming his shoulders, with his face carried a full stop under that on light coming back off the wet sand.",
-    "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He leans on the promenade rail with both forearms, wind moving his shirt. He looks out along the coast, past the lens. The view runs back from him through twelve metres of open ground to {{backdrop}}, all of it softening toward the horizon. Low sun sits out over the water directly behind him, burning the horizon and rimming his shoulders, with his face carried a full stop under that on light coming back off the wet sand. A 4:3 waist-up portrait with one useful foreground detail, Leica Q2, 28mm, f/2.8, 1/250, ISO 400. Keep distance-appropriate facial detail, fabric wear, accurate hands, and real weather in the air.",
+    "light": "Low sun sits out over the water directly behind him, burning the horizon and rimming his shoulders, with his face carried a full stop under that on light coming back off the wet ground.",
+    "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He stands at the water's edge with both forearms folded, wind moving his shirt. He looks out along the coast, past the lens. The view runs back from him through twelve metres of open ground to {{backdrop}}, all of it softening toward the horizon. Low sun sits out over the water directly behind him, burning the horizon and rimming his shoulders, with his face carried a full stop under that on light coming back off the wet ground. A 4:3 waist-up portrait with one useful foreground detail, Leica Q2, 28mm, f/2.8, 1/250, ISO 400. Keep distance-appropriate facial detail, fabric wear, accurate hands, and real weather in the air.",
     "locations": {
       "urban": "a city beach promenade",
       "outdoorsy": "an open shoreline",
@@ -6447,8 +6475,8 @@ export const DATING_PROMPTS = [
       "height": 2304
     },
     "tags": [],
-    "light": "Low sun sits out over the water directly behind him, burning the horizon and rimming his shoulders, with his face carried a full stop under that on light coming back off the wet sand.",
-    "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He shakes sand from one shoe with a hand braced on the rail. He glances to the lens mid-motion. Ten metres of foreground lead the eye to him, and {{backdrop}} settle fifty metres further into soft blue depth. Low sun sits out over the water directly behind him, burning the horizon and rimming his shoulders, with his face carried a full stop under that on light coming back off the wet sand. A 3:4 knee-up portrait that keeps hands and carried objects clear, Canon R5, 50mm, f/2.8, 1/320, ISO 200. Retain complexion variation, beard detail, clothing folds, and believable focus falloff toward the distance.",
+    "light": "Low sun sits out over the water directly behind him, burning the horizon and rimming his shoulders, with his face carried a full stop under that on light coming back off the wet ground.",
+    "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He shakes a shoe out with one hand braced on his knee. He glances to the lens mid-motion. Ten metres of foreground lead the eye to him, and {{backdrop}} settle fifty metres further into soft blue depth. Low sun sits out over the water directly behind him, burning the horizon and rimming his shoulders, with his face carried a full stop under that on light coming back off the wet ground. A 3:4 knee-up portrait that keeps hands and carried objects clear, Canon R5, 50mm, f/2.8, 1/320, ISO 200. Retain complexion variation, beard detail, clothing folds, and believable focus falloff toward the distance.",
     "locations": {
       "urban": "a city beach promenade",
       "outdoorsy": "an open shoreline",
@@ -6476,8 +6504,8 @@ export const DATING_PROMPTS = [
       "height": 2304
     },
     "tags": [],
-    "light": "Low sun sits out over the water directly behind him, burning the horizon and rimming his shoulders, with his face carried a full stop under that on light coming back off the wet sand.",
-    "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He pushes wet hair back with one hand and lets the other fall. He smiles to the lens. He stands eight metres clear of the nearest edge, with {{backdrop}} stacked forty metres beyond and losing contrast with depth. Low sun sits out over the water directly behind him, burning the horizon and rimming his shoulders, with his face carried a full stop under that on light coming back off the wet sand. A 3:4 waist-up portrait with gentle medium-format separation, Fujifilm GFX 100S, 45mm, f/4, 1/250, ISO 200. Preserve gentle skin texture, tonal variation, accurate scale between him and the place, and honest environmental detail.",
+    "light": "Low sun sits out over the water directly behind him, burning the horizon and rimming his shoulders, with his face carried a full stop under that on light coming back off the wet ground.",
+    "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He pushes wet hair back with one hand and lets the other fall. He smiles to the lens. He stands eight metres clear of the nearest edge, with {{backdrop}} stacked forty metres beyond and losing contrast with depth. Low sun sits out over the water directly behind him, burning the horizon and rimming his shoulders, with his face carried a full stop under that on light coming back off the wet ground. A 3:4 waist-up portrait with gentle medium-format separation, Fujifilm GFX 100S, 45mm, f/4, 1/250, ISO 200. Preserve gentle skin texture, tonal variation, accurate scale between him and the place, and honest environmental detail.",
     "locations": {
       "urban": "a city beach promenade",
       "outdoorsy": "an open shoreline",
@@ -6505,8 +6533,8 @@ export const DATING_PROMPTS = [
       "height": 1728
     },
     "tags": [],
-    "light": "Bright overcast comes off the whole sky and the pale shoreline, wrapping him evenly with a soft shadow only under his brow.",
-    "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He walks up the beach steps with one hand on the rail and a towel over his shoulder. He looks to the lens as he reaches the top. {{backdrop}} lie thirty metres past him, dropping into pale atmospheric distance while the near ground stays legible. Bright overcast comes off the whole sky and the pale shoreline, wrapping him evenly with a soft shadow only under his brow. A 4:3 environmental portrait with him holding roughly half the frame, Leica Q2, 28mm, f/2.8, 1/250, ISO 400. Keep distance-appropriate facial detail, fabric wear, accurate hands, and real weather in the air.",
+    "light": "Bright overcast comes off the whole sky and the pale ground at the water's edge, wrapping him evenly with a soft shadow only under his brow.",
+    "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He walks up the slope from the water with a towel over one shoulder and a hand swinging free. He looks to the lens as he reaches the top. {{backdrop}} lie thirty metres past him, dropping into pale atmospheric distance while the near ground stays legible. Bright overcast comes off the whole sky and the pale ground at the water's edge, wrapping him evenly with a soft shadow only under his brow. A 4:3 environmental portrait with him holding roughly half the frame, Leica Q2, 28mm, f/2.8, 1/250, ISO 400. Keep distance-appropriate facial detail, fabric wear, accurate hands, and real weather in the air.",
     "locations": {
       "urban": "a city beach promenade",
       "outdoorsy": "an open shoreline",
@@ -6534,8 +6562,8 @@ export const DATING_PROMPTS = [
       "height": 2304
     },
     "tags": [],
-    "light": "Bright overcast comes off the whole sky and the pale shoreline, wrapping him evenly with a soft shadow only under his brow.",
-    "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He sits on the low wall with both palms beside him, ankles crossed. He looks out at the bay, past the lens. The ground opens fifteen metres to a middle distance and carries on to {{backdrop}} some sixty metres out, softening by layers. Bright overcast comes off the whole sky and the pale shoreline, wrapping him evenly with a soft shadow only under his brow. A 3:4 waist-up lifestyle portrait at eye level, Canon R5, 50mm, f/2.8, 1/320, ISO 200. Retain complexion variation, beard detail, clothing folds, and believable focus falloff toward the distance.",
+    "light": "Bright overcast comes off the whole sky and the pale ground at the water's edge, wrapping him evenly with a soft shadow only under his brow.",
+    "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He sits on a low ledge with both palms beside him, ankles crossed. He looks out at the bay, past the lens. The ground opens fifteen metres to a middle distance and carries on to {{backdrop}} some sixty metres out, softening by layers. Bright overcast comes off the whole sky and the pale ground at the water's edge, wrapping him evenly with a soft shadow only under his brow. A 3:4 waist-up lifestyle portrait at eye level, Canon R5, 50mm, f/2.8, 1/320, ISO 200. Retain complexion variation, beard detail, clothing folds, and believable focus falloff toward the distance.",
     "locations": {
       "urban": "a city beach promenade",
       "outdoorsy": "an open shoreline",
@@ -6563,8 +6591,8 @@ export const DATING_PROMPTS = [
       "height": 1728
     },
     "tags": [],
-    "light": "Bright overcast comes off the whole sky and the pale shoreline, wrapping him evenly with a soft shadow only under his brow.",
-    "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He shoulders a bag with one hand and starts back up the beach. He turns to the lens as he goes. Twenty metres behind him {{backdrop}} sit in gentle haze, the ground between them holding just enough detail to read. Bright overcast comes off the whole sky and the pale shoreline, wrapping him evenly with a soft shadow only under his brow. A 4:3 environmental portrait with layered foreground, subject and distance, Fujifilm GFX 100S, 45mm, f/4, 1/250, ISO 200. Preserve gentle skin texture, tonal variation, accurate scale between him and the place, and honest environmental detail.",
+    "light": "Bright overcast comes off the whole sky and the pale ground at the water's edge, wrapping him evenly with a soft shadow only under his brow.",
+    "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He shoulders a bag with one hand and starts back up from the water. He turns to the lens as he goes. Twenty metres behind him {{backdrop}} sit in gentle haze, the ground between them holding just enough detail to read. Bright overcast comes off the whole sky and the pale ground at the water's edge, wrapping him evenly with a soft shadow only under his brow. A 4:3 environmental portrait with layered foreground, subject and distance, Fujifilm GFX 100S, 45mm, f/4, 1/250, ISO 200. Preserve gentle skin texture, tonal variation, accurate scale between him and the place, and honest environmental detail.",
     "locations": {
       "urban": "a city beach promenade",
       "outdoorsy": "an open shoreline",
@@ -6592,8 +6620,8 @@ export const DATING_PROMPTS = [
       "height": 2688
     },
     "tags": [],
-    "light": "Thin high-altitude sun comes from his left and rakes hard across his face, with the shadow side falling deep because the air holds so little haze.",
-    "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He reaches the saddle and stands with both hands on his hips, breathing hard. He looks to the lens. Ten metres of foreground lead the eye to him, and {{backdrop}} settle fifty metres further into soft blue depth. Thin high-altitude sun comes from his left and rakes hard across his face, with the shadow side falling deep because the air holds so little haze. A 9:16 full-body portrait at natural perspective, Leica Q2, 28mm, f/2.8, 1/250, ISO 400. Keep distance-appropriate facial detail, fabric wear, accurate hands, and real weather in the air.",
+    "light": "Clear thin air lets the sun come from his left and rake hard across his face, with the shadow side falling deep because so little haze softens it.",
+    "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He reaches the top and stands with both hands on his hips, breathing hard. He looks to the lens. Ten metres of foreground lead the eye to him, and {{backdrop}} settle fifty metres further into soft blue depth. Clear thin air lets the sun come from his left and rake hard across his face, with the shadow side falling deep because so little haze softens it. A 9:16 full-body portrait at natural perspective, Leica Q2, 28mm, f/2.8, 1/250, ISO 400. Keep distance-appropriate facial detail, fabric wear, accurate hands, and real weather in the air.",
     "locations": {
       "urban": "a cable-car viewing terrace",
       "outdoorsy": "a high alpine saddle",
@@ -6621,8 +6649,8 @@ export const DATING_PROMPTS = [
       "height": 1728
     },
     "tags": [],
-    "light": "Thin high-altitude sun comes from his left and rakes hard across his face, with the shadow side falling deep because the air holds so little haze.",
-    "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He rests one boot on a rock with a forearm across his knee, taking the view in. His eyes stay on the ridgeline, past the lens. He stands eight metres clear of the nearest edge, with {{backdrop}} stacked forty metres beyond and losing contrast with depth. Thin high-altitude sun comes from his left and rakes hard across his face, with the shadow side falling deep because the air holds so little haze. A 4:3 knee-up frame that keeps the horizon and travel context, Canon R5, 50mm, f/2.8, 1/320, ISO 200. Retain complexion variation, beard detail, clothing folds, and believable focus falloff toward the distance.",
+    "light": "Clear thin air lets the sun come from his left and rake hard across his face, with the shadow side falling deep because so little haze softens it.",
+    "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He rests one boot on a rock with a forearm across his knee, taking the view in. His eyes stay on the ridgeline, past the lens. He stands eight metres clear of the nearest edge, with {{backdrop}} stacked forty metres beyond and losing contrast with depth. Clear thin air lets the sun come from his left and rake hard across his face, with the shadow side falling deep because so little haze softens it. A 4:3 knee-up frame that keeps the horizon and travel context, Canon R5, 50mm, f/2.8, 1/320, ISO 200. Retain complexion variation, beard detail, clothing folds, and believable focus falloff toward the distance.",
     "locations": {
       "urban": "a cable-car viewing terrace",
       "outdoorsy": "a high alpine saddle",
@@ -6650,8 +6678,8 @@ export const DATING_PROMPTS = [
       "height": 2688
     },
     "tags": [],
-    "light": "Thin high-altitude sun comes from his left and rakes hard across his face, with the shadow side falling deep because the air holds so little haze.",
-    "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He pulls a hood up with both hands against the wind and laughs at the cold. He looks to the lens through it. The view runs back from him through twelve metres of open ground to {{backdrop}}, all of it softening toward the horizon. Thin high-altitude sun comes from his left and rakes hard across his face, with the shadow side falling deep because the air holds so little haze. A 9:16 full-body composition that preserves natural scale, Fujifilm GFX 100S, 45mm, f/4, 1/250, ISO 200. Preserve gentle skin texture, tonal variation, accurate scale between him and the place, and honest environmental detail.",
+    "light": "Clear thin air lets the sun come from his left and rake hard across his face, with the shadow side falling deep because so little haze softens it.",
+    "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He pulls a hood up with both hands against the wind and laughs at the cold. He looks to the lens through it. The view runs back from him through twelve metres of open ground to {{backdrop}}, all of it softening toward the horizon. Clear thin air lets the sun come from his left and rake hard across his face, with the shadow side falling deep because so little haze softens it. A 9:16 full-body composition that preserves natural scale, Fujifilm GFX 100S, 45mm, f/4, 1/250, ISO 200. Preserve gentle skin texture, tonal variation, accurate scale between him and the place, and honest environmental detail.",
     "locations": {
       "urban": "a cable-car viewing terrace",
       "outdoorsy": "a high alpine saddle",
@@ -6679,8 +6707,8 @@ export const DATING_PROMPTS = [
       "height": 2304
     },
     "tags": [],
-    "light": "Flat cloud light sits directly above the ridge and lights him softly from overhead, while snow or pale rock below throws a clean fill up under his jaw.",
-    "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He leans on the terrace rail with both forearms and the valley dropping away behind. He turns his head to the lens. The ground opens fifteen metres to a middle distance and carries on to {{backdrop}} some sixty metres out, softening by layers. Flat cloud light sits directly above the ridge and lights him softly from overhead, while snow or pale rock below throws a clean fill up under his jaw. A 3:4 three-quarter frame from an ordinary walking distance, Leica Q2, 28mm, f/2.8, 1/250, ISO 400. Keep distance-appropriate facial detail, fabric wear, accurate hands, and real weather in the air.",
+    "light": "Flat cloud light sits directly overhead and lights him softly from above, while the pale ground below throws a clean fill up under his jaw.",
+    "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He leans on the terrace rail with both forearms and the valley dropping away behind. He turns his head to the lens. The ground opens fifteen metres to a middle distance and carries on to {{backdrop}} some sixty metres out, softening by layers. Flat cloud light sits directly overhead and lights him softly from above, while the pale ground below throws a clean fill up under his jaw. A 3:4 three-quarter frame from an ordinary walking distance, Leica Q2, 28mm, f/2.8, 1/250, ISO 400. Keep distance-appropriate facial detail, fabric wear, accurate hands, and real weather in the air.",
     "locations": {
       "urban": "a cable-car viewing terrace",
       "outdoorsy": "a high alpine saddle",
@@ -6708,8 +6736,8 @@ export const DATING_PROMPTS = [
       "height": 2304
     },
     "tags": [],
-    "light": "Flat cloud light sits directly above the ridge and lights him softly from overhead, while snow or pale rock below throws a clean fill up under his jaw.",
-    "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He tightens a pack strap with one hand and settles the weight. He looks to the lens as it seats. Twenty metres behind him {{backdrop}} sit in gentle haze, the ground between them holding just enough detail to read. Flat cloud light sits directly above the ridge and lights him softly from overhead, while snow or pale rock below throws a clean fill up under his jaw. A 3:4 waist-up lifestyle portrait at eye level, Canon R5, 50mm, f/2.8, 1/320, ISO 200. Retain complexion variation, beard detail, clothing folds, and believable focus falloff toward the distance.",
+    "light": "Flat cloud light sits directly overhead and lights him softly from above, while the pale ground below throws a clean fill up under his jaw.",
+    "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He tightens a pack strap with one hand and settles the weight. He looks to the lens as it seats. Twenty metres behind him {{backdrop}} sit in gentle haze, the ground between them holding just enough detail to read. Flat cloud light sits directly overhead and lights him softly from above, while the pale ground below throws a clean fill up under his jaw. A 3:4 waist-up lifestyle portrait at eye level, Canon R5, 50mm, f/2.8, 1/320, ISO 200. Retain complexion variation, beard detail, clothing folds, and believable focus falloff toward the distance.",
     "locations": {
       "urban": "a cable-car viewing terrace",
       "outdoorsy": "a high alpine saddle",
@@ -6737,8 +6765,8 @@ export const DATING_PROMPTS = [
       "height": 2688
     },
     "tags": [],
-    "light": "Flat cloud light sits directly above the ridge and lights him softly from overhead, while snow or pale rock below throws a clean fill up under his jaw.",
-    "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He steps up onto a flat rock with one hand out for balance and straightens. He glances back to the lens. {{backdrop}} lie thirty metres past him, dropping into pale atmospheric distance while the near ground stays legible. Flat cloud light sits directly above the ridge and lights him softly from overhead, while snow or pale rock below throws a clean fill up under his jaw. A 9:16 full-body portrait at natural perspective, Fujifilm GFX 100S, 45mm, f/4, 1/250, ISO 200. Preserve gentle skin texture, tonal variation, accurate scale between him and the place, and honest environmental detail.",
+    "light": "Flat cloud light sits directly overhead and lights him softly from above, while the pale ground below throws a clean fill up under his jaw.",
+    "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He steps up onto a flat rock with one hand out for balance and straightens. He glances back to the lens. {{backdrop}} lie thirty metres past him, dropping into pale atmospheric distance while the near ground stays legible. Flat cloud light sits directly overhead and lights him softly from above, while the pale ground below throws a clean fill up under his jaw. A 9:16 full-body portrait at natural perspective, Fujifilm GFX 100S, 45mm, f/4, 1/250, ISO 200. Preserve gentle skin texture, tonal variation, accurate scale between him and the place, and honest environmental detail.",
     "locations": {
       "urban": "a cable-car viewing terrace",
       "outdoorsy": "a high alpine saddle",
@@ -8604,7 +8632,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "dog"
+    ],
     "light": "Early sun comes low from his left and stretches long shadows across the grass, catching one side of his face and the dog beside him.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He walks with the lead looped once round one hand, matching the pace beside him. He looks down at it, off past the lens. {{backdrop}} sit twenty-five metres beyond him, dropping into soft outdoor depth. Early sun comes low from his left and stretches long shadows across the grass, catching one side of his face and the dog beside him. A 9:16 full-body action frame from sideline height, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
     "locations": {
@@ -8633,7 +8663,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "dog"
+    ],
     "light": "Early sun comes low from his left and stretches long shadows across the grass, catching one side of his face and the dog beside him.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He crouches with one hand flat on the grass and the other loose, waiting. He glances up to the lens. The ground runs back ten metres to {{backdrop}}, held just out of focus. Early sun comes low from his left and stretches long shadows across the grass, catching one side of his face and the dog beside him. A 9:16 three-quarter burst photograph with ordinary perspective, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
     "locations": {
@@ -8662,7 +8694,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "dog"
+    ],
     "light": "Early sun comes low from his left and stretches long shadows across the grass, catching one side of his face and the dog beside him.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He straightens up from unclipping the lead, coiling it into one hand. He smiles to the lens. The path opens twelve metres behind him to {{backdrop}}, which soften as the ground falls away. Early sun comes low from his left and stretches long shadows across the grass, catching one side of his face and the dog beside him. A 9:16 full-body documentary photograph with balanced ground contact, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
@@ -8691,7 +8725,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "dog"
+    ],
     "light": "Flat morning cloud lights the whole park evenly from above, with the wet grass throwing a weak green fill up under his jaw.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He throws underarm across the grass, arm following through, and watches it go. His eyes track it, past the lens. Fifteen metres behind him, {{backdrop}} blur gently with the movement of the air. Flat morning cloud lights the whole park evenly from above, with the wet grass throwing a weak green fill up under his jaw. A 9:16 three-quarter action frame with the face fully visible, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
     "locations": {
@@ -8720,7 +8756,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "dog"
+    ],
     "light": "Flat morning cloud lights the whole park evenly from above, with the wet grass throwing a weak green fill up under his jaw.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He wipes both palms down his thighs after the throw and waits. He looks to the lens. Thirty metres out, {{backdrop}} settle into pale distance while his own footing stays sharp. Flat morning cloud lights the whole park evenly from above, with the wet grass throwing a weak green fill up under his jaw. A 3:4 knee-up candid with small natural movement at the edges, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
     "locations": {
@@ -8749,7 +8787,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "dog"
+    ],
     "light": "Flat morning cloud lights the whole park evenly from above, with the wet grass throwing a weak green fill up under his jaw.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He bends to clip the lead back on, one hand steady on the collar. He looks up to the lens as it clicks. Eighteen metres back, {{backdrop}} lose their edges while the ground between stays readable. Flat morning cloud lights the whole park evenly from above, with the wet grass throwing a weak green fill up under his jaw. A 3:4 medium portrait taken during the activity, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
@@ -8778,7 +8818,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "dog"
+    ],
     "light": "Sun breaks through the trees behind him and rims his shoulders, while his face rides on the soft bounce off the open path ahead.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He walks the path with both hands in his pockets and the lead hooked over one wrist. He looks to the lens as he passes. The ground runs back ten metres to {{backdrop}}, held just out of focus. Sun breaks through the trees behind him and rims his shoulders, while his face rides on the soft bounce off the open path ahead. A 9:16 full-body action frame from sideline height, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
     "locations": {
@@ -8807,7 +8849,9 @@ export const DATING_PROMPTS = [
       "width": 2304,
       "height": 1728
     },
-    "tags": [],
+    "tags": [
+      "dog"
+    ],
     "light": "Sun breaks through the trees behind him and rims his shoulders, while his face rides on the soft bounce off the open path ahead.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He stops to wait, one hand resting on a fence rail, patient. His eyes stay down the path, past the lens. The path opens twelve metres behind him to {{backdrop}}, which soften as the ground falls away. Sun breaks through the trees behind him and rims his shoulders, while his face rides on the soft bounce off the open path ahead. A 4:3 environmental snapshot that includes the path, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
     "locations": {
@@ -8836,7 +8880,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "dog"
+    ],
     "light": "Sun breaks through the trees behind him and rims his shoulders, while his face rides on the soft bounce off the open path ahead.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He laughs and shakes his head with one hand raised, mid-stride. He looks to the lens through it. {{backdrop}} sit twenty-five metres beyond him, dropping into soft outdoor depth. Sun breaks through the trees behind him and rims his shoulders, while his face rides on the soft bounce off the open path ahead. A 3:4 knee-up photograph that keeps kit and hands coherent, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
@@ -8865,7 +8911,9 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
+    "tags": [
+      "teamSport"
+    ],
     "light": "Bright open sky sits overhead and slightly ahead, lighting his face frontally with a short shadow under his brow and a clean edge on his shoulders.",
     "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He holds a ball on one hip with the other hand on his knee, catching his breath. He looks up to the lens. Thirty metres out, {{backdrop}} settle into pale distance while his own footing stays sharp. Bright open sky sits overhead and slightly ahead, lighting his face frontally with a short shadow under his brow and a clean edge on his shoulders. A 3:4 medium action frame that keeps active joints whole, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
     "locations": {
@@ -8894,7 +8942,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "teamSport"
+    ],
     "light": "Bright open sky sits overhead and slightly ahead, lighting his face frontally with a short shadow under his brow and a clean edge on his shoulders.",
     "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He bounces a ball twice with one hand and catches it flat. His eyes stay on the hoop, past the lens. Eighteen metres back, {{backdrop}} lose their edges while the ground between stays readable. Bright open sky sits overhead and slightly ahead, lighting his face frontally with a short shadow under his brow and a clean edge on his shoulders. A 9:16 full-body action frame from sideline height, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
     "locations": {
@@ -8923,7 +8973,9 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
+    "tags": [
+      "teamSport"
+    ],
     "light": "Bright open sky sits overhead and slightly ahead, lighting his face frontally with a short shadow under his brow and a clean edge on his shoulders.",
     "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He tucks a ball under one arm and pulls the hem of his top up with one hand to wipe his face. He looks to the lens as it drops. Fifteen metres behind him, {{backdrop}} blur gently with the movement of the air. Bright open sky sits overhead and slightly ahead, lighting his face frontally with a short shadow under his brow and a clean edge on his shoulders. A 9:16 three-quarter photograph with activity context behind him, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
@@ -8952,9 +9004,11 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
-    "light": "Low floodlight from the side of the court rakes across him at chest height, modelling one side of his face while the far side falls dark.",
-    "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He jogs backwards a couple of steps with both hands raised and ready, then stops. He grins to the lens. The path opens twelve metres behind him to {{backdrop}}, which soften as the ground falls away. Low floodlight from the side of the court rakes across him at chest height, modelling one side of his face while the far side falls dark. A 9:16 full-body documentary photograph with balanced ground contact, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
+    "tags": [
+      "teamSport"
+    ],
+    "light": "Low light from the side of the playing area rakes across him at chest height, modelling one side of his face while the far side falls dark.",
+    "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He jogs backwards a couple of steps with both hands raised and ready, then stops. He grins to the lens. The path opens twelve metres behind him to {{backdrop}}, which soften as the ground falls away. Low light from the side of the playing area rakes across him at chest height, modelling one side of his face while the far side falls dark. A 9:16 full-body documentary photograph with balanced ground contact, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
     "locations": {
       "urban": "a floodlit outdoor court",
       "outdoorsy": "a grass pitch by the trees",
@@ -8981,9 +9035,11 @@ export const DATING_PROMPTS = [
       "width": 1728,
       "height": 2304
     },
-    "tags": [],
-    "light": "Low floodlight from the side of the court rakes across him at chest height, modelling one side of his face while the far side falls dark.",
-    "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He rests both hands on the fence rail at the side of the court, one foot up on the bottom bar. He looks to the lens. {{backdrop}} sit twenty-five metres beyond him, dropping into soft outdoor depth. Low floodlight from the side of the court rakes across him at chest height, modelling one side of his face while the far side falls dark. A 3:4 knee-up frame with hands and kit inside the image, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
+    "tags": [
+      "teamSport"
+    ],
+    "light": "Low light from the side of the playing area rakes across him at chest height, modelling one side of his face while the far side falls dark.",
+    "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He rests both hands on the fence rail at the side of the court, one foot up on the bottom bar. He looks to the lens. {{backdrop}} sit twenty-five metres beyond him, dropping into soft outdoor depth. Low light from the side of the playing area rakes across him at chest height, modelling one side of his face while the far side falls dark. A 3:4 knee-up frame with hands and kit inside the image, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
     "locations": {
       "urban": "a floodlit outdoor court",
       "outdoorsy": "a grass pitch by the trees",
@@ -9011,8 +9067,8 @@ export const DATING_PROMPTS = [
       "height": 2304
     },
     "tags": [],
-    "light": "Low floodlight from the side of the court rakes across him at chest height, modelling one side of his face while the far side falls dark.",
-    "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He ties a lace with both hands, one boot up on the low wall, then stands. He looks up to the lens as he straightens. The ground runs back ten metres to {{backdrop}}, held just out of focus. Low floodlight from the side of the court rakes across him at chest height, modelling one side of his face while the far side falls dark. A 3:4 medium snapshot that keeps the face identifiable, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
+    "light": "Low light from the side of the playing area rakes across him at chest height, modelling one side of his face while the far side falls dark.",
+    "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He ties a lace with both hands, one boot up on the low wall, then stands. He looks up to the lens as he straightens. The ground runs back ten metres to {{backdrop}}, held just out of focus. Low light from the side of the playing area rakes across him at chest height, modelling one side of his face while the far side falls dark. A 3:4 medium snapshot that keeps the face identifiable, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
       "urban": "a floodlit outdoor court",
       "outdoorsy": "a grass pitch by the trees",
@@ -9039,9 +9095,11 @@ export const DATING_PROMPTS = [
       "width": 1512,
       "height": 2688
     },
-    "tags": [],
-    "light": "Late sun comes almost level from behind the far end of the pitch, rimming his hair and shoulders, with his face lit softly from the front by the open sky.",
-    "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He walks off the pitch with a ball under one arm and his other hand rubbing the back of his neck. He looks to the lens. Eighteen metres back, {{backdrop}} lose their edges while the ground between stays readable. Late sun comes almost level from behind the far end of the pitch, rimming his hair and shoulders, with his face lit softly from the front by the open sky. A 9:16 full-body action frame from sideline height, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
+    "tags": [
+      "teamSport"
+    ],
+    "light": "Late sun comes almost level from behind the far end of the ground, rimming his hair and shoulders, with his face lit softly from the front by the open sky.",
+    "promptTemplate": "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age, and natural asymmetry; this identity belongs to him alone. At {{location}}, wearing {{outfit}}. He walks off with a ball under one arm and his other hand rubbing the back of his neck. He looks to the lens. Eighteen metres back, {{backdrop}} lose their edges while the ground between stays readable. Late sun comes almost level from behind the far end of the ground, rimming his hair and shoulders, with his face lit softly from the front by the open sky. A 9:16 full-body action frame from sideline height, Sony A1, 50mm, f/2.8, 1/1000, auto ISO. Keep joints, hands, feet, equipment and ground contact credible, with mild real warmth across his skin and damp hair at the temple.",
     "locations": {
       "urban": "a floodlit outdoor court",
       "outdoorsy": "a grass pitch by the trees",
@@ -9069,8 +9127,8 @@ export const DATING_PROMPTS = [
       "height": 1728
     },
     "tags": [],
-    "light": "Late sun comes almost level from behind the far end of the pitch, rimming his hair and shoulders, with his face lit softly from the front by the open sky.",
-    "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He drops onto the bench, both forearms on his knees and hands hanging, spent. His eyes go across the pitch, past the lens. Fifteen metres behind him, {{backdrop}} blur gently with the movement of the air. Late sun comes almost level from behind the far end of the pitch, rimming his hair and shoulders, with his face lit softly from the front by the open sky. A 4:3 environmental portrait with natural outdoor depth, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
+    "light": "Late sun comes almost level from behind the far end of the ground, rimming his hair and shoulders, with his face lit softly from the front by the open sky.",
+    "promptTemplate": "Every reference shows this same man. Keep his face, complexion, hair, grooming, age, and real asymmetries exactly as they are, and give this face to him alone. Photograph him fresh in the scene below. At {{location}}, wearing {{outfit}}. He drops onto the bench, both forearms on his knees and hands hanging, spent. His eyes go across the pitch, past the lens. Fifteen metres behind him, {{backdrop}} blur gently with the movement of the air. Late sun comes almost level from behind the far end of the ground, rimming his hair and shoulders, with his face lit softly from the front by the open sky. A 4:3 environmental portrait with natural outdoor depth, handheld iPhone 15 Pro burst, 35mm equivalent, standard photo mode. Preserve believable mechanics, movement outside the face, distance-appropriate skin, and ordinary phone texture.",
     "locations": {
       "urban": "a floodlit outdoor court",
       "outdoorsy": "a grass pitch by the trees",
@@ -9098,8 +9156,8 @@ export const DATING_PROMPTS = [
       "height": 2304
     },
     "tags": [],
-    "light": "Late sun comes almost level from behind the far end of the pitch, rimming his hair and shoulders, with his face lit softly from the front by the open sky.",
-    "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He pulls a jumper on over his head with both hands and shakes it down. He finds the lens as his head comes through. Thirty metres out, {{backdrop}} settle into pale distance while his own footing stays sharp. Late sun comes almost level from behind the far end of the pitch, rimming his hair and shoulders, with his face lit softly from the front by the open sky. A 3:4 medium portrait taken during the activity, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
+    "light": "Late sun comes almost level from behind the far end of the ground, rimming his hair and shoulders, with his face lit softly from the front by the open sky.",
+    "promptTemplate": "Use the supplied photographs for identity. Keep his face shape, skin tone, hair, beard pattern, age, and asymmetry exactly as they appear, on him alone. At {{location}}, wearing {{outfit}}. He pulls a jumper on over his head with both hands and shakes it down. He finds the lens as his head comes through. Thirty metres out, {{backdrop}} settle into pale distance while his own footing stays sharp. Late sun comes almost level from behind the far end of the ground, rimming his hair and shoulders, with his face lit softly from the front by the open sky. A 3:4 medium portrait taken during the activity, Fujifilm X-T5, 33mm, f/2.8, 1/500, ISO 400. Keep natural posture, accurate equipment, modest skin warmth, real breathing effort, and honest contrast.",
     "locations": {
       "urban": "a floodlit outdoor court",
       "outdoorsy": "a grass pitch by the trees",
