@@ -415,4 +415,4 @@ The rewrite will discard inherited prose instead of mechanically repairing phras
 - Keep the current five buckets, 20 delivered photos per bucket, 100-photo order size, preference fields, Seedream 4.5 Edit endpoint, reference-image flow, and Trigger.dev orchestration.
 - Keep code as the authoritative prompt source and preserve exact compiled prompt snapshots in `order_photos`.
 - Limit changes to the prompt library, compiler/selector, order-time prompt choice, validation, and prompt documentation.
-- Do not change UI, database schema, pricing, ranking, curation, generation concurrency, image dimensions, or unrelated product behavior.
+- Do not change UI, database schema, pricing, ranking, curation, generation concurrency, image dimensions, or unrelated product behavior
