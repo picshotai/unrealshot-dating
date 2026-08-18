@@ -161,19 +161,37 @@ export function dominantStyle(bias: DeliveryBias): StylePref {
 }
 
 /**
- * The free-text hobby feeds the `{{hobby}}` prompt alternatives, which now sit
- * on ten slots rather than four, so the answer reaches ten photos. When the
- * user only tapped chips, the chip labels stand in so those slots still fire.
+ * His interests as a list, one per hobby photo.
+ *
+ * This used to join the first two chips into "hiking and climbing" and hand the
+ * same compound string to every hobby slot, so tapping four things silently
+ * discarded two and produced one repeated activity. Selection deals from this
+ * list instead, which is what makes four chips read as four different photos.
+ *
+ * Free text is split on commas so "bouldering, film photography" counts as two.
  */
+export function resolveHobbies(
+  interests: InterestId[],
+  freeText?: string | null
+): string[] {
+  const typed = (freeText ?? "")
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  const fromChips = interests
+    .map((id) => CHIP_BY_ID.get(id)?.label.toLowerCase())
+    .filter((label): label is string => Boolean(label));
+
+  // Typed answers lead, chips fill in behind them, duplicates collapse.
+  return [...new Set([...typed, ...fromChips])];
+}
+
+/** The single value stored on the preferences row for display and regeneration. */
 export function resolveHobbyText(
   interests: InterestId[],
   freeText?: string | null
 ): string | null {
-  const typed = freeText?.trim();
-  if (typed) return typed;
-  const labels = interests
-    .map((id) => CHIP_BY_ID.get(id)?.label.toLowerCase())
-    .filter((label): label is string => Boolean(label));
-  if (labels.length === 0) return null;
-  return labels.slice(0, 2).join(" and ");
+  const list = resolveHobbies(interests, freeText);
+  return list.length > 0 ? list.join(", ") : null;
 }

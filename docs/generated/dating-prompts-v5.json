@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-18T13:04:20.444Z",
+  "generatedAt": "2026-08-18T13:23:42.000Z",
   "libraryVersion": 5,
   "note": "The prompt field is the exact compiled string sent to fal. No action, pose, camera, lighting, realism, or composition fragments are added after this export.",
   "preferences": {

@@ -47,6 +47,11 @@ export type DeliverySlot = {
   variant: DatingPromptVariant;
   vibe: Vibe;
   style: StylePref;
+  /**
+   * Which of his interests this photo shows, when it landed on a slot that
+   * offers a hobby alternative. Undefined means the general beat is used.
+   */
+  hobby?: string;
 };
 
 const VIBES: readonly Vibe[] = ["urban", "outdoorsy", "homebody"];
@@ -121,7 +126,25 @@ function definitionFor(
 export type PlanOptions = {
   /** Content the user asked us to leave out. */
   excludeTags?: readonly string[];
+  /** What he is into, one per hobby photo rather than all crammed together. */
+  hobbies?: readonly string[];
 };
+
+/**
+ * How many photos one interest may claim.
+ *
+ * Without a ceiling a man who taps a single chip gets every hobby slot filled
+ * with it — ten photos of chess — which is the flooding problem. With it, the
+ * remaining hobby slots fall back to their general beats, so his interests show
+ * up alongside the ordinary shots rather than replacing them.
+ */
+const MAX_PHOTOS_PER_HOBBY = 3;
+
+function offersHobby(bucket: DatingBucket, slot: number): boolean {
+  return getPromptVariants(bucket, slot).some((p) =>
+    Boolean(p.hobbyPromptTemplate)
+  );
+}
 
 /** True when every variant of a slot carries something the user excluded. */
 function slotIsBlocked(
@@ -141,6 +164,8 @@ export function planDelivery(
   options: PlanOptions = {}
 ): DeliverySlot[] {
   const excluded = options.excludeTags ?? [];
+  const hobbies = (options.hobbies ?? []).filter((h) => h.trim().length > 0);
+  const hobbyBudget = hobbies.length * MAX_PHOTOS_PER_HOBBY;
   const vibeOrder = byWeight(VIBES, bias.vibe);
   const styleOrder = byWeight(STYLES, bias.style);
 
@@ -171,7 +196,15 @@ export function planDelivery(
       });
     }
 
+    // When he told us what he is into, the slots that can show it are picked
+    // first, up to the budget his choices earn. Without this the hobby count
+    // drifted between seven and nine purely on which slots the vibe weighting
+    // happened to favour, so the answer he gave produced a different amount of
+    // evidence every time.
     const ranked = candidates.sort((a, b) => {
+      const aHobby = hobbyBudget > 0 && offersHobby(bucket, a.slot) ? 1 : 0;
+      const bHobby = hobbyBudget > 0 && offersHobby(bucket, b.slot) ? 1 : 0;
+      if (aHobby !== bHobby) return bHobby - aHobby;
       const weight = (bias.vibe[b.vibe] ?? 0) - (bias.vibe[a.vibe] ?? 0);
       if (weight !== 0) return weight;
       // stable, batch-dependent tie-break so two orders differ
@@ -259,6 +292,31 @@ export function planDelivery(
       definitionFor(bucket, slot, choice.variant).outfits[choice.style]
     );
     plan.push({ bucket, slot, variant: choice.variant, vibe, style: choice.style });
+  }
+
+  // One interest per hobby photo, dealt round-robin, so four chips produce four
+  // different activities across the shoot rather than one compound string
+  // repeated on every hobby slot. Slots beyond the budget keep their general
+  // beat, which is what stops a single interest taking over the delivery.
+  if (hobbies.length > 0) {
+    const dealt = new Map<string, number>();
+    let next = 0;
+    for (const entry of plan) {
+      if (!offersHobby(entry.bucket, entry.slot)) continue;
+      // find the next interest that still has room
+      let picked: string | undefined;
+      for (let step = 0; step < hobbies.length; step += 1) {
+        const candidate = hobbies[(next + step) % hobbies.length];
+        if ((dealt.get(candidate) ?? 0) < MAX_PHOTOS_PER_HOBBY) {
+          picked = candidate;
+          next = (next + step + 1) % hobbies.length;
+          break;
+        }
+      }
+      if (!picked) break; // every interest has had its share
+      dealt.set(picked, (dealt.get(picked) ?? 0) + 1);
+      entry.hobby = picked;
+    }
   }
 
   if (plan.length !== TOTAL_PHOTOS) {

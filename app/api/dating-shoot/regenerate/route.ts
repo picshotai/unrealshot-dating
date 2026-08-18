@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
     // has not used instead: different place, outfit and light.
     const { data: prefs } = await admin
       .from("user_preferences")
-      .select("interests, style, exclude_tags")
+      .select("interests, style, exclude_tags, hobby_text")
       .eq("user_id", user.id)
       .maybeSingle();
 
@@ -150,10 +150,19 @@ export async function POST(request: NextRequest) {
         replacement.slot
       ).find((candidate) => candidate.variant === replacement.variant);
       if (definition) {
+        // Keep his interest on the replacement. Dropping it meant a redo of a
+        // hobby photo came back as the generic version of that scene.
+        const hobbies = (prefs?.hobby_text ?? "")
+          .split(",")
+          .map((part: string) => part.trim())
+          .filter(Boolean);
         prompt = compileDatingPrompt(definition, {
           vibe: replacement.vibe,
           style: replacement.style,
-          hobby: null,
+          hobby:
+            definition.hobbyPromptTemplate && hobbies.length > 0
+              ? hobbies[attempt % hobbies.length]
+              : null,
         });
         imageWidth = definition.imageSize.width;
         imageHeight = definition.imageSize.height;
