@@ -577,9 +577,9 @@ export function DatingShootClient({
             </p>
             <Button
               onClick={() => setIsIntakeOpen(true)}
-              className="bg-white text-black hover:bg-zinc-200 font-bold px-6 py-5 rounded-xl shadow-lg transition-all active:scale-95"
+              className="bg-white text-black hover:bg-zinc-200 font-bold px-6 py-5 rounded-lg shadow-lg transition-all active:scale-95"
             >
-              <Plus className="w-4 h-4 mr-2" /> Start Photoshoot (100 Photos)
+              <Plus className="w-4 h-4 mr-2" strokeWidth={1.5} /> Start Photoshoot (100 Photos)
             </Button>
           </div>
         )}

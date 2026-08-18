@@ -106,7 +106,7 @@ export const StudioIntakeModal: React.FC<StudioIntakeModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-zinc-800/80 hover:bg-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-400 hover:text-white flex items-center justify-center transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -120,7 +120,7 @@ export const StudioIntakeModal: React.FC<StudioIntakeModalProps> = ({
               Select Face Model
             </label>
             {models.length === 0 ? (
-              <div className="p-4 rounded-xl border border-dashed border-zinc-700 bg-zinc-900/50 text-center">
+              <div className="p-4 rounded-lg border border-dashed border-zinc-700 bg-zinc-900/50 text-center">
                 <p className="text-sm text-zinc-300 mb-2">
                   No face models found.
                 </p>
@@ -139,7 +139,7 @@ export const StudioIntakeModal: React.FC<StudioIntakeModalProps> = ({
                   setModelId(val);
                   onSelectModel(val);
                 }}
-                className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-accent transition-colors"
+                className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-accent transition-colors"
               >
                 {models.map((m) => (
                   <option key={m.id} value={m.id}>
@@ -166,7 +166,7 @@ export const StudioIntakeModal: React.FC<StudioIntakeModalProps> = ({
                     key={option.id}
                     type="button"
                     onClick={() => setDress(option.id)}
-                    className={`text-left rounded-xl border p-3.5 transition-all relative ${
+                    className={`text-left rounded-lg border p-3.5 transition-all relative ${
                       isSelected
                         ? 'border-accent bg-accent/10 ring-1 ring-accent'
                         : 'border-zinc-800 bg-zinc-900/60 hover:border-zinc-700'
@@ -177,7 +177,7 @@ export const StudioIntakeModal: React.FC<StudioIntakeModalProps> = ({
                         {option.label}
                       </span>
                       {isSelected && (
-                        <span className="w-4 h-4 rounded-full bg-accent text-background flex items-center justify-center">
+                        <span className="w-4 h-4 rounded-lg bg-accent text-background flex items-center justify-center">
                           <Check className="w-2.5 h-2.5 stroke-[3]" />
                         </span>
                       )}
@@ -213,7 +213,7 @@ export const StudioIntakeModal: React.FC<StudioIntakeModalProps> = ({
                           : [...prev, chip.id]
                       )
                     }
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all flex items-center gap-1.5 active:scale-95 ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all flex items-center gap-1.5 active:scale-95 ${
                       isSelected
                         ? 'bg-white text-black border-white shadow-md font-semibold'
                         : 'bg-zinc-900 text-zinc-300 border-zinc-800 hover:border-zinc-700'
@@ -249,7 +249,7 @@ export const StudioIntakeModal: React.FC<StudioIntakeModalProps> = ({
                           : [...prev, chip.id]
                       )
                     }
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all flex items-center gap-1.5 ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all flex items-center gap-1.5 ${
                       isExcluded
                         ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 font-semibold'
                         : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:border-zinc-700'
@@ -274,19 +274,19 @@ export const StudioIntakeModal: React.FC<StudioIntakeModalProps> = ({
               value={hobbyText}
               onChange={(e) => setHobbyText(e.target.value)}
               placeholder="e.g., bouldering, vinyl collecting, film photography, playing guitar"
-              className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-2.5 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-accent transition-colors"
+              className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-2.5 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-accent transition-colors"
             />
           </div>
 
           {/* Error messages */}
           {generalError && (
-            <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-mono">
+            <div className="p-3.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-mono">
               [!] {generalError}
             </div>
           )}
 
           {creditError && (
-            <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs">
+            <div className="p-3.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs">
               <span>{creditError}</span>{' '}
               <Link href="/buy-credits" className="underline font-semibold text-white ml-1">
                 Top up credits →
@@ -304,7 +304,7 @@ export const StudioIntakeModal: React.FC<StudioIntakeModalProps> = ({
             <Button
               type="submit"
               disabled={isLoading || !modelId}
-              className="w-full sm:w-auto bg-white text-black hover:bg-zinc-200 font-bold px-6 py-5 text-sm rounded-xl shadow-lg transition-all active:scale-95"
+              className="w-full sm:w-auto bg-white text-black hover:bg-zinc-200 font-bold px-6 py-5 text-sm rounded-lg shadow-lg transition-all active:scale-95"
             >
               {isLoading ? (
                 <>

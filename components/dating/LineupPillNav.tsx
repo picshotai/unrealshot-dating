@@ -44,29 +44,30 @@ export const LineupPillNav: React.FC<LineupPillNavProps> = ({
       : LINEUP_HINTS[activeTab];
 
   return (
-    <div className="space-y-3.5">
-      {/* Horizontal Scrollable Pill Bar */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar sm:flex-wrap">
+    <div className="space-y-4">
+      {/* Horizontal Scrollable Bar */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar sm:flex-wrap">
         {/* All Tab */}
         <button
           onClick={() => onTabChange('all')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-medium transition-all shrink-0 border select-none active:scale-95 ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium transition-all shrink-0 border select-none active:scale-95 ${
             activeTab === 'all'
-              ? 'bg-white text-black border-white shadow-lg font-semibold'
-              : 'bg-zinc-900/90 text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200'
+              ? 'bg-white text-black border-white shadow-sm font-semibold'
+              : 'bg-zinc-900/60 text-zinc-400 border-zinc-800 hover:bg-zinc-800 hover:text-zinc-200'
           }`}
         >
           <Grid
-            className={`w-3.5 h-3.5 ${
+            className={`w-4 h-4 ${
               activeTab === 'all' ? 'text-black' : 'text-zinc-400'
             }`}
+            strokeWidth={1.5}
           />
           <span>All Photos</span>
           <span
-            className={`text-[11px] font-mono px-1.5 py-0.2 rounded-full ${
+            className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
               activeTab === 'all'
-                ? 'bg-black/15 text-black'
-                : 'bg-zinc-800 text-zinc-400'
+                ? 'bg-black/10 text-black'
+                : 'bg-zinc-800/80 text-zinc-500'
             }`}
           >
             {totalCompleted}
@@ -87,23 +88,24 @@ export const LineupPillNav: React.FC<LineupPillNavProps> = ({
             <button
               key={role}
               onClick={() => onTabChange(role)}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-medium transition-all shrink-0 border select-none active:scale-95 ${
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium transition-all shrink-0 border select-none active:scale-95 ${
                 isActive
-                  ? 'bg-white text-black border-white shadow-lg font-semibold'
-                  : 'bg-zinc-900/90 text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200'
+                  ? 'bg-white text-black border-white shadow-sm font-semibold'
+                  : 'bg-zinc-900/60 text-zinc-400 border-zinc-800 hover:bg-zinc-800 hover:text-zinc-200'
               }`}
             >
               <Icon
-                className={`w-3.5 h-3.5 ${
+                className={`w-4 h-4 ${
                   isActive ? 'text-black' : 'text-zinc-400'
                 }`}
+                strokeWidth={1.5}
               />
               <span>{LINEUP_LABELS[role]}</span>
               <span
-                className={`text-[11px] font-mono px-1.5 py-0.2 rounded-full ${
+                className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
                   isActive
-                    ? 'bg-black/15 text-black'
-                    : 'bg-zinc-800 text-zinc-400'
+                    ? 'bg-black/10 text-black'
+                    : 'bg-zinc-800/80 text-zinc-500'
                 }`}
               >
                 {count}
@@ -114,9 +116,9 @@ export const LineupPillNav: React.FC<LineupPillNavProps> = ({
       </div>
 
       {/* Dating Strategy Hint */}
-      <div className="flex items-center justify-between px-1">
-        <p className="text-xs text-zinc-400 font-mono flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+      <div className="flex items-center px-1">
+        <p className="text-xs text-zinc-500 font-sans flex items-center gap-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />
           {currentHint}
         </p>
       </div>

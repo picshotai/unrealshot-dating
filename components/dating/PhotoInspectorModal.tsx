@@ -7,7 +7,6 @@ import {
   RefreshCw,
   ChevronLeft,
   ChevronRight,
-  Sparkles,
   Loader2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -43,11 +42,11 @@ interface PhotoInspectorModalProps {
 }
 
 const ROLE_COLORS: Record<LineupRole, string> = {
-  opener: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
-  fullBody: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40',
-  whatYouDo: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
-  outThere: 'bg-sky-500/20 text-sky-300 border-sky-500/40',
-  more: 'bg-zinc-800 text-zinc-300 border-zinc-700',
+  opener: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  fullBody: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
+  whatYouDo: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+  outThere: 'bg-sky-500/10 text-sky-400 border-sky-500/20',
+  more: 'bg-zinc-800/50 text-zinc-300 border-zinc-700/50',
 };
 
 export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
@@ -104,14 +103,25 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
   const isMock = photo.imageUrl.startsWith('data:image/svg+xml');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-xl animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-6 bg-black/95 backdrop-blur-sm animate-in fade-in duration-200">
       {/* Background click to close */}
       <div className="absolute inset-0" onClick={onClose} />
 
       {/* Main Lightbox Container */}
-      <div className="relative z-10 flex flex-col lg:flex-row w-full max-w-5xl max-h-[92vh] bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl">
-        {/* Left / Center: High-Resolution Photo Viewer */}
-        <div className="relative flex-1 flex items-center justify-center bg-black/60 p-4 sm:p-8 min-h-[350px] lg:min-h-[580px]">
+      <div className="relative z-10 flex flex-col lg:flex-row w-full h-full sm:h-auto sm:max-h-[90vh] max-w-6xl bg-zinc-950 sm:border border-zinc-800 sm:rounded-2xl overflow-hidden shadow-2xl">
+        
+        {/* Mobile Top Bar (Close button on small screens only) */}
+        <div className="absolute top-0 left-0 right-0 p-3 sm:hidden flex justify-end z-30">
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center border border-white/10"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Left / Center: Image Viewer (Responsive, non-cropping) */}
+        <div className="relative flex-1 flex items-center justify-center bg-black p-0 sm:p-6 lg:p-8 min-h-[50vh]">
           {/* Navigation: Previous Button */}
           {hasPrev && (
             <button
@@ -119,25 +129,20 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
                 e.stopPropagation();
                 handlePrev();
               }}
-              className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-white border border-zinc-700 flex items-center justify-center transition-all active:scale-95 shadow-lg backdrop-blur-md"
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/40 hover:bg-black/80 text-white border border-white/10 flex items-center justify-center transition-all active:scale-95 shadow-lg backdrop-blur-md"
               aria-label="Previous photo"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="w-5 h-5" strokeWidth={1.5} />
             </button>
           )}
 
-          {/* Image Container with 4:5 Aspect Ratio Constraint */}
-          <div className="relative max-w-full max-h-[70vh] aspect-[4/5] flex items-center justify-center overflow-hidden rounded-xl shadow-2xl border border-zinc-800/80 bg-zinc-900">
+          {/* Image Container - Using flex instead of hardcoded aspect ratio for max responsiveness */}
+          <div className="relative w-full h-full max-h-[85vh] flex items-center justify-center">
             <img
               src={photo.imageUrl}
               alt={`${roleLabel} - Photo #${photo.slot}`}
-              className="w-full h-full object-cover select-none"
+              className="w-full h-full object-contain select-none max-w-full max-h-full"
             />
-
-            {/* Position Indicator Badge */}
-            <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-md border border-white/10 text-white text-[11px] font-mono px-2.5 py-1 rounded-full">
-              {currentIndex + 1} / {photos.length}
-            </div>
           </div>
 
           {/* Navigation: Next Button */}
@@ -147,64 +152,63 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
                 e.stopPropagation();
                 handleNext();
               }}
-              className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-zinc-900/80 hover:bg-zinc-800 text-white border border-zinc-700 flex items-center justify-center transition-all active:scale-95 shadow-lg backdrop-blur-md"
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/40 hover:bg-black/80 text-white border border-white/10 flex items-center justify-center transition-all active:scale-95 shadow-lg backdrop-blur-md"
               aria-label="Next photo"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-5 h-5" strokeWidth={1.5} />
             </button>
           )}
+
+          {/* Position Indicator Badge */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono px-2.5 py-1 rounded-full z-20">
+            {currentIndex + 1} / {photos.length}
+          </div>
         </div>
 
-        {/* Right Sidebar: Details & Actions */}
-        <div className="w-full lg:w-84 border-t lg:border-t-0 lg:border-l border-zinc-800 p-6 flex flex-col justify-between bg-zinc-950/80 backdrop-blur-md">
+        {/* Right / Bottom Sidebar: Details & Actions */}
+        <div className="w-full lg:w-80 shrink-0 border-t lg:border-t-0 lg:border-l border-zinc-800 p-5 sm:p-6 flex flex-col justify-between bg-zinc-950 overflow-y-auto">
           {/* Header & Meta */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span
-                className={`text-xs font-mono font-medium px-2.5 py-1 rounded-full border ${colorClass}`}
+                className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded border ${colorClass}`}
               >
-                {roleLabel.toUpperCase()}
+                {roleLabel}
               </span>
               <button
                 onClick={onClose}
-                className="w-8 h-8 rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center transition-colors border border-zinc-800"
+                className="hidden sm:flex w-7 h-7 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white items-center justify-center transition-colors border border-zinc-800"
               >
-                <X className="w-4 h-4" />
+                <X className="w-3.5 h-3.5" />
               </button>
             </div>
 
             <div>
-              <h3 className="text-xl font-bold text-white tracking-tight">
-                {roleLabel}
+              <h3 className="text-xl font-medium text-white tracking-tight">
+                Photo #{photo.slot}
               </h3>
-              <p className="text-xs text-zinc-400 font-mono mt-0.5">
-                Photo #{photo.slot} in your photoshoot
-              </p>
-            </div>
-
-            <div className="p-3.5 bg-zinc-900/60 border border-zinc-800 rounded-xl">
-              <p className="text-xs text-zinc-300 leading-relaxed font-sans">
+              <p className="text-xs text-zinc-500 font-sans mt-2 leading-relaxed">
                 {roleHint}
               </p>
             </div>
           </div>
 
           {/* Action Bar */}
-          <div className="space-y-3 pt-6 border-t border-zinc-800/80 mt-6 lg:mt-0">
+          <div className="space-y-2.5 pt-6 mt-auto">
             {/* Download Button */}
             <a
               href={photo.imageUrl}
               download={`dating-photo-${role}-${photo.slot}.${isMock ? 'svg' : 'png'}`}
               target="_blank"
               rel="noreferrer"
-              className="w-full"
+              className="w-full block"
             >
               <Button
                 variant="default"
-                className="w-full bg-white text-black hover:bg-zinc-200 font-semibold py-5 text-sm flex items-center justify-center gap-2 rounded-xl transition-all"
+                className="w-full bg-white text-black hover:bg-zinc-200 font-medium h-12 text-sm flex items-center justify-center gap-2 rounded-lg transition-all"
               >
-                <Download className="w-4 h-4" />
-                Download High-Res PNG
+                <Download className="w-4 h-4" strokeWidth={1.5} />
+                Download Full PNG
               </Button>
             </a>
 
@@ -213,18 +217,18 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
               variant="outline"
               disabled={isRegenerating || customCreditsRemaining <= 0}
               onClick={() => onRegenerate(photo.id)}
-              className="w-full border-zinc-800 hover:border-zinc-600 bg-zinc-900/80 text-zinc-200 hover:text-white py-5 text-xs font-medium flex items-center justify-center gap-2 rounded-xl"
+              className="w-full border-zinc-800 hover:border-zinc-700 bg-transparent text-zinc-300 hover:text-white h-12 text-xs font-medium flex items-center justify-center gap-2 rounded-lg transition-colors"
             >
               {isRegenerating ? (
                 <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin" />
                   Generating Variation...
                 </>
               ) : (
                 <>
-                  <RefreshCw className="w-3.5 h-3.5" />
-                  Regenerate This Look{' '}
-                  <span className="text-zinc-500 font-normal">
+                  <RefreshCw className="w-4 h-4" strokeWidth={1.5} />
+                  Regenerate Look
+                  <span className="text-zinc-600 font-normal ml-1">
                     (1 credit)
                   </span>
                 </>
@@ -232,10 +236,9 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
             </Button>
 
             {/* Credit Info */}
-            <div className="flex items-center justify-between text-[11px] font-mono text-zinc-500 px-1">
-              <span>Remaining Custom Credits:</span>
-              <span className="text-accent font-semibold">
-                {customCreditsRemaining} left
+            <div className="text-center mt-2">
+              <span className="text-[10px] font-mono text-zinc-600">
+                {customCreditsRemaining} custom credits remaining
               </span>
             </div>
           </div>
