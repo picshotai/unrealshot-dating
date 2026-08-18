@@ -663,14 +663,14 @@
   }
 }
 
-/* Protected pages: explicitly keep default heading font */
+/* Protected pages: use Oxanium heading font */
 .protected-scope h1,
 .protected-scope h2,
 .protected-scope h3,
 .protected-scope h4,
 .protected-scope h5,
 .protected-scope h6 {
-  font-family: var(--font-inter);
+  font-family: var(--font-oxanium), sans-serif;
   font-weight: 700;
 }
 
