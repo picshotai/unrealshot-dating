@@ -412,7 +412,6 @@ The rewrite will discard inherited prose instead of mechanically repairing phras
 - Run the prompt validator throughout authoring, then perform one final TypeScript check, lint attempt, and production build attempt after the entire V3 library is complete.
 
 ## Assumptions
-
 - Keep the current five buckets, 20 delivered photos per bucket, 100-photo order size, preference fields, Seedream 4.5 Edit endpoint, reference-image flow, and Trigger.dev orchestration.
 - Keep code as the authoritative prompt source and preserve exact compiled prompt snapshots in `order_photos`.
 - Limit changes to the prompt library, compiler/selector, order-time prompt choice, validation, and prompt documentation.
