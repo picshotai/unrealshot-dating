@@ -514,6 +514,8 @@ export interface Database {
           bucket: string
           slot: number
           prompt_template: string
+          image_width: number | null
+          image_height: number | null
           status: string
           fal_request_id: string | null
           image_url: string | null
@@ -531,6 +533,8 @@ export interface Database {
           bucket: string
           slot: number
           prompt_template: string
+          image_width?: number | null
+          image_height?: number | null
           status?: string
           fal_request_id?: string | null
           image_url?: string | null
@@ -548,6 +552,8 @@ export interface Database {
           bucket?: string
           slot?: number
           prompt_template?: string
+          image_width?: number | null
+          image_height?: number | null
           status?: string
           fal_request_id?: string | null
           image_url?: string | null
