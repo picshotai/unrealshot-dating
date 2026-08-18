@@ -2,16 +2,21 @@
 
 import React, { useState } from 'react';
 import {
-  Sparkles,
   ArrowRight,
   X,
   Loader2,
   CheckCircle2,
   AlertCircle,
   Image as ImageIcon,
+  Sliders,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { DRESS_OPTIONS, INTEREST_CHIPS, EXCLUSION_CHIPS, type InterestId } from '@/lib/dating/interests';
+import {
+  DRESS_OPTIONS,
+  INTEREST_CHIPS,
+  EXCLUSION_CHIPS,
+  type InterestId,
+} from '@/lib/dating/interests';
 import type { StylePref, ExcludableTag } from '@/lib/dating/types';
 
 type Model = {
@@ -36,7 +41,7 @@ interface StudioIntakeViewProps {
   isLoading: boolean;
   creditError: string;
   generalError: string;
-  showCancel: boolean; // if false, this is their first shoot and they can't cancel
+  showCancel: boolean;
 }
 
 export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
@@ -79,230 +84,248 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-black text-foreground selection:bg-accent/30 selection:text-white animate-in fade-in duration-500">
-      {/* Top Navigation Bar */}
-      <div className="sticky top-0 z-20 bg-black/80 backdrop-blur-xl border-b border-zinc-900/50">
-        <div className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-black shadow-[0_0_15px_rgba(255,255,255,0.15)]">
-              <Sparkles className="w-4 h-4" strokeWidth={2} />
+    <div className="min-h-screen bg-background text-foreground py-6 sm:py-10 px-4 sm:px-6">
+      <div className="max-w-2xl mx-auto space-y-6">
+        {/* Studio Header Bar */}
+        <div className="flex items-center justify-between pb-4 border-b border-zinc-800/80">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300">
+              <Sliders className="w-4 h-4" strokeWidth={1.5} />
             </div>
-            <span className="text-white font-medium tracking-tight">
-              Curate Your Dating Profile
-            </span>
+            <div>
+              <h1 className="text-sm font-semibold text-white tracking-tight">
+                New Photoshoot
+              </h1>
+              <p className="text-[11px] text-zinc-500 font-mono">
+                100 photos · 5 lineup profile roles
+              </p>
+            </div>
           </div>
+
           {showCancel && (
             <button
               onClick={onCancel}
-              className="text-zinc-400 hover:text-white text-sm font-medium transition-colors flex items-center gap-2"
+              className="text-xs text-zinc-400 hover:text-white border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
             >
-              Cancel <X className="w-4 h-4" />
+              Cancel <X className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
-      </div>
 
-      <div className="max-w-3xl mx-auto px-6 py-12 sm:py-20 space-y-20 pb-40">
-        {/* Header Section */}
-        <div className="text-center space-y-4 max-w-2xl mx-auto">
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-white">
-            Design your aesthetic.
-          </h1>
-          <p className="text-lg text-zinc-400 leading-relaxed">
-            Tell us about your lifestyle. We'll generate 100 hyper-realistic photos 
-            perfectly structured for Hinge, Bumble, and Tinder.
-          </p>
-        </div>
-
-        {/* 1. Select Model */}
+        {/* Form Container */}
         <div className="space-y-6">
-          <div className="space-y-1">
-            <h2 className="text-xl font-semibold text-white">Select Face Model</h2>
-            <p className="text-zinc-500 text-sm">Choose the AI model you've trained to star in this photoshoot.</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {models.map((model) => {
-              const isActive = selectedModelId === model.id;
-              const avatarUrl = model.samples?.[0]?.uri;
-              return (
-                <button
-                  key={model.id}
-                  onClick={() => onSelectModel(model.id)}
-                  className={`flex items-center gap-4 p-4 rounded-2xl border text-left transition-all duration-200 active:scale-[0.98] ${
-                    isActive
-                      ? 'bg-zinc-900 border-white shadow-[0_0_20px_rgba(255,255,255,0.05)]'
-                      : 'bg-zinc-950 border-zinc-800 hover:border-zinc-600'
-                  }`}
-                >
-                  <div className="w-14 h-14 rounded-xl overflow-hidden bg-zinc-800 shrink-0">
-                    {avatarUrl ? (
-                      <img src={avatarUrl} alt="" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-zinc-600">
-                        <ImageIcon className="w-6 h-6" />
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    <h3 className={`font-semibold ${isActive ? 'text-white' : 'text-zinc-300'}`}>
-                      {model.name || 'Untitled Model'}
-                    </h3>
-                    <p className="text-xs font-mono text-zinc-500 mt-1">
-                      {model.samples?.length || 0} sample photos
-                    </p>
-                  </div>
-                  {isActive && (
-                    <div className="ml-auto">
-                      <CheckCircle2 className="w-5 h-5 text-white" />
+          {/* 1. Model Selection */}
+          <div className="space-y-2.5">
+            <label className="text-xs font-medium text-zinc-300">
+              Face Model
+            </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {models.map((model) => {
+                const isActive = selectedModelId === model.id;
+                const avatarUrl = model.samples?.[0]?.uri;
+                return (
+                  <button
+                    key={model.id}
+                    onClick={() => onSelectModel(model.id)}
+                    className={`flex items-center gap-3 p-3 rounded-lg border text-left transition-all active:scale-[0.99] ${
+                      isActive
+                        ? 'bg-zinc-900 border-white text-white'
+                        : 'bg-zinc-950/70 border-zinc-800/90 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+                    }`}
+                  >
+                    <div className="w-9 h-9 rounded-full overflow-hidden bg-zinc-800 shrink-0 border border-zinc-700">
+                      {avatarUrl ? (
+                        <img
+                          src={avatarUrl}
+                          alt=""
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-zinc-500">
+                          <ImageIcon className="w-4 h-4" />
+                        </div>
+                      )}
                     </div>
-                  )}
-                </button>
-              );
-            })}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-semibold text-white truncate">
+                        {model.name || 'Trained Model'}
+                      </p>
+                      <p className="text-[11px] text-zinc-500 font-mono">
+                        {model.samples?.length || 0} samples
+                      </p>
+                    </div>
+                    {isActive && (
+                      <CheckCircle2
+                        className="w-4 h-4 text-white shrink-0"
+                        strokeWidth={2}
+                      />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
 
-        {/* 2. Wardrobe Tone */}
-        <div className="space-y-6">
-          <div className="space-y-1">
-            <h2 className="text-xl font-semibold text-white">Which look should we lead with?</h2>
-            <p className="text-zinc-500 text-sm">Sets the dominant wardrobe tone (~65%), balanced with the other two looks.</p>
+          {/* 2. Wardrobe Tone */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-medium text-zinc-300">
+                Primary Wardrobe Look
+              </label>
+              <span className="text-[11px] text-zinc-500 font-mono">
+                Leads ~65% of shots
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              {DRESS_OPTIONS.map((opt) => {
+                const isActive = dress === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    onClick={() => setDress(opt.id)}
+                    className={`p-3 rounded-lg border text-left transition-all active:scale-[0.99] ${
+                      isActive
+                        ? 'bg-zinc-900 border-white text-white'
+                        : 'bg-zinc-950/70 border-zinc-800/90 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-semibold text-white">
+                        {opt.label}
+                      </span>
+                      {isActive && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                      )}
+                    </div>
+                    <p className="text-[11px] text-zinc-500 leading-snug">
+                      {opt.hint}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {DRESS_OPTIONS.map((opt) => {
-              const isActive = dress === opt.id;
-              return (
-                <button
-                  key={opt.id}
-                  onClick={() => setDress(opt.id)}
-                  className={`p-5 rounded-2xl border text-left transition-all duration-200 active:scale-[0.98] ${
-                    isActive
-                      ? 'bg-zinc-900 border-white shadow-[0_0_20px_rgba(255,255,255,0.05)]'
-                      : 'bg-zinc-950 border-zinc-800 hover:border-zinc-700'
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className={`font-semibold text-lg ${isActive ? 'text-white' : 'text-zinc-300'}`}>
-                      {opt.label}
+
+          {/* 3. Activities & Lifestyle */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-medium text-zinc-300">
+                Activities & Interests
+              </label>
+              <span className="text-[11px] text-zinc-500 font-mono">
+                {interests.length > 0
+                  ? `${interests.length} selected`
+                  : 'Select what you do'}
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {INTEREST_CHIPS.map((chip) => {
+                const isActive = interests.includes(chip.id);
+                return (
+                  <button
+                    key={chip.id}
+                    onClick={() => toggleInterest(chip.id)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all flex items-center gap-1.5 active:scale-95 ${
+                      isActive
+                        ? 'bg-white text-black border-white font-semibold'
+                        : 'bg-zinc-950/80 text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200'
+                    }`}
+                  >
+                    <span className="text-xs">{chip.emoji}</span>
+                    <span>{chip.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 4. Exclusions */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-medium text-zinc-300">
+                Leave Out <span className="text-zinc-500 font-normal">(Optional)</span>
+              </label>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {EXCLUSION_CHIPS.map((chip) => {
+                const isActive = excludeTags.includes(chip.id);
+                return (
+                  <button
+                    key={chip.id}
+                    onClick={() => toggleExclusion(chip.id)}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all flex items-center gap-1.5 active:scale-95 ${
+                      isActive
+                        ? 'bg-red-500/10 text-red-400 border-red-500/30'
+                        : 'bg-zinc-950/80 text-zinc-500 border-zinc-800 hover:border-zinc-700 hover:text-zinc-300'
+                    }`}
+                  >
+                    <span className="text-xs grayscale opacity-70">
+                      {chip.emoji}
                     </span>
-                    {isActive && <div className="w-2 h-2 rounded-full bg-white" />}
-                  </div>
-                  <p className="text-sm text-zinc-500 leading-relaxed">
-                    {opt.hint}
-                  </p>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 3. Lifestyle / Interests */}
-        <div className="space-y-6">
-          <div className="space-y-1">
-            <h2 className="text-xl font-semibold text-white">What do you actually do?</h2>
-            <p className="text-zinc-500 text-sm">Tap the activities that represent your genuine lifestyle.</p>
-          </div>
-          <div className="flex flex-wrap gap-2.5">
-            {INTEREST_CHIPS.map((chip) => {
-              const isActive = interests.includes(chip.id);
-              return (
-                <button
-                  key={chip.id}
-                  onClick={() => toggleInterest(chip.id)}
-                  className={`px-4 py-2.5 rounded-xl text-sm font-medium border transition-all duration-200 flex items-center gap-2 active:scale-95 ${
-                    isActive
-                      ? 'bg-white text-black border-white shadow-sm'
-                      : 'bg-zinc-950 text-zinc-400 border-zinc-800 hover:border-zinc-600 hover:text-zinc-200'
-                  }`}
-                >
-                  <span className="text-base">{chip.emoji}</span>
-                  {chip.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 4. Exclusions */}
-        <div className="space-y-6">
-          <div className="space-y-1">
-            <h2 className="text-xl font-semibold text-white">Anything to leave out? <span className="text-zinc-600 font-normal">(Optional)</span></h2>
-            <p className="text-zinc-500 text-sm">We will completely exclude these themes from your 100 photos.</p>
-          </div>
-          <div className="flex flex-wrap gap-2.5">
-            {EXCLUSION_CHIPS.map((chip) => {
-              const isActive = excludeTags.includes(chip.id);
-              return (
-                <button
-                  key={chip.id}
-                  onClick={() => toggleExclusion(chip.id)}
-                  className={`px-4 py-2.5 rounded-xl text-sm font-medium border transition-all duration-200 flex items-center gap-2 active:scale-95 ${
-                    isActive
-                      ? 'bg-red-500/10 text-red-400 border-red-500/30'
-                      : 'bg-zinc-950 text-zinc-400 border-zinc-800 hover:border-zinc-600 hover:text-zinc-200'
-                  }`}
-                >
-                  <span className="text-base grayscale opacity-80">{chip.emoji}</span>
-                  {chip.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* 5. Custom Hobbies */}
-        <div className="space-y-6">
-          <div className="space-y-1">
-            <h2 className="text-xl font-semibold text-white">Custom Hobbies <span className="text-zinc-600 font-normal">(Optional)</span></h2>
-            <p className="text-zinc-500 text-sm">Add any niche interests separated by commas.</p>
-          </div>
-          <input
-            type="text"
-            value={hobbyText}
-            onChange={(e) => setHobbyText(e.target.value)}
-            placeholder="e.g., bouldering, vinyl collecting, film photography"
-            className="w-full bg-zinc-950 border border-zinc-800 rounded-2xl px-5 py-4 text-white text-base placeholder:text-zinc-600 focus:outline-none focus:border-white focus:bg-zinc-900 transition-all shadow-sm"
-          />
-        </div>
-
-        {/* Errors */}
-        {creditError && (
-          <div className="p-5 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
-            <div className="space-y-1">
-              <p className="font-medium text-sm">Insufficient Credits</p>
-              <p className="text-sm opacity-90 leading-relaxed">{creditError}</p>
+                    <span>{chip.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
-        )}
 
-        {generalError && (
-          <div className="p-5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-300 flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
-            <div className="space-y-1">
-              <p className="font-medium text-sm">Something went wrong</p>
-              <p className="text-sm opacity-90 leading-relaxed">{generalError}</p>
-            </div>
+          {/* 5. Custom Hobbies Input */}
+          <div className="space-y-2">
+            <label className="text-xs font-medium text-zinc-300">
+              Custom Specific Hobbies{' '}
+              <span className="text-zinc-500 font-normal">(Optional)</span>
+            </label>
+            <input
+              type="text"
+              value={hobbyText}
+              onChange={(e) => setHobbyText(e.target.value)}
+              placeholder="e.g. bouldering, vinyl records, film photography"
+              className="w-full bg-zinc-950/90 border border-zinc-800 rounded-lg px-3.5 py-2.5 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 transition-colors"
+            />
           </div>
-        )}
 
-        {/* Submit Block (Sticky on Mobile) */}
-        <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black via-black/90 to-transparent z-20 pointer-events-none">
-          <div className="max-w-3xl mx-auto pointer-events-auto">
+          {/* Errors */}
+          {creditError && (
+            <div className="p-3.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-start gap-2.5 text-xs">
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold">Insufficient Credits</p>
+                <p className="opacity-90 mt-0.5">{creditError}</p>
+              </div>
+            </div>
+          )}
+
+          {generalError && (
+            <div className="p-3.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 flex items-start gap-2.5 text-xs">
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-semibold">Error</p>
+                <p className="opacity-90 mt-0.5">{generalError}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Submit Action Card */}
+          <div className="pt-4 border-t border-zinc-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-[11px] font-mono text-zinc-500 text-center sm:text-left">
+              Includes <span className="text-white font-semibold">100 Photos</span> +{' '}
+              <span className="text-accent font-semibold">30 Custom Retakes</span>
+            </div>
+
             <Button
               onClick={handleSubmit}
               disabled={isLoading || !selectedModelId}
-              className="w-full bg-white text-black hover:bg-zinc-200 font-bold h-14 sm:h-16 text-base sm:text-lg rounded-2xl shadow-[0_0_40px_rgba(255,255,255,0.15)] transition-all active:scale-[0.98]"
+              className="w-full sm:w-auto bg-white text-black hover:bg-zinc-200 font-semibold text-xs h-10 px-6 rounded-lg shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="w-5 h-5 mr-3 animate-spin" />
-                  Starting Photoshoot...
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  Generating Photoshoot...
                 </>
               ) : (
                 <>
-                  Generate 100 Photos
-                  <ArrowRight className="w-5 h-5 ml-2" strokeWidth={2.5} />
+                  Start 100-Photo Shoot
+                  <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} />
                 </>
               )}
             </Button>
