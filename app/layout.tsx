@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google"
+import { Inter, Space_Grotesk, JetBrains_Mono, Oxanium } from "next/font/google"
 import "./globals.css"
 import { Suspense } from "react"
 import Script from "next/script"
@@ -34,6 +34,13 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 })
 
+const oxanium = Oxanium({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-oxanium",
+  display: "swap",
+})
+
 
 export const metadata: Metadata = generateMetadata()
 
@@ -44,7 +51,7 @@ export default async function RootLayout({
 }>) {
 
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}>
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${oxanium.variable} antialiased`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

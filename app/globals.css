@@ -199,6 +199,7 @@
   --color-foreground: var(--foreground);
   --font-display: var(--font-space-grotesk);
   --font-mono-jb: var(--font-jetbrains-mono);
+  --font-oxanium: var(--font-oxanium);
 }
 
 .theme-public {
