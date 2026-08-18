@@ -415,6 +415,7 @@ export interface Database {
           user_id: string
           vibe: string
           style: string
+          interests: string[] | null
           hobby_text: string | null
           created_at: string
           updated_at: string
@@ -424,6 +425,7 @@ export interface Database {
           user_id: string
           vibe: string
           style: string
+          interests?: string[] | null
           hobby_text?: string | null
           created_at?: string
           updated_at?: string
@@ -433,6 +435,7 @@ export interface Database {
           user_id?: string
           vibe?: string
           style?: string
+          interests?: string[] | null
           hobby_text?: string | null
           created_at?: string
           updated_at?: string

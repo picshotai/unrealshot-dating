@@ -1,14 +1,21 @@
 import { createAdminClient } from "@/utils/supabase/admin";
 import { compileDatingPrompt } from "./prompt-params";
-import {
-  assertLibraryComplete,
-  selectDatingPromptVariant,
-} from "./prompt-library";
+import { assertLibraryComplete, getPromptVariants } from "./prompt-library";
 import { makeDeterministicPhotoId, slotToIndex } from "./deterministic-id";
 import {
+  assertDeliveryUnique,
+  planDelivery,
+  type DeliveryBias,
+} from "./select-delivery";
+import {
+  deriveBias,
+  dominantStyle,
+  dominantVibe,
+  resolveHobbyText,
+  type InterestId,
+} from "./interests";
+import {
   CUSTOM_CREDITS_DEFAULT,
-  DATING_BUCKETS,
-  PHOTOS_PER_BUCKET,
   TOTAL_PHOTOS,
   type StylePref,
   type Vibe,
@@ -18,9 +25,14 @@ import { datingPhotoshootOrchestrator } from "@/trigger/dating-shoot";
 export type CreateOrderInput = {
   userId: string;
   modelId: number;
-  vibe: Vibe;
-  style: StylePref;
+  /** What he actually does. Drives the vibe weighting and the hobby prompts. */
+  interests?: InterestId[];
+  /** How he dresses, answered with pictures rather than the word "style". */
+  dress?: StylePref;
   hobbyText?: string | null;
+  /** Legacy callers may still send a locked vibe/style; both become a lean. */
+  vibe?: Vibe;
+  style?: StylePref;
 };
 
 /**
@@ -29,7 +41,24 @@ export type CreateOrderInput = {
  */
 export async function createDatingShootOrder(input: CreateOrderInput) {
   const db = createAdminClient();
-  const { userId, modelId, vibe, style, hobbyText } = input;
+  const { userId, modelId, interests = [], dress, hobbyText } = input;
+
+  // A locked vibe/style from an older client is honoured as a strong lean so
+  // in-flight sessions keep working, but nothing locks the delivery any more.
+  const bias: DeliveryBias = input.vibe
+    ? {
+        ...deriveBias(interests, dress ?? input.style ?? "casual"),
+        vibe: {
+          urban: input.vibe === "urban" ? 0.5 : 0.25,
+          outdoorsy: input.vibe === "outdoorsy" ? 0.5 : 0.25,
+          homebody: input.vibe === "homebody" ? 0.5 : 0.25,
+        },
+      }
+    : deriveBias(interests, dress ?? input.style ?? "casual");
+
+  const vibe = dominantVibe(bias);
+  const style = dominantStyle(bias);
+  const hobby = resolveHobbyText(interests, hobbyText);
 
   const { data: model, error: modelErr } = await db
     .from("models")
@@ -55,7 +84,8 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
         user_id: userId,
         vibe,
         style,
-        hobby_text: hobbyText || null,
+        interests: interests.length > 0 ? interests : null,
+        hobby_text: hobby,
         updated_at: new Date().toISOString(),
       },
       { onConflict: "user_id" }
@@ -91,33 +121,42 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
 
   const batchId = order.id as string;
 
-  // Pre-allocate 100 rows with deterministic IDs. The batch id makes prompt
-  // selection stable for retries while giving each new order a new shot mix.
-  const finalRows = [];
-  for (const bucket of DATING_BUCKETS) {
-    for (let slot = 1; slot <= PHOTOS_PER_BUCKET; slot++) {
-      const index = slotToIndex(slot);
-      const prompt = selectDatingPromptVariant(batchId, bucket, slot);
-      const filled = compileDatingPrompt(prompt, {
-        vibe,
-        style,
-        hobby: hobbyText,
-      });
+  // Plan all 100 photos together rather than looping buckets with one locked
+  // vibe and style. Each photo gets its own vibe, style and variant, which is
+  // what lets a single delivery reach ~95% of the library's locations instead
+  // of 33%. Seeded from batchId, so retries and paid regenerations are stable.
+  const plan = planDelivery(batchId, bias);
+  assertDeliveryUnique(plan);
 
-      finalRows.push({
-        order_id: batchId,
-        bucket,
-        slot,
-        prompt_template: filled,
-        // Snapshot the authored size so the shot renders at the resolution it
-        // was written for, and stays stable across retries and regenerations.
-        image_width: prompt.imageSize?.width ?? null,
-        image_height: prompt.imageSize?.height ?? null,
-        status: "pending" as const,
-        deterministic_id: makeDeterministicPhotoId(batchId, bucket, index),
-      });
+  const finalRows = plan.map((entry) => {
+    const prompt = getPromptVariants(entry.bucket, entry.slot).find(
+      (candidate) => candidate.variant === entry.variant
+    );
+    if (!prompt) {
+      throw new Error(
+        `Planned ${entry.bucket}:${entry.slot} variant ${entry.variant} is missing`
+      );
     }
-  }
+    const filled = compileDatingPrompt(prompt, {
+      vibe: entry.vibe,
+      style: entry.style,
+      hobby,
+    });
+    const index = slotToIndex(entry.slot);
+
+    return {
+      order_id: batchId,
+      bucket: entry.bucket,
+      slot: entry.slot,
+      prompt_template: filled,
+      // Snapshot the authored size so the shot renders at the resolution it
+      // was written for, and stays stable across retries and regenerations.
+      image_width: prompt.imageSize?.width ?? null,
+      image_height: prompt.imageSize?.height ?? null,
+      status: "pending" as const,
+      deterministic_id: makeDeterministicPhotoId(batchId, entry.bucket, index),
+    };
+  });
 
   if (finalRows.length !== TOTAL_PHOTOS) {
     await db.from("user_shoot_orders").delete().eq("id", batchId);

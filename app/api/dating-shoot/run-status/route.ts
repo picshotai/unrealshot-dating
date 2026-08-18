@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
 
   const { data: photos } = await supabase
     .from("order_photos")
-    .select("id, bucket, slot, status, image_url")
+    .select("id, bucket, slot, status, image_url, image_width, image_height")
     .eq("order_id", orderId)
     .order("bucket")
     .order("slot");
@@ -64,6 +64,10 @@ export async function GET(request: NextRequest) {
               id: p.id,
               slot: p.slot,
               imageUrl: p.image_url,
+              // the client groups the delivery by lineup role, and a 9:16 frame
+              // is what identifies the full-length shots
+              imageWidth: p.image_width,
+              imageHeight: p.image_height,
             })),
         },
       ];

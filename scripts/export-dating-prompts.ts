@@ -3,6 +3,7 @@ import { dirname, resolve } from "node:path";
 import {
   DATING_PROMPTS,
   DATING_PROMPT_LIBRARY_VERSION,
+  getPromptVariants,
   selectDatingPromptVariant,
   type DatingPromptDefinition,
 } from "../lib/dating/prompt-library";
@@ -12,6 +13,12 @@ import {
   resolveDatingImageDimensions,
 } from "../lib/dating/aspect-ratio";
 import { compileDatingPrompt } from "../lib/dating/prompt-params";
+import {
+  assertDeliveryUnique,
+  planDelivery,
+  summariseDelivery,
+} from "../lib/dating/select-delivery";
+import { deriveBias, isInterestId } from "../lib/dating/interests";
 import {
   DATING_BUCKETS,
   PHOTOS_PER_BUCKET,
@@ -90,7 +97,46 @@ function compileForExport(
   };
 }
 
+/**
+ * `--delivery` plans one real order and proves the guarantee the product makes:
+ * 100 photos with no repeated location, outfit or lighting setup.
+ */
+async function reportDelivery() {
+  const interestArg = readArgument("interests") ?? "";
+  const interests = interestArg
+    .split(",")
+    .map((value) => value.trim())
+    .filter(isInterestId);
+  const dress = (readArgument("dress") ?? "casual") as StylePref;
+  const batchId = readArgument("batch-id") ?? "delivery-preview";
+
+  const bias = deriveBias(interests, dress);
+  const plan = planDelivery(batchId, bias);
+  assertDeliveryUnique(plan);
+
+  console.log(`batch      ${batchId}`);
+  console.log(`interests  ${interests.length ? interests.join(", ") : "(none)"}`);
+  console.log(`dress      ${dress}`);
+  console.log(JSON.stringify(summariseDelivery(plan), null, 2));
+
+  for (const entry of plan) {
+    const definition = getPromptVariants(entry.bucket, entry.slot).find(
+      (candidate) => candidate.variant === entry.variant
+    )!;
+    console.log(
+      `${entry.bucket}-${String(entry.slot).padStart(2, "0")}-${entry.variant}` +
+        `  ${entry.vibe.padEnd(9)} ${entry.style.padEnd(6)} ` +
+        `| ${definition.locations[entry.vibe]}`
+    );
+  }
+  console.log("\nassertDeliveryUnique: PASS");
+}
+
 async function main() {
+  if (process.argv.includes("--delivery")) {
+    await reportDelivery();
+    return;
+  }
   const args = parseArguments();
   const selectedOrderPrompts = DATING_BUCKETS.flatMap((bucket) =>
     Array.from({ length: PHOTOS_PER_BUCKET }, (_, index) => {

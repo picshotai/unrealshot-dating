@@ -5,13 +5,17 @@ import Link from 'next/link';
 import JSZip from 'jszip';
 import { Button } from '@/components/ui/button';
 import {
-  BUCKET_DESCRIPTIONS,
   BUCKET_LABELS,
   DATING_BUCKETS,
   type DatingBucket,
   type StylePref,
-  type Vibe,
 } from '@/lib/dating/types';
+import {
+  DRESS_OPTIONS,
+  INTEREST_CHIPS,
+  type InterestId,
+} from '@/lib/dating/interests';
+import { groupByLineup } from '@/lib/dating/lineup';
 import {
   Loader2,
   Download,
@@ -22,6 +26,17 @@ import {
   Archive,
   FlaskConical,
 } from 'lucide-react';
+
+/**
+ * Placeholder until three real frames from a delivery replace them. Even as
+ * swatches this reads as choosing between looks rather than between the words
+ * casual / sharp / street.
+ */
+const DRESS_SWATCHES: Record<string, string> = {
+  casual: 'linear-gradient(160deg, #b8a88f 0%, #6f6552 60%, #2f2c26 100%)',
+  sharp: 'linear-gradient(160deg, #6b7079 0%, #3a3f47 60%, #17191d 100%)',
+  street: 'linear-gradient(160deg, #8a5a44 0%, #46362f 60%, #1c1917 100%)',
+};
 
 type Model = {
   id: number;
@@ -53,7 +68,13 @@ type StatusResponse = {
     {
       completed: number;
       total: number;
-      photos: { id: string; slot: number; imageUrl: string }[];
+      photos: {
+        id: string;
+        slot: number;
+        imageUrl: string;
+        imageWidth: number | null;
+        imageHeight: number | null;
+      }[];
     }
   >;
   progressPercent: number;
@@ -74,8 +95,8 @@ export function DatingShootClient({
   const [modelId, setModelId] = useState<number | null>(
     initialModelId || models[0]?.id || null
   );
-  const [vibe, setVibe] = useState<Vibe>('urban');
-  const [style, setStyle] = useState<StylePref>('casual');
+  const [interests, setInterests] = useState<InterestId[]>([]);
+  const [dress, setDress] = useState<StylePref>('casual');
   const [hobbyText, setHobbyText] = useState('');
   const [activeOrderId, setActiveOrderId] = useState<string | null>(
     initialOrderId || orders[0]?.id || null
@@ -83,7 +104,6 @@ export function DatingShootClient({
   const [status, setStatus] = useState<StatusResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [activeBucket, setActiveBucket] = useState<DatingBucket>('anchor');
   const [regenLoading, setRegenLoading] = useState<string | null>(null);
   const [zipLoading, setZipLoading] = useState(false);
   const [zipProgress, setZipProgress] = useState<string>('');
@@ -117,8 +137,8 @@ export function DatingShootClient({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           modelId,
-          vibe,
-          style,
+          interests,
+          dress,
           hobbyText: hobbyText.trim() || null,
         }),
       });
@@ -239,14 +259,21 @@ export function DatingShootClient({
     status?.order.status === 'developing' || status?.order.status === 'queued';
   const isReady =
     status?.order.status === 'ready' || status?.order.status === 'partial_failed';
-  const bucketPhotos = status?.byBucket?.[activeBucket]?.photos || [];
+  const allPhotos = DATING_BUCKETS.flatMap((bucket) =>
+    (status?.byBucket?.[bucket]?.photos || []).map((photo) => ({
+      ...photo,
+      bucket,
+    }))
+  );
+  const lineup = groupByLineup(allPhotos);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-white mb-1">Dating Photoshoot</h1>
         <p className="text-zinc-400 text-sm">
-          100 photos · 5 styles · ~90 min delivery
+          100 photos. No two share an outfit or a light. One person in every
+          frame — you.
         </p>
       </div>
 
@@ -281,52 +308,99 @@ export function DatingShootClient({
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="space-y-5">
             <div>
-              <label className="text-xs text-zinc-500 mb-2 block">Vibe</label>
-              <div className="flex flex-col gap-1">
-                {(['urban', 'outdoorsy', 'homebody'] as Vibe[]).map((v) => (
-                  <button
-                    key={v}
-                    onClick={() => setVibe(v)}
-                    className={`text-left text-sm px-3 py-2 rounded-lg capitalize ${
-                      vibe === v
-                        ? 'bg-white text-black'
-                        : 'bg-zinc-800 text-zinc-400 hover:text-white'
-                    }`}
-                  >
-                    {v}
-                  </button>
-                ))}
+              <label className="text-sm text-white font-medium block">
+                What do you actually do?
+              </label>
+              <p className="text-xs text-zinc-500 mt-0.5 mb-3">
+                Tap anything that fits. This decides what you are doing in the
+                photos, not how many you get.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {INTEREST_CHIPS.map((chip) => {
+                  const on = interests.includes(chip.id);
+                  return (
+                    <button
+                      key={chip.id}
+                      type="button"
+                      aria-pressed={on}
+                      onClick={() =>
+                        setInterests((prev) =>
+                          prev.includes(chip.id)
+                            ? prev.filter((id) => id !== chip.id)
+                            : [...prev, chip.id]
+                        )
+                      }
+                      className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        on
+                          ? 'bg-white text-black border-white'
+                          : 'bg-zinc-800 text-zinc-300 border-zinc-700 hover:border-zinc-500'
+                      }`}
+                    >
+                      <span aria-hidden="true">{chip.emoji}</span> {chip.label}
+                    </button>
+                  );
+                })}
               </div>
             </div>
+
             <div>
-              <label className="text-xs text-zinc-500 mb-2 block">Style</label>
-              <div className="flex flex-col gap-1">
-                {(['casual', 'sharp', 'street'] as StylePref[]).map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => setStyle(s)}
-                    className={`text-left text-sm px-3 py-2 rounded-lg capitalize ${
-                      style === s
-                        ? 'bg-white text-black'
-                        : 'bg-zinc-800 text-zinc-400 hover:text-white'
-                    }`}
-                  >
-                    {s}
-                  </button>
-                ))}
+              <label className="text-sm text-white font-medium block">
+                How do you dress?
+              </label>
+              <p className="text-xs text-zinc-500 mt-0.5 mb-3">
+                Pick the one closest to your actual wardrobe.
+              </p>
+              <div className="grid grid-cols-3 gap-3">
+                {DRESS_OPTIONS.map((option) => {
+                  const on = dress === option.id;
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      aria-pressed={on}
+                      onClick={() => setDress(option.id)}
+                      className={`text-left rounded-xl overflow-hidden border transition-colors ${
+                        on
+                          ? 'border-white ring-1 ring-white'
+                          : 'border-zinc-700 hover:border-zinc-500'
+                      }`}
+                    >
+                      {option.previewImage ? (
+                        <img
+                          src={option.previewImage}
+                          alt={option.label}
+                          className="aspect-[3/4] w-full object-cover"
+                        />
+                      ) : (
+                        <div
+                          className="aspect-[3/4] w-full"
+                          style={{ background: DRESS_SWATCHES[option.id] }}
+                        />
+                      )}
+                      <div className="p-2">
+                        <div className="text-sm text-white">{option.label}</div>
+                        <div className="text-[11px] text-zinc-500 leading-tight">
+                          {option.hint}
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
+
             <div>
-              <label className="text-xs text-zinc-500 mb-2 block">
-                Hobby (optional)
+              <label className="text-sm text-white font-medium block">
+                Anything else you are into?{' '}
+                <span className="text-zinc-500 font-normal">(optional)</span>
               </label>
               <input
                 value={hobbyText}
                 onChange={(e) => setHobbyText(e.target.value)}
-                placeholder="e.g. hiking, coffee, dogs"
-                className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm"
+                placeholder="e.g. bouldering, film photography, playing bass"
+                className="mt-2 w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-white text-sm"
               />
             </div>
           </div>
@@ -429,75 +503,64 @@ export function DatingShootClient({
             </p>
           </div>
 
-          {/* Bucket tabs + gallery */}
-          <div>
-            <div className="flex gap-2 overflow-x-auto pb-3 mb-4">
-              {DATING_BUCKETS.map((b) => (
-                <button
-                  key={b}
-                  onClick={() => setActiveBucket(b)}
-                  className={`shrink-0 px-3 py-2 rounded-lg text-sm whitespace-nowrap ${
-                    activeBucket === b
-                      ? 'bg-white text-black'
-                      : 'bg-zinc-800 text-zinc-400 hover:text-white'
-                  }`}
-                >
-                  {BUCKET_LABELS[b]}
-                  <span className="ml-2 text-xs opacity-70">
-                    {status.byBucket[b]?.completed || 0}/
-                    {status.byBucket[b]?.total || 20}
-                  </span>
-                </button>
-              ))}
-            </div>
-            <p className="text-zinc-500 text-sm mb-4">
-              {BUCKET_DESCRIPTIONS[activeBucket]}
-            </p>
-
-            {bucketPhotos.length === 0 ? (
+          {/* Delivery, grouped by the job each photo does */}
+          <div className="space-y-8">
+            {lineup.length === 0 ? (
               <div className="text-zinc-600 text-sm py-12 text-center border border-dashed border-zinc-800 rounded-xl">
                 {isDeveloping
                   ? 'Photos will appear here as they develop...'
-                  : 'No photos in this bucket yet'}
+                  : 'No photos yet'}
               </div>
             ) : (
-              <div className="columns-2 gap-3 sm:columns-3 md:columns-4">
-                {bucketPhotos.map((p) => (
-                  <div
-                    key={p.id}
-                    className="relative mb-3 break-inside-avoid overflow-hidden rounded-lg bg-zinc-900 group"
-                  >
-                    <img
-                      src={p.imageUrl}
-                      alt={`${activeBucket} ${p.slot}`}
-                      className="block h-auto w-full"
-                    />
-                    <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-                      <a
-                        href={p.imageUrl}
-                        download
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex-1 flex items-center justify-center gap-1 text-xs bg-white/10 hover:bg-white/20 text-white rounded py-1.5"
-                      >
-                        <Download className="w-3 h-3" /> Save
-                      </a>
-                      <button
-                        onClick={() => regenerate(p.id)}
-                        disabled={regenLoading === p.id}
-                        className="flex-1 flex items-center justify-center gap-1 text-xs bg-white/10 hover:bg-white/20 text-white rounded py-1.5"
-                      >
-                        {regenLoading === p.id ? (
-                          <Loader2 className="w-3 h-3 animate-spin" />
-                        ) : (
-                          <RefreshCw className="w-3 h-3" />
-                        )}
-                        Regen
-                      </button>
-                    </div>
+              lineup.map((section) => (
+                <div key={section.role}>
+                  <div className="flex items-baseline gap-3 mb-1">
+                    <h3 className="text-white font-semibold">{section.label}</h3>
+                    <span className="text-xs text-zinc-600">
+                      {section.photos.length}
+                    </span>
                   </div>
-                ))}
-              </div>
+                  <p className="text-zinc-500 text-sm mb-4">{section.hint}</p>
+
+                  <div className="columns-2 gap-3 sm:columns-3 md:columns-4">
+                    {section.photos.map((p) => (
+                      <div
+                        key={p.id}
+                        className="relative mb-3 break-inside-avoid overflow-hidden rounded-lg bg-zinc-900 group"
+                      >
+                        <img
+                          src={p.imageUrl}
+                          alt={section.label}
+                          className="block h-auto w-full"
+                        />
+                        <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+                          <a
+                            href={p.imageUrl}
+                            download
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex-1 flex items-center justify-center gap-1 text-xs bg-white/10 hover:bg-white/20 text-white rounded py-1.5"
+                          >
+                            <Download className="w-3 h-3" /> Save
+                          </a>
+                          <button
+                            onClick={() => regenerate(p.id)}
+                            disabled={regenLoading === p.id}
+                            className="flex-1 flex items-center justify-center gap-1 text-xs bg-white/10 hover:bg-white/20 text-white rounded py-1.5"
+                          >
+                            {regenLoading === p.id ? (
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                            ) : (
+                              <RefreshCw className="w-3 h-3" />
+                            )}
+                            Regen
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))
             )}
           </div>
         </div>

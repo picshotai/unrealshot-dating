@@ -155,7 +155,9 @@ export const generateSingleDatingImage = task({
 
       const aspectRatio = resolveDatingAspectRatio(prompt);
       const mockImageUrl = getMockPlaceholderImageUrl(bucket, slot, aspectRatio);
-      const aestheticScore = Number((0.78 + Math.random() * 0.2).toFixed(3));
+      // No quality score is written. It used to be a random number, which is
+      // noise presented as a signal — anything ranking on it ranked randomly.
+      const aestheticScore = undefined;
 
       const { error: upsertErr } = await db.from("order_photos").upsert(
         {
@@ -167,7 +169,7 @@ export const generateSingleDatingImage = task({
           status: "completed",
           image_url: mockImageUrl,
           fal_request_id: `mock_${deterministicId}`,
-          aesthetic_score: aestheticScore,
+          aesthetic_score: null,
           failed_reason: null,
           updated_at: new Date().toISOString(),
         },
@@ -238,8 +240,9 @@ export const generateSingleDatingImage = task({
       const r2BaseUrl = process.env.R2_PUBLIC_URL || "";
       const publicUri = `${r2BaseUrl}/${key}`;
 
-      // Baseline technical aesthetic score (0.6–1.0) — placeholder until curation exists
-      const aestheticScore = Number((0.6 + Math.random() * 0.4).toFixed(3));
+      // No quality score is written. It used to be a random number, which is
+      // noise presented as a signal — anything ranking on it ranked randomly.
+      const aestheticScore = undefined;
 
       // Idempotent upsert: insert or overwrite — never duplicate
       const { error: upsertErr } = await db.from("order_photos").upsert(
@@ -252,7 +255,7 @@ export const generateSingleDatingImage = task({
           status: "completed",
           image_url: publicUri,
           fal_request_id: requestId,
-          aesthetic_score: aestheticScore,
+          aesthetic_score: null,
           failed_reason: null,
           updated_at: new Date().toISOString(),
         },

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { createDatingShootOrder } from "@/lib/dating/create-order";
+import { isInterestId, type InterestId } from "@/lib/dating/interests";
 import type { StylePref, Vibe } from "@/lib/dating/types";
 
 export const dynamic = "force-dynamic";
@@ -22,20 +23,40 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { modelId, vibe, style, hobbyText } = body;
+    const { modelId, interests, dress, hobbyText, vibe, style } = body;
 
     if (!modelId || typeof modelId !== "number") {
       return NextResponse.json({ error: "modelId is required" }, { status: 400 });
     }
-    if (!VIBES.includes(vibe)) {
+
+    // The screen now sends interests + dress. vibe/style are still accepted so
+    // a client mid-session keeps working; both are treated as a lean, and
+    // neither locks the delivery any more.
+    const cleanInterests: InterestId[] = Array.isArray(interests)
+      ? interests.filter(isInterestId)
+      : [];
+
+    if (dress !== undefined && !STYLES.includes(dress)) {
+      return NextResponse.json(
+        { error: "dress must be casual | sharp | street" },
+        { status: 400 }
+      );
+    }
+    if (vibe !== undefined && !VIBES.includes(vibe)) {
       return NextResponse.json(
         { error: "vibe must be urban | outdoorsy | homebody" },
         { status: 400 }
       );
     }
-    if (!STYLES.includes(style)) {
+    if (style !== undefined && !STYLES.includes(style)) {
       return NextResponse.json(
         { error: "style must be casual | sharp | street" },
+        { status: 400 }
+      );
+    }
+    if (dress === undefined && style === undefined) {
+      return NextResponse.json(
+        { error: "dress is required" },
         { status: 400 }
       );
     }
@@ -43,8 +64,10 @@ export async function POST(request: NextRequest) {
     const result = await createDatingShootOrder({
       userId: user.id,
       modelId,
-      vibe,
-      style,
+      interests: cleanInterests,
+      dress: (dress as StylePref | undefined) ?? undefined,
+      vibe: (vibe as Vibe | undefined) ?? undefined,
+      style: (style as StylePref | undefined) ?? undefined,
       hobbyText: hobbyText || null,
     });
 
