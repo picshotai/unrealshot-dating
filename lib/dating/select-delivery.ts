@@ -10,6 +10,7 @@ import {
   SLOTS_PER_BUCKET,
   TOTAL_PHOTOS,
   type DatingBucket,
+  type InterestId,
   type StylePref,
   type Vibe,
 } from "./types";
@@ -128,6 +129,15 @@ export type PlanOptions = {
   excludeTags?: readonly string[];
   /** What he is into, one per hobby photo rather than all crammed together. */
   hobbies?: readonly string[];
+  /**
+   * The chips he tapped, as ids.
+   *
+   * Distinct from `hobbies`, which are the phrases that go into a hobby
+   * template. These select real scenes: a slot that depicts one of his
+   * interests outranks one that does not, so tapping "cycling" puts him on a
+   * bike rather than only weighting the vibe toward outdoorsy.
+   */
+  interests?: readonly InterestId[];
 };
 
 /**
@@ -144,6 +154,26 @@ function offersHobby(bucket: DatingBucket, slot: number): boolean {
   return getPromptVariants(bucket, slot).some((p) =>
     Boolean(p.hobbyPromptTemplate)
   );
+}
+
+/**
+ * Which of his interests a slot actually shows.
+ *
+ * Read across all three variants because selection has not chosen one yet; a
+ * slot counts as depicting an interest if any variant does.
+ */
+function slotDepicts(
+  bucket: DatingBucket,
+  slot: number,
+  interests: readonly InterestId[]
+): InterestId | null {
+  if (interests.length === 0) return null;
+  for (const prompt of getPromptVariants(bucket, slot)) {
+    for (const id of prompt.depicts ?? []) {
+      if (interests.includes(id)) return id;
+    }
+  }
+  return null;
 }
 
 /** True when every variant of a slot carries something the user excluded. */
@@ -166,6 +196,14 @@ export function planDelivery(
   const excluded = options.excludeTags ?? [];
   const hobbies = (options.hobbies ?? []).filter((h) => h.trim().length > 0);
   const hobbyBudget = hobbies.length * MAX_PHOTOS_PER_HOBBY;
+  const interests = options.interests ?? [];
+  /**
+   * How many scenes each interest has already claimed, across every bucket.
+   * Counted while ranking rather than afterwards so the cap decides *which*
+   * slots are chosen, not merely what gets stamped on them — a man who taps one
+   * chip should not have his whole delivery turn into that one thing.
+   */
+  const interestTally = new Map<InterestId, number>();
   const vibeOrder = byWeight(VIBES, bias.vibe);
   const styleOrder = byWeight(STYLES, bias.style);
 
@@ -205,6 +243,10 @@ export function planDelivery(
       const aHobby = hobbyBudget > 0 && offersHobby(bucket, a.slot) ? 1 : 0;
       const bHobby = hobbyBudget > 0 && offersHobby(bucket, b.slot) ? 1 : 0;
       if (aHobby !== bHobby) return bHobby - aHobby;
+      // A scene that shows something he said he does outranks one that does not.
+      const aShows = slotDepicts(bucket, a.slot, interests) ? 1 : 0;
+      const bShows = slotDepicts(bucket, b.slot, interests) ? 1 : 0;
+      if (aShows !== bShows) return bShows - aShows;
       const weight = (bias.vibe[b.vibe] ?? 0) - (bias.vibe[a.vibe] ?? 0);
       if (weight !== 0) return weight;
       // stable, batch-dependent tie-break so two orders differ
@@ -214,9 +256,30 @@ export function planDelivery(
       );
     });
 
-    selected.push(...ranked.slice(0, PHOTOS_PER_BUCKET));
-    spare.push(...ranked.slice(PHOTOS_PER_BUCKET));
-    shortfall += Math.max(0, PHOTOS_PER_BUCKET - ranked.length);
+    // Take the ranked list, but stop any single interest running away with the
+    // bucket. A slot over its interest's cap drops to the back rather than out,
+    // so the bucket still fills to PHOTOS_PER_BUCKET.
+    const withinCap: Candidate[] = [];
+    const overCap: Candidate[] = [];
+    for (const candidate of ranked) {
+      const shows = slotDepicts(bucket, candidate.slot, interests);
+      if (!shows) {
+        withinCap.push(candidate);
+        continue;
+      }
+      const used = interestTally.get(shows) ?? 0;
+      if (used >= MAX_PHOTOS_PER_HOBBY) {
+        overCap.push(candidate);
+        continue;
+      }
+      interestTally.set(shows, used + 1);
+      withinCap.push(candidate);
+    }
+    const ordered = [...withinCap, ...overCap];
+
+    selected.push(...ordered.slice(0, PHOTOS_PER_BUCKET));
+    spare.push(...ordered.slice(PHOTOS_PER_BUCKET));
+    shortfall += Math.max(0, PHOTOS_PER_BUCKET - ordered.length);
   }
 
   // Exclusions do not fall evenly. Dog and team sport both land in `active`,

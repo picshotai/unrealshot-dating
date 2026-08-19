@@ -139,4 +139,43 @@ if (missing.length > 0) {
 }
 ok("interest coverage", `${INTEREST_CHIPS.length} chips all reach photos`);
 
+// 5. An interest backed by real scenes must actually land those scenes, and must
+//    not run away with the delivery. This is the difference between a chip that
+//    nudges the vibe weighting and a chip that is a promise.
+const depicted = new Map<string, number>();
+for (const prompt of DATING_PROMPTS) {
+  const list = "depicts" in prompt ? (prompt.depicts as readonly string[]) : [];
+  for (const id of list) depicted.set(id, (depicted.get(id) ?? 0) + 1);
+}
+
+let proven = 0;
+for (const chip of INTEREST_CHIPS) {
+  if (!depicted.has(chip.id)) continue; // served by the hobby route only
+  const plan = planDelivery(`check-depicts-${chip.id}`, deriveBias([chip.id], "casual"), {
+    excludeTags: [],
+    hobbies: resolveHobbies([chip.id], null),
+    interests: [chip.id],
+  });
+  const shown = plan.filter((entry) => {
+    const definition = getPromptVariants(entry.bucket, entry.slot).find(
+      (candidate) => candidate.variant === entry.variant
+    );
+    const list =
+      definition && "depicts" in definition
+        ? (definition.depicts as readonly string[])
+        : [];
+    return list.includes(chip.id);
+  }).length;
+
+  // The promise is presence, not an exact count. The cap of 3 bounds the
+  // *boost*; beyond it a depicting slot competes normally, and a bucket still
+  // takes 20 of its 26 candidates — so an interest with many scenes will land a
+  // few more on ordinary vibe weighting. That is a man getting more of what he
+  // said he likes, which is fine. A runaway is not.
+  if (shown === 0) fail(`"${chip.id}" has ${depicted.get(chip.id)} scenes but landed none`);
+  if (shown > 15) fail(`"${chip.id}" flooded the delivery with ${shown} photos`);
+  proven += 1;
+}
+ok("interest guarantee", `${proven} interests land dedicated scenes`);
+
 console.log(`\n${checks} checks passed\n`);

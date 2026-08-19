@@ -90,7 +90,7 @@ Do not promise an exact photo count per section. The mix shifts with his answers
 The intake asks exactly three things. Landing copy should promise nothing that contradicts them:
 
 1. **"Which look should we lead with?"** — three photos of wardrobes, not the words casual/sharp/street.
-2. **"What do you actually do?"** — 16 interests, multi-select, plus free text.
+2. **"What do you actually do?"** — 22 interests, multi-select, plus free text.
 3. **"Anything to leave out?"** — the four exclusions.
 
 **Critical nuance on question 1.** He picks what to *lead with*, not what he gets. Every shoot spans all three wardrobes — that range is the product, since 100 photos in one register reads flat. If landing copy implies "pick casual, get casual," we have written a broken promise into the funnel. Phrase it as: *every shoot covers the range; you choose where it leans.*
@@ -152,7 +152,7 @@ If a claim is not in this brief, read it out of the code before writing it:
 | 100 photos, credits, exclusions | `lib/dating/types.ts` |
 | No-repeat guarantee (enforced) | `lib/dating/select-delivery.ts` — `assertDeliveryUnique` |
 | 390 shots, 135 locations, 156 lights, 1,170 outfits | `lib/dating/prompt-library.ts` |
-| 16 interests, 3 wardrobes, 4 exclusions | `lib/dating/interests.ts` |
+| 22 interests, 3 wardrobes, 4 exclusions | `lib/dating/interests.ts` |
 | Section labels | `lib/dating/lineup.ts` — `LINEUP_LABELS` |
 | 30 re-shoots, 1 per regeneration | `app/api/dating-shoot/regenerate/route.ts` |
 | 4-photo minimum | `lib/dating/create-order.ts` |

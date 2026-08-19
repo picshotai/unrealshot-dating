@@ -187,7 +187,7 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
     // vibe and style. Each photo gets its own vibe, style and variant, which is
     // what lets a single delivery reach ~95% of the library's locations instead
     // of 33%. Seeded from batchId, so retries and paid regenerations are stable.
-    const plan = planDelivery(batchId, bias, { excludeTags, hobbies });
+    const plan = planDelivery(batchId, bias, { excludeTags, hobbies, interests });
     assertDeliveryUnique(plan);
 
     const finalRows = plan.map((entry) => {

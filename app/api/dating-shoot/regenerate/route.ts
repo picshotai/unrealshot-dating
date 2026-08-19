@@ -4,7 +4,7 @@ import { createAdminClient } from "@/utils/supabase/admin";
 import { generateSingleDatingImage } from "@/trigger/dating-shoot";
 import { makeDeterministicPhotoId, slotToIndex } from "@/lib/dating/deterministic-id";
 import { planReplacement } from "@/lib/dating/select-delivery";
-import { deriveBias } from "@/lib/dating/interests";
+import { deriveBias, isInterestId } from "@/lib/dating/interests";
 import { compileDatingPrompt } from "@/lib/dating/prompt-params";
 import { getPromptVariants } from "@/lib/dating/prompt-library";
 import type { ExcludableTag, StylePref } from "@/lib/dating/types";
@@ -124,10 +124,12 @@ export async function POST(request: NextRequest) {
       .eq("bucket", photo.bucket);
 
     const excludeTags = (prefs?.exclude_tags ?? []) as ExcludableTag[];
-    const bias = deriveBias(
-      (prefs?.interests ?? []) as never,
-      (prefs?.style ?? "casual") as StylePref
+    // Stored as an untyped text[], so validate rather than cast — a stale or
+    // hand-edited row must not put an unknown id into selection.
+    const savedInterests = ((prefs?.interests ?? []) as unknown[]).filter(
+      isInterestId
     );
+    const bias = deriveBias(savedInterests, (prefs?.style ?? "casual") as StylePref);
     const usedSlots = (siblings ?? []).map((row) => row.slot as number);
     // Attempts differ so a second redo of the same photo lands somewhere new.
     const attempt = Date.now();
@@ -137,7 +139,9 @@ export async function POST(request: NextRequest) {
       photo.bucket as DatingBucket,
       usedSlots,
       attempt,
-      { excludeTags }
+      // Interests travel with the replacement so redoing a cycling photo lands
+      // on another cycling scene rather than a generic one.
+      { excludeTags, interests: savedInterests }
     );
 
     let prompt = photo.prompt_template as string;

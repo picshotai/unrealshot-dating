@@ -87,6 +87,40 @@ export const ACTIVE_ORDER_STATUSES = ["queued", "developing"] as const;
 /** Content a user can ask us to leave out of their delivery. */
 export const EXCLUDABLE_TAGS = ["alcohol", "dog", "bicycle", "teamSport"] as const;
 export type ExcludableTag = (typeof EXCLUDABLE_TAGS)[number];
+
+/**
+ * The things a man can say he does.
+ *
+ * Lives here rather than in interests.ts because the prompt library needs it to
+ * declare what a scene depicts, and interests.ts already imports from the
+ * selection module — putting it there would close a cycle.
+ */
+export const INTEREST_IDS = [
+  "gym",
+  "running",
+  "hiking",
+  "climbing",
+  "cycling",
+  "dogs",
+  "coffee",
+  "nightlife",
+  "cooking",
+  "reading",
+  "music",
+  "travel",
+  "football",
+  "motorcycles",
+  "art",
+  "surfing",
+  // Added for the buyer this product is actually for.
+  "golf",
+  "tennis",
+  "sailing",
+  "skiing",
+  "dining",
+  "boxing",
+] as const;
+export type InterestId = (typeof INTEREST_IDS)[number];
 export const MIN_COMPLETE_THRESHOLD = 85;
 export const FAL_BATCH_SIZE = 5;
 export const FAL_BATCH_GAP_MS = 3000;

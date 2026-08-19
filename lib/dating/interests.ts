@@ -1,5 +1,5 @@
 import type { DeliveryBias } from "./select-delivery";
-import type { ExcludableTag, StylePref, Vibe } from "./types";
+import type { ExcludableTag, InterestId, StylePref, Vibe } from "./types";
 
 /**
  * The two questions the shoot screen asks.
@@ -10,23 +10,7 @@ import type { ExcludableTag, StylePref, Vibe } from "./types";
  * and how he actually dresses, and the weighting is derived from that.
  */
 
-export type InterestId =
-  | "gym"
-  | "running"
-  | "hiking"
-  | "climbing"
-  | "cycling"
-  | "dogs"
-  | "coffee"
-  | "nightlife"
-  | "cooking"
-  | "reading"
-  | "music"
-  | "travel"
-  | "football"
-  | "motorcycles"
-  | "art"
-  | "surfing";
+export type { InterestId };
 
 export type InterestChip = {
   id: InterestId;
@@ -65,6 +49,14 @@ export const INTEREST_CHIPS: InterestChip[] = [
   { id: "motorcycles", label: "Motorcycles", emoji: "🏍️", activity: "bike maintenance", vibe: { urban: 0.6, outdoorsy: 0.4 } },
   { id: "art", label: "Art & museums", emoji: "🖼️", activity: "sketching", vibe: { urban: 1 } },
   { id: "surfing", label: "Surf & swim", emoji: "🏄", activity: "surfing", vibe: { outdoorsy: 1 } },
+  // The affluent half of the list. The buyer for a $59 pack does these things,
+  // and until now could not say so.
+  { id: "golf", label: "Golf", emoji: "⛳", activity: "golf", vibe: { outdoorsy: 0.7, urban: 0.3 } },
+  { id: "tennis", label: "Tennis & padel", emoji: "🎾", activity: "tennis", vibe: { outdoorsy: 0.5, urban: 0.5 } },
+  { id: "sailing", label: "Sailing", emoji: "⛵", activity: "sailing", vibe: { outdoorsy: 1 } },
+  { id: "skiing", label: "Skiing", emoji: "🎿", activity: "skiing", vibe: { outdoorsy: 1 } },
+  { id: "dining", label: "Good food & wine", emoji: "🍷", activity: "wine tasting", vibe: { urban: 1 } },
+  { id: "boxing", label: "Boxing", emoji: "🥊", activity: "boxing", vibe: { urban: 0.7, homebody: 0.3 } },
 ];
 
 /**
