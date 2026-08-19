@@ -1,0 +1,40 @@
+name: Check dating library
+
+# The prompt library's invariants are otherwise only enforced by
+# assertLibraryComplete() inside createDatingShootOrder — that is, at checkout,
+# after a customer's credits have been spent. This moves that failure to CI.
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "lib/dating/**"
+      - "scripts/check-dating-library.ts"
+      - ".github/workflows/check-dating-library.yml"
+  pull_request:
+    paths:
+      - "lib/dating/**"
+      - "scripts/check-dating-library.ts"
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Guard, compile and plan deliveries
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install --no-audit
+
+      - name: Check dating library
+        run: npm run check:dating
