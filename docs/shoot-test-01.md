@@ -332,3 +332,74 @@ out.
 Seeds are still worth sending — a fixed seed per photo makes a retry reproduce
 the identical image, which the pipeline wants for idempotency. That is a
 determinism feature, not a consistency one.
+
+---
+
+# ANCHOR TEST — result
+
+Run by hand in the fal dashboard: generate C1, then pass **C1's output** as an
+extra reference alongside the selfies for the other frames. Roughly seven
+generations across several seed conditions.
+
+## What held every single time
+
+| carried by the anchor | before anchoring |
+|---|---|
+| window position (frame-left) | drifted between frames, and between his left and right |
+| counter, cabinets, room geometry | a different kitchen in every frame |
+| the white oxford and its rolled sleeves | shoot B produced three different jackets |
+| light direction and quality | appeared to come from several directions at once |
+
+**Background drift, wardrobe drift and light drift were three separate problems
+with three separate rules. They are one mechanism, and the anchor fixes all
+three.** This is the finding that unblocks building.
+
+## What did not hold
+
+A follower whose pose resembled the anchor's was occasionally rendered as the
+anchor with a small edit — in one case literally C1 with a coffee cup added,
+identical head angle, shoulder line and hand position. That is what an *edit*
+model does when the instruction is close to the image it is already holding.
+
+## The seed hypothesis was wrong
+
+The copy first appeared on a run with a fixed seed, so the fixed seed was the
+obvious suspect. Three follow-up runs disproved it:
+
+| run | seed | copied? |
+|---|---|---|
+| 1 | none | no |
+| 2 | different seed | no |
+| 3 | **the original seed, same anchor, same prompt** | **no** |
+
+Run 3 reproduced the original conditions exactly and produced a different result.
+So the copy was a sampling outcome, not a consequence of the seed — and, more
+usefully, **Seedream is not reproducible in edit mode even with a fixed seed.**
+
+That removes the other reason to send one. Seeds were also going to be used for
+retry idempotency; they cannot deliver it. Drop them.
+
+## What that means for how quality is reached
+
+If identical inputs give different outputs, no prompt can be made reliable, and
+"write prompts good enough that every frame lands" is not a strategy. Quality has
+to come from **generating more than is delivered and redrawing what fails**.
+
+The failures found so far are mechanically detectable:
+
+| failure | detection |
+|---|---|
+| follower copies the anchor | perceptual hash between frames of one shoot — cheap, no model call |
+| identity drift | face-embedding distance to the reference selfies |
+| wardrobe changed mid-shoot | largely solved by anchoring |
+
+The regeneration machinery already exists; today it is user-triggered, and it
+would run automatically before delivery. The target is not 12/15 out of the
+prompts — it is 12/15 out of a *filtered* set, which is a far easier bar and the
+one every generative product actually clears.
+
+## Watermark: still unsolved
+
+One batch came back clean and the next carried `SHOT ON REDMI` again, so
+reproduction of the reference watermark is stochastic like everything else. It
+still has to be handled at upload.
