@@ -59,7 +59,7 @@ const STYLES: readonly StylePref[] = ["casual", "sharp", "street"];
 const VARIANTS: readonly DatingPromptVariant[] = ["a", "b", "c"];
 
 /** FNV-1a. Same construction the prompt library uses for variant selection. */
-function stableHash(value: string): number {
+export function stableHash(value: string): number {
   let hash = 0x811c9dc5;
   for (let index = 0; index < value.length; index += 1) {
     hash ^= value.charCodeAt(index);

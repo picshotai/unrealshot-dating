@@ -34,25 +34,37 @@ export type InterestChip = {
   emoji: string;
   /** Where this interest tends to put a person. Need not sum to 1. */
   vibe: Partial<Record<Vibe, number>>;
+  /**
+   * The activity as the prompt says it, which is not the chip label.
+   *
+   * All 30 hobby templates frame it as an ongoing pursuit — "a run of {{hobby}}",
+   * "a session of {{hobby}}", "the middle of {{hobby}}", "he sets up for
+   * {{hobby}}", "whatever {{hobby}} has him working at". That grammar takes an
+   * uncountable activity noun and nothing else: the chip label gave "the next
+   * part of coffee", an article gives "a session of a hike", and a preposition
+   * gives "low in working on the bike". The model renders broken English badly,
+   * so every value here is a bare gerund that survives all 30 frames.
+   */
+  activity: string;
 };
 
 export const INTEREST_CHIPS: InterestChip[] = [
-  { id: "gym", label: "Gym", emoji: "🏋️", vibe: { urban: 0.7, homebody: 0.3 } },
-  { id: "running", label: "Running", emoji: "🏃", vibe: { outdoorsy: 0.6, urban: 0.4 } },
-  { id: "hiking", label: "Hiking", emoji: "🥾", vibe: { outdoorsy: 1 } },
-  { id: "climbing", label: "Climbing", emoji: "🧗", vibe: { outdoorsy: 1 } },
-  { id: "cycling", label: "Cycling", emoji: "🚴", vibe: { outdoorsy: 0.6, urban: 0.4 } },
-  { id: "dogs", label: "Dogs", emoji: "🐕", vibe: { outdoorsy: 0.5, homebody: 0.5 } },
-  { id: "coffee", label: "Coffee", emoji: "☕", vibe: { urban: 0.7, homebody: 0.3 } },
-  { id: "nightlife", label: "Going out", emoji: "🍸", vibe: { urban: 1 } },
-  { id: "cooking", label: "Cooking", emoji: "🍳", vibe: { homebody: 1 } },
-  { id: "reading", label: "Reading", emoji: "📚", vibe: { homebody: 0.8, urban: 0.2 } },
-  { id: "music", label: "Music", emoji: "🎸", vibe: { homebody: 0.5, urban: 0.5 } },
-  { id: "travel", label: "Travel", emoji: "✈️", vibe: { outdoorsy: 0.5, urban: 0.5 } },
-  { id: "football", label: "Football", emoji: "⚽", vibe: { outdoorsy: 0.8, urban: 0.2 } },
-  { id: "motorcycles", label: "Motorcycles", emoji: "🏍️", vibe: { urban: 0.6, outdoorsy: 0.4 } },
-  { id: "art", label: "Art & museums", emoji: "🖼️", vibe: { urban: 1 } },
-  { id: "surfing", label: "Surf & swim", emoji: "🏄", vibe: { outdoorsy: 1 } },
+  { id: "gym", label: "Gym", emoji: "🏋️", activity: "training", vibe: { urban: 0.7, homebody: 0.3 } },
+  { id: "running", label: "Running", emoji: "🏃", activity: "running", vibe: { outdoorsy: 0.6, urban: 0.4 } },
+  { id: "hiking", label: "Hiking", emoji: "🥾", activity: "hiking", vibe: { outdoorsy: 1 } },
+  { id: "climbing", label: "Climbing", emoji: "🧗", activity: "climbing", vibe: { outdoorsy: 1 } },
+  { id: "cycling", label: "Cycling", emoji: "🚴", activity: "cycling", vibe: { outdoorsy: 0.6, urban: 0.4 } },
+  { id: "dogs", label: "Dogs", emoji: "🐕", activity: "dog walking", vibe: { outdoorsy: 0.5, homebody: 0.5 } },
+  { id: "coffee", label: "Coffee", emoji: "☕", activity: "coffee brewing", vibe: { urban: 0.7, homebody: 0.3 } },
+  { id: "nightlife", label: "Going out", emoji: "🍸", activity: "cocktail making", vibe: { urban: 1 } },
+  { id: "cooking", label: "Cooking", emoji: "🍳", activity: "cooking", vibe: { homebody: 1 } },
+  { id: "reading", label: "Reading", emoji: "📚", activity: "reading", vibe: { homebody: 0.8, urban: 0.2 } },
+  { id: "music", label: "Music", emoji: "🎸", activity: "guitar practice", vibe: { homebody: 0.5, urban: 0.5 } },
+  { id: "travel", label: "Travel", emoji: "✈️", activity: "packing", vibe: { outdoorsy: 0.5, urban: 0.5 } },
+  { id: "football", label: "Football", emoji: "⚽", activity: "football training", vibe: { outdoorsy: 0.8, urban: 0.2 } },
+  { id: "motorcycles", label: "Motorcycles", emoji: "🏍️", activity: "bike maintenance", vibe: { urban: 0.6, outdoorsy: 0.4 } },
+  { id: "art", label: "Art & museums", emoji: "🖼️", activity: "sketching", vibe: { urban: 1 } },
+  { id: "surfing", label: "Surf & swim", emoji: "🏄", activity: "surfing", vibe: { outdoorsy: 1 } },
 ];
 
 /**
@@ -180,8 +192,8 @@ export function resolveHobbies(
     .filter(Boolean);
 
   const fromChips = interests
-    .map((id) => CHIP_BY_ID.get(id)?.label.toLowerCase())
-    .filter((label): label is string => Boolean(label));
+    .map((id) => CHIP_BY_ID.get(id)?.activity)
+    .filter((activity): activity is string => Boolean(activity));
 
   // Typed answers lead, chips fill in behind them, duplicates collapse.
   return [...new Set([...typed, ...fromChips])];

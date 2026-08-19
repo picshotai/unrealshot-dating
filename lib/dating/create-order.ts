@@ -202,7 +202,11 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
       const filled = compileDatingPrompt(prompt, {
         vibe: entry.vibe,
         style: entry.style,
-        hobby,
+        // The per-photo interest that planDelivery dealt to this slot, not the
+        // joined list. Passing the joined string made all ten hobby photos read
+        // "gym, coffee, travel" and left MAX_PHOTOS_PER_HOBBY with nothing to
+        // cap — a man who tapped four things got one repeated activity.
+        hobby: entry.hobby ?? null,
       });
       const index = slotToIndex(entry.slot);
 

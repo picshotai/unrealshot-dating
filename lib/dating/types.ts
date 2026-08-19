@@ -58,6 +58,17 @@ export const SHOOT_CREDIT_COST = Number(
 export const CUSTOM_CREDITS_DEFAULT = 30;
 
 /**
+ * Real photos per bucket in sample mode — 4 × 5 buckets = 20 per run.
+ *
+ * One per bucket was too few to judge anything: wardrobe range and scene
+ * variety are properties of the spread, not of five images. Override with
+ * DATING_SAMPLE_PER_BUCKET when a cheaper or wider run is wanted.
+ */
+export const SAMPLE_PHOTOS_PER_BUCKET = Number(
+  process.env.DATING_SAMPLE_PER_BUCKET ?? 4
+);
+
+/**
  * How many shoots the balance can pay for.
  *
  * Credits are an implementation detail of the wallet. A buyer thinks in packs

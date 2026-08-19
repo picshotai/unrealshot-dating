@@ -19,9 +19,11 @@ import { sendDatingShootReadyNotification } from "@/lib/dating/notifications";
 import {
   DATING_BUCKETS,
   MIN_COMPLETE_THRESHOLD,
+  SAMPLE_PHOTOS_PER_BUCKET,
   SLOTS_PER_BUCKET,
   type DatingBucket,
 } from "@/lib/dating/types";
+import { stableHash } from "@/lib/dating/select-delivery";
 
 function configureFal() {
   const key = process.env.FAL_KEY;
@@ -429,20 +431,34 @@ export const datingPhotoshootOrchestrator = task({
       }
     }
 
-    // Sample mode renders one real photo per bucket. It used to be "slot 1",
-    // which broke silently once a delivery drew 20 of 26 slots and slot 1 might
-    // not be among them — a sample run could produce no real photos at all.
-    // The orchestrator can see the whole order, so it picks the first row of
-    // each bucket that this delivery actually contains.
+    // Sample mode renders a handful of real photos per bucket so the library can
+    // be judged without paying for 100 GPU runs.
+    //
+    // It used to take the lowest slot in each bucket. Because a delivery is
+    // deterministic per order, the lowest selected slot is almost always 1 or 2,
+    // so every sample run rendered the same corner of the library — and every
+    // quality judgement made from it was really a judgement of five prompts.
+    // Sampling now walks the whole bucket, seeded by batchId so a given order
+    // still samples reproducibly across retries.
     const orchestratorTestMode = getDatingTestMode();
     const realIds = new Set<string>();
     if (orchestratorTestMode === "sample") {
       for (const bucket of DATING_BUCKETS) {
-        const first = incomplete
+        const rows = incomplete
           .filter((row) => row.bucket === bucket)
-          .sort((a, b) => a.slot - b.slot)[0];
-        if (first) realIds.add(String(first.id));
+          .sort(
+            (a, b) =>
+              (stableHash(`${batchId}:sample:${bucket}:${a.slot}`) % 100000) -
+              (stableHash(`${batchId}:sample:${bucket}:${b.slot}`) % 100000)
+          );
+        for (const row of rows.slice(0, SAMPLE_PHOTOS_PER_BUCKET)) {
+          realIds.add(String(row.id));
+        }
       }
+      logger.info("Sample mode", {
+        realPhotos: realIds.size,
+        perBucket: SAMPLE_PHOTOS_PER_BUCKET,
+      });
     }
 
     // Build child payloads — only incomplete

@@ -16,16 +16,16 @@ export function getDatingTestMode(): DatingTestMode {
 }
 
 /**
- * Determines whether a specific slot (1..20) should use mock generation
- * based on the active test mode.
+ * Whether a slot (1..SLOTS_PER_BUCKET) should be mocked under the active mode.
+ *
+ * Sample mode is decided by the orchestrator, not here: it can see which slots
+ * the delivery actually drew and picks a seeded spread across each bucket. This
+ * fallback only applies to a child dispatched without that decision, and it
+ * keeps GPU spend at zero rather than guessing which slot deserves a real run.
  */
-export function shouldUseMockForSlot(testMode: DatingTestMode, slot: number): boolean {
+export function shouldUseMockForSlot(testMode: DatingTestMode, _slot: number): boolean {
   if (testMode === "mock") return true;
-  if (testMode === "sample") {
-    // In sample mode, only slot 1 (first photo of each bucket) is generated with real Fal AI.
-    // Slots 2..20 use mock images to keep the UI complete without burning GPU cost.
-    return slot !== 1;
-  }
+  if (testMode === "sample") return true;
   return false;
 }
 
