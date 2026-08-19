@@ -130,7 +130,7 @@ export default function DodoCheckoutButton({
           Processing...
         </>
       ) : (
-        children || `Buy ${credits} Credits for $${amount}`
+        children || `Get your pack — $${amount}`
       )}
     </Button>
   );

@@ -51,6 +51,13 @@ export type GenerateSingleImagePayload = {
   /** Authored output size. Omitted on legacy rows; resolved from the prompt. */
   imageWidth?: number | null;
   imageHeight?: number | null;
+  /**
+   * Makes the R2 object path unique for this run. The key is otherwise derived
+   * from (bucket, index), so a regenerated photo overwrote the original object
+   * and every cache in front of it kept serving the old image. Omitted for the
+   * initial delivery, where a stable path is what makes retries idempotent.
+   */
+  variantKey?: string;
 };
 
 export type GenerateSingleImageResult = {
@@ -120,7 +127,13 @@ export const generateSingleDatingImage = task({
       .eq("deterministic_id", deterministicId)
       .maybeSingle();
 
+    // A regeneration carries a variantKey and is always paid for, so it must
+    // reach the GPU even if the row still looks finished — otherwise a failed
+    // row reset upstream turns into "you paid and got the same photo".
+    const isRegeneration = Boolean(payload.variantKey);
+
     if (
+      !isRegeneration &&
       existing &&
       (existing.status === "completed" || existing.status === "pending_verification") &&
       existing.image_url
@@ -243,8 +256,12 @@ export const generateSingleDatingImage = task({
       }
 
       const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
-      // Deterministic R2 key so retries overwrite the same object path
-      const key = `dating/${userId}/${batchId}/${bucket}_${index}.png`;
+      // Deterministic R2 key so retries overwrite the same object path. A
+      // regeneration passes variantKey to break that determinism on purpose —
+      // without it the new photo lands on the old path and the CDN keeps
+      // serving the image the user just paid to replace.
+      const variantSuffix = payload.variantKey ? `_${payload.variantKey}` : "";
+      const key = `dating/${userId}/${batchId}/${bucket}_${index}${variantSuffix}.png`;
       await putR2Object(key, imageBuffer, "image/png");
 
       const r2BaseUrl = process.env.R2_PUBLIC_URL || "";

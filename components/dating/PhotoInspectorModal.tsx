@@ -17,12 +17,18 @@ import {
   type LineupRole,
 } from '@/lib/dating/lineup';
 import type { DatingBucket } from '@/lib/dating/types';
+import {
+  ImageGeneration,
+  type ImageGenerationStatus,
+} from '@/components/dating/ImageGeneration';
 
 export interface PhotoItem {
   id: string;
   slot: number;
   bucket: DatingBucket;
-  imageUrl: string;
+  /** Null while the photo is queued, generating or being reshot. */
+  imageUrl: string | null;
+  status?: ImageGenerationStatus;
   imageWidth?: number | null;
   imageHeight?: number | null;
   role?: LineupRole;
@@ -100,7 +106,14 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
   const roleHint = LINEUP_HINTS[role] || 'High-converting dating profile photo.';
   const colorClass = ROLE_COLORS[role] || 'bg-zinc-800 text-zinc-300 border-zinc-700';
 
-  const isMock = photo.imageUrl.startsWith('data:image/svg+xml');
+  const imageUrl = photo.imageUrl;
+  const isMock = Boolean(imageUrl?.startsWith('data:image/svg+xml'));
+  const generationStatus = photo.status ?? (imageUrl ? 'complete' : 'generating');
+  const isReady = generationStatus === 'complete' && Boolean(imageUrl);
+  const aspectRatio =
+    photo.imageWidth && photo.imageHeight
+      ? `${photo.imageWidth} / ${photo.imageHeight}`
+      : '3 / 4';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-6 bg-black/95 backdrop-blur-sm animate-in fade-in duration-200">
@@ -138,11 +151,35 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
 
           {/* Image Container - Using flex instead of hardcoded aspect ratio for max responsiveness */}
           <div className="relative w-full h-full max-h-[85vh] flex items-center justify-center">
-            <img
-              src={photo.imageUrl}
-              alt={`${roleLabel} - Photo #${photo.slot}`}
-              className="w-full h-full object-contain select-none max-w-full max-h-full"
-            />
+            {isReady ? (
+              <img
+                src={imageUrl ?? undefined}
+                alt={`${roleLabel} - Photo #${photo.slot}`}
+                className="w-full h-full object-contain select-none max-w-full max-h-full"
+              />
+            ) : (
+              // The reshoot takes ~30-60s. This is the one place worth the full
+              // dither field: a single instance, and the user is watching it.
+              // Deliberately no `prompt` — that text is the product.
+              <div className="w-full max-w-md">
+                <ImageGeneration
+                  status={generationStatus}
+                  aspectRatio={aspectRatio}
+                  size="fluid"
+                  resolution={
+                    photo.imageWidth && photo.imageHeight
+                      ? `${photo.imageWidth} × ${photo.imageHeight}`
+                      : undefined
+                  }
+                  statusText={
+                    generationStatus === 'error'
+                      ? 'Reshoot failed'
+                      : 'Shooting a new frame'
+                  }
+                  onRetry={() => void onRegenerate(photo.id)}
+                />
+              </div>
+            )}
           </div>
 
           {/* Navigation: Next Button */}
@@ -195,16 +232,18 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
 
           {/* Action Bar */}
           <div className="space-y-2.5 pt-6 mt-auto">
-            {/* Download Button */}
+            {/* Download Button — nothing to download until the frame lands */}
             <a
-              href={photo.imageUrl}
+              href={imageUrl ?? undefined}
               download={`dating-photo-${role}-${photo.slot}.${isMock ? 'svg' : 'png'}`}
               target="_blank"
               rel="noreferrer"
-              className="w-full block"
+              className={`w-full block ${isReady ? '' : 'pointer-events-none opacity-40'}`}
+              aria-disabled={!isReady}
             >
               <Button
                 variant="default"
+                disabled={!isReady}
                 className="w-full bg-white text-black hover:bg-zinc-200 font-medium h-12 text-sm flex items-center justify-center gap-2 rounded-lg transition-all"
               >
                 <Download className="w-4 h-4" strokeWidth={1.5} />
@@ -227,18 +266,18 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
               ) : (
                 <>
                   <RefreshCw className="w-4 h-4" strokeWidth={1.5} />
-                  Regenerate Look
+                  Reshoot This Photo
                   <span className="text-zinc-600 font-normal ml-1">
-                    (1 credit)
+                    (1 reshoot)
                   </span>
                 </>
               )}
             </Button>
 
-            {/* Credit Info */}
+            {/* Reshoots remaining on this order */}
             <div className="text-center mt-2">
               <span className="text-[10px] font-mono text-zinc-600">
-                {customCreditsRemaining} custom credits remaining
+                {customCreditsRemaining} reshoots left
               </span>
             </div>
           </div>

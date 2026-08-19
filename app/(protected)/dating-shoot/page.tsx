@@ -23,14 +23,20 @@ export default async function DatingShootPage({
   const params = await searchParams;
 
   // Fetch all trained models for this user
-  const { data: models } = await supabase
+  const { data: models, error: modelsError } = await supabase
     .from("models")
     .select("id, name, status, samples(uri)")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
-  // Gate /dating-shoot: If the user has no trained models, redirect to onboarding /model creation
-  if (!models || models.length === 0) {
+  // Backstop only — proxy.ts is what normally keeps model-less users out.
+  //
+  // A failed query is NOT evidence that the user has no models. Treating the two
+  // the same is what used to strand people with a trained model in onboarding,
+  // so an error is logged and the page renders rather than redirecting.
+  if (modelsError) {
+    console.error("dating-shoot: models lookup failed:", modelsError.message);
+  } else if (!models || models.length === 0) {
     redirect("/models/create");
   }
 

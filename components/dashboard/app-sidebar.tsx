@@ -34,7 +34,7 @@ import {
 import { useCreditManager } from "@/lib/credit-manager"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { createClient } from "@/utils/supabase/client"
+import { packsFromCredits } from "@/lib/dating/types"
 
 const navSecondary = [
   {
@@ -52,7 +52,7 @@ function CreditsCard({ userId }: { userId?: string }) {
     return (
       <Card className="mb-4 py-2">
         <CardContent className="p-3">
-          <div className="text-sm font-medium mb-1">Plan Usage</div>
+          <div className="text-sm font-medium mb-1">Your shoots</div>
           <div className="text-xs text-muted-foreground mb-3 justify-between">Loading...</div>
           <div className="w-full h-8 bg-muted rounded animate-pulse" />
         </CardContent>
@@ -60,16 +60,18 @@ function CreditsCard({ userId }: { userId?: string }) {
     )
   }
 
+  const packs = packsFromCredits(balance)
+
   return (
     <Card className="py-2">
       <CardContent className="gap-1 flex flex-col px-3">
-        <div className="text-sm font-medium mb-1">Plan Usage</div>
+        <div className="text-sm font-medium mb-1">Your shoots</div>
         <div className="text-xs text-muted-foreground mb-3 flex justify-between">
-          <span className="flex items-center gap-2"><Coins className="h-3 w-3" />Credits</span> <span className="text-amber-600"> {balance.toLocaleString()}</span>
+          <span className="flex items-center gap-2"><Coins className="h-3 w-3" />Packs</span> <span className="text-amber-600"> {packs}</span>
         </div>
         <Button size="sm" className="w-full bg-white text-black hover:bg-zinc-200 transition-all active:scale-[0.98] border-0" asChild>
           <Link href="/buy-credits" prefetch={false}>
-            <Sparkles className="h-3 w-3" /> Get Credits
+            <Sparkles className="h-3 w-3" /> {packs > 0 ? "Get another pack" : "Get your pack"}
           </Link>
         </Button>
       </CardContent>
@@ -94,31 +96,10 @@ export function AppSidebar({
     avatar: "/placeholder-user.jpg",
   }
 
-  const supabaseRef = React.useRef(createClient())
-  const [hasTrainedModel, setHasTrainedModel] = React.useState(false)
-
-  React.useEffect(() => {
-    let active = true
-      ; (async () => {
-        try {
-          // User ID is already passed from server, no need to call getUser()
-          if (!userData.id) {
-            if (active) setHasTrainedModel(false)
-            return
-          }
-          const { data } = await supabaseRef.current
-            .from("models")
-            .select("id")
-            .eq("user_id", userData.id)
-            .eq("status", "finished")
-            .limit(1)
-          if (active) setHasTrainedModel(!!data && data.length > 0)
-        } catch (e) {
-          if (active) setHasTrainedModel(false)
-        }
-      })()
-    return () => { active = false }
-  }, [userData.id]) // Removed supabase from deps
+  // A `hasTrainedModel` query used to run here on every protected page render.
+  // Nothing read the result, and it filtered on status 'finished' — a value this
+  // codebase never writes — so it was always false anyway. Model gating now
+  // happens at the edge in proxy.ts.
 
   const navItems = React.useMemo(() => [
     {

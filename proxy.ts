@@ -1,5 +1,35 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import {
+  readStage,
+  setStage,
+  REQUIRED_SAMPLES,
+  type OnboardingStage,
+} from '@/lib/auth/stage'
+
+/** Signed-in users have no business here; they belong in the studio or onboarding. */
+const ENTRY_ROUTES = ['/login', '/dashboard']
+
+/** Requires a usable model. */
+const STUDIO_ROUTES = ['/dating-shoot', '/gallery']
+
+/** Requires a session, whatever stage the user is at. */
+const PROTECTED_ROUTES = [
+  '/dashboard',
+  '/account',
+  '/settings',
+  '/models',
+  '/buy-credits',
+  '/dating-shoot',
+  '/gallery',
+]
+
+const ONBOARDING_ROUTE = '/models/create'
+const STUDIO_ROUTE = '/dating-shoot'
+
+function matches(pathname: string, routes: string[]) {
+  return routes.some((route) => pathname === route || pathname.startsWith(`${route}/`))
+}
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({
@@ -54,6 +84,20 @@ export async function proxy(request: NextRequest) {
     }
   )
 
+  /**
+   * Supabase may rotate the auth token while handling this request, writing the
+   * new cookies onto `response`. Returning a bare NextResponse.redirect() would
+   * discard them and silently drop the refreshed session, so every redirect is
+   * built through here.
+   */
+  const redirectTo = (pathname: string) => {
+    const target = NextResponse.redirect(new URL(pathname, request.url))
+    for (const cookie of response.cookies.getAll()) {
+      target.cookies.set(cookie)
+    }
+    return target
+  }
+
   // Check if the user is authenticated
   let user = null
   try {
@@ -64,20 +108,78 @@ export async function proxy(request: NextRequest) {
     // Treat as unauthenticated on error to prevent crashing
   }
 
-  // Protected routes - these require authentication
-  const protectedRoutes = ['/dashboard', '/account', '/settings', '/models', 'buy-credits']
-  const isProtectedRoute = protectedRoutes.some(route =>
-    request.nextUrl.pathname.startsWith(route)
-  )
+  const { pathname } = request.nextUrl
 
-  // If accessing protected routes and not authenticated, redirect to login
-  if (isProtectedRoute && !user) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  // Route handlers authenticate themselves and answer with JSON. Redirecting one
+  // would hand a fetch() an HTML login page instead of the 401 it expects. They
+  // still pass through above so a rotated session cookie is written back.
+  if (pathname.startsWith('/api')) {
+    return response
   }
 
-  // If authenticated and trying to access login, redirect to dashboard
-  if (request.nextUrl.pathname === '/login' && user) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+  if (!user) {
+    if (matches(pathname, PROTECTED_ROUTES) || pathname === ONBOARDING_ROUTE) {
+      return redirectTo('/login')
+    }
+    return response
+  }
+
+  // ── Signed in. Work out where they belong, cheaply. ──────────────────────
+  //
+  // The cookie answers this for free. Only when it is absent do we pay for a
+  // query — once per device — and then cache the answer.
+  let stage: OnboardingStage | null = readStage(request)
+  let resolvedThisRequest = false
+
+  if (stage === null) {
+    const { data: models, error } = await supabase
+      .from('models')
+      .select('id, samples(uri)')
+      .eq('user_id', user.id)
+      .eq('status', 'ready')
+
+    if (error) {
+      // A failed lookup is not evidence that the user is new. Sending them to
+      // onboarding on an error is exactly the bug this replaces: it strands a
+      // user who already has a model. Let the request through untouched and
+      // try again next time.
+      console.error('Proxy stage lookup failed:', error.message)
+      return response
+    }
+
+    const hasUsableModel = (models ?? []).some(
+      (model) => ((model as { samples?: unknown[] }).samples?.length ?? 0) >= REQUIRED_SAMPLES
+    )
+    stage = hasUsableModel ? 'ready' : 'new'
+    resolvedThisRequest = true
+    setStage(response, stage)
+  }
+
+  const send = (pathname: string) => {
+    const target = redirectTo(pathname)
+    if (resolvedThisRequest && stage) setStage(target, stage)
+    return target
+  }
+
+  if (stage === 'ready') {
+    // Entry points resolve straight to the studio, so a returning user lands
+    // there in one navigation.
+    //
+    // /models/create is deliberately NOT redirected. Two reasons: a user with a
+    // model may legitimately want to add another, and the studio page keeps its
+    // own backstop check — if that check ever disagrees with this cookie (models
+    // deleted in another tab, say) it sends the user here, and bouncing them
+    // back would be an infinite loop.
+    if (matches(pathname, ENTRY_ROUTES)) {
+      return send(STUDIO_ROUTE)
+    }
+    return response
+  }
+
+  // stage === 'new': the studio cannot work without a model, so never let the
+  // browser commit to it and bounce back.
+  if (matches(pathname, ENTRY_ROUTES) || matches(pathname, STUDIO_ROUTES)) {
+    return send(ONBOARDING_ROUTE)
   }
 
   return response
@@ -90,7 +192,9 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
+     *
+     * /api is still matched so session refresh reaches route handlers; the
+     * handler above returns early for it rather than ever redirecting.
      */
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],

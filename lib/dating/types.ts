@@ -57,6 +57,19 @@ export const SHOOT_CREDIT_COST = Number(
 /** Free regenerations included with a delivered shoot. */
 export const CUSTOM_CREDITS_DEFAULT = 30;
 
+/**
+ * How many shoots the balance can pay for.
+ *
+ * Credits are an implementation detail of the wallet. A buyer thinks in packs
+ * ("I bought one shoot"), and showing a raw figure invites the wrong question —
+ * a balance of 100 reads as either a lot or nothing depending on whether you
+ * happen to know the price. Every user-facing surface goes through this.
+ */
+export function packsFromCredits(balance: number): number {
+  if (!Number.isFinite(balance) || balance <= 0) return 0;
+  return Math.floor(balance / SHOOT_CREDIT_COST);
+}
+
 /** Statuses that mean a shoot is already running for this user. */
 export const ACTIVE_ORDER_STATUSES = ["queued", "developing"] as const;
 

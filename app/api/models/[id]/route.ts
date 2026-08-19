@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { deleteR2Objects } from "@/lib/r2";
+import { clearStage } from "@/lib/auth/stage";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -164,11 +165,18 @@ export async function DELETE(
             return NextResponse.json({ error: "Failed to delete model" }, { status: 500 });
         }
 
-        return NextResponse.json({
+        const response = NextResponse.json({
             success: true,
             message: `Model "${model.name}" deleted successfully`,
             deletedR2Objects: r2Keys.length,
         });
+
+        // Drop the cached routing hint — this user may no longer have a usable
+        // model, and the edge gate must re-resolve rather than keep sending them
+        // to a studio that cannot work.
+        clearStage(response);
+
+        return response;
     } catch (error) {
         console.error("Error deleting model:", error);
         return NextResponse.json(

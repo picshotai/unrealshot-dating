@@ -1,6 +1,7 @@
 import { getDodoPaymentsClient } from "@/lib/dodopayments";
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/utils/supabase/admin";
+import { SHOOT_CREDIT_COST } from "@/lib/dating/types";
 import { z } from "zod";
 
 const productCartItemSchema = z.object({
@@ -66,12 +67,15 @@ async function getPricingPlan(planId: string, supabase: any) {
     };
   }
 
-  // Fallback default for Complete Dating Shoot ($59)
+  // Fallback default for Complete Dating Shoot ($59).
+  // Credits must cover SHOOT_CREDIT_COST or the buyer cannot start the shoot
+  // they just paid for. The 30 free reshoots are granted separately on the
+  // order row and do not come out of this balance.
   return {
     id: planId || 'dating-pack-59',
     name: '100 Dating Photoshoot Pack',
     price: 59,
-    credits: 30,
+    credits: SHOOT_CREDIT_COST,
     productId: envProductId || 'p_dating_59',
     currency: 'USD'
   };

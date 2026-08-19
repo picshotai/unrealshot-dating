@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { putR2Object } from "@/lib/r2";
 import { apiRateLimit, checkRateLimit } from "@/utils/rate-limit";
+import { REQUIRED_SAMPLES, setStage } from "@/lib/auth/stage";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -108,19 +109,30 @@ export async function POST(
             .select("*", { count: "exact", head: true })
             .eq("modelId", parseInt(modelId));
 
-        // Update model status to 'ready' if we have at least 3 samples
-        if (count && count >= 3) {
+        // A model is only 'ready' once it has enough samples to actually shoot
+        // with. This threshold used to be 3 while createDatingShootOrder demanded
+        // 4, so a 3-sample user was routed into the studio and then refused.
+        const isReady = Boolean(count && count >= REQUIRED_SAMPLES);
+        if (isReady) {
             await supabase
                 .from("models")
                 .update({ status: "ready" })
                 .eq("id", modelId);
         }
 
-        return NextResponse.json({
+        const response = NextResponse.json({
             sample,
             key,
             uri,
         });
+
+        // The edge gate routes off this cookie. Update it the moment the model
+        // becomes usable so the next navigation already knows.
+        if (isReady) {
+            setStage(response, "ready");
+        }
+
+        return response;
     } catch (error) {
         console.error("R2 upload failed:", error);
         return NextResponse.json(

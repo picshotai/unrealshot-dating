@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { useCreditManager } from "@/lib/credit-manager"
+import { packsFromCredits } from "@/lib/dating/types"
 
 interface HeaderUserProps {
   user: {
@@ -38,13 +39,14 @@ interface HeaderUserProps {
 
 export function HeaderUser({ user, initialCreditBalance }: HeaderUserProps) {
   const { balance: creditBalance } = useCreditManager(user.id)
+  const packs = packsFromCredits(creditBalance)
   return (
     <div className="flex items-center gap-3">
-      {/* Credit Display */}
+      {/* Packs available. Deliberately not a credit figure — see packsFromCredits. */}
       <div className="flex items-center gap-1.5 px-2 py-1 bg-muted/50 rounded-md">
         <ImagePlayIcon className="h-4 w-4 text-amber-600" />
         <span className="text-sm font-medium text-foreground">
-          FILMS:{creditBalance.toLocaleString()}
+          {packs === 1 ? "1 Pack" : `${packs} Packs`}
         </span>
       </div>
 

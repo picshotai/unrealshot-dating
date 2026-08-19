@@ -29,6 +29,10 @@ import {
   type PhotoItem,
 } from '@/components/dating/PhotoInspectorModal';
 import { StudioIntakeView } from '@/components/dating/StudioIntakeView';
+import {
+  ImageGeneration,
+  type ImageGenerationStatus,
+} from '@/components/dating/ImageGeneration';
 
 type Model = {
   id: number;
@@ -63,7 +67,9 @@ type StatusResponse = {
       photos: {
         id: string;
         slot: number;
-        imageUrl: string;
+        /** Null until the photo finishes — in-flight rows still hold their place. */
+        imageUrl: string | null;
+        status: ImageGenerationStatus;
         imageWidth: number | null;
         imageHeight: number | null;
       }[];
@@ -113,8 +119,22 @@ export function DatingShootClient({
     try {
       const res = await fetch(`/api/dating-shoot/run-status?orderId=${orderId}`);
       if (!res.ok) return;
-      const data = await res.json();
+      const data = (await res.json()) as StatusResponse;
       setStatus(data);
+
+      // The reshoot is finished when the row says so, not when the POST
+      // returned. Release the spinner here so the tile animates from the
+      // dither field straight into the new photo.
+      setRegenLoadingId((current) => {
+        if (!current) return current;
+        const photo = Object.values(data.byBucket ?? {})
+          .flatMap((bucket) => bucket.photos)
+          .find((p) => p.id === current);
+        if (!photo) return current;
+        return photo.status === 'complete' || photo.status === 'error'
+          ? null
+          : current;
+      });
     } catch (e) {
       console.warn('Failed to poll status:', e);
     }
@@ -196,7 +216,12 @@ export function DatingShootClient({
     }
   };
 
-  // Regenerate Single Photo
+  // Reshoot a single photo.
+  //
+  // The POST only *queues* the work — the GPU run takes ~30-60s after it
+  // returns. This used to clear the spinner in a `finally`, so the UI declared
+  // itself done the instant the request came back and the user watched nothing
+  // happen. The loading state now ends when polling reports the row finished.
   const handleRegenerate = async (photoId: string) => {
     if (!activeOrderId) return;
     setRegenLoadingId(photoId);
@@ -211,7 +236,6 @@ export function DatingShootClient({
       setTimeout(() => fetchStatus(activeOrderId), 2500);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Regenerate failed');
-    } finally {
       setRegenLoadingId(null);
     }
   };
@@ -292,24 +316,29 @@ export function DatingShootClient({
         const folder = zip.folder(folderName);
 
         for (const [position, photo] of section.photos.entries()) {
+          // Photos still generating have no file yet. They stay in the grid so
+          // the user can watch them land, but there is nothing to zip.
+          const imageUrl = photo.imageUrl;
+          if (!imageUrl) continue;
+
           count++;
           setZipProgress(`Adding ${count} of ${totalToDownload} photos...`);
           const base = `${String(position + 1).padStart(2, '0')}`;
 
           try {
-            if (photo.imageUrl.startsWith('data:')) {
-              const isSvg = photo.imageUrl.includes('svg');
+            if (imageUrl.startsWith('data:')) {
+              const isSvg = imageUrl.includes('svg');
               if (isSvg) {
                 const svgText = decodeURIComponent(
-                  photo.imageUrl.split(',')[1] || ''
+                  imageUrl.split(',')[1] || ''
                 );
                 folder?.file(`${base}.svg`, svgText);
               } else {
-                const base64Data = photo.imageUrl.split(',')[1];
+                const base64Data = imageUrl.split(',')[1];
                 folder?.file(`${base}.png`, base64Data, { base64: true });
               }
             } else {
-              const res = await fetch(photo.imageUrl);
+              const res = await fetch(imageUrl);
               if (res.ok) {
                 const blob = await res.blob();
                 folder?.file(`${base}.png`, blob);
@@ -422,8 +451,43 @@ export function DatingShootClient({
 
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
                     {section.photos.map((p) => {
-                      const isMock = p.imageUrl.startsWith('data:image/svg+xml');
+                      const imageUrl = p.imageUrl;
+                      const isMock = Boolean(
+                        imageUrl?.startsWith('data:image/svg+xml')
+                      );
                       const isThisRegenerating = regenLoadingId === p.id;
+
+                      // Nothing to show yet. The tile holds its place either way
+                      // — a photo that vanished mid-reshoot and came back was the
+                      // most confusing thing in the old grid.
+                      //
+                      // Only the tile being reshot gets the dither field: it runs
+                      // a requestAnimationFrame canvas per instance, and during
+                      // first delivery all 100 tiles are pending at once.
+                      if (!imageUrl || p.status !== 'complete') {
+                        return (
+                          <div
+                            key={p.id}
+                            className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800/80"
+                          >
+                            {isThisRegenerating ? (
+                              <ImageGeneration
+                                status={p.status ?? 'generating'}
+                                aspectRatio="4 / 5"
+                                size="fluid"
+                                resolution={undefined}
+                                showStatus={false}
+                                interactive={false}
+                              />
+                            ) : (
+                              <div className="w-full h-full animate-pulse bg-zinc-800/60" />
+                            )}
+                            <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono px-2 py-0.5 rounded z-10">
+                              #{p.slot}
+                            </div>
+                          </div>
+                        );
+                      }
 
                       return (
                         <div
@@ -433,7 +497,7 @@ export function DatingShootClient({
                         >
                           {/* Photo Display */}
                           <img
-                            src={p.imageUrl}
+                            src={imageUrl}
                             alt={`${section.label} #${p.slot}`}
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                             loading="lazy"
@@ -464,7 +528,7 @@ export function DatingShootClient({
 
                               <div className="flex gap-1.5">
                                 <a
-                                  href={p.imageUrl}
+                                  href={imageUrl}
                                   download={`dating-photo-${section.role}-${p.slot}.${isMock ? 'svg' : 'png'}`}
                                   target="_blank"
                                   rel="noreferrer"
@@ -498,8 +562,36 @@ export function DatingShootClient({
             /* Single Role Filtered View */
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4 pt-4">
               {displayedPhotos.map((p) => {
-                const isMock = p.imageUrl.startsWith('data:image/svg+xml');
+                const imageUrl = p.imageUrl;
+                const isMock = Boolean(
+                  imageUrl?.startsWith('data:image/svg+xml')
+                );
                 const isThisRegenerating = regenLoadingId === p.id;
+
+                if (!imageUrl || p.status !== 'complete') {
+                  return (
+                    <div
+                      key={p.id}
+                      className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800/80"
+                    >
+                      {isThisRegenerating ? (
+                        <ImageGeneration
+                          status={p.status ?? 'generating'}
+                          aspectRatio="4 / 5"
+                          size="fluid"
+                          resolution={undefined}
+                          showStatus={false}
+                          interactive={false}
+                        />
+                      ) : (
+                        <div className="w-full h-full animate-pulse bg-zinc-800/60" />
+                      )}
+                      <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono px-2 py-0.5 rounded z-10">
+                        #{p.slot}
+                      </div>
+                    </div>
+                  );
+                }
 
                 return (
                   <div
@@ -509,7 +601,7 @@ export function DatingShootClient({
                   >
                     {/* Photo Display */}
                     <img
-                      src={p.imageUrl}
+                      src={imageUrl}
                       alt={`${p.roleLabel} #${p.slot}`}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       loading="lazy"
@@ -540,7 +632,7 @@ export function DatingShootClient({
 
                         <div className="flex gap-1.5">
                           <a
-                            href={p.imageUrl}
+                            href={imageUrl}
                             download={`dating-photo-${p.role}-${p.slot}.${isMock ? 'svg' : 'png'}`}
                             target="_blank"
                             rel="noreferrer"
@@ -615,7 +707,7 @@ export function DatingShootClient({
                     </div>
                   </div>
                   <span className="text-[11px] font-mono text-zinc-500 bg-zinc-900 px-2 py-1 rounded">
-                    {o.custom_credits_remaining} cr
+                    {o.custom_credits_remaining} reshoots
                   </span>
                 </button>
               ))}

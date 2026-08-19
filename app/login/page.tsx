@@ -14,7 +14,7 @@ export default async function LoginPage() {
   } = await supabase.auth.getUser()
 
   if (user) {
-    return redirect('/dashboard')
+    return redirect('/dating-shoot')
   }
 
   return (

@@ -31,18 +31,33 @@ async function handlePaymentCompleted(payload: any, supabase: any) {
     throw new Error(`Payment record not found for payment_id: ${paymentId}`);
   }
 
-  // Update payment status to completed
-  const { error: updateError } = await supabase
+  // Claim the payment before granting anything.
+  //
+  // Dodo retries webhooks, and this handler adds credits. The status transition
+  // is the idempotency key: the update only matches while the row is still
+  // unpaid, so exactly one delivery can win and go on to credit the account. A
+  // retry — or a second delivery racing this one — matches zero rows and stops
+  // here instead of granting a second pack.
+  const { data: claimed, error: updateError } = await supabase
     .from('dodo_payments')
-    .update({ 
+    .update({
       status: 'completed',
       dodo_payment_id: paymentId // Ensure we have the payment ID
     })
-    .eq('id', paymentRecord.id);
+    .eq('id', paymentRecord.id)
+    .neq('status', 'completed')
+    .select('id');
 
   if (updateError) {
     console.error('Failed to update payment status:', updateError);
     throw new Error('Failed to update payment status');
+  }
+
+  if (!claimed || claimed.length === 0) {
+    console.log(
+      `Payment ${paymentRecord.id} was already completed — skipping credit grant`
+    );
+    return;
   }
 
   // Create subscription record

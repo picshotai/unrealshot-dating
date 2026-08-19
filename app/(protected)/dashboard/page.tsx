@@ -1,33 +1,22 @@
 import { Metadata } from 'next';
-import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import { commonPageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = commonPageMetadata.dashboard();
 
+/**
+ * Legacy entry point.
+ *
+ * This page used to query `models` and fan out to the studio or to onboarding,
+ * which cost an extra navigation on every login and — because a failed query is
+ * indistinguishable from an empty one — silently stranded users who already had
+ * a model in the onboarding flow.
+ *
+ * That decision now happens at the edge in `proxy.ts`, which rewrites
+ * `/dashboard` before this ever renders. The route is kept only for old links
+ * and bookmarks; reaching it at all means the proxy let it through, so send the
+ * user to the studio and let the gate sort it out.
+ */
 export default async function DashboardPage() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect('/login');
-  }
-
-  // Check if user has any trained models
-  const { data: models } = await supabase
-    .from('models')
-    .select('id')
-    .eq('user_id', user.id)
-    .limit(1);
-
-  // If user has a model, send them directly to the Dating Studio (/dating-shoot)
-  if (models && models.length > 0) {
-    redirect('/dating-shoot');
-  }
-
-  // Otherwise, send new users to the onboarding model creation flow
-  redirect('/models/create');
+  redirect('/dating-shoot');
 }

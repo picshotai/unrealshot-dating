@@ -126,8 +126,10 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
   // here on refunds.
   const spend = await spendShootCredits(userId, SHOOT_CREDIT_COST);
   if (!spend.ok) {
+    // Phrased in packs, not credits — the buyer never sees the wallet figure,
+    // so quoting it here would be the only place a raw number appears.
     throw new DatingOrderError(
-      `This shoot costs ${SHOOT_CREDIT_COST} credits and you have ${spend.balance}.`,
+      "You don't have a pack yet — grab one to start your shoot.",
       "insufficient_credits",
       { required: SHOOT_CREDIT_COST, balance: spend.balance }
     );

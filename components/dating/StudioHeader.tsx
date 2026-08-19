@@ -105,7 +105,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
                 <>
                   {status.completed} / {status.total} photos ·{' '}
                   <span className="text-accent">
-                    {status.customCreditsRemaining} custom credits
+                    {status.customCreditsRemaining} reshoots left
                   </span>
                 </>
               ) : (

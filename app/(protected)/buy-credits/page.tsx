@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Sparkles, Check, ShieldCheck, Zap } from 'lucide-react';
 import DodoCheckoutButton from '@/components/dodopayments/DodoCheckoutButton';
 import { commonPageMetadata } from '@/lib/seo';
+import { SHOOT_CREDIT_COST } from '@/lib/dating/types';
 import { ShineBorder } from "@/components/ui/shine-border";
 
 export const metadata: Metadata = commonPageMetadata.buyCredits();
@@ -29,18 +30,21 @@ export default async function BuyCreditsPage() {
     id: dbPlan?.id || 'dating-pack-59',
     name: dbPlan?.name || '100 Dating Photoshoot Pack',
     price: dbPlan ? parseFloat(dbPlan.price.toString()) : 59,
-    credits: dbPlan?.credits || 30,
+    // A pack must cover the cost of the shoot it promises.
+    credits: dbPlan?.credits || SHOOT_CREDIT_COST,
     currency: dbPlan?.currency || 'USD',
   };
 
+  // Never name the internal buckets here — one of them ("social") no longer
+  // ships, and per-bucket counts are not something delivery guarantees.
   const features = [
-    "100 Ultra-Realistic Dating Photos (20 per style)",
-    "5 Proven Archetypes: Anchor, Social, Travel, Active & Street",
-    "30 Custom Regeneration Credits Included",
-    "Fast ~90-Minute Delivery",
+    "100 Ultra-Realistic Dating Photos, no two alike",
+    "A different outfit, place and light in every shot",
+    "Sorted into the slots dating apps ask you to fill",
+    "30 Reshoots included — replace any photo you don't love",
     "No Awkward Gym Selfies or Stiff AI Mannequin Poses",
-    "Instant ZIP Download with Organized Style Folders",
-    "Full Commercial Rights & 100% Privacy Auto-Delete",
+    "Instant ZIP Download",
+    "Full Commercial Rights",
   ];
 
   return (

@@ -5,6 +5,26 @@ import { DATING_BUCKETS } from "@/lib/dating/types";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
+/**
+ * Maps a row's pipeline status onto the vocabulary the studio's loader speaks.
+ * `pending_verification` means the image exists but has not been accepted yet,
+ * which reads to a user as final polishing rather than a separate stage.
+ */
+function toGenerationStatus(status: string | null) {
+  switch (status) {
+    case "completed":
+      return "complete";
+    case "in_progress":
+      return "generating";
+    case "pending_verification":
+      return "refining";
+    case "failed":
+      return "error";
+    default:
+      return "queued";
+  }
+}
+
 export async function GET(request: NextRequest) {
   const supabase = await createClient();
   const {
@@ -58,17 +78,22 @@ export async function GET(request: NextRequest) {
         {
           completed: bucketPhotos.filter((p) => p.status === "completed").length,
           total: bucketPhotos.length,
-          photos: bucketPhotos
-            .filter((p) => p.status === "completed" && p.image_url)
-            .map((p) => ({
-              id: p.id,
-              slot: p.slot,
-              imageUrl: p.image_url,
-              // the client groups the delivery by lineup role, and a 9:16 frame
-              // is what identifies the full-length shots
-              imageWidth: p.image_width,
-              imageHeight: p.image_height,
-            })),
+          // Every photo is returned, not just finished ones.
+          //
+          // This used to filter to `completed && image_url`, which meant a photo
+          // being reshot disappeared from the grid and reappeared a minute later
+          // — indistinguishable from a photo that never existed. The client needs
+          // the in-flight rows to hold their place and show progress.
+          photos: bucketPhotos.map((p) => ({
+            id: p.id,
+            slot: p.slot,
+            imageUrl: p.status === "completed" ? p.image_url : null,
+            status: toGenerationStatus(p.status),
+            // the client groups the delivery by lineup role, and a 9:16 frame
+            // is what identifies the full-length shots
+            imageWidth: p.image_width,
+            imageHeight: p.image_height,
+          })),
         },
       ];
     })

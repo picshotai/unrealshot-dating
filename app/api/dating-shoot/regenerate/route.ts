@@ -169,8 +169,13 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Clear completed so child re-generates (upsert will overwrite)
-    await admin
+    // Clear completed so child re-generates (upsert will overwrite).
+    //
+    // This error used to be discarded. When the update failed the row kept its
+    // old status and image_url, the child then hit its "already completed" fast
+    // path and skipped the GPU entirely — so the user paid a reshoot and got the
+    // same photo back, silently. Refund and refuse instead.
+    const { error: resetErr } = await admin
       .from("order_photos")
       .update({
         status: "pending",
@@ -188,6 +193,22 @@ export async function POST(request: NextRequest) {
       })
       .eq("id", photoId);
 
+    if (resetErr) {
+      console.error("regenerate: failed to reset photo row:", resetErr.message);
+      await admin
+        .from("user_shoot_orders")
+        .update({
+          custom_credits_remaining: order.custom_credits_remaining,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", orderId);
+
+      return NextResponse.json(
+        { error: "Could not start the reshoot. Your reshoot was not used." },
+        { status: 500 }
+      );
+    }
+
     // Unique idempotency key per regen attempt
     const handle = await generateSingleDatingImage.trigger(
       {
@@ -200,6 +221,15 @@ export async function POST(request: NextRequest) {
         referenceImageUrls,
         imageWidth,
         imageHeight,
+        // A reshoot costs the user something, so it must never be served by the
+        // mock path. Under DATING_TEST_MODE=mock the placeholder is a pure
+        // function of (bucket, slot) and comes back byte-identical, which is
+        // exactly the "regenerate does nothing" the user reported.
+        useMock: false,
+        // Forces a fresh R2 object. The key is otherwise derived from
+        // (bucket, index) alone, so a regenerated photo overwrote the same path
+        // and the CDN kept serving the old image.
+        variantKey: `r${Date.now().toString(36)}`,
       },
       {
         idempotencyKey: `${deterministicId}_regen_${Date.now()}`,

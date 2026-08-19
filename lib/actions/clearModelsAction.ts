@@ -3,6 +3,7 @@
 
 import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { clearStageCookie } from '@/lib/auth/stage-server';
 
 export async function clearAllModels(_formData: FormData): Promise<void> {
   const supabase = await createClient();
@@ -38,6 +39,11 @@ export async function clearAllModels(_formData: FormData): Promise<void> {
   }
 
   const deletedCount = deletedRows?.length ?? 0;
+
+  // The edge gate caches where this user belongs. Their models just went away,
+  // so drop the hint rather than leave them routed into a studio they can no
+  // longer use — the next request re-resolves it from the database.
+  await clearStageCookie();
 
   // Graceful no-op when there are no models
   if (deletedCount === 0) {
