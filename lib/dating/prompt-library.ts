@@ -82,9 +82,9 @@ export const DATING_PROMPTS = [
       "homebody": "an open living room, a floor lamp and the soft edge of a bookshelf"
     },
     "outfits": {
-      "casual": "an oatmeal waffle henley with the sleeves pushed to mid-forearm and dark jeans, and worn brown leather boots",
-      "sharp": "a charcoal blazer over a white crew-neck tee with dark trousers, and polished dark brown derbies",
-      "street": "a washed-indigo denim jacket over a white tee, and chunky off-white sneakers"
+      "casual": "an oatmeal merino crew with dark indigo denim, a steel dive watch, and suede chukkas",
+      "sharp": "a charcoal fine-gauge merino knit with flannel trousers, a gold-cased watch, and polished derbies",
+      "street": "a black heavyweight knit with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -111,9 +111,9 @@ export const DATING_PROMPTS = [
       "homebody": "an open living room, a floor lamp and the soft edge of a bookshelf"
     },
     "outfits": {
-      "casual": "a rust corduroy overshirt open over a cream tee with dark denim, and clean off-white sneakers",
-      "sharp": "a camel overcoat over a black fine-knit, and black leather chelsea boots",
-      "street": "a black bomber over a heather-grey tee, and black canvas high-tops"
+      "casual": "a camel quilted gilet over a linen shirt with stone chinos, and brown leather boots",
+      "sharp": "a navy navy topcoat over a cashmere crew with tailored trousers, and black chelsea boots",
+      "street": "a bone bomber over a waffle long-sleeve with black denim, and suede runners"
     }
   },
   {
@@ -140,9 +140,9 @@ export const DATING_PROMPTS = [
       "homebody": "an open living room, a floor lamp and the soft edge of a bookshelf"
     },
     "outfits": {
-      "casual": "a forest-green crewneck pushed up at the cuffs over a white tee, and dark suede chukkas",
-      "sharp": "a light-blue oxford with the sleeves rolled and navy chinos, and tan suede loafers",
-      "street": "a sand canvas chore jacket over a black tee, and tan desert boots"
+      "casual": "an olive brushed flannel shirt with the sleeves pushed back and moleskin trousers, and tan leather sneakers",
+      "sharp": "a camel button-down oxford with the sleeves pushed back and wool trousers, and suede loafers",
+      "street": "an olive rugby shirt with the sleeves pushed back and cargo trousers, and black high-tops"
     }
   },
   {
@@ -169,9 +169,9 @@ export const DATING_PROMPTS = [
       "homebody": "balcony railings and a hazy row of rooftops"
     },
     "outfits": {
-      "casual": "a sand henley under a washed-indigo chore jacket with dark jeans, and black leather sneakers",
-      "sharp": "a bottle-green knit polo with charcoal tailored trousers, and clean white leather sneakers",
-      "street": "a rust hooded overshirt over a cream tee, and grey runner sneakers"
+      "casual": "a charcoal harrington jacket open over a shawl-collar cardigan, selvedge denim, a fine wool scarf, and desert boots",
+      "sharp": "a grey belted trench open over a white poplin shirt, pleated trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate down gilet open over a mock-neck knit, wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -198,9 +198,9 @@ export const DATING_PROMPTS = [
       "homebody": "balcony railings and a hazy row of rooftops"
     },
     "outfits": {
-      "casual": "a burgundy waffle henley with dark chinos and the sleeves at three-quarter, and worn brown leather boots",
-      "sharp": "a stone linen blazer over a white tee, and polished dark brown derbies",
-      "street": "a faded army-green field jacket over a white tee, and chunky off-white sneakers"
+      "casual": "a cream cable-knit sweater under a corduroy overshirt with corduroy trousers, and penny loafers",
+      "sharp": "a black fine-gauge merino knit under an unstructured jacket with cavalry twill trousers, and brown brogues",
+      "street": "a navy boxy tee under a quilted liner jacket with black denim, and black leather boots"
     }
   },
   {
@@ -227,9 +227,9 @@ export const DATING_PROMPTS = [
       "homebody": "balcony railings and a hazy row of rooftops"
     },
     "outfits": {
-      "casual": "a faded olive sweatshirt with straight-leg grey denim, and clean off-white sneakers",
-      "sharp": "a burgundy fine-knit under a grey wool jacket, and black leather chelsea boots",
-      "street": "a cream boxy overshirt over a charcoal tee, and black canvas high-tops"
+      "casual": "a navy suede overshirt with wool trousers, and leather moccasins",
+      "sharp": "a stone silk-blend shirt with flannel trousers, and polished loafers",
+      "street": "a cream half-zip sweatshirt with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -256,9 +256,9 @@ export const DATING_PROMPTS = [
       "homebody": "sheer curtains lifting and warm interior lamplight"
     },
     "outfits": {
-      "casual": "a cream fisherman knit with dark jeans, and dark suede chukkas",
-      "sharp": "a crisp white shirt open at the collar with dark trousers, and tan suede loafers",
-      "street": "a brown suede trucker over a white tee, and tan desert boots"
+      "casual": "a rust shearling-collar jacket over a fine-gauge knit with washed denim, tortoiseshell sunglasses, and tan suede derbies",
+      "sharp": "a burgundy tailored sport coat over a striped poplin shirt with tailored trousers, a silk pocket square, and polished derbies",
+      "street": "a rust anorak over a boxy tee with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -285,9 +285,9 @@ export const DATING_PROMPTS = [
       "homebody": "sheer curtains lifting and warm interior lamplight"
     },
     "outfits": {
-      "casual": "a charcoal marl tee under an open brown flannel, and black leather sneakers",
-      "sharp": "a navy unstructured blazer over an ecru tee, and clean white leather sneakers",
-      "street": "a slate windbreaker over a black tee, and grey runner sneakers"
+      "casual": "a stone waffle henley with the sleeves pushed back and dark indigo denim, and suede chukkas",
+      "sharp": "a forest pique polo with the sleeves pushed back and wool trousers, and black chelsea boots",
+      "street": "a charcoal heavyweight knit with the sleeves pushed back and black denim, and suede runners"
     }
   },
   {
@@ -314,9 +314,9 @@ export const DATING_PROMPTS = [
       "homebody": "sheer curtains lifting and warm interior lamplight"
     },
     "outfits": {
-      "casual": "a slate-blue linen shirt worn open over a white tee, and worn brown leather boots",
-      "sharp": "a slate merino roll-neck with charcoal trousers, and polished dark brown derbies",
-      "street": "a burgundy varsity-cut jacket over a grey tee, and chunky off-white sneakers"
+      "casual": "a forest quilted gilet open over a knitted polo, stone chinos, and brown leather boots",
+      "sharp": "a slate navy topcoat open over a roll-neck, pleated trousers, and suede loafers",
+      "street": "a teal bomber open over a waffle long-sleeve, cargo trousers, and black high-tops"
     }
   },
   {
@@ -343,9 +343,9 @@ export const DATING_PROMPTS = [
       "homebody": "a lived-in sofa, a trailing plant and a warm side lamp"
     },
     "outfits": {
-      "casual": "a heather-grey henley with black jeans, and clean off-white sneakers",
-      "sharp": "a tobacco suede jacket over a white shirt, and black leather chelsea boots",
-      "street": "a stone utility vest over a long-sleeve black tee, and black canvas high-tops"
+      "casual": "a burgundy button-down oxford under a harrington jacket with moleskin trousers, a leather-strap watch, and tan leather sneakers",
+      "sharp": "a taupe silk-blend shirt under a belted trench with cavalry twill trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard rugby shirt under a down gilet with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -372,9 +372,9 @@ export const DATING_PROMPTS = [
       "homebody": "a lived-in sofa, a trailing plant and a warm side lamp"
     },
     "outfits": {
-      "casual": "a mustard-flecked knit polo with stone chinos, and dark suede chukkas",
-      "sharp": "a black knit polo with stone tailored trousers, and tan suede loafers",
-      "street": "an ecru linen overshirt over a washed-black tee, and tan desert boots"
+      "casual": "a tobacco cable-knit sweater with selvedge denim, and desert boots",
+      "sharp": "a chocolate button-down oxford with flannel trousers, and brown brogues",
+      "street": "a stone oversized crewneck with black denim, and black leather boots"
     }
   },
   {
@@ -401,9 +401,9 @@ export const DATING_PROMPTS = [
       "homebody": "a lived-in sofa, a trailing plant and a warm side lamp"
     },
     "outfits": {
-      "casual": "a washed-black tee under an ecru canvas overshirt, and black leather sneakers",
-      "sharp": "a rust silk-blend shirt with black trousers, and clean white leather sneakers",
-      "street": "a forest quilted jacket over a cream tee, and grey runner sneakers"
+      "casual": "a slate waxed cotton jacket over a cashmere crew with corduroy trousers, and penny loafers",
+      "sharp": "a teal camel overcoat over a white poplin shirt with tailored trousers, and polished loafers",
+      "street": "a plum leather jacket over a rugby shirt with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -430,9 +430,9 @@ export const DATING_PROMPTS = [
       "homebody": "a framed print, an open doorway and a strip of hall light"
     },
     "outfits": {
-      "casual": "a terracotta long-sleeve tee with indigo jeans, and worn brown leather boots",
-      "sharp": "a chalk-striped grey jacket over a black tee, and polished dark brown derbies",
-      "street": "a charcoal hoodie under a washed denim jacket, and chunky off-white sneakers"
+      "casual": "an oatmeal merino crew with the sleeves pushed back and wool trousers, a steel dive watch, and leather moccasins",
+      "sharp": "a charcoal fine-gauge merino knit with the sleeves pushed back and wool trousers, a gold-cased watch, and polished derbies",
+      "street": "a black half-zip sweatshirt with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -459,9 +459,9 @@ export const DATING_PROMPTS = [
       "homebody": "a framed print, an open doorway and a strip of hall light"
     },
     "outfits": {
-      "casual": "a plum merino crewneck with dark denim, and clean off-white sneakers",
-      "sharp": "a forest wool overshirt over a white oxford, and black leather chelsea boots",
-      "street": "a mustard corduroy trucker over a white tee, and black canvas high-tops"
+      "casual": "a camel shearling-collar jacket open over a linen shirt, washed denim, and tan suede derbies",
+      "sharp": "a navy tailored sport coat open over a cashmere crew, pleated trousers, and black chelsea boots",
+      "street": "a bone anorak open over a boxy tee, black denim, and suede runners"
     }
   },
   {
@@ -488,9 +488,9 @@ export const DATING_PROMPTS = [
       "homebody": "a framed print, an open doorway and a strip of hall light"
     },
     "outfits": {
-      "casual": "a chocolate-brown corduroy shirt with faded jeans, and dark suede chukkas",
-      "sharp": "a cream shawl-collar knit with dark trousers, and tan suede loafers",
-      "street": "a navy coach jacket over an oatmeal tee, and tan desert boots"
+      "casual": "an olive brushed flannel shirt under a quilted gilet with dark indigo denim, and suede chukkas",
+      "sharp": "a camel button-down oxford under a navy topcoat with cavalry twill trousers, and suede loafers",
+      "street": "an olive heavyweight knit under a bomber with cargo trousers, and black high-tops"
     }
   },
   {
@@ -517,9 +517,9 @@ export const DATING_PROMPTS = [
       "homebody": "a kitchen doorway, a shelf of mugs and morning light on the wall"
     },
     "outfits": {
-      "casual": "a bone-white waffle henley with olive chinos, and black leather sneakers",
-      "sharp": "a mid-brown corduroy blazer over a sand knit, and clean white leather sneakers",
-      "street": "a terracotta fleece half-zip over a white tee, and grey runner sneakers"
+      "casual": "a charcoal button-down oxford with stone chinos, a fine wool scarf, and brown leather boots",
+      "sharp": "a grey pique polo with flannel trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate mock-neck knit with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -546,9 +546,9 @@ export const DATING_PROMPTS = [
       "homebody": "a kitchen doorway, a shelf of mugs and morning light on the wall"
     },
     "outfits": {
-      "casual": "a chambray shirt with the sleeves rolled and dark chinos, and worn brown leather boots",
-      "sharp": "an ink-blue shirt buttoned to the collar with grey trousers, and polished dark brown derbies",
-      "street": "a black waxed-cotton jacket over a bone tee, and chunky off-white sneakers"
+      "casual": "a cream chore jacket over a chambray shirt with moleskin trousers, and tan leather sneakers",
+      "sharp": "a black double-breasted coat over a roll-neck with tailored trousers, and brown brogues",
+      "street": "a navy coach jacket over a heavyweight knit with black denim, and black leather boots"
     }
   },
   {
@@ -575,9 +575,9 @@ export const DATING_PROMPTS = [
       "homebody": "a kitchen doorway, a shelf of mugs and morning light on the wall"
     },
     "outfits": {
-      "casual": "a rust-flecked wool overshirt over a cream tee, and clean off-white sneakers",
-      "sharp": "a taupe field jacket over a fine black knit, and black leather chelsea boots",
-      "street": "a grey marl hoodie under a stone canvas overshirt, and black canvas high-tops"
+      "casual": "a navy suede overshirt with the sleeves pushed back and selvedge denim, and desert boots",
+      "sharp": "a stone silk-blend shirt with the sleeves pushed back and wool trousers, and polished loafers",
+      "street": "a cream oversized crewneck with the sleeves pushed back and cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -604,9 +604,9 @@ export const DATING_PROMPTS = [
       "homebody": "rendered wall, a climbing plant and a painted door"
     },
     "outfits": {
-      "casual": "a deep-teal crewneck with stone-grey jeans, and dark suede chukkas",
-      "sharp": "a soft-grey flannel jacket over a white tee, and tan suede loafers",
-      "street": "a teal windbreaker over a heather tee, and tan desert boots"
+      "casual": "a rust waxed cotton jacket open over a fine-gauge knit, corduroy trousers, tortoiseshell sunglasses, and penny loafers",
+      "sharp": "a burgundy camel overcoat open over a striped poplin shirt, pleated trousers, a silk pocket square, and polished derbies",
+      "street": "a rust leather jacket open over a rugby shirt, wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -633,9 +633,9 @@ export const DATING_PROMPTS = [
       "homebody": "rendered wall, a climbing plant and a painted door"
     },
     "outfits": {
-      "casual": "an oat cardigan over a white tee with dark jeans, and black leather sneakers",
-      "sharp": "a deep-olive blazer over a cream shirt, and clean white leather sneakers",
-      "street": "a chocolate shearling-collar trucker over a cream tee, and grey runner sneakers"
+      "casual": "a stone waffle henley under a shearling-collar jacket with wool trousers, and leather moccasins",
+      "sharp": "a forest pique polo under a tailored sport coat with cavalry twill trousers, and black chelsea boots",
+      "street": "a charcoal half-zip sweatshirt under an anorak with black denim, and suede runners"
     }
   },
   {
@@ -662,9 +662,9 @@ export const DATING_PROMPTS = [
       "homebody": "rendered wall, a climbing plant and a painted door"
     },
     "outfits": {
-      "casual": "a washed-denim shirt over a charcoal tee with black jeans, and worn brown leather boots",
-      "sharp": "a stone wool overshirt over a white tee with dark trousers, and polished dark brown derbies",
-      "street": "a washed-grey hoodie under an olive overshirt, and chunky off-white sneakers"
+      "casual": "a forest brushed flannel shirt with washed denim, and tan suede derbies",
+      "sharp": "a slate fine-gauge merino knit with flannel trousers, and suede loafers",
+      "street": "a teal waffle long-sleeve with cargo trousers, and black high-tops"
     }
   },
   {
@@ -691,9 +691,9 @@ export const DATING_PROMPTS = [
       "homebody": "courtyard paving, a terracotta pot and a garden chair"
     },
     "outfits": {
-      "casual": "a moss-green lambswool crewneck with dark denim, and clean off-white sneakers",
-      "sharp": "a midnight roll-neck with charcoal trousers, and black leather chelsea boots",
-      "street": "a rust fleece half-zip over a bone tee, and black canvas high-tops"
+      "casual": "a burgundy suede jacket over a shawl-collar cardigan with dark indigo denim, a leather-strap watch, and suede chukkas",
+      "sharp": "a taupe half-canvas blazer over a cashmere crew with tailored trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard technical shell over a half-zip sweatshirt with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -720,9 +720,9 @@ export const DATING_PROMPTS = [
       "homebody": "courtyard paving, a terracotta pot and a garden chair"
     },
     "outfits": {
-      "casual": "a soft camel overshirt over an ecru tee with stone chinos, and dark suede chukkas",
-      "sharp": "a sand unstructured jacket over a black knit, and tan suede loafers",
-      "street": "a black quilted vest over a heather long-sleeve, and tan desert boots"
+      "casual": "a tobacco cable-knit sweater with the sleeves pushed back and stone chinos, and brown leather boots",
+      "sharp": "a chocolate button-down oxford with the sleeves pushed back and wool trousers, and brown brogues",
+      "street": "a stone mock-neck knit with the sleeves pushed back and black denim, and black leather boots"
     }
   },
   {
@@ -749,9 +749,9 @@ export const DATING_PROMPTS = [
       "homebody": "courtyard paving, a terracotta pot and a garden chair"
     },
     "outfits": {
-      "casual": "a faded black henley with indigo jeans, and black leather sneakers",
-      "sharp": "a burgundy corduroy blazer over an ecru shirt, and clean white leather sneakers",
-      "street": "a sand hooded overshirt over a charcoal tee, and grey runner sneakers"
+      "casual": "a slate chore jacket open over a cashmere crew, moleskin trousers, and tan leather sneakers",
+      "sharp": "a teal double-breasted coat open over a white poplin shirt, pleated trousers, and polished loafers",
+      "street": "a plum coach jacket open over a heavyweight knit, cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -778,9 +778,9 @@ export const DATING_PROMPTS = [
       "homebody": "a sunlit courtyard corner and a wall of ivy"
     },
     "outfits": {
-      "casual": "a caramel corduroy shirt with dark chinos, and worn brown leather boots",
-      "sharp": "a slate wool shirt-jacket over a white crewneck, and polished dark brown derbies",
-      "street": "an ecru shacket over a washed-black tee, and chunky off-white sneakers"
+      "casual": "an oatmeal merino crew under a waxed cotton jacket with selvedge denim, a steel dive watch, and desert boots",
+      "sharp": "a charcoal fine-gauge merino knit under a camel overcoat with cavalry twill trousers, a gold-cased watch, and polished derbies",
+      "street": "a black oversized crewneck under a leather jacket with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -807,9 +807,9 @@ export const DATING_PROMPTS = [
       "homebody": "a sunlit courtyard corner and a wall of ivy"
     },
     "outfits": {
-      "casual": "a heather-blue waffle knit with charcoal denim, and clean off-white sneakers",
-      "sharp": "a chocolate suede overshirt over a cream knit, and black leather chelsea boots",
-      "street": "a teal trucker jacket over a cream tee, and black canvas high-tops"
+      "casual": "a camel waffle henley with corduroy trousers, and penny loafers",
+      "sharp": "a navy silk-blend shirt with flannel trousers, and black chelsea boots",
+      "street": "a bone boxy tee with black denim, and suede runners"
     }
   },
   {
@@ -836,9 +836,9 @@ export const DATING_PROMPTS = [
       "homebody": "a sunlit courtyard corner and a wall of ivy"
     },
     "outfits": {
-      "casual": "an oatmeal waffle henley with the sleeves pushed to mid-forearm and dark jeans, and worn brown leather boots",
-      "sharp": "a charcoal blazer over a white crew-neck tee with dark trousers, and polished dark brown derbies",
-      "street": "a washed-indigo denim jacket over a white tee, and chunky off-white sneakers"
+      "casual": "an olive corduroy overshirt over a knitted polo with wool trousers, and leather moccasins",
+      "sharp": "a camel unstructured jacket over a striped poplin shirt with tailored trousers, and suede loafers",
+      "street": "an olive quilted liner jacket over an oversized crewneck with cargo trousers, and black high-tops"
     }
   },
   {
@@ -865,9 +865,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stoop rail, a street tree and parked cars going soft"
     },
     "outfits": {
-      "casual": "a rust corduroy overshirt open over a cream tee with dark denim, and clean off-white sneakers",
-      "sharp": "a camel overcoat over a black fine-knit, and black leather chelsea boots",
-      "street": "a black bomber over a heather-grey tee, and black canvas high-tops"
+      "casual": "a charcoal button-down oxford with the sleeves pushed back and washed denim, a fine wool scarf, and tan suede derbies",
+      "sharp": "a grey pique polo with the sleeves pushed back and wool trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate waffle long-sleeve with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -894,9 +894,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stoop rail, a street tree and parked cars going soft"
     },
     "outfits": {
-      "casual": "a forest-green crewneck pushed up at the cuffs over a white tee, and dark suede chukkas",
-      "sharp": "a light-blue oxford with the sleeves rolled and navy chinos, and tan suede loafers",
-      "street": "a sand canvas chore jacket over a black tee, and tan desert boots"
+      "casual": "a cream suede jacket open over a chambray shirt, dark indigo denim, and suede chukkas",
+      "sharp": "a black half-canvas blazer open over a roll-neck, pleated trousers, and brown brogues",
+      "street": "a navy technical shell open over a half-zip sweatshirt, black denim, and black leather boots"
     }
   },
   {
@@ -923,9 +923,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stoop rail, a street tree and parked cars going soft"
     },
     "outfits": {
-      "casual": "a sand henley under a washed-indigo chore jacket with dark jeans, and black leather sneakers",
-      "sharp": "a bottle-green knit polo with charcoal tailored trousers, and clean white leather sneakers",
-      "street": "a rust hooded overshirt over a cream tee, and grey runner sneakers"
+      "casual": "a navy suede overshirt under a chore jacket with stone chinos, and brown leather boots",
+      "sharp": "a stone silk-blend shirt under a double-breasted coat with cavalry twill trousers, and polished loafers",
+      "street": "a cream mock-neck knit under a coach jacket with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -952,9 +952,9 @@ export const DATING_PROMPTS = [
       "homebody": "the front door, a porch light and a hedge line"
     },
     "outfits": {
-      "casual": "a burgundy waffle henley with dark chinos and the sleeves at three-quarter, and worn brown leather boots",
-      "sharp": "a stone linen blazer over a white tee, and polished dark brown derbies",
-      "street": "a faded army-green field jacket over a white tee, and chunky off-white sneakers"
+      "casual": "a rust merino crew with moleskin trousers, tortoiseshell sunglasses, and tan leather sneakers",
+      "sharp": "a burgundy button-down oxford with flannel trousers, a silk pocket square, and polished derbies",
+      "street": "a rust rugby shirt with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -981,9 +981,9 @@ export const DATING_PROMPTS = [
       "homebody": "the front door, a porch light and a hedge line"
     },
     "outfits": {
-      "casual": "a faded olive sweatshirt with straight-leg grey denim, and clean off-white sneakers",
-      "sharp": "a burgundy fine-knit under a grey wool jacket, and black leather chelsea boots",
-      "street": "a cream boxy overshirt over a charcoal tee, and black canvas high-tops"
+      "casual": "a stone harrington jacket over a linen shirt with selvedge denim, and desert boots",
+      "sharp": "a forest belted trench over a white poplin shirt with tailored trousers, and black chelsea boots",
+      "street": "a charcoal down gilet over a mock-neck knit with black denim, and suede runners"
     }
   },
   {
@@ -1010,9 +1010,9 @@ export const DATING_PROMPTS = [
       "homebody": "the front door, a porch light and a hedge line"
     },
     "outfits": {
-      "casual": "a cream fisherman knit with dark jeans, and dark suede chukkas",
-      "sharp": "a crisp white shirt open at the collar with dark trousers, and tan suede loafers",
-      "street": "a brown suede trucker over a white tee, and tan desert boots"
+      "casual": "a forest brushed flannel shirt with the sleeves pushed back and corduroy trousers, and penny loafers",
+      "sharp": "a slate fine-gauge merino knit with the sleeves pushed back and wool trousers, and suede loafers",
+      "street": "a teal boxy tee with the sleeves pushed back and cargo trousers, and black high-tops"
     }
   },
   {
@@ -1039,9 +1039,9 @@ export const DATING_PROMPTS = [
       "homebody": "steps down to the street and warm brick opposite"
     },
     "outfits": {
-      "casual": "a charcoal marl tee under an open brown flannel, and black leather sneakers",
-      "sharp": "a navy unstructured blazer over an ecru tee, and clean white leather sneakers",
-      "street": "a slate windbreaker over a black tee, and grey runner sneakers"
+      "casual": "a burgundy corduroy overshirt open over a shawl-collar cardigan, wool trousers, a leather-strap watch, and leather moccasins",
+      "sharp": "a taupe unstructured jacket open over a cashmere crew, pleated trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard quilted liner jacket open over an oversized crewneck, wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -1068,9 +1068,9 @@ export const DATING_PROMPTS = [
       "homebody": "steps down to the street and warm brick opposite"
     },
     "outfits": {
-      "casual": "a slate-blue linen shirt worn open over a white tee, and worn brown leather boots",
-      "sharp": "a slate merino roll-neck with charcoal trousers, and polished dark brown derbies",
-      "street": "a burgundy varsity-cut jacket over a grey tee, and chunky off-white sneakers"
+      "casual": "a tobacco cable-knit sweater under a suede jacket with washed denim, and tan suede derbies",
+      "sharp": "a chocolate button-down oxford under a half-canvas blazer with cavalry twill trousers, and brown brogues",
+      "street": "a stone waffle long-sleeve under a technical shell with black denim, and black leather boots"
     }
   },
   {
@@ -1097,9 +1097,9 @@ export const DATING_PROMPTS = [
       "homebody": "steps down to the street and warm brick opposite"
     },
     "outfits": {
-      "casual": "a heather-grey henley with black jeans, and clean off-white sneakers",
-      "sharp": "a tobacco suede jacket over a white shirt, and black leather chelsea boots",
-      "street": "a stone utility vest over a long-sleeve black tee, and black canvas high-tops"
+      "casual": "a slate suede overshirt with dark indigo denim, and suede chukkas",
+      "sharp": "a teal pique polo with flannel trousers, and polished loafers",
+      "street": "a plum heavyweight knit with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -1126,9 +1126,9 @@ export const DATING_PROMPTS = [
       "homebody": "a kitchen window, a kettle and a wooden shelf"
     },
     "outfits": {
-      "casual": "a mustard-flecked knit polo with stone chinos, and dark suede chukkas",
-      "sharp": "a black knit polo with stone tailored trousers, and tan suede loafers",
-      "street": "an ecru linen overshirt over a washed-black tee, and tan desert boots"
+      "casual": "an oatmeal quilted gilet over a fine-gauge knit with stone chinos, a steel dive watch, and brown leather boots",
+      "sharp": "a charcoal navy topcoat over a roll-neck with tailored trousers, a gold-cased watch, and polished derbies",
+      "street": "a black bomber over a waffle long-sleeve with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -1155,9 +1155,9 @@ export const DATING_PROMPTS = [
       "homebody": "a kitchen window, a kettle and a wooden shelf"
     },
     "outfits": {
-      "casual": "a washed-black tee under an ecru canvas overshirt, and black leather sneakers",
-      "sharp": "a rust silk-blend shirt with black trousers, and clean white leather sneakers",
-      "street": "a forest quilted jacket over a cream tee, and grey runner sneakers"
+      "casual": "a camel waffle henley with the sleeves pushed back and moleskin trousers, and tan leather sneakers",
+      "sharp": "a navy silk-blend shirt with the sleeves pushed back and wool trousers, and black chelsea boots",
+      "street": "a bone rugby shirt with the sleeves pushed back and black denim, and suede runners"
     }
   },
   {
@@ -1184,9 +1184,9 @@ export const DATING_PROMPTS = [
       "homebody": "a kitchen window, a kettle and a wooden shelf"
     },
     "outfits": {
-      "casual": "a terracotta long-sleeve tee with indigo jeans, and worn brown leather boots",
-      "sharp": "a chalk-striped grey jacket over a black tee, and polished dark brown derbies",
-      "street": "a charcoal hoodie under a washed denim jacket, and chunky off-white sneakers"
+      "casual": "an olive harrington jacket open over a knitted polo, selvedge denim, and desert boots",
+      "sharp": "a camel belted trench open over a striped poplin shirt, pleated trousers, and suede loafers",
+      "street": "an olive down gilet open over a mock-neck knit, cargo trousers, and black high-tops"
     }
   },
   {
@@ -1213,9 +1213,9 @@ export const DATING_PROMPTS = [
       "homebody": "a garden through glass and a hanging plant"
     },
     "outfits": {
-      "casual": "a plum merino crewneck with dark denim, and clean off-white sneakers",
-      "sharp": "a forest wool overshirt over a white oxford, and black leather chelsea boots",
-      "street": "a mustard corduroy trucker over a white tee, and black canvas high-tops"
+      "casual": "a charcoal button-down oxford under a corduroy overshirt with corduroy trousers, a fine wool scarf, and penny loafers",
+      "sharp": "a grey pique polo under an unstructured jacket with cavalry twill trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate boxy tee under a quilted liner jacket with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -1242,9 +1242,9 @@ export const DATING_PROMPTS = [
       "homebody": "a garden through glass and a hanging plant"
     },
     "outfits": {
-      "casual": "a chocolate-brown corduroy shirt with faded jeans, and dark suede chukkas",
-      "sharp": "a cream shawl-collar knit with dark trousers, and tan suede loafers",
-      "street": "a navy coach jacket over an oatmeal tee, and tan desert boots"
+      "casual": "a cream cable-knit sweater with wool trousers, and leather moccasins",
+      "sharp": "a black fine-gauge merino knit with flannel trousers, and brown brogues",
+      "street": "a navy half-zip sweatshirt with black denim, and black leather boots"
     }
   },
   {
@@ -1271,9 +1271,9 @@ export const DATING_PROMPTS = [
       "homebody": "a garden through glass and a hanging plant"
     },
     "outfits": {
-      "casual": "a bone-white waffle henley with olive chinos, and black leather sneakers",
-      "sharp": "a mid-brown corduroy blazer over a sand knit, and clean white leather sneakers",
-      "street": "a terracotta fleece half-zip over a white tee, and grey runner sneakers"
+      "casual": "a navy shearling-collar jacket over a cashmere crew with washed denim, and tan suede derbies",
+      "sharp": "a stone tailored sport coat over a cashmere crew with tailored trousers, and polished loafers",
+      "street": "a cream anorak over a boxy tee with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -1300,9 +1300,9 @@ export const DATING_PROMPTS = [
       "homebody": "the nook's bench seat, cushions and a bowl of fruit"
     },
     "outfits": {
-      "casual": "a chambray shirt with the sleeves rolled and dark chinos, and worn brown leather boots",
-      "sharp": "an ink-blue shirt buttoned to the collar with grey trousers, and polished dark brown derbies",
-      "street": "a black waxed-cotton jacket over a bone tee, and chunky off-white sneakers"
+      "casual": "a rust merino crew with the sleeves pushed back and dark indigo denim, tortoiseshell sunglasses, and suede chukkas",
+      "sharp": "a burgundy button-down oxford with the sleeves pushed back and wool trousers, a silk pocket square, and polished derbies",
+      "street": "a rust heavyweight knit with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -1329,9 +1329,9 @@ export const DATING_PROMPTS = [
       "homebody": "the nook's bench seat, cushions and a bowl of fruit"
     },
     "outfits": {
-      "casual": "a rust-flecked wool overshirt over a cream tee, and clean off-white sneakers",
-      "sharp": "a taupe field jacket over a fine black knit, and black leather chelsea boots",
-      "street": "a grey marl hoodie under a stone canvas overshirt, and black canvas high-tops"
+      "casual": "a stone quilted gilet open over a linen shirt, stone chinos, and brown leather boots",
+      "sharp": "a forest navy topcoat open over a white poplin shirt, pleated trousers, and black chelsea boots",
+      "street": "a charcoal bomber open over a waffle long-sleeve, black denim, and suede runners"
     }
   },
   {
@@ -1358,9 +1358,9 @@ export const DATING_PROMPTS = [
       "homebody": "the nook's bench seat, cushions and a bowl of fruit"
     },
     "outfits": {
-      "casual": "a deep-teal crewneck with stone-grey jeans, and dark suede chukkas",
-      "sharp": "a soft-grey flannel jacket over a white tee, and tan suede loafers",
-      "street": "a teal windbreaker over a heather tee, and tan desert boots"
+      "casual": "a forest brushed flannel shirt under a harrington jacket with moleskin trousers, and tan leather sneakers",
+      "sharp": "a slate fine-gauge merino knit under a belted trench with cavalry twill trousers, and suede loafers",
+      "street": "a teal rugby shirt under a down gilet with cargo trousers, and black high-tops"
     }
   },
   {
@@ -1387,9 +1387,9 @@ export const DATING_PROMPTS = [
       "homebody": "a low garden wall, a parked car and a row of houses"
     },
     "outfits": {
-      "casual": "an oat cardigan over a white tee with dark jeans, and black leather sneakers",
-      "sharp": "a deep-olive blazer over a cream shirt, and clean white leather sneakers",
-      "street": "a chocolate shearling-collar trucker over a cream tee, and grey runner sneakers"
+      "casual": "a burgundy button-down oxford with selvedge denim, a leather-strap watch, and desert boots",
+      "sharp": "a taupe silk-blend shirt with flannel trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard oversized crewneck with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -1416,9 +1416,9 @@ export const DATING_PROMPTS = [
       "homebody": "a low garden wall, a parked car and a row of houses"
     },
     "outfits": {
-      "casual": "a washed-denim shirt over a charcoal tee with black jeans, and worn brown leather boots",
-      "sharp": "a stone wool overshirt over a white tee with dark trousers, and polished dark brown derbies",
-      "street": "a washed-grey hoodie under an olive overshirt, and chunky off-white sneakers"
+      "casual": "a tobacco waxed cotton jacket over a chambray shirt with corduroy trousers, and penny loafers",
+      "sharp": "a chocolate camel overcoat over a striped poplin shirt with tailored trousers, and brown brogues",
+      "street": "a stone leather jacket over a rugby shirt with black denim, and black leather boots"
     }
   },
   {
@@ -1445,9 +1445,9 @@ export const DATING_PROMPTS = [
       "homebody": "a low garden wall, a parked car and a row of houses"
     },
     "outfits": {
-      "casual": "a moss-green lambswool crewneck with dark denim, and clean off-white sneakers",
-      "sharp": "a midnight roll-neck with charcoal trousers, and black leather chelsea boots",
-      "street": "a rust fleece half-zip over a bone tee, and black canvas high-tops"
+      "casual": "a slate suede overshirt with the sleeves pushed back and wool trousers, and leather moccasins",
+      "sharp": "a teal pique polo with the sleeves pushed back and wool trousers, and polished loafers",
+      "street": "a plum half-zip sweatshirt with the sleeves pushed back and cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -1474,9 +1474,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hedge, a gate and pavement running out of frame"
     },
     "outfits": {
-      "casual": "a soft camel overshirt over an ecru tee with stone chinos, and dark suede chukkas",
-      "sharp": "a sand unstructured jacket over a black knit, and tan suede loafers",
-      "street": "a black quilted vest over a heather long-sleeve, and tan desert boots"
+      "casual": "an oatmeal shearling-collar jacket open over a fine-gauge knit, washed denim, a steel dive watch, and tan suede derbies",
+      "sharp": "a charcoal tailored sport coat open over a roll-neck, pleated trousers, a gold-cased watch, and polished derbies",
+      "street": "a black anorak open over a boxy tee, wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -1503,9 +1503,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hedge, a gate and pavement running out of frame"
     },
     "outfits": {
-      "casual": "a faded black henley with indigo jeans, and black leather sneakers",
-      "sharp": "a burgundy corduroy blazer over an ecru shirt, and clean white leather sneakers",
-      "street": "a sand hooded overshirt over a charcoal tee, and grey runner sneakers"
+      "casual": "a camel waffle henley under a quilted gilet with dark indigo denim, and suede chukkas",
+      "sharp": "a navy silk-blend shirt under a navy topcoat with cavalry twill trousers, and black chelsea boots",
+      "street": "a bone heavyweight knit under a bomber with black denim, and suede runners"
     }
   },
   {
@@ -1532,9 +1532,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hedge, a gate and pavement running out of frame"
     },
     "outfits": {
-      "casual": "a caramel corduroy shirt with dark chinos, and worn brown leather boots",
-      "sharp": "a slate wool shirt-jacket over a white crewneck, and polished dark brown derbies",
-      "street": "an ecru shacket over a washed-black tee, and chunky off-white sneakers"
+      "casual": "an olive brushed flannel shirt with stone chinos, and brown leather boots",
+      "sharp": "a camel button-down oxford with flannel trousers, and suede loafers",
+      "street": "an olive mock-neck knit with cargo trousers, and black high-tops"
     }
   },
   {
@@ -1561,9 +1561,9 @@ export const DATING_PROMPTS = [
       "homebody": "street trees, a postbox and quiet parked cars"
     },
     "outfits": {
-      "casual": "a heather-blue waffle knit with charcoal denim, and clean off-white sneakers",
-      "sharp": "a chocolate suede overshirt over a cream knit, and black leather chelsea boots",
-      "street": "a teal trucker jacket over a cream tee, and black canvas high-tops"
+      "casual": "a charcoal chore jacket over a shawl-collar cardigan with moleskin trousers, a fine wool scarf, and tan leather sneakers",
+      "sharp": "a grey double-breasted coat over a white poplin shirt with tailored trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate coach jacket over a heavyweight knit with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -1590,9 +1590,9 @@ export const DATING_PROMPTS = [
       "homebody": "street trees, a postbox and quiet parked cars"
     },
     "outfits": {
-      "casual": "an oatmeal waffle henley with the sleeves pushed to mid-forearm and dark jeans, and worn brown leather boots",
-      "sharp": "a charcoal blazer over a white crew-neck tee with dark trousers, and polished dark brown derbies",
-      "street": "a washed-indigo denim jacket over a white tee, and chunky off-white sneakers"
+      "casual": "a cream cable-knit sweater with the sleeves pushed back and selvedge denim, and desert boots",
+      "sharp": "a black fine-gauge merino knit with the sleeves pushed back and wool trousers, and brown brogues",
+      "street": "a navy oversized crewneck with the sleeves pushed back and black denim, and black leather boots"
     }
   },
   {
@@ -1619,9 +1619,9 @@ export const DATING_PROMPTS = [
       "homebody": "street trees, a postbox and quiet parked cars"
     },
     "outfits": {
-      "casual": "a rust corduroy overshirt open over a cream tee with dark denim, and clean off-white sneakers",
-      "sharp": "a camel overcoat over a black fine-knit, and black leather chelsea boots",
-      "street": "a black bomber over a heather-grey tee, and black canvas high-tops"
+      "casual": "a navy waxed cotton jacket open over a cashmere crew, corduroy trousers, and penny loafers",
+      "sharp": "a stone camel overcoat open over a cashmere crew, pleated trousers, and polished loafers",
+      "street": "a cream leather jacket open over a rugby shirt, cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -1648,9 +1648,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hallway, hung coats and a strip of daylight"
     },
     "outfits": {
-      "casual": "a forest-green crewneck pushed up at the cuffs over a white tee, and dark suede chukkas",
-      "sharp": "a light-blue oxford with the sleeves rolled and navy chinos, and tan suede loafers",
-      "street": "a sand canvas chore jacket over a black tee, and tan desert boots"
+      "casual": "a rust merino crew under a shearling-collar jacket with wool trousers, tortoiseshell sunglasses, and leather moccasins",
+      "sharp": "a burgundy button-down oxford under a tailored sport coat with cavalry twill trousers, a silk pocket square, and polished derbies",
+      "street": "a rust half-zip sweatshirt under an anorak with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -1677,9 +1677,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hallway, hung coats and a strip of daylight"
     },
     "outfits": {
-      "casual": "a sand henley under a washed-indigo chore jacket with dark jeans, and black leather sneakers",
-      "sharp": "a bottle-green knit polo with charcoal tailored trousers, and clean white leather sneakers",
-      "street": "a rust hooded overshirt over a cream tee, and grey runner sneakers"
+      "casual": "a stone waffle henley with washed denim, and tan suede derbies",
+      "sharp": "a forest pique polo with flannel trousers, and black chelsea boots",
+      "street": "a charcoal waffle long-sleeve with black denim, and suede runners"
     }
   },
   {
@@ -1706,9 +1706,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hallway, hung coats and a strip of daylight"
     },
     "outfits": {
-      "casual": "a burgundy waffle henley with dark chinos and the sleeves at three-quarter, and worn brown leather boots",
-      "sharp": "a stone linen blazer over a white tee, and polished dark brown derbies",
-      "street": "a faded army-green field jacket over a white tee, and chunky off-white sneakers"
+      "casual": "a forest suede jacket over a knitted polo with dark indigo denim, and suede chukkas",
+      "sharp": "a slate half-canvas blazer over a roll-neck with tailored trousers, and suede loafers",
+      "street": "a teal technical shell over a half-zip sweatshirt with cargo trousers, and black high-tops"
     }
   },
   {
@@ -1735,9 +1735,9 @@ export const DATING_PROMPTS = [
       "homebody": "an open front door and daylight on the threshold"
     },
     "outfits": {
-      "casual": "a faded olive sweatshirt with straight-leg grey denim, and clean off-white sneakers",
-      "sharp": "a burgundy fine-knit under a grey wool jacket, and black leather chelsea boots",
-      "street": "a cream boxy overshirt over a charcoal tee, and black canvas high-tops"
+      "casual": "a burgundy button-down oxford with the sleeves pushed back and stone chinos, a leather-strap watch, and brown leather boots",
+      "sharp": "a taupe silk-blend shirt with the sleeves pushed back and wool trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard mock-neck knit with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -1764,9 +1764,9 @@ export const DATING_PROMPTS = [
       "homebody": "an open front door and daylight on the threshold"
     },
     "outfits": {
-      "casual": "a cream fisherman knit with dark jeans, and dark suede chukkas",
-      "sharp": "a crisp white shirt open at the collar with dark trousers, and tan suede loafers",
-      "street": "a brown suede trucker over a white tee, and tan desert boots"
+      "casual": "a tobacco chore jacket open over a chambray shirt, moleskin trousers, and tan leather sneakers",
+      "sharp": "a chocolate double-breasted coat open over a striped poplin shirt, pleated trousers, and brown brogues",
+      "street": "a stone coach jacket open over a heavyweight knit, black denim, and black leather boots"
     }
   },
   {
@@ -1793,9 +1793,9 @@ export const DATING_PROMPTS = [
       "homebody": "an open front door and daylight on the threshold"
     },
     "outfits": {
-      "casual": "a charcoal marl tee under an open brown flannel, and black leather sneakers",
-      "sharp": "a navy unstructured blazer over an ecru tee, and clean white leather sneakers",
-      "street": "a slate windbreaker over a black tee, and grey runner sneakers"
+      "casual": "a slate suede overshirt under a waxed cotton jacket with selvedge denim, and desert boots",
+      "sharp": "a teal pique polo under a camel overcoat with cavalry twill trousers, and polished loafers",
+      "street": "a plum oversized crewneck under a leather jacket with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -1822,9 +1822,9 @@ export const DATING_PROMPTS = [
       "homebody": "a tiled splashback, a kettle and a window over the sink"
     },
     "outfits": {
-      "casual": "a slate-blue linen shirt worn open over a white tee, and worn brown leather boots",
-      "sharp": "a slate merino roll-neck with charcoal trousers, and polished dark brown derbies",
-      "street": "a burgundy varsity-cut jacket over a grey tee, and chunky off-white sneakers"
+      "casual": "an oatmeal merino crew with corduroy trousers, a steel dive watch, and penny loafers",
+      "sharp": "a charcoal camel overcoat over a silk-blend shirt with tailored trousers, and polished derbies",
+      "street": "a black boxy tee with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -1851,9 +1851,9 @@ export const DATING_PROMPTS = [
       "homebody": "a tiled splashback, a kettle and a window over the sink"
     },
     "outfits": {
-      "casual": "a heather-grey henley with black jeans, and clean off-white sneakers",
-      "sharp": "a tobacco suede jacket over a white shirt, and black leather chelsea boots",
-      "street": "a stone utility vest over a long-sleeve black tee, and black canvas high-tops"
+      "casual": "a camel corduroy overshirt over a linen shirt with wool trousers, and leather moccasins",
+      "sharp": "a navy unstructured jacket over a cashmere crew with tailored trousers, and black chelsea boots",
+      "street": "a bone quilted liner jacket over an oversized crewneck with black denim, and suede runners"
     }
   },
   {
@@ -1880,9 +1880,9 @@ export const DATING_PROMPTS = [
       "homebody": "a tiled splashback, a kettle and a window over the sink"
     },
     "outfits": {
-      "casual": "a mustard-flecked knit polo with stone chinos, and dark suede chukkas",
-      "sharp": "a black knit polo with stone tailored trousers, and tan suede loafers",
-      "street": "an ecru linen overshirt over a washed-black tee, and tan desert boots"
+      "casual": "an olive brushed flannel shirt with the sleeves pushed back and washed denim, and tan suede derbies",
+      "sharp": "a camel tailored sport coat open over a pique polo, pleated trousers, a fine knitted tie, and suede loafers",
+      "street": "an olive waffle long-sleeve with the sleeves pushed back and cargo trousers, and black high-tops"
     }
   },
   {
@@ -1909,9 +1909,9 @@ export const DATING_PROMPTS = [
       "homebody": "a draining board, a plant on the sill and evening light"
     },
     "outfits": {
-      "casual": "a washed-black tee under an ecru canvas overshirt, and black leather sneakers",
-      "sharp": "a rust silk-blend shirt with black trousers, and clean white leather sneakers",
-      "street": "a forest quilted jacket over a cream tee, and grey runner sneakers"
+      "casual": "a charcoal suede jacket open over a shawl-collar cardigan, dark indigo denim, a fine wool scarf, and suede chukkas",
+      "sharp": "a grey half-canvas blazer open over a white poplin shirt, pleated trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate technical shell open over a half-zip sweatshirt, wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -1938,9 +1938,9 @@ export const DATING_PROMPTS = [
       "homebody": "a draining board, a plant on the sill and evening light"
     },
     "outfits": {
-      "casual": "a terracotta long-sleeve tee with indigo jeans, and worn brown leather boots",
-      "sharp": "a chalk-striped grey jacket over a black tee, and polished dark brown derbies",
-      "street": "a charcoal hoodie under a washed denim jacket, and chunky off-white sneakers"
+      "casual": "a cream cable-knit sweater under a chore jacket with stone chinos, and brown leather boots",
+      "sharp": "a black fine-gauge merino knit under a double-breasted coat with cavalry twill trousers, and brown brogues",
+      "street": "a navy mock-neck knit under a coach jacket with black denim, and black leather boots"
     }
   },
   {
@@ -1967,9 +1967,9 @@ export const DATING_PROMPTS = [
       "homebody": "a draining board, a plant on the sill and evening light"
     },
     "outfits": {
-      "casual": "a plum merino crewneck with dark denim, and clean off-white sneakers",
-      "sharp": "a forest wool overshirt over a white oxford, and black leather chelsea boots",
-      "street": "a mustard corduroy trucker over a white tee, and black canvas high-tops"
+      "casual": "a navy suede overshirt with moleskin trousers, and tan leather sneakers",
+      "sharp": "a stone double-breasted coat over a button-down oxford with tailored trousers, a silk pocket square, and polished loafers",
+      "street": "a cream rugby shirt with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -1996,9 +1996,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hallway, framed pictures and a stair edge"
     },
     "outfits": {
-      "casual": "a chocolate-brown corduroy shirt with faded jeans, and dark suede chukkas",
-      "sharp": "a cream shawl-collar knit with dark trousers, and tan suede loafers",
-      "street": "a navy coach jacket over an oatmeal tee, and tan desert boots"
+      "casual": "a rust harrington jacket over a fine-gauge knit with selvedge denim, tortoiseshell sunglasses, and desert boots",
+      "sharp": "a burgundy belted trench over a striped poplin shirt with tailored trousers, a silk pocket square, and polished derbies",
+      "street": "a rust down gilet over a mock-neck knit with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -2025,9 +2025,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hallway, framed pictures and a stair edge"
     },
     "outfits": {
-      "casual": "a bone-white waffle henley with olive chinos, and black leather sneakers",
-      "sharp": "a mid-brown corduroy blazer over a sand knit, and clean white leather sneakers",
-      "street": "a terracotta fleece half-zip over a white tee, and grey runner sneakers"
+      "casual": "a stone waffle henley with the sleeves pushed back and corduroy trousers, and penny loafers",
+      "sharp": "a forest camel overcoat open over a fine-gauge merino knit, pleated trousers, and black chelsea boots",
+      "street": "a charcoal boxy tee with the sleeves pushed back and black denim, and suede runners"
     }
   },
   {
@@ -2054,9 +2054,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hallway, framed pictures and a stair edge"
     },
     "outfits": {
-      "casual": "a chambray shirt with the sleeves rolled and dark chinos, and worn brown leather boots",
-      "sharp": "an ink-blue shirt buttoned to the collar with grey trousers, and polished dark brown derbies",
-      "street": "a black waxed-cotton jacket over a bone tee, and chunky off-white sneakers"
+      "casual": "a forest corduroy overshirt open over a knitted polo, wool trousers, and leather moccasins",
+      "sharp": "a slate unstructured jacket open over a roll-neck, pleated trousers, and suede loafers",
+      "street": "a teal quilted liner jacket open over an oversized crewneck, cargo trousers, and black high-tops"
     }
   },
   {
@@ -2083,9 +2083,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hedge, a path and a parked car"
     },
     "outfits": {
-      "casual": "a rust-flecked wool overshirt over a cream tee, and clean off-white sneakers",
-      "sharp": "a taupe field jacket over a fine black knit, and black leather chelsea boots",
-      "street": "a grey marl hoodie under a stone canvas overshirt, and black canvas high-tops"
+      "casual": "a burgundy button-down oxford under a suede jacket with washed denim, a leather-strap watch, and tan suede derbies",
+      "sharp": "a taupe silk-blend shirt under a half-canvas blazer with cavalry twill trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard waffle long-sleeve under a technical shell with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -2112,9 +2112,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hedge, a path and a parked car"
     },
     "outfits": {
-      "casual": "a deep-teal crewneck with stone-grey jeans, and dark suede chukkas",
-      "sharp": "a soft-grey flannel jacket over a white tee, and tan suede loafers",
-      "street": "a teal windbreaker over a heather tee, and tan desert boots"
+      "casual": "a tobacco cable-knit sweater with dark indigo denim, and suede chukkas",
+      "sharp": "a chocolate half-canvas blazer over a pique polo with tailored trousers, and brown brogues",
+      "street": "a stone heavyweight knit with black denim, and black leather boots"
     }
   },
   {
@@ -2141,9 +2141,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hedge, a path and a parked car"
     },
     "outfits": {
-      "casual": "an oat cardigan over a white tee with dark jeans, and black leather sneakers",
-      "sharp": "a deep-olive blazer over a cream shirt, and clean white leather sneakers",
-      "street": "a chocolate shearling-collar trucker over a cream tee, and grey runner sneakers"
+      "casual": "a slate quilted gilet over a cashmere crew with stone chinos, and brown leather boots",
+      "sharp": "a teal navy topcoat over a white poplin shirt with tailored trousers, and polished loafers",
+      "street": "a plum bomber over a waffle long-sleeve with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -2170,9 +2170,9 @@ export const DATING_PROMPTS = [
       "homebody": "a doormat, a plant pot and a low wall"
     },
     "outfits": {
-      "casual": "a washed-denim shirt over a charcoal tee with black jeans, and worn brown leather boots",
-      "sharp": "a stone wool overshirt over a white tee with dark trousers, and polished dark brown derbies",
-      "street": "a washed-grey hoodie under an olive overshirt, and chunky off-white sneakers"
+      "casual": "an oatmeal merino crew with the sleeves pushed back and moleskin trousers, a steel dive watch, and tan leather sneakers",
+      "sharp": "a charcoal double-breasted coat open over a silk-blend shirt, pleated trousers, and polished derbies",
+      "street": "a black rugby shirt with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -2199,9 +2199,9 @@ export const DATING_PROMPTS = [
       "homebody": "a doormat, a plant pot and a low wall"
     },
     "outfits": {
-      "casual": "a moss-green lambswool crewneck with dark denim, and clean off-white sneakers",
-      "sharp": "a midnight roll-neck with charcoal trousers, and black leather chelsea boots",
-      "street": "a rust fleece half-zip over a bone tee, and black canvas high-tops"
+      "casual": "a camel harrington jacket open over a linen shirt, selvedge denim, and desert boots",
+      "sharp": "a navy belted trench open over a cashmere crew, pleated trousers, and black chelsea boots",
+      "street": "a bone down gilet open over a mock-neck knit, black denim, and suede runners"
     }
   },
   {
@@ -2228,9 +2228,9 @@ export const DATING_PROMPTS = [
       "homebody": "a doormat, a plant pot and a low wall"
     },
     "outfits": {
-      "casual": "a soft camel overshirt over an ecru tee with stone chinos, and dark suede chukkas",
-      "sharp": "a sand unstructured jacket over a black knit, and tan suede loafers",
-      "street": "a black quilted vest over a heather long-sleeve, and tan desert boots"
+      "casual": "an olive brushed flannel shirt under a corduroy overshirt with corduroy trousers, and penny loafers",
+      "sharp": "a camel button-down oxford under an unstructured jacket with cavalry twill trousers, and suede loafers",
+      "street": "an olive boxy tee under a quilted liner jacket with cargo trousers, and black high-tops"
     }
   },
   {
@@ -2257,9 +2257,9 @@ export const DATING_PROMPTS = [
       "homebody": "an entry rug, hung coats and a stair edge"
     },
     "outfits": {
-      "casual": "a faded black henley with indigo jeans, and black leather sneakers",
-      "sharp": "a burgundy corduroy blazer over an ecru shirt, and clean white leather sneakers",
-      "street": "a sand hooded overshirt over a charcoal tee, and grey runner sneakers"
+      "casual": "a charcoal button-down oxford with wool trousers, a fine wool scarf, and leather moccasins",
+      "sharp": "a grey unstructured jacket over a fine-gauge merino knit with tailored trousers, and leather oxfords",
+      "street": "a slate half-zip sweatshirt with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -2286,9 +2286,9 @@ export const DATING_PROMPTS = [
       "homebody": "an entry rug, hung coats and a stair edge"
     },
     "outfits": {
-      "casual": "a caramel corduroy shirt with dark chinos, and worn brown leather boots",
-      "sharp": "a slate wool shirt-jacket over a white crewneck, and polished dark brown derbies",
-      "street": "an ecru shacket over a washed-black tee, and chunky off-white sneakers"
+      "casual": "a cream shearling-collar jacket over a chambray shirt with washed denim, and tan suede derbies",
+      "sharp": "a black tailored sport coat over a roll-neck with tailored trousers, and brown brogues",
+      "street": "a navy anorak over a boxy tee with black denim, and black leather boots"
     }
   },
   {
@@ -2315,9 +2315,9 @@ export const DATING_PROMPTS = [
       "homebody": "an entry rug, hung coats and a stair edge"
     },
     "outfits": {
-      "casual": "a heather-blue waffle knit with charcoal denim, and clean off-white sneakers",
-      "sharp": "a chocolate suede overshirt over a cream knit, and black leather chelsea boots",
-      "street": "a teal trucker jacket over a cream tee, and black canvas high-tops"
+      "casual": "a navy suede overshirt with the sleeves pushed back and dark indigo denim, and suede chukkas",
+      "sharp": "a stone half-canvas blazer open over a button-down oxford, pleated trousers, a silk pocket square, and polished loafers",
+      "street": "a cream heavyweight knit with the sleeves pushed back and cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -2346,9 +2346,9 @@ export const DATING_PROMPTS = [
       "homebody": "string lights, a garden fence and lit windows"
     },
     "outfits": {
-      "casual": "a burgundy waffle henley with dark denim, and scuffed tan leather boots",
-      "sharp": "a bottle-green knit polo and charcoal trousers, and polished dark brown derbies",
-      "street": "a rust bomber over a cream tee with black denim, and chunky off-white sneakers"
+      "casual": "an oatmeal button-down oxford with corduroy trousers, a steel dive watch, and suede chukkas",
+      "sharp": "a charcoal pique polo with cavalry twill trousers, a gold-cased watch, and polished derbies",
+      "street": "a black leather jacket over a rugby shirt with technical trousers, and minimal leather sneakers"
     }
   },
   {
@@ -2377,9 +2377,9 @@ export const DATING_PROMPTS = [
       "homebody": "string lights, a garden fence and lit windows"
     },
     "outfits": {
-      "casual": "a charcoal merino crewneck and black jeans, and clean off-white low-profile sneakers",
-      "sharp": "a navy unstructured blazer over a white tee with dark trousers, and black leather chelsea boots",
-      "street": "a black leather-trim trucker over a white tee and dark jeans, and black canvas high-tops"
+      "casual": "a camel corduroy overshirt over a chambray shirt with wool trousers, and brown leather boots",
+      "sharp": "a navy unstructured jacket over a roll-neck with flannel trousers, and black chelsea boots",
+      "street": "a bone half-zip sweatshirt with the sleeves pushed back and pleated wool trousers, and suede runners"
     }
   },
   {
@@ -2406,9 +2406,9 @@ export const DATING_PROMPTS = [
       "homebody": "string lights, a garden fence and lit windows"
     },
     "outfits": {
-      "casual": "an ecru overshirt over a dark tee with black denim, and dark brown suede chukkas",
-      "sharp": "a burgundy fine-knit under a charcoal jacket with dark trousers, and oxblood leather loafers",
-      "street": "a sand canvas overshirt over a charcoal tee with black denim, and tan suede desert boots"
+      "casual": "an olive suede overshirt with the sleeves pushed back and washed denim, and tan leather sneakers",
+      "sharp": "a camel silk-blend shirt with the sleeves pushed back and tailored trousers, and suede loafers",
+      "street": "an olive anorak open over a boxy tee, tailored trousers, a chunky steel watch, and black high-tops"
     }
   },
   {
@@ -2435,9 +2435,9 @@ export const DATING_PROMPTS = [
       "homebody": "patio heaters, potted herbs and a lit kitchen next door"
     },
     "outfits": {
-      "casual": "a forest-green corduroy shirt and dark chinos, and worn black leather sneakers",
-      "sharp": "a stone linen blazer over an ecru shirt and dark trousers, and charcoal suede monk shoes",
-      "street": "an indigo denim jacket over a black tee and dark jeans, and grey runner sneakers"
+      "casual": "a charcoal suede jacket open over a fine-gauge knit, dark indigo denim, a fine wool scarf, and desert boots",
+      "sharp": "a grey half-canvas blazer open over a striped poplin shirt, wool trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate heavyweight knit under a bomber with technical trousers, and suede trainers"
     }
   },
   {
@@ -2464,9 +2464,9 @@ export const DATING_PROMPTS = [
       "homebody": "patio heaters, potted herbs and a lit kitchen next door"
     },
     "outfits": {
-      "casual": "a rust knit polo with dark denim, and scuffed tan leather boots",
-      "sharp": "a black shawl-collar knit and dark trousers, and polished dark brown derbies",
-      "street": "a forest coach jacket over an oat tee with black denim, and chunky off-white sneakers"
+      "casual": "a cream waffle henley under a chore jacket with stone chinos, and penny loafers",
+      "sharp": "a black pique polo under a double-breasted coat with pleated trousers, and brown brogues",
+      "street": "a navy mock-neck knit with pleated wool trousers, and black leather boots"
     }
   },
   {
@@ -2495,9 +2495,9 @@ export const DATING_PROMPTS = [
       "homebody": "patio heaters, potted herbs and a lit kitchen next door"
     },
     "outfits": {
-      "casual": "a stone linen shirt with the sleeves rolled and dark jeans, and clean off-white low-profile sneakers",
-      "sharp": "a camel sport coat over a cream shirt with charcoal trousers, and black leather chelsea boots",
-      "street": "a cream boxy overshirt over a washed-black tee and dark jeans, and black canvas high-tops"
+      "casual": "a navy brushed flannel shirt with moleskin trousers, and leather moccasins",
+      "sharp": "a stone fine-gauge merino knit with cavalry twill trousers, and polished loafers",
+      "street": "a cream coach jacket over a heavyweight knit with tailored trousers, a chunky steel watch, and leather chelsea boots"
     }
   },
   {
@@ -2526,9 +2526,9 @@ export const DATING_PROMPTS = [
       "homebody": "trellis vines, a side gate and warm porch light"
     },
     "outfits": {
-      "casual": "a slate-blue henley and charcoal chinos, and dark brown suede chukkas",
-      "sharp": "a slate merino roll-neck and grey trousers, and oxblood leather loafers",
-      "street": "a burgundy varsity jacket over a grey tee with black denim, and tan suede desert boots"
+      "casual": "a rust harrington jacket over a shawl-collar cardigan with selvedge denim, tortoiseshell sunglasses, and tan suede derbies",
+      "sharp": "a burgundy belted trench over a cashmere crew with flannel trousers, a silk pocket square, and polished derbies",
+      "street": "a rust oversized crewneck with the sleeves pushed back and technical trousers, and minimal leather sneakers"
     }
   },
   {
@@ -2557,9 +2557,9 @@ export const DATING_PROMPTS = [
       "homebody": "trellis vines, a side gate and warm porch light"
     },
     "outfits": {
-      "casual": "a cream cable knit with dark denim, and worn black leather sneakers",
-      "sharp": "a rust silk-blend shirt with black trousers, and charcoal suede monk shoes",
-      "street": "a slate windbreaker over a white tee and dark jeans, and grey runner sneakers"
+      "casual": "a stone cable-knit sweater with the sleeves pushed back and corduroy trousers, and suede chukkas",
+      "sharp": "a forest button-down oxford with the sleeves pushed back and tailored trousers, and black chelsea boots",
+      "street": "a charcoal leather jacket open over a rugby shirt, pleated wool trousers, and suede runners"
     }
   },
   {
@@ -2588,9 +2588,9 @@ export const DATING_PROMPTS = [
       "homebody": "trellis vines, a side gate and warm porch light"
     },
     "outfits": {
-      "casual": "a chocolate suede-trim overshirt over a black tee and dark jeans, and scuffed tan leather boots",
-      "sharp": "a chalk-grey blazer over a black knit polo and dark trousers, and polished dark brown derbies",
-      "street": "a chocolate corduroy trucker over a cream tee with black denim, and chunky off-white sneakers"
+      "casual": "a forest corduroy overshirt open over a cashmere crew, wool trousers, and brown leather boots",
+      "sharp": "a slate unstructured jacket open over a white poplin shirt, wool trousers, and suede loafers",
+      "street": "a teal half-zip sweatshirt under an anorak with tailored trousers, a chunky steel watch, and black high-tops"
     }
   },
   {
@@ -2617,9 +2617,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bakery window, bread trays and the morning street"
     },
     "outfits": {
-      "casual": "an olive flannel worn open over a grey tee with black denim, and clean off-white low-profile sneakers",
-      "sharp": "an ink-blue shirt open at the collar with charcoal trousers, and black leather chelsea boots",
-      "street": "an olive field jacket over a black tee and dark jeans, and black canvas high-tops"
+      "casual": "a burgundy merino crew under a suede jacket with washed denim, a leather-strap watch, and tan leather sneakers",
+      "sharp": "a taupe fine-gauge merino knit under a half-canvas blazer with pleated trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard waffle long-sleeve with technical trousers, and suede trainers"
     }
   },
   {
@@ -2648,9 +2648,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bakery window, bread trays and the morning street"
     },
     "outfits": {
-      "casual": "a plum lambswool crewneck and dark chinos, and dark brown suede chukkas",
-      "sharp": "a taupe corduroy blazer over a white shirt and dark trousers, and oxblood leather loafers",
-      "street": "a stone utility overshirt over a heather tee with black denim, and tan suede desert boots"
+      "casual": "a tobacco waffle henley with dark indigo denim, and desert boots",
+      "sharp": "a chocolate silk-blend shirt with cavalry twill trousers, and brown brogues",
+      "street": "a stone technical shell over a half-zip sweatshirt with pleated wool trousers, and black leather boots"
     }
   },
   {
@@ -2677,9 +2677,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bakery window, bread trays and the morning street"
     },
     "outfits": {
-      "casual": "a sand waffle henley with black jeans, and worn black leather sneakers",
-      "sharp": "a forest velvet-trim jacket over a black tee with dark trousers, and charcoal suede monk shoes",
-      "street": "a charcoal hoodie under a black bomber with dark jeans, and grey runner sneakers"
+      "casual": "a slate quilted gilet over a knitted polo with stone chinos, and penny loafers",
+      "sharp": "a teal navy topcoat over a striped poplin shirt with flannel trousers, and polished loafers",
+      "street": "a plum mock-neck knit with the sleeves pushed back and tailored trousers, a chunky steel watch, and leather chelsea boots"
     }
   },
   {
@@ -2706,9 +2706,9 @@ export const DATING_PROMPTS = [
       "homebody": "patio chairs, a bicycle and a low wall"
     },
     "outfits": {
-      "casual": "a teal knit polo and dark denim, and scuffed tan leather boots",
-      "sharp": "a cream shawl knit and dark trousers, and polished dark brown derbies",
-      "street": "a mustard fleece half-zip over a white tee and black denim, and chunky off-white sneakers"
+      "casual": "an oatmeal button-down oxford with the sleeves pushed back and moleskin trousers, a steel dive watch, and leather moccasins",
+      "sharp": "a charcoal pique polo with the sleeves pushed back and tailored trousers, a gold-cased watch, and polished derbies",
+      "street": "a black coach jacket open over a heavyweight knit, technical trousers, and minimal leather sneakers"
     }
   },
   {
@@ -2737,9 +2737,9 @@ export const DATING_PROMPTS = [
       "homebody": "patio chairs, a bicycle and a low wall"
     },
     "outfits": {
-      "casual": "a mustard corduroy shirt with charcoal chinos, and clean off-white low-profile sneakers",
-      "sharp": "a tobacco suede blazer over a sand knit with charcoal trousers, and black leather chelsea boots",
-      "street": "an ecru linen overshirt over a grey tee with dark jeans, and black canvas high-tops"
+      "casual": "a camel harrington jacket open over a chambray shirt, selvedge denim, and tan suede derbies",
+      "sharp": "a navy belted trench open over a roll-neck, wool trousers, and black chelsea boots",
+      "street": "a bone oversized crewneck under a leather jacket with pleated wool trousers, and suede runners"
     }
   },
   {
@@ -2768,9 +2768,9 @@ export const DATING_PROMPTS = [
       "homebody": "patio chairs, a bicycle and a low wall"
     },
     "outfits": {
-      "casual": "a bone linen overshirt over a washed grey tee and dark jeans, and dark brown suede chukkas",
-      "sharp": "a charcoal double-breasted jacket over a white tee and dark trousers, and oxblood leather loafers",
-      "street": "a teal coach jacket over a bone tee and black denim, and tan suede desert boots"
+      "casual": "an olive suede overshirt under a corduroy overshirt with corduroy trousers, and suede chukkas",
+      "sharp": "a camel silk-blend shirt under an unstructured jacket with pleated trousers, and suede loafers",
+      "street": "an olive boxy tee with tailored trousers, a chunky steel watch, and black high-tops"
     }
   },
   {
@@ -2799,9 +2799,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bakery doorway, an awning and quiet houses"
     },
     "outfits": {
-      "casual": "a chambray shirt buttoned low over a white tee with black denim, and worn black leather sneakers",
-      "sharp": "a plum knit polo with grey trousers, and charcoal suede monk shoes",
-      "street": "a brown suede trucker over a black tee with dark jeans, and grey runner sneakers"
+      "casual": "a charcoal merino crew with wool trousers, a fine wool scarf, and brown leather boots",
+      "sharp": "a grey button-down oxford with cavalry twill trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate quilted liner jacket over an oversized crewneck with technical trousers, and suede trainers"
     }
   },
   {
@@ -2828,9 +2828,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bakery doorway, an awning and quiet houses"
     },
     "outfits": {
-      "casual": "a terracotta merino crewneck and dark denim, and scuffed tan leather boots",
-      "sharp": "an olive sport coat over a cream shirt and dark trousers, and polished dark brown derbies",
-      "street": "a terracotta hooded overshirt over a cream tee and black denim, and chunky off-white sneakers"
+      "casual": "a cream shearling-collar jacket over a linen shirt with washed denim, and tan leather sneakers",
+      "sharp": "a black tailored sport coat over a white poplin shirt with flannel trousers, and brown brogues",
+      "street": "a navy waffle long-sleeve with the sleeves pushed back and pleated wool trousers, and black leather boots"
     }
   },
   {
@@ -2857,9 +2857,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bakery doorway, an awning and quiet houses"
     },
     "outfits": {
-      "casual": "a grey marl henley with black chinos, and clean off-white low-profile sneakers",
-      "sharp": "a mid-brown blazer over a light-blue shirt with charcoal trousers, and black leather chelsea boots",
-      "street": "a navy bomber over an oat tee with dark jeans, and black canvas high-tops"
+      "casual": "a navy brushed flannel shirt with the sleeves pushed back and dark indigo denim, and desert boots",
+      "sharp": "a stone fine-gauge merino knit with the sleeves pushed back and tailored trousers, and polished loafers",
+      "street": "a cream technical shell open over a half-zip sweatshirt, tailored trousers, a chunky steel watch, and leather chelsea boots"
     }
   },
   {
@@ -2888,9 +2888,9 @@ export const DATING_PROMPTS = [
       "homebody": "garden fencing, a barbecue and lit windows"
     },
     "outfits": {
-      "casual": "an oat brushed-cotton shirt and dark jeans, and dark brown suede chukkas",
-      "sharp": "a black band-collar shirt and dark trousers, and oxblood leather loafers",
-      "street": "a grey marl hoodie under a stone chore jacket and black denim, and tan suede desert boots"
+      "casual": "a rust quilted gilet open over a shawl-collar cardigan, stone chinos, tortoiseshell sunglasses, and penny loafers",
+      "sharp": "a burgundy navy topcoat open over a cashmere crew, wool trousers, a silk pocket square, and polished derbies",
+      "street": "a rust bomber open over a waffle long-sleeve, wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -2919,9 +2919,9 @@ export const DATING_PROMPTS = [
       "homebody": "garden fencing, a barbecue and lit windows"
     },
     "outfits": {
-      "casual": "an indigo overshirt over a cream tee with dark denim, and worn black leather sneakers",
-      "sharp": "a soft-grey flannel jacket over an oat knit with dark trousers, and charcoal suede monk shoes",
-      "street": "a black waxed trucker over a white tee with dark jeans, and grey runner sneakers"
+      "casual": "a stone cable-knit sweater under a harrington jacket with moleskin trousers, and leather moccasins",
+      "sharp": "a forest button-down oxford under a belted trench with pleated trousers, and black chelsea boots",
+      "street": "a charcoal rugby shirt under a down gilet with black denim, and suede runners"
     }
   },
   {
@@ -2948,9 +2948,9 @@ export const DATING_PROMPTS = [
       "homebody": "garden fencing, a barbecue and lit windows"
     },
     "outfits": {
-      "casual": "a washed-black henley with dark denim, and scuffed tan leather boots",
-      "sharp": "a midnight roll-neck with charcoal trousers, and polished dark brown derbies",
-      "street": "a washed-grey hoodie under an olive overshirt with black denim, and chunky off-white sneakers"
+      "casual": "a forest suede overshirt with selvedge denim, and tan suede derbies",
+      "sharp": "a slate pique polo with cavalry twill trousers, and suede loafers",
+      "street": "a teal oversized crewneck with cargo trousers, and black high-tops"
     }
   },
   {
@@ -2977,9 +2977,9 @@ export const DATING_PROMPTS = [
       "homebody": "a garden table, a hedge and a back door"
     },
     "outfits": {
-      "casual": "a caramel corduroy shirt over a cream tee with dark chinos, and clean off-white low-profile sneakers",
-      "sharp": "a stone wool overshirt over a white tee with dark trousers, and black leather chelsea boots",
-      "street": "a rust fleece half-zip over a bone tee with dark jeans, and black canvas high-tops"
+      "casual": "a burgundy waxed cotton jacket over a fine-gauge knit with corduroy trousers, a leather-strap watch, and suede chukkas",
+      "sharp": "a taupe camel overcoat over a roll-neck with flannel trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard leather jacket over a rugby shirt with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -3006,9 +3006,9 @@ export const DATING_PROMPTS = [
       "homebody": "a garden table, a hedge and a back door"
     },
     "outfits": {
-      "casual": "a deep-green waffle knit with charcoal chinos, and dark brown suede chukkas",
-      "sharp": "a burgundy velvet-trim jacket over a black knit and dark trousers, and oxblood leather loafers",
-      "street": "a black quilted vest over a heather long-sleeve with black denim, and tan suede desert boots"
+      "casual": "a tobacco waffle henley with the sleeves pushed back and wool trousers, and brown leather boots",
+      "sharp": "a chocolate silk-blend shirt with the sleeves pushed back and tailored trousers, and brown brogues",
+      "street": "a stone half-zip sweatshirt with the sleeves pushed back and black denim, and black leather boots"
     }
   },
   {
@@ -3037,9 +3037,9 @@ export const DATING_PROMPTS = [
       "homebody": "a garden table, a hedge and a back door"
     },
     "outfits": {
-      "casual": "a stone brushed shirt with black denim, and worn black leather sneakers",
-      "sharp": "a sand sport coat over an ecru shirt with dark trousers, and charcoal suede monk shoes",
-      "street": "a sand shacket over a charcoal tee with dark jeans, and grey runner sneakers"
+      "casual": "a slate shearling-collar jacket open over a knitted polo, washed denim, and tan leather sneakers",
+      "sharp": "a teal tailored sport coat open over a striped poplin shirt, wool trousers, and polished loafers",
+      "street": "a plum anorak open over a boxy tee, cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -3068,9 +3068,9 @@ export const DATING_PROMPTS = [
       "homebody": "a garden path, a shed and a leaning tree"
     },
     "outfits": {
-      "casual": "a maroon merino crewneck with dark jeans, and scuffed tan leather boots",
-      "sharp": "a graphite knit polo with black trousers, and polished dark brown derbies",
-      "street": "an ecru trucker over a washed-black tee with black denim, and chunky off-white sneakers"
+      "casual": "an oatmeal button-down oxford under a quilted gilet with dark indigo denim, a steel dive watch, and desert boots",
+      "sharp": "a charcoal pique polo under a navy topcoat with pleated trousers, a gold-cased watch, and polished derbies",
+      "street": "a black heavyweight knit under a bomber with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -3097,9 +3097,9 @@ export const DATING_PROMPTS = [
       "homebody": "a garden path, a shed and a leaning tree"
     },
     "outfits": {
-      "casual": "a dusty-blue overshirt over a white tee with black denim, and clean off-white low-profile sneakers",
-      "sharp": "a chocolate suede blazer over a cream knit with charcoal trousers, and black leather chelsea boots",
-      "street": "a teal overshirt over a cream tee with dark jeans, and black canvas high-tops"
+      "casual": "a camel cable-knit sweater with stone chinos, and penny loafers",
+      "sharp": "a navy fine-gauge merino knit with cavalry twill trousers, and black chelsea boots",
+      "street": "a bone mock-neck knit with black denim, and suede runners"
     }
   },
   {
@@ -3128,9 +3128,9 @@ export const DATING_PROMPTS = [
       "homebody": "a garden path, a shed and a leaning tree"
     },
     "outfits": {
-      "casual": "a burgundy waffle henley with dark denim, and scuffed tan leather boots",
-      "sharp": "a bottle-green knit polo and charcoal trousers, and polished dark brown derbies",
-      "street": "a rust bomber over a cream tee with black denim, and chunky off-white sneakers"
+      "casual": "an olive chore jacket over a cashmere crew with moleskin trousers, and leather moccasins",
+      "sharp": "a camel double-breasted coat over a cashmere crew with flannel trousers, and suede loafers",
+      "street": "an olive coach jacket over a heavyweight knit with cargo trousers, and black high-tops"
     }
   },
   {
@@ -3159,9 +3159,9 @@ export const DATING_PROMPTS = [
       "homebody": "pub taps, copper pans and a dim corner"
     },
     "outfits": {
-      "casual": "a charcoal merino crewneck and black jeans, and clean off-white low-profile sneakers",
-      "sharp": "a navy unstructured blazer over a white tee with dark trousers, and black leather chelsea boots",
-      "street": "a black leather-trim trucker over a white tee and dark jeans, and black canvas high-tops"
+      "casual": "a charcoal merino crew with the sleeves pushed back and selvedge denim, a fine wool scarf, and tan suede derbies",
+      "sharp": "a grey button-down oxford with the sleeves pushed back and tailored trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate oversized crewneck with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -3190,9 +3190,9 @@ export const DATING_PROMPTS = [
       "homebody": "pub taps, copper pans and a dim corner"
     },
     "outfits": {
-      "casual": "an ecru overshirt over a dark tee with black denim, and dark brown suede chukkas",
-      "sharp": "a burgundy fine-knit under a charcoal jacket with dark trousers, and oxblood leather loafers",
-      "street": "a sand canvas overshirt over a charcoal tee with black denim, and tan suede desert boots"
+      "casual": "a cream waxed cotton jacket open over a linen shirt, corduroy trousers, and suede chukkas",
+      "sharp": "a black camel overcoat open over a white poplin shirt, wool trousers, and brown brogues",
+      "street": "a navy leather jacket open over a rugby shirt, black denim, and black leather boots"
     }
   },
   {
@@ -3221,9 +3221,9 @@ export const DATING_PROMPTS = [
       "homebody": "pub taps, copper pans and a dim corner"
     },
     "outfits": {
-      "casual": "a forest-green corduroy shirt and dark chinos, and worn black leather sneakers",
-      "sharp": "a stone linen blazer over an ecru shirt and dark trousers, and charcoal suede monk shoes",
-      "street": "an indigo denim jacket over a black tee and dark jeans, and grey runner sneakers"
+      "casual": "a navy brushed flannel shirt under a shearling-collar jacket with wool trousers, and brown leather boots",
+      "sharp": "a stone fine-gauge merino knit under a tailored sport coat with pleated trousers, and polished loafers",
+      "street": "a cream half-zip sweatshirt under an anorak with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -3252,9 +3252,9 @@ export const DATING_PROMPTS = [
       "homebody": "beer pumps, framed photographs and a low doorway"
     },
     "outfits": {
-      "casual": "a rust knit polo with dark denim, and scuffed tan leather boots",
-      "sharp": "a black shawl-collar knit and dark trousers, and polished dark brown derbies",
-      "street": "a forest coach jacket over an oat tee with black denim, and chunky off-white sneakers"
+      "casual": "a rust button-down oxford with washed denim, tortoiseshell sunglasses, and tan leather sneakers",
+      "sharp": "a burgundy silk-blend shirt with cavalry twill trousers, a silk pocket square, and polished derbies",
+      "street": "a rust waffle long-sleeve with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -3283,9 +3283,9 @@ export const DATING_PROMPTS = [
       "homebody": "beer pumps, framed photographs and a low doorway"
     },
     "outfits": {
-      "casual": "a stone linen shirt with the sleeves rolled and dark jeans, and clean off-white low-profile sneakers",
-      "sharp": "a camel sport coat over a cream shirt with charcoal trousers, and black leather chelsea boots",
-      "street": "a cream boxy overshirt over a washed-black tee and dark jeans, and black canvas high-tops"
+      "casual": "a stone suede jacket over a chambray shirt with dark indigo denim, and desert boots",
+      "sharp": "a forest half-canvas blazer over a striped poplin shirt with flannel trousers, and black chelsea boots",
+      "street": "a charcoal technical shell over a half-zip sweatshirt with black denim, and suede runners"
     }
   },
   {
@@ -3314,9 +3314,9 @@ export const DATING_PROMPTS = [
       "homebody": "beer pumps, framed photographs and a low doorway"
     },
     "outfits": {
-      "casual": "a slate-blue henley and charcoal chinos, and dark brown suede chukkas",
-      "sharp": "a slate merino roll-neck and grey trousers, and oxblood leather loafers",
-      "street": "a burgundy varsity jacket over a grey tee with black denim, and tan suede desert boots"
+      "casual": "a forest suede overshirt with the sleeves pushed back and stone chinos, and penny loafers",
+      "sharp": "a slate pique polo with the sleeves pushed back and tailored trousers, and suede loafers",
+      "street": "a teal mock-neck knit with the sleeves pushed back and cargo trousers, and black high-tops"
     }
   },
   {
@@ -3345,9 +3345,9 @@ export const DATING_PROMPTS = [
       "homebody": "a pub window, wet pavement and a passing car"
     },
     "outfits": {
-      "casual": "a cream cable knit with dark denim, and worn black leather sneakers",
-      "sharp": "a rust silk-blend shirt with black trousers, and charcoal suede monk shoes",
-      "street": "a slate windbreaker over a white tee and dark jeans, and grey runner sneakers"
+      "casual": "a burgundy chore jacket open over a fine-gauge knit, moleskin trousers, a leather-strap watch, and leather moccasins",
+      "sharp": "a taupe double-breasted coat open over a roll-neck, wool trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard coach jacket open over a heavyweight knit, wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -3374,9 +3374,9 @@ export const DATING_PROMPTS = [
       "homebody": "a pub window, wet pavement and a passing car"
     },
     "outfits": {
-      "casual": "a chocolate suede-trim overshirt over a black tee and dark jeans, and scuffed tan leather boots",
-      "sharp": "a chalk-grey blazer over a black knit polo and dark trousers, and polished dark brown derbies",
-      "street": "a chocolate corduroy trucker over a cream tee with black denim, and chunky off-white sneakers"
+      "casual": "a tobacco waffle henley under a waxed cotton jacket with selvedge denim, and tan suede derbies",
+      "sharp": "a chocolate silk-blend shirt under a camel overcoat with pleated trousers, and brown brogues",
+      "street": "a stone oversized crewneck under a leather jacket with black denim, and black leather boots"
     }
   },
   {
@@ -3403,9 +3403,9 @@ export const DATING_PROMPTS = [
       "homebody": "a pub window, wet pavement and a passing car"
     },
     "outfits": {
-      "casual": "an olive flannel worn open over a grey tee with black denim, and clean off-white low-profile sneakers",
-      "sharp": "an ink-blue shirt open at the collar with charcoal trousers, and black leather chelsea boots",
-      "street": "an olive field jacket over a black tee and dark jeans, and black canvas high-tops"
+      "casual": "a slate brushed flannel shirt with corduroy trousers, and suede chukkas",
+      "sharp": "a teal button-down oxford with cavalry twill trousers, and polished loafers",
+      "street": "a plum boxy tee with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -3434,9 +3434,9 @@ export const DATING_PROMPTS = [
       "homebody": "courtyard planters, brick walls and lit windows"
     },
     "outfits": {
-      "casual": "a plum lambswool crewneck and dark chinos, and dark brown suede chukkas",
-      "sharp": "a taupe corduroy blazer over a white shirt and dark trousers, and oxblood leather loafers",
-      "street": "a stone utility overshirt over a heather tee with black denim, and tan suede desert boots"
+      "casual": "an oatmeal corduroy overshirt over a shawl-collar cardigan with wool trousers, a steel dive watch, and brown leather boots",
+      "sharp": "a charcoal unstructured jacket over a white poplin shirt with flannel trousers, a gold-cased watch, and polished derbies",
+      "street": "a black quilted liner jacket over an oversized crewneck with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -3465,9 +3465,9 @@ export const DATING_PROMPTS = [
       "homebody": "courtyard planters, brick walls and lit windows"
     },
     "outfits": {
-      "casual": "a sand waffle henley with black jeans, and worn black leather sneakers",
-      "sharp": "a forest velvet-trim jacket over a black tee with dark trousers, and charcoal suede monk shoes",
-      "street": "a charcoal hoodie under a black bomber with dark jeans, and grey runner sneakers"
+      "casual": "a camel cable-knit sweater with the sleeves pushed back and washed denim, and tan leather sneakers",
+      "sharp": "a navy fine-gauge merino knit with the sleeves pushed back and tailored trousers, and black chelsea boots",
+      "street": "a bone waffle long-sleeve with the sleeves pushed back and black denim, and suede runners"
     }
   },
   {
@@ -3494,9 +3494,9 @@ export const DATING_PROMPTS = [
       "homebody": "courtyard planters, brick walls and lit windows"
     },
     "outfits": {
-      "casual": "a teal knit polo and dark denim, and scuffed tan leather boots",
-      "sharp": "a cream shawl knit and dark trousers, and polished dark brown derbies",
-      "street": "a mustard fleece half-zip over a white tee and black denim, and chunky off-white sneakers"
+      "casual": "an olive suede jacket open over a cashmere crew, dark indigo denim, and desert boots",
+      "sharp": "a camel half-canvas blazer open over a cashmere crew, wool trousers, and suede loafers",
+      "street": "an olive technical shell open over a half-zip sweatshirt, cargo trousers, and black high-tops"
     }
   },
   {
@@ -3523,9 +3523,9 @@ export const DATING_PROMPTS = [
       "homebody": "a courtyard gate, bicycles and a stairwell light"
     },
     "outfits": {
-      "casual": "a mustard corduroy shirt with charcoal chinos, and clean off-white low-profile sneakers",
-      "sharp": "a tobacco suede blazer over a sand knit with charcoal trousers, and black leather chelsea boots",
-      "street": "an ecru linen overshirt over a grey tee with dark jeans, and black canvas high-tops"
+      "casual": "a charcoal merino crew under a chore jacket with stone chinos, a fine wool scarf, and penny loafers",
+      "sharp": "a grey button-down oxford under a double-breasted coat with pleated trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate mock-neck knit under a coach jacket with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -3552,9 +3552,9 @@ export const DATING_PROMPTS = [
       "homebody": "a courtyard gate, bicycles and a stairwell light"
     },
     "outfits": {
-      "casual": "a bone linen overshirt over a washed grey tee and dark jeans, and dark brown suede chukkas",
-      "sharp": "a charcoal double-breasted jacket over a white tee and dark trousers, and oxblood leather loafers",
-      "street": "a teal coach jacket over a bone tee and black denim, and tan suede desert boots"
+      "casual": "a cream waffle henley with moleskin trousers, and leather moccasins",
+      "sharp": "a black pique polo with cavalry twill trousers, and brown brogues",
+      "street": "a navy rugby shirt with black denim, and black leather boots"
     }
   },
   {
@@ -3583,9 +3583,9 @@ export const DATING_PROMPTS = [
       "homebody": "a courtyard gate, bicycles and a stairwell light"
     },
     "outfits": {
-      "casual": "a chambray shirt buttoned low over a white tee with black denim, and worn black leather sneakers",
-      "sharp": "a plum knit polo with grey trousers, and charcoal suede monk shoes",
-      "street": "a brown suede trucker over a black tee with dark jeans, and grey runner sneakers"
+      "casual": "a navy harrington jacket over a knitted polo with selvedge denim, and tan suede derbies",
+      "sharp": "a stone belted trench over a roll-neck with flannel trousers, and polished loafers",
+      "street": "a cream down gilet over a mock-neck knit with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -3614,9 +3614,9 @@ export const DATING_PROMPTS = [
       "homebody": "a shared bench, washing lines and warm windows"
     },
     "outfits": {
-      "casual": "a terracotta merino crewneck and dark denim, and scuffed tan leather boots",
-      "sharp": "an olive sport coat over a cream shirt and dark trousers, and polished dark brown derbies",
-      "street": "a terracotta hooded overshirt over a cream tee and black denim, and chunky off-white sneakers"
+      "casual": "a rust button-down oxford with the sleeves pushed back and corduroy trousers, tortoiseshell sunglasses, and suede chukkas",
+      "sharp": "a burgundy silk-blend shirt with the sleeves pushed back and tailored trousers, a silk pocket square, and polished derbies",
+      "street": "a rust boxy tee with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -3643,9 +3643,9 @@ export const DATING_PROMPTS = [
       "homebody": "a shared bench, washing lines and warm windows"
     },
     "outfits": {
-      "casual": "a grey marl henley with black chinos, and clean off-white low-profile sneakers",
-      "sharp": "a mid-brown blazer over a light-blue shirt with charcoal trousers, and black leather chelsea boots",
-      "street": "a navy bomber over an oat tee with dark jeans, and black canvas high-tops"
+      "casual": "a stone corduroy overshirt open over a chambray shirt, wool trousers, and brown leather boots",
+      "sharp": "a forest unstructured jacket open over a striped poplin shirt, wool trousers, and black chelsea boots",
+      "street": "a charcoal quilted liner jacket open over an oversized crewneck, black denim, and suede runners"
     }
   },
   {
@@ -3674,9 +3674,9 @@ export const DATING_PROMPTS = [
       "homebody": "a shared bench, washing lines and warm windows"
     },
     "outfits": {
-      "casual": "an oat brushed-cotton shirt and dark jeans, and dark brown suede chukkas",
-      "sharp": "a black band-collar shirt and dark trousers, and oxblood leather loafers",
-      "street": "a grey marl hoodie under a stone chore jacket and black denim, and tan suede desert boots"
+      "casual": "a forest suede overshirt under a suede jacket with washed denim, and tan leather sneakers",
+      "sharp": "a slate pique polo under a half-canvas blazer with pleated trousers, and suede loafers",
+      "street": "a teal waffle long-sleeve under a technical shell with cargo trousers, and black high-tops"
     }
   },
   {
@@ -3705,9 +3705,9 @@ export const DATING_PROMPTS = [
       "homebody": "an apartment kitchen, open shelves and a hallway light"
     },
     "outfits": {
-      "casual": "an indigo overshirt over a cream tee with dark denim, and worn black leather sneakers",
-      "sharp": "a soft-grey flannel jacket over an oat knit with dark trousers, and charcoal suede monk shoes",
-      "street": "a black waxed trucker over a white tee with dark jeans, and grey runner sneakers"
+      "casual": "a burgundy merino crew with dark indigo denim, a leather-strap watch, and desert boots",
+      "sharp": "a taupe fine-gauge merino knit with cavalry twill trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard heavyweight knit with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -3736,9 +3736,9 @@ export const DATING_PROMPTS = [
       "homebody": "an apartment kitchen, open shelves and a hallway light"
     },
     "outfits": {
-      "casual": "a washed-black henley with dark denim, and scuffed tan leather boots",
-      "sharp": "a midnight roll-neck with charcoal trousers, and polished dark brown derbies",
-      "street": "a washed-grey hoodie under an olive overshirt with black denim, and chunky off-white sneakers"
+      "casual": "a tobacco quilted gilet over a linen shirt with stone chinos, and penny loafers",
+      "sharp": "a chocolate navy topcoat over a cashmere crew with flannel trousers, and brown brogues",
+      "street": "a stone bomber over a waffle long-sleeve with black denim, and black leather boots"
     }
   },
   {
@@ -3767,9 +3767,9 @@ export const DATING_PROMPTS = [
       "homebody": "an apartment kitchen, open shelves and a hallway light"
     },
     "outfits": {
-      "casual": "a caramel corduroy shirt over a cream tee with dark chinos, and clean off-white low-profile sneakers",
-      "sharp": "a stone wool overshirt over a white tee with dark trousers, and black leather chelsea boots",
-      "street": "a rust fleece half-zip over a bone tee with dark jeans, and black canvas high-tops"
+      "casual": "a slate brushed flannel shirt with the sleeves pushed back and moleskin trousers, and leather moccasins",
+      "sharp": "a teal button-down oxford with the sleeves pushed back and tailored trousers, and polished loafers",
+      "street": "a plum rugby shirt with the sleeves pushed back and cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -3796,9 +3796,9 @@ export const DATING_PROMPTS = [
       "homebody": "a dining table, a sideboard and a lit doorway"
     },
     "outfits": {
-      "casual": "a deep-green waffle knit with charcoal chinos, and dark brown suede chukkas",
-      "sharp": "a burgundy velvet-trim jacket over a black knit and dark trousers, and oxblood leather loafers",
-      "street": "a black quilted vest over a heather long-sleeve with black denim, and tan suede desert boots"
+      "casual": "an oatmeal harrington jacket open over a shawl-collar cardigan, selvedge denim, a steel dive watch, and tan suede derbies",
+      "sharp": "a charcoal belted trench open over a white poplin shirt, wool trousers, a gold-cased watch, and polished derbies",
+      "street": "a black down gilet open over a mock-neck knit, wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -3827,9 +3827,9 @@ export const DATING_PROMPTS = [
       "homebody": "a dining table, a sideboard and a lit doorway"
     },
     "outfits": {
-      "casual": "a stone brushed shirt with black denim, and worn black leather sneakers",
-      "sharp": "a sand sport coat over an ecru shirt with dark trousers, and charcoal suede monk shoes",
-      "street": "a sand shacket over a charcoal tee with dark jeans, and grey runner sneakers"
+      "casual": "a camel cable-knit sweater under a corduroy overshirt with corduroy trousers, and suede chukkas",
+      "sharp": "a navy fine-gauge merino knit under an unstructured jacket with pleated trousers, and black chelsea boots",
+      "street": "a bone boxy tee under a quilted liner jacket with black denim, and suede runners"
     }
   },
   {
@@ -3858,9 +3858,9 @@ export const DATING_PROMPTS = [
       "homebody": "a dining table, a sideboard and a lit doorway"
     },
     "outfits": {
-      "casual": "a maroon merino crewneck with dark jeans, and scuffed tan leather boots",
-      "sharp": "a graphite knit polo with black trousers, and polished dark brown derbies",
-      "street": "an ecru trucker over a washed-black tee with black denim, and chunky off-white sneakers"
+      "casual": "an olive suede overshirt with wool trousers, and brown leather boots",
+      "sharp": "a camel silk-blend shirt with cavalry twill trousers, and suede loafers",
+      "street": "an olive half-zip sweatshirt with cargo trousers, and black high-tops"
     }
   },
   {
@@ -3889,9 +3889,9 @@ export const DATING_PROMPTS = [
       "homebody": "an apartment hallway, shoes and a coat hook"
     },
     "outfits": {
-      "casual": "a dusty-blue overshirt over a white tee with black denim, and clean off-white low-profile sneakers",
-      "sharp": "a chocolate suede blazer over a cream knit with charcoal trousers, and black leather chelsea boots",
-      "street": "a teal overshirt over a cream tee with dark jeans, and black canvas high-tops"
+      "casual": "a charcoal shearling-collar jacket over a fine-gauge knit with washed denim, a fine wool scarf, and tan leather sneakers",
+      "sharp": "a grey tailored sport coat over a striped poplin shirt with flannel trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate anorak over a boxy tee with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -3918,9 +3918,9 @@ export const DATING_PROMPTS = [
       "homebody": "an apartment hallway, shoes and a coat hook"
     },
     "outfits": {
-      "casual": "a burgundy waffle henley with dark denim, and scuffed tan leather boots",
-      "sharp": "a bottle-green knit polo and charcoal trousers, and polished dark brown derbies",
-      "street": "a rust bomber over a cream tee with black denim, and chunky off-white sneakers"
+      "casual": "a cream waffle henley with the sleeves pushed back and dark indigo denim, and desert boots",
+      "sharp": "a black pique polo with the sleeves pushed back and tailored trousers, and brown brogues",
+      "street": "a navy heavyweight knit with the sleeves pushed back and black denim, and black leather boots"
     }
   },
   {
@@ -3947,9 +3947,9 @@ export const DATING_PROMPTS = [
       "homebody": "an apartment hallway, shoes and a coat hook"
     },
     "outfits": {
-      "casual": "a charcoal merino crewneck and black jeans, and clean off-white low-profile sneakers",
-      "sharp": "a navy unstructured blazer over a white tee with dark trousers, and black leather chelsea boots",
-      "street": "a black leather-trim trucker over a white tee and dark jeans, and black canvas high-tops"
+      "casual": "a navy quilted gilet open over a knitted polo, stone chinos, and penny loafers",
+      "sharp": "a stone navy topcoat open over a roll-neck, wool trousers, and polished loafers",
+      "street": "a cream bomber open over a waffle long-sleeve, cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -3978,9 +3978,9 @@ export const DATING_PROMPTS = [
       "homebody": "balcony railings, plant pots and city glow"
     },
     "outfits": {
-      "casual": "an ecru overshirt over a dark tee with black denim, and dark brown suede chukkas",
-      "sharp": "a burgundy fine-knit under a charcoal jacket with dark trousers, and oxblood leather loafers",
-      "street": "a sand canvas overshirt over a charcoal tee with black denim, and tan suede desert boots"
+      "casual": "a rust button-down oxford under a harrington jacket with moleskin trousers, tortoiseshell sunglasses, and leather moccasins",
+      "sharp": "a burgundy silk-blend shirt under a belted trench with pleated trousers, a silk pocket square, and polished derbies",
+      "street": "a rust rugby shirt under a down gilet with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -4009,9 +4009,9 @@ export const DATING_PROMPTS = [
       "homebody": "balcony railings, plant pots and city glow"
     },
     "outfits": {
-      "casual": "a forest-green corduroy shirt and dark chinos, and worn black leather sneakers",
-      "sharp": "a stone linen blazer over an ecru shirt and dark trousers, and charcoal suede monk shoes",
-      "street": "an indigo denim jacket over a black tee and dark jeans, and grey runner sneakers"
+      "casual": "a stone cable-knit sweater with selvedge denim, and tan suede derbies",
+      "sharp": "a forest button-down oxford with cavalry twill trousers, and black chelsea boots",
+      "street": "a charcoal oversized crewneck with black denim, and suede runners"
     }
   },
   {
@@ -4038,9 +4038,9 @@ export const DATING_PROMPTS = [
       "homebody": "balcony railings, plant pots and city glow"
     },
     "outfits": {
-      "casual": "a rust knit polo with dark denim, and scuffed tan leather boots",
-      "sharp": "a black shawl-collar knit and dark trousers, and polished dark brown derbies",
-      "street": "a forest coach jacket over an oat tee with black denim, and chunky off-white sneakers"
+      "casual": "a forest waxed cotton jacket over a cashmere crew with corduroy trousers, and suede chukkas",
+      "sharp": "a slate camel overcoat over a white poplin shirt with flannel trousers, and suede loafers",
+      "street": "a teal leather jacket over a rugby shirt with cargo trousers, and black high-tops"
     }
   },
   {
@@ -4067,9 +4067,9 @@ export const DATING_PROMPTS = [
       "homebody": "a balcony door, drawn curtains and rooftops"
     },
     "outfits": {
-      "casual": "a stone linen shirt with the sleeves rolled and dark jeans, and clean off-white low-profile sneakers",
-      "sharp": "a camel sport coat over a cream shirt with charcoal trousers, and black leather chelsea boots",
-      "street": "a cream boxy overshirt over a washed-black tee and dark jeans, and black canvas high-tops"
+      "casual": "a burgundy merino crew with the sleeves pushed back and wool trousers, a leather-strap watch, and brown leather boots",
+      "sharp": "a taupe fine-gauge merino knit with the sleeves pushed back and tailored trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard half-zip sweatshirt with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -4096,9 +4096,9 @@ export const DATING_PROMPTS = [
       "homebody": "a balcony door, drawn curtains and rooftops"
     },
     "outfits": {
-      "casual": "a slate-blue henley and charcoal chinos, and dark brown suede chukkas",
-      "sharp": "a slate merino roll-neck and grey trousers, and oxblood leather loafers",
-      "street": "a burgundy varsity jacket over a grey tee with black denim, and tan suede desert boots"
+      "casual": "a tobacco shearling-collar jacket open over a linen shirt, washed denim, and tan leather sneakers",
+      "sharp": "a chocolate tailored sport coat open over a cashmere crew, wool trousers, and brown brogues",
+      "street": "a stone anorak open over a boxy tee, black denim, and black leather boots"
     }
   },
   {
@@ -4127,9 +4127,9 @@ export const DATING_PROMPTS = [
       "homebody": "a balcony door, drawn curtains and rooftops"
     },
     "outfits": {
-      "casual": "a cream cable knit with dark denim, and worn black leather sneakers",
-      "sharp": "a rust silk-blend shirt with black trousers, and charcoal suede monk shoes",
-      "street": "a slate windbreaker over a white tee and dark jeans, and grey runner sneakers"
+      "casual": "a slate brushed flannel shirt under a quilted gilet with dark indigo denim, and desert boots",
+      "sharp": "a teal button-down oxford under a navy topcoat with pleated trousers, and polished loafers",
+      "street": "a plum heavyweight knit under a bomber with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -4158,9 +4158,9 @@ export const DATING_PROMPTS = [
       "homebody": "roof railings, plant pots and lit windows opposite"
     },
     "outfits": {
-      "casual": "a chocolate suede-trim overshirt over a black tee and dark jeans, and scuffed tan leather boots",
-      "sharp": "a chalk-grey blazer over a black knit polo and dark trousers, and polished dark brown derbies",
-      "street": "a chocolate corduroy trucker over a cream tee with black denim, and chunky off-white sneakers"
+      "casual": "an oatmeal button-down oxford with stone chinos, a steel dive watch, and penny loafers",
+      "sharp": "a charcoal navy topcoat over a fine-gauge merino knit with flannel trousers, and polished derbies",
+      "street": "a black mock-neck knit with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -4189,9 +4189,9 @@ export const DATING_PROMPTS = [
       "homebody": "roof railings, plant pots and lit windows opposite"
     },
     "outfits": {
-      "casual": "an olive flannel worn open over a grey tee with black denim, and clean off-white low-profile sneakers",
-      "sharp": "an ink-blue shirt open at the collar with charcoal trousers, and black leather chelsea boots",
-      "street": "an olive field jacket over a black tee and dark jeans, and black canvas high-tops"
+      "casual": "a camel chore jacket over a chambray shirt with moleskin trousers, and leather moccasins",
+      "sharp": "a navy double-breasted coat over a roll-neck with flannel trousers, and black chelsea boots",
+      "street": "a bone coach jacket over a heavyweight knit with black denim, and suede runners"
     }
   },
   {
@@ -4220,9 +4220,9 @@ export const DATING_PROMPTS = [
       "homebody": "roof railings, plant pots and lit windows opposite"
     },
     "outfits": {
-      "casual": "a plum lambswool crewneck and dark chinos, and dark brown suede chukkas",
-      "sharp": "a taupe corduroy blazer over a white shirt and dark trousers, and oxblood leather loafers",
-      "street": "a stone utility overshirt over a heather tee with black denim, and tan suede desert boots"
+      "casual": "an olive suede overshirt with the sleeves pushed back and selvedge denim, and tan suede derbies",
+      "sharp": "a camel belted trench open over a button-down oxford, wool trousers, a fine knitted tie, and suede loafers",
+      "street": "an olive oversized crewneck with the sleeves pushed back and cargo trousers, and black high-tops"
     }
   },
   {
@@ -4251,9 +4251,9 @@ export const DATING_PROMPTS = [
       "homebody": "a low table, a heater and rooftops"
     },
     "outfits": {
-      "casual": "a sand waffle henley with black jeans, and worn black leather sneakers",
-      "sharp": "a forest velvet-trim jacket over a black tee with dark trousers, and charcoal suede monk shoes",
-      "street": "a charcoal hoodie under a black bomber with dark jeans, and grey runner sneakers"
+      "casual": "a charcoal waxed cotton jacket open over a fine-gauge knit, corduroy trousers, a fine wool scarf, and suede chukkas",
+      "sharp": "a grey camel overcoat open over a striped poplin shirt, wool trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate leather jacket open over a rugby shirt, wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -4282,9 +4282,9 @@ export const DATING_PROMPTS = [
       "homebody": "a low table, a heater and rooftops"
     },
     "outfits": {
-      "casual": "a teal knit polo and dark denim, and scuffed tan leather boots",
-      "sharp": "a cream shawl knit and dark trousers, and polished dark brown derbies",
-      "street": "a mustard fleece half-zip over a white tee and black denim, and chunky off-white sneakers"
+      "casual": "a cream waffle henley under a shearling-collar jacket with wool trousers, and brown leather boots",
+      "sharp": "a black pique polo under a tailored sport coat with pleated trousers, and brown brogues",
+      "street": "a navy half-zip sweatshirt under an anorak with black denim, and black leather boots"
     }
   },
   {
@@ -4311,9 +4311,9 @@ export const DATING_PROMPTS = [
       "homebody": "a low table, a heater and rooftops"
     },
     "outfits": {
-      "casual": "a mustard corduroy shirt with charcoal chinos, and clean off-white low-profile sneakers",
-      "sharp": "a tobacco suede blazer over a sand knit with charcoal trousers, and black leather chelsea boots",
-      "street": "an ecru linen overshirt over a grey tee with dark jeans, and black canvas high-tops"
+      "casual": "a navy brushed flannel shirt with washed denim, and tan leather sneakers",
+      "sharp": "a stone tailored sport coat over a silk-blend shirt with flannel trousers, a silk pocket square, and polished loafers",
+      "street": "a cream waffle long-sleeve with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -4340,9 +4340,9 @@ export const DATING_PROMPTS = [
       "homebody": "a chimney stack, a washing line and night sky"
     },
     "outfits": {
-      "casual": "a bone linen overshirt over a washed grey tee and dark jeans, and dark brown suede chukkas",
-      "sharp": "a charcoal double-breasted jacket over a white tee and dark trousers, and oxblood leather loafers",
-      "street": "a teal coach jacket over a bone tee and black denim, and tan suede desert boots"
+      "casual": "a rust suede jacket over a shawl-collar cardigan with dark indigo denim, tortoiseshell sunglasses, and desert boots",
+      "sharp": "a burgundy half-canvas blazer over a cashmere crew with flannel trousers, a silk pocket square, and polished derbies",
+      "street": "a rust technical shell over a half-zip sweatshirt with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -4371,9 +4371,9 @@ export const DATING_PROMPTS = [
       "homebody": "a chimney stack, a washing line and night sky"
     },
     "outfits": {
-      "casual": "a chambray shirt buttoned low over a white tee with black denim, and worn black leather sneakers",
-      "sharp": "a plum knit polo with grey trousers, and charcoal suede monk shoes",
-      "street": "a brown suede trucker over a black tee with dark jeans, and grey runner sneakers"
+      "casual": "a stone cable-knit sweater with the sleeves pushed back and stone chinos, and penny loafers",
+      "sharp": "a forest navy topcoat open over a pique polo, wool trousers, and black chelsea boots",
+      "street": "a charcoal mock-neck knit with the sleeves pushed back and black denim, and suede runners"
     }
   },
   {
@@ -4402,9 +4402,9 @@ export const DATING_PROMPTS = [
       "homebody": "a chimney stack, a washing line and night sky"
     },
     "outfits": {
-      "casual": "a terracotta merino crewneck and dark denim, and scuffed tan leather boots",
-      "sharp": "an olive sport coat over a cream shirt and dark trousers, and polished dark brown derbies",
-      "street": "a terracotta hooded overshirt over a cream tee and black denim, and chunky off-white sneakers"
+      "casual": "a forest chore jacket open over a cashmere crew, moleskin trousers, and leather moccasins",
+      "sharp": "a slate double-breasted coat open over a white poplin shirt, wool trousers, and suede loafers",
+      "street": "a teal coach jacket open over a heavyweight knit, cargo trousers, and black high-tops"
     }
   },
   {
@@ -4433,9 +4433,9 @@ export const DATING_PROMPTS = [
       "homebody": "a trestle table, fairy lights and lit house windows"
     },
     "outfits": {
-      "casual": "a grey marl henley with black chinos, and clean off-white low-profile sneakers",
-      "sharp": "a mid-brown blazer over a light-blue shirt with charcoal trousers, and black leather chelsea boots",
-      "street": "a navy bomber over an oat tee with dark jeans, and black canvas high-tops"
+      "casual": "a burgundy merino crew under a waxed cotton jacket with selvedge denim, a leather-strap watch, and tan suede derbies",
+      "sharp": "a taupe fine-gauge merino knit under a camel overcoat with pleated trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard oversized crewneck under a leather jacket with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -4462,9 +4462,9 @@ export const DATING_PROMPTS = [
       "homebody": "a trestle table, fairy lights and lit house windows"
     },
     "outfits": {
-      "casual": "an oat brushed-cotton shirt and dark jeans, and dark brown suede chukkas",
-      "sharp": "a black band-collar shirt and dark trousers, and oxblood leather loafers",
-      "street": "a grey marl hoodie under a stone chore jacket and black denim, and tan suede desert boots"
+      "casual": "a tobacco waffle henley with corduroy trousers, and suede chukkas",
+      "sharp": "a chocolate camel overcoat over a button-down oxford with flannel trousers, and brown brogues",
+      "street": "a stone boxy tee with black denim, and black leather boots"
     }
   },
   {
@@ -4491,9 +4491,9 @@ export const DATING_PROMPTS = [
       "homebody": "a trestle table, fairy lights and lit house windows"
     },
     "outfits": {
-      "casual": "an indigo overshirt over a cream tee with dark denim, and worn black leather sneakers",
-      "sharp": "a soft-grey flannel jacket over an oat knit with dark trousers, and charcoal suede monk shoes",
-      "street": "a black waxed trucker over a white tee with dark jeans, and grey runner sneakers"
+      "casual": "a slate corduroy overshirt over a knitted polo with wool trousers, and brown leather boots",
+      "sharp": "a teal unstructured jacket over a striped poplin shirt with flannel trousers, and polished loafers",
+      "street": "a plum quilted liner jacket over an oversized crewneck with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -4522,9 +4522,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stall awning, a parked van and a garden fence"
     },
     "outfits": {
-      "casual": "a washed-black henley with dark denim, and scuffed tan leather boots",
-      "sharp": "a midnight roll-neck with charcoal trousers, and polished dark brown derbies",
-      "street": "a washed-grey hoodie under an olive overshirt with black denim, and chunky off-white sneakers"
+      "casual": "an oatmeal button-down oxford with the sleeves pushed back and washed denim, a steel dive watch, and tan leather sneakers",
+      "sharp": "a charcoal tailored sport coat open over a fine-gauge merino knit, wool trousers, and polished derbies",
+      "street": "a black waffle long-sleeve with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -4553,9 +4553,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stall awning, a parked van and a garden fence"
     },
     "outfits": {
-      "casual": "a caramel corduroy shirt over a cream tee with dark chinos, and clean off-white low-profile sneakers",
-      "sharp": "a stone wool overshirt over a white tee with dark trousers, and black leather chelsea boots",
-      "street": "a rust fleece half-zip over a bone tee with dark jeans, and black canvas high-tops"
+      "casual": "a camel suede jacket open over a chambray shirt, dark indigo denim, and desert boots",
+      "sharp": "a navy half-canvas blazer open over a roll-neck, wool trousers, and black chelsea boots",
+      "street": "a bone technical shell open over a half-zip sweatshirt, black denim, and suede runners"
     }
   },
   {
@@ -4582,9 +4582,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stall awning, a parked van and a garden fence"
     },
     "outfits": {
-      "casual": "a deep-green waffle knit with charcoal chinos, and dark brown suede chukkas",
-      "sharp": "a burgundy velvet-trim jacket over a black knit and dark trousers, and oxblood leather loafers",
-      "street": "a black quilted vest over a heather long-sleeve with black denim, and tan suede desert boots"
+      "casual": "an olive suede overshirt under a chore jacket with stone chinos, and penny loafers",
+      "sharp": "a camel silk-blend shirt under a double-breasted coat with pleated trousers, and suede loafers",
+      "street": "an olive mock-neck knit under a coach jacket with cargo trousers, and black high-tops"
     }
   },
   {
@@ -4611,9 +4611,9 @@ export const DATING_PROMPTS = [
       "homebody": "a corner pitch, bunting and quiet houses"
     },
     "outfits": {
-      "casual": "a stone brushed shirt with black denim, and worn black leather sneakers",
-      "sharp": "a sand sport coat over an ecru shirt with dark trousers, and charcoal suede monk shoes",
-      "street": "a sand shacket over a charcoal tee with dark jeans, and grey runner sneakers"
+      "casual": "a charcoal merino crew with moleskin trousers, a fine wool scarf, and leather moccasins",
+      "sharp": "a grey double-breasted coat over a pique polo with flannel trousers, and leather oxfords",
+      "street": "a slate rugby shirt with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -4640,9 +4640,9 @@ export const DATING_PROMPTS = [
       "homebody": "a corner pitch, bunting and quiet houses"
     },
     "outfits": {
-      "casual": "a maroon merino crewneck with dark jeans, and scuffed tan leather boots",
-      "sharp": "a graphite knit polo with black trousers, and polished dark brown derbies",
-      "street": "an ecru trucker over a washed-black tee with black denim, and chunky off-white sneakers"
+      "casual": "a cream harrington jacket over a linen shirt with selvedge denim, and tan suede derbies",
+      "sharp": "a black belted trench over a white poplin shirt with flannel trousers, and brown brogues",
+      "street": "a navy down gilet over a mock-neck knit with black denim, and black leather boots"
     }
   },
   {
@@ -4671,9 +4671,9 @@ export const DATING_PROMPTS = [
       "homebody": "a corner pitch, bunting and quiet houses"
     },
     "outfits": {
-      "casual": "a dusty-blue overshirt over a white tee with black denim, and clean off-white low-profile sneakers",
-      "sharp": "a chocolate suede blazer over a cream knit with charcoal trousers, and black leather chelsea boots",
-      "street": "a teal overshirt over a cream tee with dark jeans, and black canvas high-tops"
+      "casual": "a navy brushed flannel shirt with the sleeves pushed back and corduroy trousers, and suede chukkas",
+      "sharp": "a stone camel overcoat open over a silk-blend shirt, wool trousers, a silk pocket square, and polished loafers",
+      "street": "a cream boxy tee with the sleeves pushed back and cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -4700,9 +4700,9 @@ export const DATING_PROMPTS = [
       "homebody": "a brick platform building, a footbridge and low rooftops"
     },
     "outfits": {
-      "casual": "a sand overshirt over a white tee with dark jeans, and worn brown leather boots",
-      "sharp": "a camel overcoat over a fine black knit, and polished brown leather boots",
-      "street": "an olive field jacket over a white tee, and chunky black sneakers"
+      "casual": "an oatmeal merino crew with stone chinos, a steel dive watch, and suede chukkas",
+      "sharp": "a charcoal button-down oxford with pleated trousers, a gold-cased watch, and polished derbies",
+      "street": "a black bomber over a waffle long-sleeve with technical trousers, and minimal leather sneakers"
     }
   },
   {
@@ -4729,9 +4729,9 @@ export const DATING_PROMPTS = [
       "homebody": "a brick platform building, a footbridge and low rooftops"
     },
     "outfits": {
-      "casual": "a charcoal merino crewneck with straight indigo denim, and scuffed off-white sneakers",
-      "sharp": "a navy field jacket over a white oxford, and clean white leather sneakers",
-      "street": "a black shell jacket over a heather tee, and tan canvas high-tops"
+      "casual": "a camel chore jacket over a linen shirt with moleskin trousers, and brown leather boots",
+      "sharp": "a navy double-breasted coat over a white poplin shirt with cavalry twill trousers, and black chelsea boots",
+      "street": "a bone rugby shirt with the sleeves pushed back and pleated wool trousers, and suede runners"
     }
   },
   {
@@ -4758,9 +4758,9 @@ export const DATING_PROMPTS = [
       "homebody": "a brick platform building, a footbridge and low rooftops"
     },
     "outfits": {
-      "casual": "an olive field shirt worn open over a grey tee, and olive suede desert boots",
-      "sharp": "a charcoal overcoat over a cream crewneck, and tan suede chukkas",
-      "street": "a sand canvas trucker over a charcoal tee, and brown hiking boots"
+      "casual": "an olive brushed flannel shirt with the sleeves pushed back and selvedge denim, and tan leather sneakers",
+      "sharp": "a camel fine-gauge merino knit with the sleeves pushed back and flannel trousers, and suede loafers",
+      "street": "an olive down gilet open over a mock-neck knit, tailored trousers, a chunky steel watch, and black high-tops"
     }
   },
   {
@@ -4787,9 +4787,9 @@ export const DATING_PROMPTS = [
       "homebody": "a waiting shelter, a car park and a line of trees"
     },
     "outfits": {
-      "casual": "a cream fisherman knit with dark chinos, and dark grey trail sneakers",
-      "sharp": "a stone trench over a slate knit, and black leather chelsea boots",
-      "street": "an indigo denim jacket over a cream tee, and grey runner sneakers"
+      "casual": "a charcoal waxed cotton jacket open over a shawl-collar cardigan, corduroy trousers, a fine wool scarf, and desert boots",
+      "sharp": "a grey camel overcoat open over a cashmere crew, tailored trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate boxy tee under a quilted liner jacket with technical trousers, and suede trainers"
     }
   },
   {
@@ -4816,9 +4816,9 @@ export const DATING_PROMPTS = [
       "homebody": "a waiting shelter, a car park and a line of trees"
     },
     "outfits": {
-      "casual": "a rust flannel over a washed-black tee, and worn brown leather boots",
-      "sharp": "a bottle-green wool overshirt over a white shirt, and polished brown leather boots",
-      "street": "a rust anorak over a black tee, and chunky black sneakers"
+      "casual": "a cream cable-knit sweater under a shearling-collar jacket with wool trousers, and penny loafers",
+      "sharp": "a black button-down oxford under a tailored sport coat with wool trousers, and brown brogues",
+      "street": "a navy half-zip sweatshirt with pleated wool trousers, and black leather boots"
     }
   },
   {
@@ -4845,9 +4845,9 @@ export const DATING_PROMPTS = [
       "homebody": "a waiting shelter, a car park and a line of trees"
     },
     "outfits": {
-      "casual": "a slate-blue chambray shirt with the sleeves rolled and dark jeans, and scuffed off-white sneakers",
-      "sharp": "a tobacco suede jacket over a sand knit, and clean white leather sneakers",
-      "street": "a cream boxy overshirt over a grey tee, and tan canvas high-tops"
+      "casual": "a navy suede overshirt with washed denim, and leather moccasins",
+      "sharp": "a stone pique polo with pleated trousers, and polished loafers",
+      "street": "a cream anorak over a boxy tee with tailored trousers, a chunky steel watch, and leather chelsea boots"
     }
   },
   {
@@ -4874,9 +4874,9 @@ export const DATING_PROMPTS = [
       "homebody": "a gated crossing, hedgerows and a quiet road"
     },
     "outfits": {
-      "casual": "a forest-green quarter-zip with stone chinos, and olive suede desert boots",
-      "sharp": "a black tailored topcoat over a grey roll-neck, and tan suede chukkas",
-      "street": "a brown suede trucker over a bone tee, and brown hiking boots"
+      "casual": "a rust suede jacket over a fine-gauge knit with dark indigo denim, tortoiseshell sunglasses, and tan suede derbies",
+      "sharp": "a burgundy half-canvas blazer over a roll-neck with cavalry twill trousers, a silk pocket square, and polished derbies",
+      "street": "a rust heavyweight knit with the sleeves pushed back and technical trousers, and minimal leather sneakers"
     }
   },
   {
@@ -4903,9 +4903,9 @@ export const DATING_PROMPTS = [
       "homebody": "a gated crossing, hedgerows and a quiet road"
     },
     "outfits": {
-      "casual": "an oat waffle henley under a light grey shell, and dark grey trail sneakers",
-      "sharp": "a light-blue oxford under a taupe field coat, and black leather chelsea boots",
-      "street": "a slate packable windbreaker over a white tee, and grey runner sneakers"
+      "casual": "a stone waffle henley with the sleeves pushed back and stone chinos, and suede chukkas",
+      "sharp": "a forest silk-blend shirt with the sleeves pushed back and flannel trousers, and black chelsea boots",
+      "street": "a charcoal bomber open over a waffle long-sleeve, pleated wool trousers, and suede runners"
     }
   },
   {
@@ -4932,9 +4932,9 @@ export const DATING_PROMPTS = [
       "homebody": "a gated crossing, hedgerows and a quiet road"
     },
     "outfits": {
-      "casual": "a burgundy lambswool crewneck with dark denim, and worn brown leather boots",
-      "sharp": "a burgundy fine-knit under a charcoal wool jacket, and polished brown leather boots",
-      "street": "a forest quilted vest over a charcoal long-sleeve, and chunky black sneakers"
+      "casual": "a forest chore jacket open over a knitted polo, moleskin trousers, and brown leather boots",
+      "sharp": "a slate double-breasted coat open over a striped poplin shirt, tailored trousers, and suede loafers",
+      "street": "a teal rugby shirt under a down gilet with tailored trousers, a chunky steel watch, and black high-tops"
     }
   },
   {
@@ -4961,9 +4961,9 @@ export const DATING_PROMPTS = [
       "homebody": "reed beds, a jetty and the far shore"
     },
     "outfits": {
-      "casual": "a chocolate corduroy shirt with faded jeans, and scuffed off-white sneakers",
-      "sharp": "a cream shawl-collar coat over a dark knit, and clean white leather sneakers",
-      "street": "a burgundy hooded overshirt over a white tee, and tan canvas high-tops"
+      "casual": "a burgundy button-down oxford under a waxed cotton jacket with selvedge denim, a leather-strap watch, and tan leather sneakers",
+      "sharp": "a taupe pique polo under a camel overcoat with wool trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard oversized crewneck with technical trousers, and suede trainers"
     }
   },
   {
@@ -4990,9 +4990,9 @@ export const DATING_PROMPTS = [
       "homebody": "reed beds, a jetty and the far shore"
     },
     "outfits": {
-      "casual": "a bone linen shirt over a charcoal tee, and olive suede desert boots",
-      "sharp": "an olive waxed jacket over a white shirt, and tan suede chukkas",
-      "street": "a stone utility jacket over a black tee, and brown hiking boots"
+      "casual": "a tobacco cable-knit sweater with corduroy trousers, and desert boots",
+      "sharp": "a chocolate fine-gauge merino knit with pleated trousers, and brown brogues",
+      "street": "a stone leather jacket over a rugby shirt with pleated wool trousers, and black leather boots"
     }
   },
   {
@@ -5019,9 +5019,9 @@ export const DATING_PROMPTS = [
       "homebody": "reed beds, a jetty and the far shore"
     },
     "outfits": {
-      "casual": "a teal packable jacket over a white tee, and dark grey trail sneakers",
-      "sharp": "a mid-brown corduroy blazer over an ecru knit, and black leather chelsea boots",
-      "street": "a charcoal hoodie under a washed denim jacket, and grey runner sneakers"
+      "casual": "a slate corduroy overshirt over a cashmere crew with wool trousers, and penny loafers",
+      "sharp": "a teal unstructured jacket over a cashmere crew with cavalry twill trousers, and polished loafers",
+      "street": "a plum half-zip sweatshirt with the sleeves pushed back and tailored trousers, a chunky steel watch, and leather chelsea boots"
     }
   },
   {
@@ -5048,9 +5048,9 @@ export const DATING_PROMPTS = [
       "homebody": "moored dinghies, willows and a low hill"
     },
     "outfits": {
-      "casual": "a mustard knit polo with dark chinos, and worn brown leather boots",
-      "sharp": "an ink-blue overcoat over a black tee, and polished brown leather boots",
-      "street": "a teal cagoule over an oat tee, and chunky black sneakers"
+      "casual": "an oatmeal merino crew with the sleeves pushed back and washed denim, a steel dive watch, and leather moccasins",
+      "sharp": "a charcoal button-down oxford with the sleeves pushed back and flannel trousers, a gold-cased watch, and polished derbies",
+      "street": "a black anorak open over a boxy tee, technical trousers, and minimal leather sneakers"
     }
   },
   {
@@ -5077,9 +5077,9 @@ export const DATING_PROMPTS = [
       "homebody": "moored dinghies, willows and a low hill"
     },
     "outfits": {
-      "casual": "a stone chore jacket over a heather tee, and scuffed off-white sneakers",
-      "sharp": "a chalk-grey wool jacket over a white crewneck, and clean white leather sneakers",
-      "street": "an ecru linen overshirt over a washed-black tee, and tan canvas high-tops"
+      "casual": "a camel suede jacket open over a linen shirt, dark indigo denim, and tan suede derbies",
+      "sharp": "a navy half-canvas blazer open over a white poplin shirt, tailored trousers, and black chelsea boots",
+      "street": "a bone heavyweight knit under a bomber with pleated wool trousers, and suede runners"
     }
   },
   {
@@ -5106,9 +5106,9 @@ export const DATING_PROMPTS = [
       "homebody": "moored dinghies, willows and a low hill"
     },
     "outfits": {
-      "casual": "an ecru cable knit with indigo jeans, and olive suede desert boots",
-      "sharp": "a plum merino roll-neck under a stone coat, and tan suede chukkas",
-      "street": "a mustard fleece half-zip over a white tee, and brown hiking boots"
+      "casual": "an olive brushed flannel shirt under a chore jacket with stone chinos, and suede chukkas",
+      "sharp": "a camel fine-gauge merino knit under a double-breasted coat with wool trousers, and suede loafers",
+      "street": "an olive mock-neck knit with tailored trousers, a chunky steel watch, and black high-tops"
     }
   },
   {
@@ -5135,9 +5135,9 @@ export const DATING_PROMPTS = [
       "homebody": "a boathouse, poplars and flat water"
     },
     "outfits": {
-      "casual": "a plum brushed-cotton shirt with dark denim, and dark grey trail sneakers",
-      "sharp": "a forest quilted jacket over a light-blue shirt, and black leather chelsea boots",
-      "street": "a navy coach jacket over a grey tee, and grey runner sneakers"
+      "casual": "a charcoal button-down oxford with moleskin trousers, a fine wool scarf, and brown leather boots",
+      "sharp": "a grey silk-blend shirt with pleated trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate coach jacket over a heavyweight knit with technical trousers, and suede trainers"
     }
   },
   {
@@ -5164,9 +5164,9 @@ export const DATING_PROMPTS = [
       "homebody": "a boathouse, poplars and flat water"
     },
     "outfits": {
-      "casual": "a terracotta sweatshirt with stone-grey jeans, and worn brown leather boots",
-      "sharp": "a rust wool overshirt over a cream knit, and polished brown leather boots",
-      "street": "a terracotta windbreaker over a cream tee, and chunky black sneakers"
+      "casual": "a cream harrington jacket over a chambray shirt with selvedge denim, and tan leather sneakers",
+      "sharp": "a black belted trench over a striped poplin shirt with cavalry twill trousers, and brown brogues",
+      "street": "a navy oversized crewneck with the sleeves pushed back and pleated wool trousers, and black leather boots"
     }
   },
   {
@@ -5193,9 +5193,9 @@ export const DATING_PROMPTS = [
       "homebody": "a boathouse, poplars and flat water"
     },
     "outfits": {
-      "casual": "a grey marl crewneck under an olive shell, and scuffed off-white sneakers",
-      "sharp": "a soft-grey topcoat over a black polo, and clean white leather sneakers",
-      "street": "a grey marl hoodie under a stone chore coat, and tan canvas high-tops"
+      "casual": "a navy suede overshirt with the sleeves pushed back and corduroy trousers, and desert boots",
+      "sharp": "a stone pique polo with the sleeves pushed back and flannel trousers, and polished loafers",
+      "street": "a cream leather jacket open over a rugby shirt, tailored trousers, a chunky steel watch, and leather chelsea boots"
     }
   },
   {
@@ -5222,9 +5222,9 @@ export const DATING_PROMPTS = [
       "homebody": "sash windows, iron railings and a church spire"
     },
     "outfits": {
-      "casual": "a chambray overshirt over a cream tee, and olive suede desert boots",
-      "sharp": "a sand safari jacket over a white tee, and tan suede chukkas",
-      "street": "a chocolate corduroy trucker over a white tee, and brown hiking boots"
+      "casual": "a rust corduroy overshirt open over a fine-gauge knit, wool trousers, tortoiseshell sunglasses, and penny loafers",
+      "sharp": "a burgundy unstructured jacket open over a roll-neck, tailored trousers, a silk pocket square, and polished derbies",
+      "street": "a rust quilted liner jacket open over an oversized crewneck, wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -5251,9 +5251,9 @@ export const DATING_PROMPTS = [
       "homebody": "sash windows, iron railings and a church spire"
     },
     "outfits": {
-      "casual": "a black merino half-zip with dark jeans, and dark grey trail sneakers",
-      "sharp": "a slate peacoat over a bone knit, and black leather chelsea boots",
-      "street": "a black waxed parka over an oat tee, and grey runner sneakers"
+      "casual": "a stone waffle henley under a suede jacket with washed denim, and leather moccasins",
+      "sharp": "a forest silk-blend shirt under a half-canvas blazer with wool trousers, and black chelsea boots",
+      "street": "a charcoal waffle long-sleeve under a technical shell with black denim, and suede runners"
     }
   },
   {
@@ -5280,9 +5280,9 @@ export const DATING_PROMPTS = [
       "homebody": "sash windows, iron railings and a church spire"
     },
     "outfits": {
-      "casual": "a faded indigo overshirt over a white tee with sand chinos, and worn brown leather boots",
-      "sharp": "a sand linen blazer over a white tee with stone trousers, and polished brown leather boots",
-      "street": "a bleached denim jacket over a white tee with sand shorts, and chunky black sneakers"
+      "casual": "a forest brushed flannel shirt with dark indigo denim, and tan suede derbies",
+      "sharp": "a slate button-down oxford with pleated trousers, and suede loafers",
+      "street": "a teal heavyweight knit with cargo trousers, and black high-tops"
     }
   },
   {
@@ -5309,9 +5309,9 @@ export const DATING_PROMPTS = [
       "homebody": "a cobbled kerb, lamp posts and shopfronts"
     },
     "outfits": {
-      "casual": "a sun-bleached red tee with stone shorts, and scuffed off-white sneakers",
-      "sharp": "a navy overshirt over an ecru knit with charcoal trousers, and clean white leather sneakers",
-      "street": "a coral windshirt over a bone tee with dark trousers, and tan canvas high-tops"
+      "casual": "a burgundy quilted gilet over a shawl-collar cardigan with stone chinos, a leather-strap watch, and suede chukkas",
+      "sharp": "a taupe navy topcoat over a white poplin shirt with cavalry twill trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard bomber over a waffle long-sleeve with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -5338,9 +5338,9 @@ export const DATING_PROMPTS = [
       "homebody": "a cobbled kerb, lamp posts and shopfronts"
     },
     "outfits": {
-      "casual": "a moss quarter-zip with dark trail trousers, and olive suede desert boots",
-      "sharp": "a bottle-green field coat over a cream shirt with dark trousers, and tan suede chukkas",
-      "street": "a khaki anorak over a charcoal tee with black denim, and brown hiking boots"
+      "casual": "a tobacco cable-knit sweater with the sleeves pushed back and moleskin trousers, and brown leather boots",
+      "sharp": "a chocolate fine-gauge merino knit with the sleeves pushed back and flannel trousers, and brown brogues",
+      "street": "a stone rugby shirt with the sleeves pushed back and black denim, and black leather boots"
     }
   },
   {
@@ -5367,9 +5367,9 @@ export const DATING_PROMPTS = [
       "homebody": "a cobbled kerb, lamp posts and shopfronts"
     },
     "outfits": {
-      "casual": "an ecru linen shirt open over a bone tee with sand trousers, and dark grey trail sneakers",
-      "sharp": "a taupe travel blazer over a black knit with grey trousers, and black leather chelsea boots",
-      "street": "a cream fisherman knit with faded jeans, and grey runner sneakers"
+      "casual": "a slate harrington jacket open over a cashmere crew, selvedge denim, and tan leather sneakers",
+      "sharp": "a teal belted trench open over a cashmere crew, tailored trousers, and polished loafers",
+      "street": "a plum down gilet open over a mock-neck knit, cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -5396,9 +5396,9 @@ export const DATING_PROMPTS = [
       "homebody": "a brick terrace, a corner pub and parked cars"
     },
     "outfits": {
-      "casual": "a rust waffle henley with faded jeans, and worn brown leather boots",
-      "sharp": "a rust wool shirt-jacket over a white oxford with dark trousers, and polished brown leather boots",
-      "street": "a burnt-orange fleece over a grey tee with dark trousers, and chunky black sneakers"
+      "casual": "an oatmeal merino crew under a corduroy overshirt with corduroy trousers, a steel dive watch, and desert boots",
+      "sharp": "a charcoal button-down oxford under an unstructured jacket with wool trousers, a gold-cased watch, and polished derbies",
+      "street": "a black boxy tee under a quilted liner jacket with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -5425,9 +5425,9 @@ export const DATING_PROMPTS = [
       "homebody": "a brick terrace, a corner pub and parked cars"
     },
     "outfits": {
-      "casual": "a charcoal fleece over a heather tee with dark trousers, and scuffed off-white sneakers",
-      "sharp": "a slate merino half-zip with stone trousers, and clean white leather sneakers",
-      "street": "a navy cagoule over an oat tee with stone trousers, and tan canvas high-tops"
+      "casual": "a camel waffle henley with wool trousers, and penny loafers",
+      "sharp": "a navy pique polo with pleated trousers, and black chelsea boots",
+      "street": "a bone half-zip sweatshirt with black denim, and suede runners"
     }
   },
   {
@@ -5454,9 +5454,9 @@ export const DATING_PROMPTS = [
       "homebody": "a brick terrace, a corner pub and parked cars"
     },
     "outfits": {
-      "casual": "a sand overshirt over a white tee with dark jeans, and worn brown leather boots",
-      "sharp": "a camel overcoat over a fine black knit, and polished brown leather boots",
-      "street": "an olive field jacket over a white tee, and chunky black sneakers"
+      "casual": "an olive shearling-collar jacket over a knitted polo with washed denim, and leather moccasins",
+      "sharp": "a camel tailored sport coat over a roll-neck with cavalry twill trousers, and suede loafers",
+      "street": "an olive anorak over a boxy tee with cargo trousers, and black high-tops"
     }
   },
   {
@@ -5483,9 +5483,9 @@ export const DATING_PROMPTS = [
       "homebody": "a slow river, a stone bridge and willows"
     },
     "outfits": {
-      "casual": "a charcoal merino crewneck with straight indigo denim, and scuffed off-white sneakers",
-      "sharp": "a navy field jacket over a white oxford, and clean white leather sneakers",
-      "street": "a black shell jacket over a heather tee, and tan canvas high-tops"
+      "casual": "a charcoal button-down oxford with the sleeves pushed back and dark indigo denim, a fine wool scarf, and tan suede derbies",
+      "sharp": "a grey silk-blend shirt with the sleeves pushed back and flannel trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate heavyweight knit with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -5512,9 +5512,9 @@ export const DATING_PROMPTS = [
       "homebody": "a slow river, a stone bridge and willows"
     },
     "outfits": {
-      "casual": "an olive field shirt worn open over a grey tee, and olive suede desert boots",
-      "sharp": "a charcoal overcoat over a cream crewneck, and tan suede chukkas",
-      "street": "a sand canvas trucker over a charcoal tee, and brown hiking boots"
+      "casual": "a cream quilted gilet open over a chambray shirt, stone chinos, and suede chukkas",
+      "sharp": "a black navy topcoat open over a striped poplin shirt, tailored trousers, and brown brogues",
+      "street": "a navy bomber open over a waffle long-sleeve, black denim, and black leather boots"
     }
   },
   {
@@ -5541,9 +5541,9 @@ export const DATING_PROMPTS = [
       "homebody": "a slow river, a stone bridge and willows"
     },
     "outfits": {
-      "casual": "a cream fisherman knit with dark chinos, and dark grey trail sneakers",
-      "sharp": "a stone trench over a slate knit, and black leather chelsea boots",
-      "street": "an indigo denim jacket over a cream tee, and grey runner sneakers"
+      "casual": "a navy suede overshirt under a harrington jacket with moleskin trousers, and brown leather boots",
+      "sharp": "a stone pique polo under a belted trench with wool trousers, and polished loafers",
+      "street": "a cream rugby shirt under a down gilet with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -5570,9 +5570,9 @@ export const DATING_PROMPTS = [
       "homebody": "a weir, a footpath and allotments"
     },
     "outfits": {
-      "casual": "a rust flannel over a washed-black tee, and worn brown leather boots",
-      "sharp": "a bottle-green wool overshirt over a white shirt, and polished brown leather boots",
-      "street": "a rust anorak over a black tee, and chunky black sneakers"
+      "casual": "a rust merino crew with selvedge denim, tortoiseshell sunglasses, and tan leather sneakers",
+      "sharp": "a burgundy fine-gauge merino knit with pleated trousers, a silk pocket square, and polished derbies",
+      "street": "a rust oversized crewneck with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -5599,9 +5599,9 @@ export const DATING_PROMPTS = [
       "homebody": "a weir, a footpath and allotments"
     },
     "outfits": {
-      "casual": "a slate-blue chambray shirt with the sleeves rolled and dark jeans, and scuffed off-white sneakers",
-      "sharp": "a tobacco suede jacket over a sand knit, and clean white leather sneakers",
-      "street": "a cream boxy overshirt over a grey tee, and tan canvas high-tops"
+      "casual": "a stone waxed cotton jacket over a linen shirt with corduroy trousers, and desert boots",
+      "sharp": "a forest camel overcoat over a cashmere crew with cavalry twill trousers, and black chelsea boots",
+      "street": "a charcoal leather jacket over a rugby shirt with black denim, and suede runners"
     }
   },
   {
@@ -5628,9 +5628,9 @@ export const DATING_PROMPTS = [
       "homebody": "a weir, a footpath and allotments"
     },
     "outfits": {
-      "casual": "a forest-green quarter-zip with stone chinos, and olive suede desert boots",
-      "sharp": "a black tailored topcoat over a grey roll-neck, and tan suede chukkas",
-      "street": "a brown suede trucker over a bone tee, and brown hiking boots"
+      "casual": "a forest brushed flannel shirt with the sleeves pushed back and wool trousers, and penny loafers",
+      "sharp": "a slate button-down oxford with the sleeves pushed back and flannel trousers, and suede loafers",
+      "street": "a teal half-zip sweatshirt with the sleeves pushed back and cargo trousers, and black high-tops"
     }
   },
   {
@@ -5657,9 +5657,9 @@ export const DATING_PROMPTS = [
       "homebody": "a mill building, reeds and a road bridge"
     },
     "outfits": {
-      "casual": "an oat waffle henley under a light grey shell, and dark grey trail sneakers",
-      "sharp": "a light-blue oxford under a taupe field coat, and black leather chelsea boots",
-      "street": "a slate packable windbreaker over a white tee, and grey runner sneakers"
+      "casual": "a burgundy shearling-collar jacket open over a shawl-collar cardigan, washed denim, a leather-strap watch, and leather moccasins",
+      "sharp": "a taupe tailored sport coat open over a white poplin shirt, tailored trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard anorak open over a boxy tee, wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -5686,9 +5686,9 @@ export const DATING_PROMPTS = [
       "homebody": "a mill building, reeds and a road bridge"
     },
     "outfits": {
-      "casual": "a burgundy lambswool crewneck with dark denim, and worn brown leather boots",
-      "sharp": "a burgundy fine-knit under a charcoal wool jacket, and polished brown leather boots",
-      "street": "a forest quilted vest over a charcoal long-sleeve, and chunky black sneakers"
+      "casual": "a tobacco cable-knit sweater under a quilted gilet with dark indigo denim, and tan suede derbies",
+      "sharp": "a chocolate fine-gauge merino knit under a navy topcoat with wool trousers, and brown brogues",
+      "street": "a stone heavyweight knit under a bomber with black denim, and black leather boots"
     }
   },
   {
@@ -5715,9 +5715,9 @@ export const DATING_PROMPTS = [
       "homebody": "a mill building, reeds and a road bridge"
     },
     "outfits": {
-      "casual": "a chocolate corduroy shirt with faded jeans, and scuffed off-white sneakers",
-      "sharp": "a cream shawl-collar coat over a dark knit, and clean white leather sneakers",
-      "street": "a burgundy hooded overshirt over a white tee, and tan canvas high-tops"
+      "casual": "a slate suede overshirt with stone chinos, and suede chukkas",
+      "sharp": "a teal silk-blend shirt with pleated trousers, and polished loafers",
+      "street": "a plum mock-neck knit with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -5744,9 +5744,9 @@ export const DATING_PROMPTS = [
       "homebody": "a cobbled slope, sash windows and chimney pots"
     },
     "outfits": {
-      "casual": "a bone linen shirt over a charcoal tee, and olive suede desert boots",
-      "sharp": "an olive waxed jacket over a white shirt, and tan suede chukkas",
-      "street": "a stone utility jacket over a black tee, and brown hiking boots"
+      "casual": "an oatmeal chore jacket over a fine-gauge knit with moleskin trousers, a steel dive watch, and brown leather boots",
+      "sharp": "a charcoal double-breasted coat over a striped poplin shirt with cavalry twill trousers, a gold-cased watch, and polished derbies",
+      "street": "a black coach jacket over a heavyweight knit with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -5773,9 +5773,9 @@ export const DATING_PROMPTS = [
       "homebody": "a cobbled slope, sash windows and chimney pots"
     },
     "outfits": {
-      "casual": "a teal packable jacket over a white tee, and dark grey trail sneakers",
-      "sharp": "a mid-brown corduroy blazer over an ecru knit, and black leather chelsea boots",
-      "street": "a charcoal hoodie under a washed denim jacket, and grey runner sneakers"
+      "casual": "a camel waffle henley with the sleeves pushed back and selvedge denim, and tan leather sneakers",
+      "sharp": "a navy pique polo with the sleeves pushed back and flannel trousers, and black chelsea boots",
+      "street": "a bone oversized crewneck with the sleeves pushed back and black denim, and suede runners"
     }
   },
   {
@@ -5802,9 +5802,9 @@ export const DATING_PROMPTS = [
       "homebody": "a cobbled slope, sash windows and chimney pots"
     },
     "outfits": {
-      "casual": "a mustard knit polo with dark chinos, and worn brown leather boots",
-      "sharp": "an ink-blue overcoat over a black tee, and polished brown leather boots",
-      "street": "a teal cagoule over an oat tee, and chunky black sneakers"
+      "casual": "an olive waxed cotton jacket open over a knitted polo, corduroy trousers, and desert boots",
+      "sharp": "a camel camel overcoat open over a roll-neck, tailored trousers, and suede loafers",
+      "street": "an olive leather jacket open over a rugby shirt, cargo trousers, and black high-tops"
     }
   },
   {
@@ -5831,9 +5831,9 @@ export const DATING_PROMPTS = [
       "homebody": "an archway, a courtyard and pantiled roofs"
     },
     "outfits": {
-      "casual": "a stone chore jacket over a heather tee, and scuffed off-white sneakers",
-      "sharp": "a chalk-grey wool jacket over a white crewneck, and clean white leather sneakers",
-      "street": "an ecru linen overshirt over a washed-black tee, and tan canvas high-tops"
+      "casual": "a charcoal button-down oxford under a shearling-collar jacket with wool trousers, a fine wool scarf, and penny loafers",
+      "sharp": "a grey silk-blend shirt under a tailored sport coat with wool trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate half-zip sweatshirt under an anorak with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -5860,9 +5860,9 @@ export const DATING_PROMPTS = [
       "homebody": "an archway, a courtyard and pantiled roofs"
     },
     "outfits": {
-      "casual": "an ecru cable knit with indigo jeans, and olive suede desert boots",
-      "sharp": "a plum merino roll-neck under a stone coat, and tan suede chukkas",
-      "street": "a mustard fleece half-zip over a white tee, and brown hiking boots"
+      "casual": "a cream cable-knit sweater with washed denim, and leather moccasins",
+      "sharp": "a black button-down oxford with pleated trousers, and brown brogues",
+      "street": "a navy waffle long-sleeve with black denim, and black leather boots"
     }
   },
   {
@@ -5889,9 +5889,9 @@ export const DATING_PROMPTS = [
       "homebody": "an archway, a courtyard and pantiled roofs"
     },
     "outfits": {
-      "casual": "a plum brushed-cotton shirt with dark denim, and dark grey trail sneakers",
-      "sharp": "a forest quilted jacket over a light-blue shirt, and black leather chelsea boots",
-      "street": "a navy coach jacket over a grey tee, and grey runner sneakers"
+      "casual": "a navy suede jacket over a cashmere crew with dark indigo denim, and tan suede derbies",
+      "sharp": "a stone half-canvas blazer over a white poplin shirt with cavalry twill trousers, and polished loafers",
+      "street": "a cream technical shell over a half-zip sweatshirt with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -5918,9 +5918,9 @@ export const DATING_PROMPTS = [
       "homebody": "a florist front, planters and old brick"
     },
     "outfits": {
-      "casual": "a terracotta sweatshirt with stone-grey jeans, and worn brown leather boots",
-      "sharp": "a rust wool overshirt over a cream knit, and polished brown leather boots",
-      "street": "a terracotta windbreaker over a cream tee, and chunky black sneakers"
+      "casual": "a rust merino crew with the sleeves pushed back and stone chinos, tortoiseshell sunglasses, and suede chukkas",
+      "sharp": "a burgundy fine-gauge merino knit with the sleeves pushed back and flannel trousers, a silk pocket square, and polished derbies",
+      "street": "a rust mock-neck knit with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -5947,9 +5947,9 @@ export const DATING_PROMPTS = [
       "homebody": "a florist front, planters and old brick"
     },
     "outfits": {
-      "casual": "a grey marl crewneck under an olive shell, and scuffed off-white sneakers",
-      "sharp": "a soft-grey topcoat over a black polo, and clean white leather sneakers",
-      "street": "a grey marl hoodie under a stone chore coat, and tan canvas high-tops"
+      "casual": "a stone chore jacket open over a linen shirt, moleskin trousers, and brown leather boots",
+      "sharp": "a forest double-breasted coat open over a cashmere crew, tailored trousers, and black chelsea boots",
+      "street": "a charcoal coach jacket open over a heavyweight knit, black denim, and suede runners"
     }
   },
   {
@@ -5976,9 +5976,9 @@ export const DATING_PROMPTS = [
       "homebody": "a florist front, planters and old brick"
     },
     "outfits": {
-      "casual": "a chambray overshirt over a cream tee, and olive suede desert boots",
-      "sharp": "a sand safari jacket over a white tee, and tan suede chukkas",
-      "street": "a chocolate corduroy trucker over a white tee, and brown hiking boots"
+      "casual": "a forest brushed flannel shirt under a waxed cotton jacket with selvedge denim, and tan leather sneakers",
+      "sharp": "a slate button-down oxford under a camel overcoat with wool trousers, and suede loafers",
+      "street": "a teal oversized crewneck under a leather jacket with cargo trousers, and black high-tops"
     }
   },
   {
@@ -6005,9 +6005,9 @@ export const DATING_PROMPTS = [
       "homebody": "a civic facade, stone urns and a paved forecourt"
     },
     "outfits": {
-      "casual": "a black merino half-zip with dark jeans, and dark grey trail sneakers",
-      "sharp": "a slate peacoat over a bone knit, and black leather chelsea boots",
-      "street": "a black waxed parka over an oat tee, and grey runner sneakers"
+      "casual": "a burgundy button-down oxford with corduroy trousers, a leather-strap watch, and desert boots",
+      "sharp": "a taupe pique polo with pleated trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard boxy tee with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -6034,9 +6034,9 @@ export const DATING_PROMPTS = [
       "homebody": "a civic facade, stone urns and a paved forecourt"
     },
     "outfits": {
-      "casual": "a faded indigo overshirt over a white tee with sand chinos, and worn brown leather boots",
-      "sharp": "a sand linen blazer over a white tee with stone trousers, and polished brown leather boots",
-      "street": "a bleached denim jacket over a white tee with sand shorts, and chunky black sneakers"
+      "casual": "a tobacco corduroy overshirt over a chambray shirt with wool trousers, and penny loafers",
+      "sharp": "a chocolate unstructured jacket over a roll-neck with cavalry twill trousers, and brown brogues",
+      "street": "a stone quilted liner jacket over an oversized crewneck with black denim, and black leather boots"
     }
   },
   {
@@ -6063,9 +6063,9 @@ export const DATING_PROMPTS = [
       "homebody": "a civic facade, stone urns and a paved forecourt"
     },
     "outfits": {
-      "casual": "a sun-bleached red tee with stone shorts, and scuffed off-white sneakers",
-      "sharp": "a navy overshirt over an ecru knit with charcoal trousers, and clean white leather sneakers",
-      "street": "a coral windshirt over a bone tee with dark trousers, and tan canvas high-tops"
+      "casual": "a slate suede overshirt with the sleeves pushed back and washed denim, and leather moccasins",
+      "sharp": "a teal silk-blend shirt with the sleeves pushed back and flannel trousers, and polished loafers",
+      "street": "a plum waffle long-sleeve with the sleeves pushed back and cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -6092,9 +6092,9 @@ export const DATING_PROMPTS = [
       "homebody": "a lawn, a sculpture and a car park edge"
     },
     "outfits": {
-      "casual": "a moss quarter-zip with dark trail trousers, and olive suede desert boots",
-      "sharp": "a bottle-green field coat over a cream shirt with dark trousers, and tan suede chukkas",
-      "street": "a khaki anorak over a charcoal tee with black denim, and brown hiking boots"
+      "casual": "an oatmeal suede jacket open over a fine-gauge knit, dark indigo denim, a steel dive watch, and tan suede derbies",
+      "sharp": "a charcoal half-canvas blazer open over a striped poplin shirt, tailored trousers, a gold-cased watch, and polished derbies",
+      "street": "a black technical shell open over a half-zip sweatshirt, wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -6121,9 +6121,9 @@ export const DATING_PROMPTS = [
       "homebody": "a lawn, a sculpture and a car park edge"
     },
     "outfits": {
-      "casual": "an ecru linen shirt open over a bone tee with sand trousers, and dark grey trail sneakers",
-      "sharp": "a taupe travel blazer over a black knit with grey trousers, and black leather chelsea boots",
-      "street": "a cream fisherman knit with faded jeans, and grey runner sneakers"
+      "casual": "a camel waffle henley under a chore jacket with stone chinos, and suede chukkas",
+      "sharp": "a navy pique polo under a double-breasted coat with wool trousers, and black chelsea boots",
+      "street": "a bone mock-neck knit under a coach jacket with black denim, and suede runners"
     }
   },
   {
@@ -6150,9 +6150,9 @@ export const DATING_PROMPTS = [
       "homebody": "a lawn, a sculpture and a car park edge"
     },
     "outfits": {
-      "casual": "a rust waffle henley with faded jeans, and worn brown leather boots",
-      "sharp": "a rust wool shirt-jacket over a white oxford with dark trousers, and polished brown leather boots",
-      "street": "a burnt-orange fleece over a grey tee with dark trousers, and chunky black sneakers"
+      "casual": "an olive brushed flannel shirt with moleskin trousers, and brown leather boots",
+      "sharp": "a camel fine-gauge merino knit with pleated trousers, and suede loafers",
+      "street": "an olive rugby shirt with cargo trousers, and black high-tops"
     }
   },
   {
@@ -6179,9 +6179,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stepped entrance, a bike stand and street trees"
     },
     "outfits": {
-      "casual": "a charcoal fleece over a heather tee with dark trousers, and scuffed off-white sneakers",
-      "sharp": "a slate merino half-zip with stone trousers, and clean white leather sneakers",
-      "street": "a navy cagoule over an oat tee with stone trousers, and tan canvas high-tops"
+      "casual": "a charcoal harrington jacket over a shawl-collar cardigan with selvedge denim, a fine wool scarf, and tan leather sneakers",
+      "sharp": "a grey belted trench over a cashmere crew with cavalry twill trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate down gilet over a mock-neck knit with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -6208,9 +6208,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stepped entrance, a bike stand and street trees"
     },
     "outfits": {
-      "casual": "a sand overshirt over a white tee with dark jeans, and worn brown leather boots",
-      "sharp": "a camel overcoat over a fine black knit, and polished brown leather boots",
-      "street": "an olive field jacket over a white tee, and chunky black sneakers"
+      "casual": "a cream cable-knit sweater with the sleeves pushed back and corduroy trousers, and desert boots",
+      "sharp": "a black button-down oxford with the sleeves pushed back and flannel trousers, and brown brogues",
+      "street": "a navy boxy tee with the sleeves pushed back and black denim, and black leather boots"
     }
   },
   {
@@ -6237,9 +6237,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stepped entrance, a bike stand and street trees"
     },
     "outfits": {
-      "casual": "a charcoal merino crewneck with straight indigo denim, and scuffed off-white sneakers",
-      "sharp": "a navy field jacket over a white oxford, and clean white leather sneakers",
-      "street": "a black shell jacket over a heather tee, and tan canvas high-tops"
+      "casual": "a navy corduroy overshirt open over a cashmere crew, wool trousers, and penny loafers",
+      "sharp": "a stone unstructured jacket open over a white poplin shirt, tailored trousers, and polished loafers",
+      "street": "a cream quilted liner jacket open over an oversized crewneck, cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -6266,9 +6266,9 @@ export const DATING_PROMPTS = [
       "homebody": "a jetty, upturned boats and the far bank"
     },
     "outfits": {
-      "casual": "an olive field shirt worn open over a grey tee, and olive suede desert boots",
-      "sharp": "a charcoal overcoat over a cream crewneck, and tan suede chukkas",
-      "street": "a sand canvas trucker over a charcoal tee, and brown hiking boots"
+      "casual": "a rust merino crew under a suede jacket with washed denim, tortoiseshell sunglasses, and leather moccasins",
+      "sharp": "a burgundy fine-gauge merino knit under a half-canvas blazer with wool trousers, a silk pocket square, and polished derbies",
+      "street": "a rust waffle long-sleeve under a technical shell with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -6295,9 +6295,9 @@ export const DATING_PROMPTS = [
       "homebody": "a jetty, upturned boats and the far bank"
     },
     "outfits": {
-      "casual": "a cream fisherman knit with dark chinos, and dark grey trail sneakers",
-      "sharp": "a stone trench over a slate knit, and black leather chelsea boots",
-      "street": "an indigo denim jacket over a cream tee, and grey runner sneakers"
+      "casual": "a stone waffle henley with dark indigo denim, and tan suede derbies",
+      "sharp": "a forest silk-blend shirt with pleated trousers, and black chelsea boots",
+      "street": "a charcoal heavyweight knit with black denim, and suede runners"
     }
   },
   {
@@ -6324,9 +6324,9 @@ export const DATING_PROMPTS = [
       "homebody": "a jetty, upturned boats and the far bank"
     },
     "outfits": {
-      "casual": "a rust flannel over a washed-black tee, and worn brown leather boots",
-      "sharp": "a bottle-green wool overshirt over a white shirt, and polished brown leather boots",
-      "street": "a rust anorak over a black tee, and chunky black sneakers"
+      "casual": "a forest quilted gilet over a knitted polo with stone chinos, and suede chukkas",
+      "sharp": "a slate navy topcoat over a striped poplin shirt with cavalry twill trousers, and suede loafers",
+      "street": "a teal bomber over a waffle long-sleeve with cargo trousers, and black high-tops"
     }
   },
   {
@@ -6353,9 +6353,9 @@ export const DATING_PROMPTS = [
       "homebody": "a lake path, birches and a wooden hide"
     },
     "outfits": {
-      "casual": "a slate-blue chambray shirt with the sleeves rolled and dark jeans, and scuffed off-white sneakers",
-      "sharp": "a tobacco suede jacket over a sand knit, and clean white leather sneakers",
-      "street": "a cream boxy overshirt over a grey tee, and tan canvas high-tops"
+      "casual": "a burgundy button-down oxford with the sleeves pushed back and moleskin trousers, a leather-strap watch, and brown leather boots",
+      "sharp": "a taupe pique polo with the sleeves pushed back and flannel trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard rugby shirt with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -6382,9 +6382,9 @@ export const DATING_PROMPTS = [
       "homebody": "a lake path, birches and a wooden hide"
     },
     "outfits": {
-      "casual": "a forest-green quarter-zip with stone chinos, and olive suede desert boots",
-      "sharp": "a black tailored topcoat over a grey roll-neck, and tan suede chukkas",
-      "street": "a brown suede trucker over a bone tee, and brown hiking boots"
+      "casual": "a tobacco harrington jacket open over a chambray shirt, selvedge denim, and tan leather sneakers",
+      "sharp": "a chocolate belted trench open over a roll-neck, tailored trousers, and brown brogues",
+      "street": "a stone down gilet open over a mock-neck knit, black denim, and black leather boots"
     }
   },
   {
@@ -6411,9 +6411,9 @@ export const DATING_PROMPTS = [
       "homebody": "a lake path, birches and a wooden hide"
     },
     "outfits": {
-      "casual": "an oat waffle henley under a light grey shell, and dark grey trail sneakers",
-      "sharp": "a light-blue oxford under a taupe field coat, and black leather chelsea boots",
-      "street": "a slate packable windbreaker over a white tee, and grey runner sneakers"
+      "casual": "a slate suede overshirt under a corduroy overshirt with corduroy trousers, and desert boots",
+      "sharp": "a teal silk-blend shirt under an unstructured jacket with wool trousers, and polished loafers",
+      "street": "a plum boxy tee under a quilted liner jacket with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -6440,9 +6440,9 @@ export const DATING_PROMPTS = [
       "homebody": "a shingle edge, moored dinghies and a far bank"
     },
     "outfits": {
-      "casual": "a burgundy lambswool crewneck with dark denim, and worn brown leather boots",
-      "sharp": "a burgundy fine-knit under a charcoal wool jacket, and polished brown leather boots",
-      "street": "a forest quilted vest over a charcoal long-sleeve, and chunky black sneakers"
+      "casual": "an oatmeal merino crew with wool trousers, a steel dive watch, and penny loafers",
+      "sharp": "a charcoal unstructured jacket over a pique polo with cavalry twill trousers, and polished derbies",
+      "street": "a black half-zip sweatshirt with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -6469,9 +6469,9 @@ export const DATING_PROMPTS = [
       "homebody": "a shingle edge, moored dinghies and a far bank"
     },
     "outfits": {
-      "casual": "a chocolate corduroy shirt with faded jeans, and scuffed off-white sneakers",
-      "sharp": "a cream shawl-collar coat over a dark knit, and clean white leather sneakers",
-      "street": "a burgundy hooded overshirt over a white tee, and tan canvas high-tops"
+      "casual": "a camel shearling-collar jacket over a linen shirt with washed denim, and leather moccasins",
+      "sharp": "a navy tailored sport coat over a white poplin shirt with cavalry twill trousers, and black chelsea boots",
+      "street": "a bone anorak over a boxy tee with black denim, and suede runners"
     }
   },
   {
@@ -6498,9 +6498,9 @@ export const DATING_PROMPTS = [
       "homebody": "a shingle edge, moored dinghies and a far bank"
     },
     "outfits": {
-      "casual": "a bone linen shirt over a charcoal tee, and olive suede desert boots",
-      "sharp": "an olive waxed jacket over a white shirt, and tan suede chukkas",
-      "street": "a stone utility jacket over a black tee, and brown hiking boots"
+      "casual": "an olive brushed flannel shirt with the sleeves pushed back and dark indigo denim, and tan suede derbies",
+      "sharp": "a camel half-canvas blazer open over a silk-blend shirt, tailored trousers, a fine knitted tie, and suede loafers",
+      "street": "an olive heavyweight knit with the sleeves pushed back and cargo trousers, and black high-tops"
     }
   },
   {
@@ -6527,9 +6527,9 @@ export const DATING_PROMPTS = [
       "homebody": "reed beds, a jetty and low hills"
     },
     "outfits": {
-      "casual": "a teal packable jacket over a white tee, and dark grey trail sneakers",
-      "sharp": "a mid-brown corduroy blazer over an ecru knit, and black leather chelsea boots",
-      "street": "a charcoal hoodie under a washed denim jacket, and grey runner sneakers"
+      "casual": "a charcoal quilted gilet open over a shawl-collar cardigan, stone chinos, a fine wool scarf, and suede chukkas",
+      "sharp": "a grey navy topcoat open over a cashmere crew, tailored trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate bomber open over a waffle long-sleeve, wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -6556,9 +6556,9 @@ export const DATING_PROMPTS = [
       "homebody": "reed beds, a jetty and low hills"
     },
     "outfits": {
-      "casual": "a mustard knit polo with dark chinos, and worn brown leather boots",
-      "sharp": "an ink-blue overcoat over a black tee, and polished brown leather boots",
-      "street": "a teal cagoule over an oat tee, and chunky black sneakers"
+      "casual": "a cream cable-knit sweater under a harrington jacket with moleskin trousers, and brown leather boots",
+      "sharp": "a black button-down oxford under a belted trench with wool trousers, and brown brogues",
+      "street": "a navy rugby shirt under a down gilet with black denim, and black leather boots"
     }
   },
   {
@@ -6585,9 +6585,9 @@ export const DATING_PROMPTS = [
       "homebody": "reed beds, a jetty and low hills"
     },
     "outfits": {
-      "casual": "a stone chore jacket over a heather tee, and scuffed off-white sneakers",
-      "sharp": "a chalk-grey wool jacket over a white crewneck, and clean white leather sneakers",
-      "street": "an ecru linen overshirt over a washed-black tee, and tan canvas high-tops"
+      "casual": "a navy suede overshirt with selvedge denim, and tan leather sneakers",
+      "sharp": "a stone belted trench over a fine-gauge merino knit with cavalry twill trousers, a silk pocket square, and polished loafers",
+      "street": "a cream oversized crewneck with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -6614,9 +6614,9 @@ export const DATING_PROMPTS = [
       "homebody": "a boathouse, willows and flat water"
     },
     "outfits": {
-      "casual": "an ecru cable knit with indigo jeans, and olive suede desert boots",
-      "sharp": "a plum merino roll-neck under a stone coat, and tan suede chukkas",
-      "street": "a mustard fleece half-zip over a white tee, and brown hiking boots"
+      "casual": "a rust waxed cotton jacket over a fine-gauge knit with corduroy trousers, tortoiseshell sunglasses, and desert boots",
+      "sharp": "a burgundy camel overcoat over a roll-neck with cavalry twill trousers, a silk pocket square, and polished derbies",
+      "street": "a rust leather jacket over a rugby shirt with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -6643,9 +6643,9 @@ export const DATING_PROMPTS = [
       "homebody": "a boathouse, willows and flat water"
     },
     "outfits": {
-      "casual": "a plum brushed-cotton shirt with dark denim, and dark grey trail sneakers",
-      "sharp": "a forest quilted jacket over a light-blue shirt, and black leather chelsea boots",
-      "street": "a navy coach jacket over a grey tee, and grey runner sneakers"
+      "casual": "a stone waffle henley with the sleeves pushed back and wool trousers, and penny loafers",
+      "sharp": "a forest unstructured jacket open over a button-down oxford, tailored trousers, and black chelsea boots",
+      "street": "a charcoal half-zip sweatshirt with the sleeves pushed back and black denim, and suede runners"
     }
   },
   {
@@ -6672,9 +6672,9 @@ export const DATING_PROMPTS = [
       "homebody": "a boathouse, willows and flat water"
     },
     "outfits": {
-      "casual": "a terracotta sweatshirt with stone-grey jeans, and worn brown leather boots",
-      "sharp": "a rust wool overshirt over a cream knit, and polished brown leather boots",
-      "street": "a terracotta windbreaker over a cream tee, and chunky black sneakers"
+      "casual": "a forest shearling-collar jacket open over a knitted polo, washed denim, and leather moccasins",
+      "sharp": "a slate tailored sport coat open over a striped poplin shirt, tailored trousers, and suede loafers",
+      "street": "a teal anorak open over a boxy tee, cargo trousers, and black high-tops"
     }
   },
   {
@@ -6701,9 +6701,9 @@ export const DATING_PROMPTS = [
       "homebody": "a grass rampart, a trig point and open country"
     },
     "outfits": {
-      "casual": "a grey marl crewneck under an olive shell, and scuffed off-white sneakers",
-      "sharp": "a soft-grey topcoat over a black polo, and clean white leather sneakers",
-      "street": "a grey marl hoodie under a stone chore coat, and tan canvas high-tops"
+      "casual": "a burgundy button-down oxford under a quilted gilet with dark indigo denim, a leather-strap watch, and tan suede derbies",
+      "sharp": "a taupe pique polo under a navy topcoat with wool trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard heavyweight knit under a bomber with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -6730,9 +6730,9 @@ export const DATING_PROMPTS = [
       "homebody": "a grass rampart, a trig point and open country"
     },
     "outfits": {
-      "casual": "a chambray overshirt over a cream tee, and olive suede desert boots",
-      "sharp": "a sand safari jacket over a white tee, and tan suede chukkas",
-      "street": "a chocolate corduroy trucker over a white tee, and brown hiking boots"
+      "casual": "a tobacco cable-knit sweater with stone chinos, and suede chukkas",
+      "sharp": "a chocolate navy topcoat over a silk-blend shirt with cavalry twill trousers, and brown brogues",
+      "street": "a stone mock-neck knit with black denim, and black leather boots"
     }
   },
   {
@@ -6759,9 +6759,9 @@ export const DATING_PROMPTS = [
       "homebody": "a grass rampart, a trig point and open country"
     },
     "outfits": {
-      "casual": "a black merino half-zip with dark jeans, and dark grey trail sneakers",
-      "sharp": "a slate peacoat over a bone knit, and black leather chelsea boots",
-      "street": "a black waxed parka over an oat tee, and grey runner sneakers"
+      "casual": "a slate chore jacket over a cashmere crew with moleskin trousers, and brown leather boots",
+      "sharp": "a teal double-breasted coat over a cashmere crew with cavalry twill trousers, and polished loafers",
+      "street": "a plum coach jacket over a heavyweight knit with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -6788,9 +6788,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stone wall, gorse and a patchwork of fields"
     },
     "outfits": {
-      "casual": "a faded indigo overshirt over a white tee with sand chinos, and worn brown leather boots",
-      "sharp": "a sand linen blazer over a white tee with stone trousers, and polished brown leather boots",
-      "street": "a bleached denim jacket over a white tee with sand shorts, and chunky black sneakers"
+      "casual": "an oatmeal merino crew with the sleeves pushed back and selvedge denim, a steel dive watch, and tan leather sneakers",
+      "sharp": "a charcoal belted trench open over a pique polo, tailored trousers, and polished derbies",
+      "street": "a black oversized crewneck with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -6817,9 +6817,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stone wall, gorse and a patchwork of fields"
     },
     "outfits": {
-      "casual": "a sun-bleached red tee with stone shorts, and scuffed off-white sneakers",
-      "sharp": "a navy overshirt over an ecru knit with charcoal trousers, and clean white leather sneakers",
-      "street": "a coral windshirt over a bone tee with dark trousers, and tan canvas high-tops"
+      "casual": "a camel waxed cotton jacket open over a linen shirt, corduroy trousers, and desert boots",
+      "sharp": "a navy camel overcoat open over a white poplin shirt, tailored trousers, and black chelsea boots",
+      "street": "a bone leather jacket open over a rugby shirt, black denim, and suede runners"
     }
   },
   {
@@ -6846,9 +6846,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stone wall, gorse and a patchwork of fields"
     },
     "outfits": {
-      "casual": "a moss quarter-zip with dark trail trousers, and olive suede desert boots",
-      "sharp": "a bottle-green field coat over a cream shirt with dark trousers, and tan suede chukkas",
-      "street": "a khaki anorak over a charcoal tee with black denim, and brown hiking boots"
+      "casual": "an olive brushed flannel shirt under a shearling-collar jacket with wool trousers, and penny loafers",
+      "sharp": "a camel fine-gauge merino knit under a tailored sport coat with wool trousers, and suede loafers",
+      "street": "an olive half-zip sweatshirt under an anorak with cargo trousers, and black high-tops"
     }
   },
   {
@@ -6875,9 +6875,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bare crown, a footpath and distant woods"
     },
     "outfits": {
-      "casual": "an ecru linen shirt open over a bone tee with sand trousers, and dark grey trail sneakers",
-      "sharp": "a taupe travel blazer over a black knit with grey trousers, and black leather chelsea boots",
-      "street": "a cream fisherman knit with faded jeans, and grey runner sneakers"
+      "casual": "a charcoal button-down oxford with washed denim, a fine wool scarf, and leather moccasins",
+      "sharp": "a grey tailored sport coat over a button-down oxford with cavalry twill trousers, and leather oxfords",
+      "street": "a slate waffle long-sleeve with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -6904,9 +6904,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bare crown, a footpath and distant woods"
     },
     "outfits": {
-      "casual": "a rust waffle henley with faded jeans, and worn brown leather boots",
-      "sharp": "a rust wool shirt-jacket over a white oxford with dark trousers, and polished brown leather boots",
-      "street": "a burnt-orange fleece over a grey tee with dark trousers, and chunky black sneakers"
+      "casual": "a cream suede jacket over a chambray shirt with dark indigo denim, and tan suede derbies",
+      "sharp": "a black half-canvas blazer over a striped poplin shirt with cavalry twill trousers, and brown brogues",
+      "street": "a navy technical shell over a half-zip sweatshirt with black denim, and black leather boots"
     }
   },
   {
@@ -6933,9 +6933,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bare crown, a footpath and distant woods"
     },
     "outfits": {
-      "casual": "a charcoal fleece over a heather tee with dark trousers, and scuffed off-white sneakers",
-      "sharp": "a slate merino half-zip with stone trousers, and clean white leather sneakers",
-      "street": "a navy cagoule over an oat tee with stone trousers, and tan canvas high-tops"
+      "casual": "a navy suede overshirt with the sleeves pushed back and stone chinos, and suede chukkas",
+      "sharp": "a stone navy topcoat open over a fine-gauge merino knit, tailored trousers, a silk pocket square, and polished loafers",
+      "street": "a cream mock-neck knit with the sleeves pushed back and cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -6964,9 +6964,9 @@ export const DATING_PROMPTS = [
       "homebody": "clipped hedges, a park gate and low houses"
     },
     "outfits": {
-      "casual": "a slate technical tee with tapered charcoal joggers, and worn trail shoes",
-      "sharp": "a black technical half-zip with charcoal soft-shell trousers, and clean white leather sneakers",
-      "street": "a teal windbreaker over a white training tee, and chunky white sneakers"
+      "casual": "an oatmeal button-down oxford with wool trousers, a steel dive watch, and suede chukkas",
+      "sharp": "a charcoal silk-blend shirt with wool trousers, a gold-cased watch, and polished derbies",
+      "street": "a black quilted liner jacket over an oversized crewneck with technical trousers, and minimal leather sneakers"
     }
   },
   {
@@ -6995,9 +6995,9 @@ export const DATING_PROMPTS = [
       "homebody": "clipped hedges, a park gate and low houses"
     },
     "outfits": {
-      "casual": "a heather-grey training top with black shorts, and grey running sneakers",
-      "sharp": "a navy performance polo with stone hiking trousers, and dark grey technical trainers",
-      "street": "a black hooded shell over a grey tee, and black trail runners"
+      "casual": "a camel shearling-collar jacket over a chambray shirt with washed denim, and brown leather boots",
+      "sharp": "a navy tailored sport coat over a striped poplin shirt with pleated trousers, and black chelsea boots",
+      "street": "a bone waffle long-sleeve with the sleeves pushed back and pleated wool trousers, and suede runners"
     }
   },
   {
@@ -7026,9 +7026,9 @@ export const DATING_PROMPTS = [
       "homebody": "clipped hedges, a park gate and low houses"
     },
     "outfits": {
-      "casual": "an olive long-sleeve base layer with dark trail trousers, and brown walking boots",
-      "sharp": "a charcoal merino quarter-zip with dark technical trousers, and brown suede walking boots",
-      "street": "a sand cagoule over a charcoal long-sleeve, and tan hiking boots"
+      "casual": "an olive suede overshirt with the sleeves pushed back and dark indigo denim, and tan leather sneakers",
+      "sharp": "a camel pique polo with the sleeves pushed back and cavalry twill trousers, and suede loafers",
+      "street": "an olive technical shell open over a half-zip sweatshirt, tailored trousers, a chunky steel watch, and black high-tops"
     }
   },
   {
@@ -7056,9 +7056,9 @@ export const DATING_PROMPTS = [
       "homebody": "a cycle path, bollards and garden fences"
     },
     "outfits": {
-      "casual": "a cream cotton tee under a light stone shell, and black training sneakers",
-      "sharp": "a stone softshell over a white performance tee with grey trail trousers, and black low-profile sneakers",
-      "street": "an indigo track jacket over a cream tee, and grey mesh trainers"
+      "casual": "a charcoal quilted gilet open over a fine-gauge knit, stone chinos, a fine wool scarf, and desert boots",
+      "sharp": "a grey navy topcoat open over a roll-neck, flannel trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate mock-neck knit under a coach jacket with technical trousers, and suede trainers"
     }
   },
   {
@@ -7086,9 +7086,9 @@ export const DATING_PROMPTS = [
       "homebody": "a cycle path, bollards and garden fences"
     },
     "outfits": {
-      "casual": "a rust merino tee with charcoal joggers, and worn trail shoes",
-      "sharp": "a bottle-green quarter-zip with charcoal trail trousers, and clean white leather sneakers",
-      "street": "a rust half-zip fleece over a black tee, and chunky white sneakers"
+      "casual": "a cream waffle henley under a harrington jacket with moleskin trousers, and penny loafers",
+      "sharp": "a black silk-blend shirt under a belted trench with tailored trousers, and brown brogues",
+      "street": "a navy rugby shirt with pleated wool trousers, and black leather boots"
     }
   },
   {
@@ -7116,9 +7116,9 @@ export const DATING_PROMPTS = [
       "homebody": "a cycle path, bollards and garden fences"
     },
     "outfits": {
-      "casual": "a black training half-zip with grey shorts, and grey running sneakers",
-      "sharp": "a camel technical overshirt over a black base layer with dark trail trousers, and dark grey technical trainers",
-      "street": "a cream hooded overshirt over a slate tee, and black trail runners"
+      "casual": "a navy brushed flannel shirt with selvedge denim, and leather moccasins",
+      "sharp": "a stone button-down oxford with wool trousers, and polished loafers",
+      "street": "a cream down gilet over a mock-neck knit with tailored trousers, a chunky steel watch, and leather chelsea boots"
     }
   },
   {
@@ -7145,9 +7145,9 @@ export const DATING_PROMPTS = [
       "homebody": "a footbridge, brambles and a quiet lane"
     },
     "outfits": {
-      "casual": "a forest-green tee with sand hiking trousers, and brown walking boots",
-      "sharp": "a slate merino crew with grey technical trousers, and brown suede walking boots",
-      "street": "a burgundy track top with black joggers, and tan hiking boots"
+      "casual": "a rust waxed cotton jacket over a shawl-collar cardigan with corduroy trousers, tortoiseshell sunglasses, and tan suede derbies",
+      "sharp": "a burgundy camel overcoat over a white poplin shirt with pleated trousers, a silk pocket square, and polished derbies",
+      "street": "a rust boxy tee with the sleeves pushed back and technical trousers, and minimal leather sneakers"
     }
   },
   {
@@ -7174,9 +7174,9 @@ export const DATING_PROMPTS = [
       "homebody": "a footbridge, brambles and a quiet lane"
     },
     "outfits": {
-      "casual": "an oat sweatshirt with dark track pants, and black training sneakers",
-      "sharp": "a rust performance polo with dark trail trousers, and black low-profile sneakers",
-      "street": "a slate anorak over a white tee, and grey mesh trainers"
+      "casual": "a stone cable-knit sweater with the sleeves pushed back and wool trousers, and suede chukkas",
+      "sharp": "a forest fine-gauge merino knit with the sleeves pushed back and cavalry twill trousers, and black chelsea boots",
+      "street": "a charcoal quilted liner jacket open over an oversized crewneck, pleated wool trousers, and suede runners"
     }
   },
   {
@@ -7203,9 +7203,9 @@ export const DATING_PROMPTS = [
       "homebody": "a footbridge, brambles and a quiet lane"
     },
     "outfits": {
-      "casual": "a burgundy technical tee with black trail trousers, and worn trail shoes",
-      "sharp": "a chalk-grey windshirt over a black tee with stone trail trousers, and clean white leather sneakers",
-      "street": "a chocolate fleece over an oat tee, and chunky white sneakers"
+      "casual": "a forest shearling-collar jacket open over a cashmere crew, washed denim, and brown leather boots",
+      "sharp": "a slate tailored sport coat open over a cashmere crew, flannel trousers, and suede loafers",
+      "street": "a teal waffle long-sleeve under a technical shell with tailored trousers, a chunky steel watch, and black high-tops"
     }
   },
   {
@@ -7232,9 +7232,9 @@ export const DATING_PROMPTS = [
       "homebody": "a mown verge, a bench and open parkland"
     },
     "outfits": {
-      "casual": "a chocolate-brown tee under a light olive gilet, and grey running sneakers",
-      "sharp": "an ink-blue merino half-zip with stone technical trousers, and dark grey technical trainers",
-      "street": "an olive coach jacket over a charcoal tee, and black trail runners"
+      "casual": "a burgundy merino crew under a quilted gilet with dark indigo denim, a leather-strap watch, and tan leather sneakers",
+      "sharp": "a taupe button-down oxford under a navy topcoat with tailored trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard heavyweight knit with technical trousers, and suede trainers"
     }
   },
   {
@@ -7261,9 +7261,9 @@ export const DATING_PROMPTS = [
       "homebody": "a mown verge, a bench and open parkland"
     },
     "outfits": {
-      "casual": "a bone tee with slate running shorts, and brown walking boots",
-      "sharp": "a taupe softshell over a cream base layer with dark trail trousers, and brown suede walking boots",
-      "street": "a stone gilet over a heather long-sleeve, and tan hiking boots"
+      "casual": "a tobacco waffle henley with stone chinos, and desert boots",
+      "sharp": "a chocolate pique polo with wool trousers, and brown brogues",
+      "street": "a stone bomber over a waffle long-sleeve with pleated wool trousers, and black leather boots"
     }
   },
   {
@@ -7290,9 +7290,9 @@ export const DATING_PROMPTS = [
       "homebody": "a mown verge, a bench and open parkland"
     },
     "outfits": {
-      "casual": "a teal training top with charcoal joggers, and black training sneakers",
-      "sharp": "a forest technical gilet over a white long-sleeve with charcoal trail trousers, and black low-profile sneakers",
-      "street": "a charcoal hoodie under a black windbreaker, and grey mesh trainers"
+      "casual": "a slate chore jacket over a knitted polo with moleskin trousers, and penny loafers",
+      "sharp": "a teal double-breasted coat over a roll-neck with pleated trousers, and polished loafers",
+      "street": "a plum rugby shirt with the sleeves pushed back and tailored trousers, a chunky steel watch, and leather chelsea boots"
     }
   },
   {
@@ -7320,9 +7320,9 @@ export const DATING_PROMPTS = [
       "homebody": "a loop path, a litter bin and playing fields"
     },
     "outfits": {
-      "casual": "a mustard long-sleeve with dark shorts, and worn trail shoes",
-      "sharp": "a cream merino crew with charcoal technical trousers, and clean white leather sneakers",
-      "street": "a mustard shell over a white tee, and chunky white sneakers"
+      "casual": "an oatmeal button-down oxford with the sleeves pushed back and selvedge denim, a steel dive watch, and leather moccasins",
+      "sharp": "a charcoal silk-blend shirt with the sleeves pushed back and cavalry twill trousers, a gold-cased watch, and polished derbies",
+      "street": "a black down gilet open over a mock-neck knit, technical trousers, and minimal leather sneakers"
     }
   },
   {
@@ -7350,9 +7350,9 @@ export const DATING_PROMPTS = [
       "homebody": "a loop path, a litter bin and playing fields"
     },
     "outfits": {
-      "casual": "a stone-grey hoodie with black joggers, and grey running sneakers",
-      "sharp": "a tobacco technical overshirt over a sand tee with dark trail trousers, and dark grey technical trainers",
-      "street": "an ecru hooded fleece over a grey tee, and black trail runners"
+      "casual": "a camel waxed cotton jacket open over a chambray shirt, corduroy trousers, and tan suede derbies",
+      "sharp": "a navy camel overcoat open over a striped poplin shirt, flannel trousers, and black chelsea boots",
+      "street": "a bone boxy tee under a quilted liner jacket with pleated wool trousers, and suede runners"
     }
   },
   {
@@ -7380,9 +7380,9 @@ export const DATING_PROMPTS = [
       "homebody": "a loop path, a litter bin and playing fields"
     },
     "outfits": {
-      "casual": "an ecru tee under a light navy windshirt, and brown walking boots",
-      "sharp": "a black merino roll-neck with grey technical trousers, and brown suede walking boots",
-      "street": "a forest track jacket over a bone tee, and tan hiking boots"
+      "casual": "an olive suede overshirt under a shearling-collar jacket with wool trousers, and suede chukkas",
+      "sharp": "a camel pique polo under a tailored sport coat with tailored trousers, and suede loafers",
+      "street": "an olive half-zip sweatshirt with tailored trousers, a chunky steel watch, and black high-tops"
     }
   },
   {
@@ -7409,9 +7409,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hedgerow, a stile and grazing land"
     },
     "outfits": {
-      "casual": "a plum training tee with grey trail trousers, and black training sneakers",
-      "sharp": "a plum quarter-zip with dark trail trousers, and black low-profile sneakers",
-      "street": "a brown fleece half-zip over a black tee, and grey mesh trainers"
+      "casual": "a charcoal merino crew with washed denim, a fine wool scarf, and brown leather boots",
+      "sharp": "a grey fine-gauge merino knit with wool trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate anorak over a boxy tee with technical trousers, and suede trainers"
     }
   },
   {
@@ -7438,9 +7438,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hedgerow, a stile and grazing land"
     },
     "outfits": {
-      "casual": "a terracotta merino tee with dark joggers, and worn trail shoes",
-      "sharp": "an olive softshell over a bone tee with stone trail trousers, and clean white leather sneakers",
-      "street": "a terracotta windshirt over a cream tee, and chunky white sneakers"
+      "casual": "a cream suede jacket over a linen shirt with dark indigo denim, and tan leather sneakers",
+      "sharp": "a black half-canvas blazer over a cashmere crew with pleated trousers, and brown brogues",
+      "street": "a navy heavyweight knit with the sleeves pushed back and pleated wool trousers, and black leather boots"
     }
   },
   {
@@ -7467,9 +7467,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hedgerow, a stile and grazing land"
     },
     "outfits": {
-      "casual": "a charcoal base layer with olive shorts, and grey running sneakers",
-      "sharp": "a mid-brown technical shirt with stone hiking trousers, and dark grey technical trainers",
-      "street": "a navy hooded shell over an oat tee, and black trail runners"
+      "casual": "a navy brushed flannel shirt with the sleeves pushed back and stone chinos, and desert boots",
+      "sharp": "a stone button-down oxford with the sleeves pushed back and cavalry twill trousers, and polished loafers",
+      "street": "a cream bomber open over a waffle long-sleeve, tailored trousers, a chunky steel watch, and leather chelsea boots"
     }
   },
   {
@@ -7498,9 +7498,9 @@ export const DATING_PROMPTS = [
       "homebody": "an open lawn, a goalmouth and a hedge"
     },
     "outfits": {
-      "casual": "a chambray-blue training tee with black trousers, and brown walking boots",
-      "sharp": "a light-blue performance shirt with charcoal trail trousers, and brown suede walking boots",
-      "street": "a grey marl hoodie under a stone gilet, and tan hiking boots"
+      "casual": "a rust chore jacket open over a shawl-collar cardigan, moleskin trousers, tortoiseshell sunglasses, and penny loafers",
+      "sharp": "a burgundy double-breasted coat open over a white poplin shirt, flannel trousers, a silk pocket square, and polished derbies",
+      "street": "a rust coach jacket open over a heavyweight knit, wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -7529,9 +7529,9 @@ export const DATING_PROMPTS = [
       "homebody": "an open lawn, a goalmouth and a hedge"
     },
     "outfits": {
-      "casual": "an indigo long-sleeve with stone shorts, and black training sneakers",
-      "sharp": "a soft-grey merino half-zip with black technical trousers, and black low-profile sneakers",
-      "street": "a black track jacket over a white tee, and grey mesh trainers"
+      "casual": "a stone cable-knit sweater under a waxed cotton jacket with selvedge denim, and leather moccasins",
+      "sharp": "a forest fine-gauge merino knit under a camel overcoat with tailored trousers, and black chelsea boots",
+      "street": "a charcoal oversized crewneck under a leather jacket with black denim, and suede runners"
     }
   },
   {
@@ -7560,9 +7560,9 @@ export const DATING_PROMPTS = [
       "homebody": "an open lawn, a goalmouth and a hedge"
     },
     "outfits": {
-      "casual": "a faded navy tee with grey training shorts, and worn trail shoes",
-      "sharp": "a graphite merino crew with charcoal technical trousers, and clean white leather sneakers",
-      "street": "a coral windbreaker over a white tee with black joggers, and chunky white sneakers"
+      "casual": "a forest suede overshirt with corduroy trousers, and tan suede derbies",
+      "sharp": "a slate silk-blend shirt with wool trousers, and suede loafers",
+      "street": "a teal boxy tee with cargo trousers, and black high-tops"
     }
   },
   {
@@ -7590,9 +7590,9 @@ export const DATING_PROMPTS = [
       "homebody": "a park path, litter bins and a play area"
     },
     "outfits": {
-      "casual": "a moss long-sleeve with black trail trousers, and grey running sneakers",
-      "sharp": "a sand performance half-zip with stone trail trousers, and dark grey technical trainers",
-      "street": "a charcoal track jacket over a bone tee with dark joggers, and black trail runners"
+      "casual": "a burgundy corduroy overshirt over a fine-gauge knit with wool trousers, a leather-strap watch, and suede chukkas",
+      "sharp": "a taupe unstructured jacket over a striped poplin shirt with pleated trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard quilted liner jacket over an oversized crewneck with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -7620,9 +7620,9 @@ export const DATING_PROMPTS = [
       "homebody": "a park path, litter bins and a play area"
     },
     "outfits": {
-      "casual": "an oat hoodie with charcoal joggers, and brown walking boots",
-      "sharp": "a navy softshell over a white base layer with dark trousers, and brown suede walking boots",
-      "street": "a sand fleece half-zip over a grey tee with black trousers, and tan hiking boots"
+      "casual": "a tobacco waffle henley with the sleeves pushed back and washed denim, and brown leather boots",
+      "sharp": "a chocolate pique polo with the sleeves pushed back and cavalry twill trousers, and brown brogues",
+      "street": "a stone waffle long-sleeve with the sleeves pushed back and black denim, and black leather boots"
     }
   },
   {
@@ -7650,9 +7650,9 @@ export const DATING_PROMPTS = [
       "homebody": "a park path, litter bins and a play area"
     },
     "outfits": {
-      "casual": "a rust technical tee with dark shorts, and black training sneakers",
-      "sharp": "a burgundy technical polo with grey trousers, and black low-profile sneakers",
-      "street": "an indigo shell over an oat tee with charcoal joggers, and grey mesh trainers"
+      "casual": "a slate suede jacket open over a knitted polo, dark indigo denim, and tan leather sneakers",
+      "sharp": "a teal half-canvas blazer open over a roll-neck, flannel trousers, and polished loafers",
+      "street": "a plum technical shell open over a half-zip sweatshirt, cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -7679,9 +7679,9 @@ export const DATING_PROMPTS = [
       "homebody": "goalposts, a mown stripe and distant trees"
     },
     "outfits": {
-      "casual": "a bone base layer under a slate gilet with black joggers, and worn trail shoes",
-      "sharp": "a black gilet over a cream long-sleeve with charcoal trousers, and clean white leather sneakers",
-      "street": "a maroon hoodie under a black gilet with dark joggers, and chunky white sneakers"
+      "casual": "an oatmeal button-down oxford under a chore jacket with stone chinos, a steel dive watch, and desert boots",
+      "sharp": "a charcoal silk-blend shirt under a double-breasted coat with tailored trousers, a gold-cased watch, and polished derbies",
+      "street": "a black mock-neck knit under a coach jacket with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -7708,9 +7708,9 @@ export const DATING_PROMPTS = [
       "homebody": "goalposts, a mown stripe and distant trees"
     },
     "outfits": {
-      "casual": "a forest training top with stone shorts, and grey running sneakers",
-      "sharp": "an olive merino quarter-zip with sand trousers, and dark grey technical trainers",
-      "street": "a stone cagoule over a heather tee with black trousers, and black trail runners"
+      "casual": "a camel cable-knit sweater with moleskin trousers, and penny loafers",
+      "sharp": "a navy button-down oxford with wool trousers, and black chelsea boots",
+      "street": "a bone rugby shirt with black denim, and suede runners"
     }
   },
   {
@@ -7737,9 +7737,9 @@ export const DATING_PROMPTS = [
       "homebody": "goalposts, a mown stripe and distant trees"
     },
     "outfits": {
-      "casual": "a slate technical tee with tapered charcoal joggers, and worn trail shoes",
-      "sharp": "a black technical half-zip with charcoal soft-shell trousers, and clean white leather sneakers",
-      "street": "a teal windbreaker over a white training tee, and chunky white sneakers"
+      "casual": "an olive harrington jacket over a cashmere crew with selvedge denim, and leather moccasins",
+      "sharp": "a camel belted trench over a white poplin shirt with pleated trousers, and suede loafers",
+      "street": "an olive down gilet over a mock-neck knit with cargo trousers, and black high-tops"
     }
   },
   {
@@ -7766,9 +7766,9 @@ export const DATING_PROMPTS = [
       "homebody": "a tarmac loop, lamp posts and open grass"
     },
     "outfits": {
-      "casual": "a heather-grey training top with black shorts, and grey running sneakers",
-      "sharp": "a navy performance polo with stone hiking trousers, and dark grey technical trainers",
-      "street": "a black hooded shell over a grey tee, and black trail runners"
+      "casual": "a charcoal merino crew with the sleeves pushed back and corduroy trousers, a fine wool scarf, and tan suede derbies",
+      "sharp": "a grey fine-gauge merino knit with the sleeves pushed back and cavalry twill trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate boxy tee with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -7795,9 +7795,9 @@ export const DATING_PROMPTS = [
       "homebody": "a tarmac loop, lamp posts and open grass"
     },
     "outfits": {
-      "casual": "an olive long-sleeve base layer with dark trail trousers, and brown walking boots",
-      "sharp": "a charcoal merino quarter-zip with dark technical trousers, and brown suede walking boots",
-      "street": "a sand cagoule over a charcoal long-sleeve, and tan hiking boots"
+      "casual": "a cream corduroy overshirt open over a linen shirt, wool trousers, and suede chukkas",
+      "sharp": "a black unstructured jacket open over a cashmere crew, flannel trousers, and brown brogues",
+      "street": "a navy quilted liner jacket open over an oversized crewneck, black denim, and black leather boots"
     }
   },
   {
@@ -7824,9 +7824,9 @@ export const DATING_PROMPTS = [
       "homebody": "a tarmac loop, lamp posts and open grass"
     },
     "outfits": {
-      "casual": "a cream cotton tee under a light stone shell, and black training sneakers",
-      "sharp": "a stone softshell over a white performance tee with grey trail trousers, and black low-profile sneakers",
-      "street": "an indigo track jacket over a cream tee, and grey mesh trainers"
+      "casual": "a navy brushed flannel shirt under a suede jacket with washed denim, and brown leather boots",
+      "sharp": "a stone button-down oxford under a half-canvas blazer with tailored trousers, and polished loafers",
+      "street": "a cream waffle long-sleeve under a technical shell with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -7854,9 +7854,9 @@ export const DATING_PROMPTS = [
       "homebody": "park railings, a café hut and playing fields"
     },
     "outfits": {
-      "casual": "a rust merino tee with charcoal joggers, and worn trail shoes",
-      "sharp": "a bottle-green quarter-zip with charcoal trail trousers, and clean white leather sneakers",
-      "street": "a rust half-zip fleece over a black tee, and chunky white sneakers"
+      "casual": "a rust button-down oxford with dark indigo denim, tortoiseshell sunglasses, and tan leather sneakers",
+      "sharp": "a burgundy pique polo with wool trousers, a silk pocket square, and polished derbies",
+      "street": "a rust heavyweight knit with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -7884,9 +7884,9 @@ export const DATING_PROMPTS = [
       "homebody": "park railings, a café hut and playing fields"
     },
     "outfits": {
-      "casual": "a black training half-zip with grey shorts, and grey running sneakers",
-      "sharp": "a camel technical overshirt over a black base layer with dark trail trousers, and dark grey technical trainers",
-      "street": "a cream hooded overshirt over a slate tee, and black trail runners"
+      "casual": "a stone quilted gilet over a chambray shirt with stone chinos, and desert boots",
+      "sharp": "a forest navy topcoat over a roll-neck with pleated trousers, and black chelsea boots",
+      "street": "a charcoal bomber over a waffle long-sleeve with black denim, and suede runners"
     }
   },
   {
@@ -7914,9 +7914,9 @@ export const DATING_PROMPTS = [
       "homebody": "park railings, a café hut and playing fields"
     },
     "outfits": {
-      "casual": "a forest-green tee with sand hiking trousers, and brown walking boots",
-      "sharp": "a slate merino crew with grey technical trousers, and brown suede walking boots",
-      "street": "a burgundy track top with black joggers, and tan hiking boots"
+      "casual": "a forest suede overshirt with the sleeves pushed back and moleskin trousers, and penny loafers",
+      "sharp": "a slate silk-blend shirt with the sleeves pushed back and cavalry twill trousers, and suede loafers",
+      "street": "a teal rugby shirt with the sleeves pushed back and cargo trousers, and black high-tops"
     }
   },
   {
@@ -7943,9 +7943,9 @@ export const DATING_PROMPTS = [
       "homebody": "a tree line, a bench and a car park edge"
     },
     "outfits": {
-      "casual": "an oat sweatshirt with dark track pants, and black training sneakers",
-      "sharp": "a rust performance polo with dark trail trousers, and black low-profile sneakers",
-      "street": "a slate anorak over a white tee, and grey mesh trainers"
+      "casual": "a burgundy harrington jacket open over a fine-gauge knit, selvedge denim, a leather-strap watch, and leather moccasins",
+      "sharp": "a taupe belted trench open over a striped poplin shirt, flannel trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard down gilet open over a mock-neck knit, wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -7972,9 +7972,9 @@ export const DATING_PROMPTS = [
       "homebody": "a tree line, a bench and a car park edge"
     },
     "outfits": {
-      "casual": "a burgundy technical tee with black trail trousers, and worn trail shoes",
-      "sharp": "a chalk-grey windshirt over a black tee with stone trail trousers, and clean white leather sneakers",
-      "street": "a chocolate fleece over an oat tee, and chunky white sneakers"
+      "casual": "a tobacco waffle henley under a corduroy overshirt with corduroy trousers, and tan suede derbies",
+      "sharp": "a chocolate pique polo under an unstructured jacket with tailored trousers, and brown brogues",
+      "street": "a stone boxy tee under a quilted liner jacket with black denim, and black leather boots"
     }
   },
   {
@@ -8001,9 +8001,9 @@ export const DATING_PROMPTS = [
       "homebody": "a tree line, a bench and a car park edge"
     },
     "outfits": {
-      "casual": "a chocolate-brown tee under a light olive gilet, and grey running sneakers",
-      "sharp": "an ink-blue merino half-zip with stone technical trousers, and dark grey technical trainers",
-      "street": "an olive coach jacket over a charcoal tee, and black trail runners"
+      "casual": "a slate brushed flannel shirt with wool trousers, and suede chukkas",
+      "sharp": "a teal fine-gauge merino knit with wool trousers, and polished loafers",
+      "street": "a plum half-zip sweatshirt with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -8031,9 +8031,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hedge, a swing frame and low rooftops"
     },
     "outfits": {
-      "casual": "a bone tee with slate running shorts, and brown walking boots",
-      "sharp": "a taupe softshell over a cream base layer with dark trail trousers, and brown suede walking boots",
-      "street": "a stone gilet over a heather long-sleeve, and tan hiking boots"
+      "casual": "an oatmeal shearling-collar jacket over a shawl-collar cardigan with washed denim, a steel dive watch, and brown leather boots",
+      "sharp": "a charcoal tailored sport coat over a cashmere crew with pleated trousers, a gold-cased watch, and polished derbies",
+      "street": "a black anorak over a boxy tee with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -8061,9 +8061,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hedge, a swing frame and low rooftops"
     },
     "outfits": {
-      "casual": "a teal training top with charcoal joggers, and black training sneakers",
-      "sharp": "a forest technical gilet over a white long-sleeve with charcoal trail trousers, and black low-profile sneakers",
-      "street": "a charcoal hoodie under a black windbreaker, and grey mesh trainers"
+      "casual": "a camel cable-knit sweater with the sleeves pushed back and dark indigo denim, and tan leather sneakers",
+      "sharp": "a navy button-down oxford with the sleeves pushed back and cavalry twill trousers, and black chelsea boots",
+      "street": "a bone heavyweight knit with the sleeves pushed back and black denim, and suede runners"
     }
   },
   {
@@ -8091,9 +8091,9 @@ export const DATING_PROMPTS = [
       "homebody": "a hedge, a swing frame and low rooftops"
     },
     "outfits": {
-      "casual": "a mustard long-sleeve with dark shorts, and worn trail shoes",
-      "sharp": "a cream merino crew with charcoal technical trousers, and clean white leather sneakers",
-      "street": "a mustard shell over a white tee, and chunky white sneakers"
+      "casual": "an olive quilted gilet open over a cashmere crew, stone chinos, and desert boots",
+      "sharp": "a camel navy topcoat open over a white poplin shirt, flannel trousers, and suede loafers",
+      "street": "an olive bomber open over a waffle long-sleeve, cargo trousers, and black high-tops"
     }
   },
   {
@@ -8120,9 +8120,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bin, a lamp post and a row of gardens"
     },
     "outfits": {
-      "casual": "a stone-grey hoodie with black joggers, and grey running sneakers",
-      "sharp": "a tobacco technical overshirt over a sand tee with dark trail trousers, and dark grey technical trainers",
-      "street": "an ecru hooded fleece over a grey tee, and black trail runners"
+      "casual": "a charcoal merino crew under a harrington jacket with moleskin trousers, a fine wool scarf, and penny loafers",
+      "sharp": "a grey fine-gauge merino knit under a belted trench with tailored trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate rugby shirt under a down gilet with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -8149,9 +8149,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bin, a lamp post and a row of gardens"
     },
     "outfits": {
-      "casual": "an ecru tee under a light navy windshirt, and brown walking boots",
-      "sharp": "a black merino roll-neck with grey technical trousers, and brown suede walking boots",
-      "street": "a forest track jacket over a bone tee, and tan hiking boots"
+      "casual": "a cream waffle henley with selvedge denim, and leather moccasins",
+      "sharp": "a black silk-blend shirt with wool trousers, and brown brogues",
+      "street": "a navy oversized crewneck with black denim, and black leather boots"
     }
   },
   {
@@ -8178,9 +8178,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bin, a lamp post and a row of gardens"
     },
     "outfits": {
-      "casual": "a plum training tee with grey trail trousers, and black training sneakers",
-      "sharp": "a plum quarter-zip with dark trail trousers, and black low-profile sneakers",
-      "street": "a brown fleece half-zip over a black tee, and grey mesh trainers"
+      "casual": "a navy waxed cotton jacket over a knitted polo with corduroy trousers, and tan suede derbies",
+      "sharp": "a stone camel overcoat over a striped poplin shirt with pleated trousers, and polished loafers",
+      "street": "a cream leather jacket over a rugby shirt with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -8207,9 +8207,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bike rack, a wall and quiet houses"
     },
     "outfits": {
-      "casual": "a terracotta merino tee with dark joggers, and worn trail shoes",
-      "sharp": "an olive softshell over a bone tee with stone trail trousers, and clean white leather sneakers",
-      "street": "a terracotta windshirt over a cream tee, and chunky white sneakers"
+      "casual": "a rust button-down oxford with the sleeves pushed back and wool trousers, tortoiseshell sunglasses, and suede chukkas",
+      "sharp": "a burgundy pique polo with the sleeves pushed back and cavalry twill trousers, a silk pocket square, and polished derbies",
+      "street": "a rust half-zip sweatshirt with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -8236,9 +8236,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bike rack, a wall and quiet houses"
     },
     "outfits": {
-      "casual": "a charcoal base layer with olive shorts, and grey running sneakers",
-      "sharp": "a mid-brown technical shirt with stone hiking trousers, and dark grey technical trainers",
-      "street": "a navy hooded shell over an oat tee, and black trail runners"
+      "casual": "a stone shearling-collar jacket open over a chambray shirt, washed denim, and brown leather boots",
+      "sharp": "a forest tailored sport coat open over a roll-neck, flannel trousers, and black chelsea boots",
+      "street": "a charcoal anorak open over a boxy tee, black denim, and suede runners"
     }
   },
   {
@@ -8267,9 +8267,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bike rack, a wall and quiet houses"
     },
     "outfits": {
-      "casual": "a chambray-blue training tee with black trousers, and brown walking boots",
-      "sharp": "a light-blue performance shirt with charcoal trail trousers, and brown suede walking boots",
-      "street": "a grey marl hoodie under a stone gilet, and tan hiking boots"
+      "casual": "a forest suede overshirt under a quilted gilet with dark indigo denim, and tan leather sneakers",
+      "sharp": "a slate silk-blend shirt under a navy topcoat with tailored trousers, and suede loafers",
+      "street": "a teal heavyweight knit under a bomber with cargo trousers, and black high-tops"
     }
   },
   {
@@ -8297,9 +8297,9 @@ export const DATING_PROMPTS = [
       "homebody": "a grass bank, a fence and back gardens"
     },
     "outfits": {
-      "casual": "an indigo long-sleeve with stone shorts, and black training sneakers",
-      "sharp": "a soft-grey merino half-zip with black technical trousers, and black low-profile sneakers",
-      "street": "a black track jacket over a white tee, and grey mesh trainers"
+      "casual": "a burgundy merino crew with stone chinos, a leather-strap watch, and desert boots",
+      "sharp": "a taupe button-down oxford with wool trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard mock-neck knit with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -8327,9 +8327,9 @@ export const DATING_PROMPTS = [
       "homebody": "a grass bank, a fence and back gardens"
     },
     "outfits": {
-      "casual": "a faded navy tee with grey training shorts, and worn trail shoes",
-      "sharp": "a graphite merino crew with charcoal technical trousers, and clean white leather sneakers",
-      "street": "a coral windbreaker over a white tee with black joggers, and chunky white sneakers"
+      "casual": "a tobacco chore jacket over a linen shirt with moleskin trousers, and penny loafers",
+      "sharp": "a chocolate double-breasted coat over a white poplin shirt with pleated trousers, and brown brogues",
+      "street": "a stone coach jacket over a heavyweight knit with black denim, and black leather boots"
     }
   },
   {
@@ -8357,9 +8357,9 @@ export const DATING_PROMPTS = [
       "homebody": "a grass bank, a fence and back gardens"
     },
     "outfits": {
-      "casual": "a moss long-sleeve with black trail trousers, and grey running sneakers",
-      "sharp": "a sand performance half-zip with stone trail trousers, and dark grey technical trainers",
-      "street": "a charcoal track jacket over a bone tee with dark joggers, and black trail runners"
+      "casual": "a slate brushed flannel shirt with the sleeves pushed back and selvedge denim, and leather moccasins",
+      "sharp": "a teal fine-gauge merino knit with the sleeves pushed back and cavalry twill trousers, and polished loafers",
+      "street": "a plum oversized crewneck with the sleeves pushed back and cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -8387,9 +8387,9 @@ export const DATING_PROMPTS = [
       "homebody": "a tarmac rise, hedging and a bus stop below"
     },
     "outfits": {
-      "casual": "an oat hoodie with charcoal joggers, and brown walking boots",
-      "sharp": "a navy softshell over a white base layer with dark trousers, and brown suede walking boots",
-      "street": "a sand fleece half-zip over a grey tee with black trousers, and tan hiking boots"
+      "casual": "an oatmeal waxed cotton jacket open over a shawl-collar cardigan, corduroy trousers, a steel dive watch, and tan suede derbies",
+      "sharp": "a charcoal camel overcoat open over a cashmere crew, flannel trousers, a gold-cased watch, and polished derbies",
+      "street": "a black leather jacket open over a rugby shirt, wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -8417,9 +8417,9 @@ export const DATING_PROMPTS = [
       "homebody": "a tarmac rise, hedging and a bus stop below"
     },
     "outfits": {
-      "casual": "a rust technical tee with dark shorts, and black training sneakers",
-      "sharp": "a burgundy technical polo with grey trousers, and black low-profile sneakers",
-      "street": "an indigo shell over an oat tee with charcoal joggers, and grey mesh trainers"
+      "casual": "a camel cable-knit sweater under a shearling-collar jacket with wool trousers, and suede chukkas",
+      "sharp": "a navy button-down oxford under a tailored sport coat with tailored trousers, and black chelsea boots",
+      "street": "a bone half-zip sweatshirt under an anorak with black denim, and suede runners"
     }
   },
   {
@@ -8447,9 +8447,9 @@ export const DATING_PROMPTS = [
       "homebody": "a tarmac rise, hedging and a bus stop below"
     },
     "outfits": {
-      "casual": "a bone base layer under a slate gilet with black joggers, and worn trail shoes",
-      "sharp": "a black gilet over a cream long-sleeve with charcoal trousers, and clean white leather sneakers",
-      "street": "a maroon hoodie under a black gilet with dark joggers, and chunky white sneakers"
+      "casual": "an olive suede overshirt with washed denim, and brown leather boots",
+      "sharp": "a camel pique polo with wool trousers, and suede loafers",
+      "street": "an olive waffle long-sleeve with cargo trousers, and black high-tops"
     }
   },
   {
@@ -8477,9 +8477,9 @@ export const DATING_PROMPTS = [
       "homebody": "a green corridor, saplings and a footbridge"
     },
     "outfits": {
-      "casual": "a forest training top with stone shorts, and grey running sneakers",
-      "sharp": "an olive merino quarter-zip with sand trousers, and dark grey technical trainers",
-      "street": "a stone cagoule over a heather tee with black trousers, and black trail runners"
+      "casual": "a charcoal suede jacket over a fine-gauge knit with dark indigo denim, a fine wool scarf, and tan leather sneakers",
+      "sharp": "a grey half-canvas blazer over a roll-neck with pleated trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate technical shell over a half-zip sweatshirt with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -8507,9 +8507,9 @@ export const DATING_PROMPTS = [
       "homebody": "a green corridor, saplings and a footbridge"
     },
     "outfits": {
-      "casual": "a slate technical tee with tapered charcoal joggers, and worn trail shoes",
-      "sharp": "a black technical half-zip with charcoal soft-shell trousers, and clean white leather sneakers",
-      "street": "a teal windbreaker over a white training tee, and chunky white sneakers"
+      "casual": "a cream waffle henley with the sleeves pushed back and stone chinos, and desert boots",
+      "sharp": "a black silk-blend shirt with the sleeves pushed back and cavalry twill trousers, and brown brogues",
+      "street": "a navy mock-neck knit with the sleeves pushed back and black denim, and black leather boots"
     }
   },
   {
@@ -8537,9 +8537,9 @@ export const DATING_PROMPTS = [
       "homebody": "a green corridor, saplings and a footbridge"
     },
     "outfits": {
-      "casual": "a heather-grey training top with black shorts, and grey running sneakers",
-      "sharp": "a navy performance polo with stone hiking trousers, and dark grey technical trainers",
-      "street": "a black hooded shell over a grey tee, and black trail runners"
+      "casual": "a navy chore jacket open over a knitted polo, moleskin trousers, and penny loafers",
+      "sharp": "a stone double-breasted coat open over a striped poplin shirt, flannel trousers, and polished loafers",
+      "street": "a cream coach jacket open over a heavyweight knit, cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -8567,9 +8567,9 @@ export const DATING_PROMPTS = [
       "homebody": "a marked pitch, a fence and a row of houses"
     },
     "outfits": {
-      "casual": "an olive long-sleeve base layer with dark trail trousers, and brown walking boots",
-      "sharp": "a charcoal merino quarter-zip with dark technical trousers, and brown suede walking boots",
-      "street": "a sand cagoule over a charcoal long-sleeve, and tan hiking boots"
+      "casual": "a rust button-down oxford under a waxed cotton jacket with selvedge denim, tortoiseshell sunglasses, and leather moccasins",
+      "sharp": "a burgundy pique polo under a camel overcoat with tailored trousers, a silk pocket square, and polished derbies",
+      "street": "a rust oversized crewneck under a leather jacket with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -8599,9 +8599,9 @@ export const DATING_PROMPTS = [
       "homebody": "a marked pitch, a fence and a row of houses"
     },
     "outfits": {
-      "casual": "a cream cotton tee under a light stone shell, and black training sneakers",
-      "sharp": "a stone softshell over a white performance tee with grey trail trousers, and black low-profile sneakers",
-      "street": "an indigo track jacket over a cream tee, and grey mesh trainers"
+      "casual": "a stone cable-knit sweater with corduroy trousers, and tan suede derbies",
+      "sharp": "a forest fine-gauge merino knit with wool trousers, and black chelsea boots",
+      "street": "a charcoal boxy tee with black denim, and suede runners"
     }
   },
   {
@@ -8629,9 +8629,9 @@ export const DATING_PROMPTS = [
       "homebody": "a marked pitch, a fence and a row of houses"
     },
     "outfits": {
-      "casual": "a rust merino tee with charcoal joggers, and worn trail shoes",
-      "sharp": "a bottle-green quarter-zip with charcoal trail trousers, and clean white leather sneakers",
-      "street": "a rust half-zip fleece over a black tee, and chunky white sneakers"
+      "casual": "a forest corduroy overshirt over a cashmere crew with wool trousers, and suede chukkas",
+      "sharp": "a slate unstructured jacket over a cashmere crew with pleated trousers, and suede loafers",
+      "street": "a teal quilted liner jacket over an oversized crewneck with cargo trousers, and black high-tops"
     }
   },
   {
@@ -8659,9 +8659,9 @@ export const DATING_PROMPTS = [
       "homebody": "goalposts, a clubhouse and parked cars"
     },
     "outfits": {
-      "casual": "a black training half-zip with grey shorts, and grey running sneakers",
-      "sharp": "a camel technical overshirt over a black base layer with dark trail trousers, and dark grey technical trainers",
-      "street": "a cream hooded overshirt over a slate tee, and black trail runners"
+      "casual": "a burgundy merino crew with the sleeves pushed back and washed denim, a leather-strap watch, and brown leather boots",
+      "sharp": "a taupe button-down oxford with the sleeves pushed back and cavalry twill trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard waffle long-sleeve with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -8689,9 +8689,9 @@ export const DATING_PROMPTS = [
       "homebody": "goalposts, a clubhouse and parked cars"
     },
     "outfits": {
-      "casual": "a forest-green tee with sand hiking trousers, and brown walking boots",
-      "sharp": "a slate merino crew with grey technical trousers, and brown suede walking boots",
-      "street": "a burgundy track top with black joggers, and tan hiking boots"
+      "casual": "a tobacco suede jacket open over a linen shirt, dark indigo denim, and tan leather sneakers",
+      "sharp": "a chocolate half-canvas blazer open over a white poplin shirt, flannel trousers, and brown brogues",
+      "street": "a stone technical shell open over a half-zip sweatshirt, black denim, and black leather boots"
     }
   },
   {
@@ -8719,9 +8719,9 @@ export const DATING_PROMPTS = [
       "homebody": "goalposts, a clubhouse and parked cars"
     },
     "outfits": {
-      "casual": "an oat sweatshirt with dark track pants, and black training sneakers",
-      "sharp": "a rust performance polo with dark trail trousers, and black low-profile sneakers",
-      "street": "a slate anorak over a white tee, and grey mesh trainers"
+      "casual": "a slate brushed flannel shirt under a chore jacket with stone chinos, and desert boots",
+      "sharp": "a teal fine-gauge merino knit under a double-breasted coat with tailored trousers, and polished loafers",
+      "street": "a plum mock-neck knit under a coach jacket with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -8750,9 +8750,9 @@ export const DATING_PROMPTS = [
       "homebody": "clipped hedges, a bench and low houses"
     },
     "outfits": {
-      "casual": "a burgundy technical tee with black trail trousers, and worn trail shoes",
-      "sharp": "a chalk-grey windshirt over a black tee with stone trail trousers, and clean white leather sneakers",
-      "street": "a chocolate fleece over an oat tee, and chunky white sneakers"
+      "casual": "an oatmeal button-down oxford with moleskin trousers, a steel dive watch, and penny loafers",
+      "sharp": "a charcoal double-breasted coat over a button-down oxford with pleated trousers, and polished derbies",
+      "street": "a black rugby shirt with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -8781,9 +8781,9 @@ export const DATING_PROMPTS = [
       "homebody": "clipped hedges, a bench and low houses"
     },
     "outfits": {
-      "casual": "a chocolate-brown tee under a light olive gilet, and grey running sneakers",
-      "sharp": "an ink-blue merino half-zip with stone technical trousers, and dark grey technical trainers",
-      "street": "an olive coach jacket over a charcoal tee, and black trail runners"
+      "casual": "a camel harrington jacket over a chambray shirt with selvedge denim, and leather moccasins",
+      "sharp": "a navy belted trench over a striped poplin shirt with pleated trousers, and black chelsea boots",
+      "street": "a bone down gilet over a mock-neck knit with black denim, and suede runners"
     }
   },
   {
@@ -8812,9 +8812,9 @@ export const DATING_PROMPTS = [
       "homebody": "clipped hedges, a bench and low houses"
     },
     "outfits": {
-      "casual": "a bone tee with slate running shorts, and brown walking boots",
-      "sharp": "a taupe softshell over a cream base layer with dark trail trousers, and brown suede walking boots",
-      "street": "a stone gilet over a heather long-sleeve, and tan hiking boots"
+      "casual": "an olive suede overshirt with the sleeves pushed back and corduroy trousers, and tan suede derbies",
+      "sharp": "a camel camel overcoat open over a fine-gauge merino knit, flannel trousers, a fine knitted tie, and suede loafers",
+      "street": "an olive boxy tee with the sleeves pushed back and cargo trousers, and black high-tops"
     }
   },
   {
@@ -8843,9 +8843,9 @@ export const DATING_PROMPTS = [
       "homebody": "a footpath, a lamp post and garden fences"
     },
     "outfits": {
-      "casual": "a teal training top with charcoal joggers, and black training sneakers",
-      "sharp": "a forest technical gilet over a white long-sleeve with charcoal trail trousers, and black low-profile sneakers",
-      "street": "a charcoal hoodie under a black windbreaker, and grey mesh trainers"
+      "casual": "a charcoal corduroy overshirt open over a fine-gauge knit, wool trousers, a fine wool scarf, and suede chukkas",
+      "sharp": "a grey unstructured jacket open over a roll-neck, flannel trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate quilted liner jacket open over an oversized crewneck, wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -8874,9 +8874,9 @@ export const DATING_PROMPTS = [
       "homebody": "a footpath, a lamp post and garden fences"
     },
     "outfits": {
-      "casual": "a mustard long-sleeve with dark shorts, and worn trail shoes",
-      "sharp": "a cream merino crew with charcoal technical trousers, and clean white leather sneakers",
-      "street": "a mustard shell over a white tee, and chunky white sneakers"
+      "casual": "a cream waffle henley under a suede jacket with washed denim, and brown leather boots",
+      "sharp": "a black silk-blend shirt under a half-canvas blazer with tailored trousers, and brown brogues",
+      "street": "a navy waffle long-sleeve under a technical shell with black denim, and black leather boots"
     }
   },
   {
@@ -8905,9 +8905,9 @@ export const DATING_PROMPTS = [
       "homebody": "a footpath, a lamp post and garden fences"
     },
     "outfits": {
-      "casual": "a stone-grey hoodie with black joggers, and grey running sneakers",
-      "sharp": "a tobacco technical overshirt over a sand tee with dark trail trousers, and dark grey technical trainers",
-      "street": "an ecru hooded fleece over a grey tee, and black trail runners"
+      "casual": "a navy brushed flannel shirt with dark indigo denim, and tan leather sneakers",
+      "sharp": "a stone half-canvas blazer over a pique polo with pleated trousers, a silk pocket square, and polished loafers",
+      "street": "a cream heavyweight knit with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -8936,9 +8936,9 @@ export const DATING_PROMPTS = [
       "homebody": "a corner green, a postbox and quiet road"
     },
     "outfits": {
-      "casual": "an ecru tee under a light navy windshirt, and brown walking boots",
-      "sharp": "a black merino roll-neck with grey technical trousers, and brown suede walking boots",
-      "street": "a forest track jacket over a bone tee, and tan hiking boots"
+      "casual": "a rust quilted gilet over a shawl-collar cardigan with stone chinos, tortoiseshell sunglasses, and desert boots",
+      "sharp": "a burgundy navy topcoat over a white poplin shirt with pleated trousers, a silk pocket square, and polished derbies",
+      "street": "a rust bomber over a waffle long-sleeve with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -8967,9 +8967,9 @@ export const DATING_PROMPTS = [
       "homebody": "a corner green, a postbox and quiet road"
     },
     "outfits": {
-      "casual": "a plum training tee with grey trail trousers, and black training sneakers",
-      "sharp": "a plum quarter-zip with dark trail trousers, and black low-profile sneakers",
-      "street": "a brown fleece half-zip over a black tee, and grey mesh trainers"
+      "casual": "a stone cable-knit sweater with the sleeves pushed back and moleskin trousers, and penny loafers",
+      "sharp": "a forest double-breasted coat open over a silk-blend shirt, flannel trousers, and black chelsea boots",
+      "street": "a charcoal rugby shirt with the sleeves pushed back and black denim, and suede runners"
     }
   },
   {
@@ -8998,9 +8998,9 @@ export const DATING_PROMPTS = [
       "homebody": "a corner green, a postbox and quiet road"
     },
     "outfits": {
-      "casual": "a terracotta merino tee with dark joggers, and worn trail shoes",
-      "sharp": "an olive softshell over a bone tee with stone trail trousers, and clean white leather sneakers",
-      "street": "a terracotta windshirt over a cream tee, and chunky white sneakers"
+      "casual": "a forest harrington jacket open over a cashmere crew, selvedge denim, and leather moccasins",
+      "sharp": "a slate belted trench open over a cashmere crew, flannel trousers, and suede loafers",
+      "street": "a teal down gilet open over a mock-neck knit, cargo trousers, and black high-tops"
     }
   },
   {
@@ -9029,9 +9029,9 @@ export const DATING_PROMPTS = [
       "homebody": "a clubhouse, a fence line and parked cars"
     },
     "outfits": {
-      "casual": "a charcoal base layer with olive shorts, and grey running sneakers",
-      "sharp": "a mid-brown technical shirt with stone hiking trousers, and dark grey technical trainers",
-      "street": "a navy hooded shell over an oat tee, and black trail runners"
+      "casual": "a burgundy merino crew under a corduroy overshirt with corduroy trousers, a leather-strap watch, and tan suede derbies",
+      "sharp": "a taupe button-down oxford under an unstructured jacket with tailored trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard boxy tee under a quilted liner jacket with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -9060,9 +9060,9 @@ export const DATING_PROMPTS = [
       "homebody": "a clubhouse, a fence line and parked cars"
     },
     "outfits": {
-      "casual": "a chambray-blue training tee with black trousers, and brown walking boots",
-      "sharp": "a light-blue performance shirt with charcoal trail trousers, and brown suede walking boots",
-      "street": "a grey marl hoodie under a stone gilet, and tan hiking boots"
+      "casual": "a tobacco waffle henley with wool trousers, and suede chukkas",
+      "sharp": "a chocolate unstructured jacket over a fine-gauge merino knit with pleated trousers, and brown brogues",
+      "street": "a stone half-zip sweatshirt with black denim, and black leather boots"
     }
   },
   {
@@ -9091,9 +9091,9 @@ export const DATING_PROMPTS = [
       "homebody": "a clubhouse, a fence line and parked cars"
     },
     "outfits": {
-      "casual": "an indigo long-sleeve with stone shorts, and black training sneakers",
-      "sharp": "a soft-grey merino half-zip with black technical trousers, and black low-profile sneakers",
-      "street": "a black track jacket over a white tee, and grey mesh trainers"
+      "casual": "a slate shearling-collar jacket over a knitted polo with washed denim, and brown leather boots",
+      "sharp": "a teal tailored sport coat over a roll-neck with pleated trousers, and polished loafers",
+      "street": "a plum anorak over a boxy tee with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -9122,9 +9122,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bench, a bin and a row of houses"
     },
     "outfits": {
-      "casual": "a faded navy tee with grey training shorts, and worn trail shoes",
-      "sharp": "a graphite merino crew with charcoal technical trousers, and clean white leather sneakers",
-      "street": "a coral windbreaker over a white tee with black joggers, and chunky white sneakers"
+      "casual": "an oatmeal button-down oxford with the sleeves pushed back and dark indigo denim, a steel dive watch, and tan leather sneakers",
+      "sharp": "a charcoal half-canvas blazer open over a button-down oxford, flannel trousers, and polished derbies",
+      "street": "a black heavyweight knit with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -9153,9 +9153,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bench, a bin and a row of houses"
     },
     "outfits": {
-      "casual": "a moss long-sleeve with black trail trousers, and grey running sneakers",
-      "sharp": "a sand performance half-zip with stone trail trousers, and dark grey technical trainers",
-      "street": "a charcoal track jacket over a bone tee with dark joggers, and black trail runners"
+      "casual": "a camel quilted gilet open over a chambray shirt, stone chinos, and desert boots",
+      "sharp": "a navy navy topcoat open over a striped poplin shirt, flannel trousers, and black chelsea boots",
+      "street": "a bone bomber open over a waffle long-sleeve, black denim, and suede runners"
     }
   },
   {
@@ -9184,9 +9184,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bench, a bin and a row of houses"
     },
     "outfits": {
-      "casual": "an oat hoodie with charcoal joggers, and brown walking boots",
-      "sharp": "a navy softshell over a white base layer with dark trousers, and brown suede walking boots",
-      "street": "a sand fleece half-zip over a grey tee with black trousers, and tan hiking boots"
+      "casual": "an olive suede overshirt under a harrington jacket with moleskin trousers, and penny loafers",
+      "sharp": "a camel pique polo under a belted trench with tailored trousers, and suede loafers",
+      "street": "an olive rugby shirt under a down gilet with cargo trousers, and black high-tops"
     }
   },
   {
@@ -9215,9 +9215,9 @@ export const DATING_PROMPTS = [
       "homebody": "a goalmouth, a footpath and low roofs"
     },
     "outfits": {
-      "casual": "a rust technical tee with dark shorts, and black training sneakers",
-      "sharp": "a burgundy technical polo with grey trousers, and black low-profile sneakers",
-      "street": "an indigo shell over an oat tee with charcoal joggers, and grey mesh trainers"
+      "casual": "a charcoal merino crew with selvedge denim, a fine wool scarf, and leather moccasins",
+      "sharp": "a grey belted trench over a silk-blend shirt with pleated trousers, and leather oxfords",
+      "street": "a slate oversized crewneck with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -9246,9 +9246,9 @@ export const DATING_PROMPTS = [
       "homebody": "a goalmouth, a footpath and low roofs"
     },
     "outfits": {
-      "casual": "a bone base layer under a slate gilet with black joggers, and worn trail shoes",
-      "sharp": "a black gilet over a cream long-sleeve with charcoal trousers, and clean white leather sneakers",
-      "street": "a maroon hoodie under a black gilet with dark joggers, and chunky white sneakers"
+      "casual": "a cream waxed cotton jacket over a linen shirt with corduroy trousers, and tan suede derbies",
+      "sharp": "a black camel overcoat over a cashmere crew with pleated trousers, and brown brogues",
+      "street": "a navy leather jacket over a rugby shirt with black denim, and black leather boots"
     }
   },
   {
@@ -9277,9 +9277,9 @@ export const DATING_PROMPTS = [
       "homebody": "a goalmouth, a footpath and low roofs"
     },
     "outfits": {
-      "casual": "a forest training top with stone shorts, and grey running sneakers",
-      "sharp": "an olive merino quarter-zip with sand trousers, and dark grey technical trainers",
-      "street": "a stone cagoule over a heather tee with black trousers, and black trail runners"
+      "casual": "a navy brushed flannel shirt with the sleeves pushed back and wool trousers, and suede chukkas",
+      "sharp": "a stone unstructured jacket open over a pique polo, flannel trousers, a silk pocket square, and polished loafers",
+      "street": "a cream half-zip sweatshirt with the sleeves pushed back and cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -9306,9 +9306,9 @@ export const DATING_PROMPTS = [
       "homebody": "street trees, a pillar box and lit front windows"
     },
     "outfits": {
-      "casual": "a chocolate corduroy overshirt over a cream tee with dark jeans, and worn brown leather boots",
-      "sharp": "a stone linen blazer over a black crew-neck tee, and polished black derbies",
-      "street": "a mustard corduroy trucker over a white tee, and chunky white sneakers"
+      "casual": "an oatmeal merino crew with moleskin trousers, a steel dive watch, and suede chukkas",
+      "sharp": "a charcoal fine-gauge merino knit with tailored trousers, a gold-cased watch, and polished derbies",
+      "street": "a black coach jacket over a heavyweight knit with technical trousers, and minimal leather sneakers"
     }
   },
   {
@@ -9335,9 +9335,9 @@ export const DATING_PROMPTS = [
       "homebody": "street trees, a pillar box and lit front windows"
     },
     "outfits": {
-      "casual": "a charcoal hoodie under an open black overshirt, and off-white low-profile sneakers",
-      "sharp": "a charcoal overcoat over a white tee, and brown leather chelsea boots",
-      "street": "a black waxed trucker over a grey tee, and black canvas high-tops"
+      "casual": "a camel harrington jacket over a linen shirt with selvedge denim, and brown leather boots",
+      "sharp": "a navy belted trench over a cashmere crew with wool trousers, and black chelsea boots",
+      "street": "a bone oversized crewneck with the sleeves pushed back and pleated wool trousers, and suede runners"
     }
   },
   {
@@ -9364,9 +9364,9 @@ export const DATING_PROMPTS = [
       "homebody": "street trees, a pillar box and lit front windows"
     },
     "outfits": {
-      "casual": "a sand waffle henley with washed indigo denim, and black suede chukkas",
-      "sharp": "a camel sport coat over a fine navy knit, and clean white leather sneakers",
-      "street": "a sand canvas chore coat over a charcoal tee, and tan suede desert boots"
+      "casual": "an olive brushed flannel shirt with the sleeves pushed back and corduroy trousers, and tan leather sneakers",
+      "sharp": "a camel button-down oxford with the sleeves pushed back and pleated trousers, and suede loafers",
+      "street": "an olive leather jacket open over a rugby shirt, tailored trousers, a chunky steel watch, and black high-tops"
     }
   },
   {
@@ -9393,9 +9393,9 @@ export const DATING_PROMPTS = [
       "homebody": "a school railing, hedges and a quiet junction"
     },
     "outfits": {
-      "casual": "an olive flannel over a grey tee with black jeans, and grey runner sneakers",
-      "sharp": "a bottle-green wool overshirt over a white oxford, and oxblood loafers",
-      "street": "an indigo denim jacket over a cream tee, and black leather sneakers"
+      "casual": "a charcoal corduroy overshirt open over a shawl-collar cardigan, wool trousers, a fine wool scarf, and desert boots",
+      "sharp": "a grey unstructured jacket open over a white poplin shirt, cavalry twill trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate half-zip sweatshirt under an anorak with technical trousers, and suede trainers"
     }
   },
   {
@@ -9422,9 +9422,9 @@ export const DATING_PROMPTS = [
       "homebody": "a school railing, hedges and a quiet junction"
     },
     "outfits": {
-      "casual": "a cream heavyweight tee under a slate overshirt, and worn brown leather boots",
-      "sharp": "a black band-collar shirt with dark trousers, and polished black derbies",
-      "street": "a rust bomber over a black tee, and chunky white sneakers"
+      "casual": "a cream cable-knit sweater under a suede jacket with washed denim, and penny loafers",
+      "sharp": "a black fine-gauge merino knit under a half-canvas blazer with flannel trousers, and brown brogues",
+      "street": "a navy waffle long-sleeve with pleated wool trousers, and black leather boots"
     }
   },
   {
@@ -9451,9 +9451,9 @@ export const DATING_PROMPTS = [
       "homebody": "a school railing, hedges and a quiet junction"
     },
     "outfits": {
-      "casual": "a rust knit polo with dark denim, and off-white low-profile sneakers",
-      "sharp": "a burgundy fine-knit under a grey wool jacket, and brown leather chelsea boots",
-      "street": "a cream boxy overshirt over a washed-black tee, and black canvas high-tops"
+      "casual": "a navy suede overshirt with dark indigo denim, and leather moccasins",
+      "sharp": "a stone silk-blend shirt with tailored trousers, and polished loafers",
+      "street": "a cream technical shell over a half-zip sweatshirt with tailored trousers, a chunky steel watch, and leather chelsea boots"
     }
   },
   {
@@ -9480,9 +9480,9 @@ export const DATING_PROMPTS = [
       "homebody": "a garden wall, a lamp post and low roofs"
     },
     "outfits": {
-      "casual": "a forest-green sweatshirt with stone-grey jeans, and black suede chukkas",
-      "sharp": "a light-grey blazer over an ink-blue tee, and clean white leather sneakers",
-      "street": "a forest coach jacket over an oat tee, and tan suede desert boots"
+      "casual": "a rust quilted gilet over a fine-gauge knit with stone chinos, tortoiseshell sunglasses, and tan suede derbies",
+      "sharp": "a burgundy navy topcoat over a striped poplin shirt with wool trousers, a silk pocket square, and polished derbies",
+      "street": "a rust mock-neck knit with the sleeves pushed back and technical trousers, and minimal leather sneakers"
     }
   },
   {
@@ -9509,9 +9509,9 @@ export const DATING_PROMPTS = [
       "homebody": "a garden wall, a lamp post and low roofs"
     },
     "outfits": {
-      "casual": "an oat brushed-cotton shirt over a white tee, and grey runner sneakers",
-      "sharp": "a rust silk-blend shirt with charcoal trousers, and oxblood loafers",
-      "street": "a slate windbreaker over a white tee, and black leather sneakers"
+      "casual": "a stone waffle henley with the sleeves pushed back and moleskin trousers, and suede chukkas",
+      "sharp": "a forest pique polo with the sleeves pushed back and pleated trousers, and black chelsea boots",
+      "street": "a charcoal coach jacket open over a heavyweight knit, pleated wool trousers, and suede runners"
     }
   },
   {
@@ -9538,9 +9538,9 @@ export const DATING_PROMPTS = [
       "homebody": "a garden wall, a lamp post and low roofs"
     },
     "outfits": {
-      "casual": "a burgundy waffle henley with black jeans, and worn brown leather boots",
-      "sharp": "a cream shawl-collar knit with dark trousers, and polished black derbies",
-      "street": "a burgundy varsity jacket over a heather tee, and chunky white sneakers"
+      "casual": "a forest harrington jacket open over a knitted polo, selvedge denim, and brown leather boots",
+      "sharp": "a slate belted trench open over a roll-neck, cavalry twill trousers, and suede loafers",
+      "street": "a teal oversized crewneck under a leather jacket with tailored trousers, a chunky steel watch, and black high-tops"
     }
   },
   {
@@ -9567,9 +9567,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bakery front, an awning and parked cars"
     },
     "outfits": {
-      "casual": "a bone tee under an open chambray shirt, and off-white low-profile sneakers",
-      "sharp": "a taupe field coat over a black roll-neck, and brown leather chelsea boots",
-      "street": "a stone utility overshirt over a black tee, and black canvas high-tops"
+      "casual": "a burgundy button-down oxford under a corduroy overshirt with corduroy trousers, a leather-strap watch, and tan leather sneakers",
+      "sharp": "a taupe silk-blend shirt under an unstructured jacket with flannel trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard boxy tee with technical trousers, and suede trainers"
     }
   },
   {
@@ -9596,9 +9596,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bakery front, an awning and parked cars"
     },
     "outfits": {
-      "casual": "a teal crewneck with dark denim, and black suede chukkas",
-      "sharp": "an olive blazer over a sand knit, and clean white leather sneakers",
-      "street": "a brown suede trucker over a bone tee, and tan suede desert boots"
+      "casual": "a tobacco cable-knit sweater with wool trousers, and desert boots",
+      "sharp": "a chocolate button-down oxford with tailored trousers, and brown brogues",
+      "street": "a stone quilted liner jacket over an oversized crewneck with pleated wool trousers, and black leather boots"
     }
   },
   {
@@ -9625,9 +9625,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bakery front, an awning and parked cars"
     },
     "outfits": {
-      "casual": "a mustard corduroy shirt with charcoal jeans, and grey runner sneakers",
-      "sharp": "a slate merino roll-neck with charcoal trousers, and oxblood loafers",
-      "street": "a charcoal hoodie under a black leather-trim jacket, and black leather sneakers"
+      "casual": "a slate shearling-collar jacket over a cashmere crew with washed denim, and penny loafers",
+      "sharp": "a teal tailored sport coat over a white poplin shirt with wool trousers, and polished loafers",
+      "street": "a plum waffle long-sleeve with the sleeves pushed back and tailored trousers, a chunky steel watch, and leather chelsea boots"
     }
   },
   {
@@ -9654,9 +9654,9 @@ export const DATING_PROMPTS = [
       "homebody": "a launderette, a bin store and terraced houses"
     },
     "outfits": {
-      "casual": "a plum merino crewneck with washed-black denim, and worn brown leather boots",
-      "sharp": "a tobacco suede blazer over a white shirt, and polished black derbies",
-      "street": "an olive field jacket over a white tee, and chunky white sneakers"
+      "casual": "an oatmeal merino crew with the sleeves pushed back and dark indigo denim, a steel dive watch, and leather moccasins",
+      "sharp": "a charcoal fine-gauge merino knit with the sleeves pushed back and pleated trousers, a gold-cased watch, and polished derbies",
+      "street": "a black technical shell open over a half-zip sweatshirt, technical trousers, and minimal leather sneakers"
     }
   },
   {
@@ -9683,9 +9683,9 @@ export const DATING_PROMPTS = [
       "homebody": "a launderette, a bin store and terraced houses"
     },
     "outfits": {
-      "casual": "a stone linen overshirt over a heather tee, and off-white low-profile sneakers",
-      "sharp": "a navy peacoat over a cream crewneck, and brown leather chelsea boots",
-      "street": "an ecru linen overshirt over a grey tee, and black canvas high-tops"
+      "casual": "a camel quilted gilet open over a linen shirt, stone chinos, and tan suede derbies",
+      "sharp": "a navy navy topcoat open over a cashmere crew, cavalry twill trousers, and black chelsea boots",
+      "street": "a bone mock-neck knit under a coach jacket with pleated wool trousers, and suede runners"
     }
   },
   {
@@ -9712,9 +9712,9 @@ export const DATING_PROMPTS = [
       "homebody": "a launderette, a bin store and terraced houses"
     },
     "outfits": {
-      "casual": "an ecru cable knit with indigo jeans, and black suede chukkas",
-      "sharp": "a plum knit polo with grey trousers, and clean white leather sneakers",
-      "street": "a teal coach jacket over a cream tee, and tan suede desert boots"
+      "casual": "an olive brushed flannel shirt under a harrington jacket with moleskin trousers, and suede chukkas",
+      "sharp": "a camel button-down oxford under a belted trench with flannel trousers, and suede loafers",
+      "street": "an olive rugby shirt with tailored trousers, a chunky steel watch, and black high-tops"
     }
   },
   {
@@ -9741,9 +9741,9 @@ export const DATING_PROMPTS = [
       "homebody": "a barber's pole, a postbox and low walls"
     },
     "outfits": {
-      "casual": "a terracotta long-sleeve tee with dark chinos, and grey runner sneakers",
-      "sharp": "a mid-brown corduroy blazer over an ecru tee, and oxblood loafers",
-      "street": "a chocolate shearling-collar trucker over a black tee, and black leather sneakers"
+      "casual": "a charcoal button-down oxford with selvedge denim, a fine wool scarf, and brown leather boots",
+      "sharp": "a grey pique polo with tailored trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate down gilet over a mock-neck knit with technical trousers, and suede trainers"
     }
   },
   {
@@ -9770,9 +9770,9 @@ export const DATING_PROMPTS = [
       "homebody": "a barber's pole, a postbox and low walls"
     },
     "outfits": {
-      "casual": "a grey marl henley with black denim, and worn brown leather boots",
-      "sharp": "a chalk-striped grey jacket over a black tee, and polished black derbies",
-      "street": "a terracotta hooded overshirt over a white tee, and chunky white sneakers"
+      "casual": "a cream waxed cotton jacket over a chambray shirt with corduroy trousers, and tan leather sneakers",
+      "sharp": "a black camel overcoat over a roll-neck with wool trousers, and brown brogues",
+      "street": "a navy boxy tee with the sleeves pushed back and pleated wool trousers, and black leather boots"
     }
   },
   {
@@ -9799,9 +9799,9 @@ export const DATING_PROMPTS = [
       "homebody": "a barber's pole, a postbox and low walls"
     },
     "outfits": {
-      "casual": "an indigo overshirt over a washed white tee, and off-white low-profile sneakers",
-      "sharp": "a forest velvet-trim jacket over a white tee, and brown leather chelsea boots",
-      "street": "a navy bomber over an oat tee, and black canvas high-tops"
+      "casual": "a navy suede overshirt with the sleeves pushed back and wool trousers, and desert boots",
+      "sharp": "a stone silk-blend shirt with the sleeves pushed back and pleated trousers, and polished loafers",
+      "street": "a cream quilted liner jacket open over an oversized crewneck, tailored trousers, a chunky steel watch, and leather chelsea boots"
     }
   },
   {
@@ -9828,9 +9828,9 @@ export const DATING_PROMPTS = [
       "homebody": "a shelter panel, a glowing light box and a quiet road"
     },
     "outfits": {
-      "casual": "a black waffle henley with faded jeans, and black suede chukkas",
-      "sharp": "a soft-grey topcoat over a bone knit, and clean white leather sneakers",
-      "street": "a grey marl hoodie under a stone chore jacket, and tan suede desert boots"
+      "casual": "a rust shearling-collar jacket open over a fine-gauge knit, washed denim, tortoiseshell sunglasses, and penny loafers",
+      "sharp": "a burgundy tailored sport coat open over a striped poplin shirt, cavalry twill trousers, a silk pocket square, and polished derbies",
+      "street": "a rust anorak open over a boxy tee, wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -9857,9 +9857,9 @@ export const DATING_PROMPTS = [
       "homebody": "a shelter panel, a glowing light box and a quiet road"
     },
     "outfits": {
-      "casual": "a slate-blue flannel over a cream tee, and grey runner sneakers",
-      "sharp": "an ink-blue overshirt over a charcoal knit, and oxblood loafers",
-      "street": "a black quilted jacket over a cream tee, and black leather sneakers"
+      "casual": "a stone waffle henley under a quilted gilet with dark indigo denim, and leather moccasins",
+      "sharp": "a forest pique polo under a navy topcoat with flannel trousers, and black chelsea boots",
+      "street": "a charcoal heavyweight knit under a bomber with black denim, and suede runners"
     }
   },
   {
@@ -9886,9 +9886,9 @@ export const DATING_PROMPTS = [
       "homebody": "a shelter panel, a glowing light box and a quiet road"
     },
     "outfits": {
-      "casual": "a faded charcoal henley with black denim, and worn brown leather boots",
-      "sharp": "a graphite overcoat over a white tee with dark trousers, and polished black derbies",
-      "street": "a bleached denim trucker over a black tee with dark jeans, and chunky white sneakers"
+      "casual": "a forest brushed flannel shirt with stone chinos, and tan suede derbies",
+      "sharp": "a slate fine-gauge merino knit with tailored trousers, and suede loafers",
+      "street": "a teal mock-neck knit with cargo trousers, and black high-tops"
     }
   },
   {
@@ -9915,9 +9915,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bus flag, a hedge and semi-detached houses"
     },
     "outfits": {
-      "casual": "a caramel corduroy overshirt over a bone tee with dark jeans, and off-white low-profile sneakers",
-      "sharp": "a sand wool shirt-jacket over a black knit with charcoal trousers, and brown leather chelsea boots",
-      "street": "a coral half-zip over a bone tee with black denim, and black canvas high-tops"
+      "casual": "a burgundy chore jacket over a shawl-collar cardigan with moleskin trousers, a leather-strap watch, and suede chukkas",
+      "sharp": "a taupe double-breasted coat over a cashmere crew with wool trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard coach jacket over a heavyweight knit with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -9944,9 +9944,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bus flag, a hedge and semi-detached houses"
     },
     "outfits": {
-      "casual": "a moss knit polo with charcoal denim, and black suede chukkas",
-      "sharp": "a burgundy blazer over an ecru tee with dark trousers, and clean white leather sneakers",
-      "street": "a khaki shacket over a charcoal tee with dark jeans, and tan suede desert boots"
+      "casual": "a tobacco cable-knit sweater with the sleeves pushed back and selvedge denim, and brown leather boots",
+      "sharp": "a chocolate button-down oxford with the sleeves pushed back and pleated trousers, and brown brogues",
+      "street": "a stone oversized crewneck with the sleeves pushed back and black denim, and black leather boots"
     }
   },
   {
@@ -9973,9 +9973,9 @@ export const DATING_PROMPTS = [
       "homebody": "a bus flag, a hedge and semi-detached houses"
     },
     "outfits": {
-      "casual": "a washed-indigo shirt over a white tee with black jeans, and grey runner sneakers",
-      "sharp": "a midnight roll-neck with grey trousers, and oxblood loafers",
-      "street": "an oxblood bomber over a cream tee with black denim, and black leather sneakers"
+      "casual": "a slate waxed cotton jacket open over a cashmere crew, corduroy trousers, and tan leather sneakers",
+      "sharp": "a teal camel overcoat open over a white poplin shirt, cavalry twill trousers, and polished loafers",
+      "street": "a plum leather jacket open over a rugby shirt, cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -10002,9 +10002,9 @@ export const DATING_PROMPTS = [
       "homebody": "a kerbside puddle, a lamp post and lit windows"
     },
     "outfits": {
-      "casual": "a maroon waffle knit with dark denim, and worn brown leather boots",
-      "sharp": "a bottle-green sport coat over a cream shirt with dark trousers, and polished black derbies",
-      "street": "a grey wool overshirt over a washed-black tee with dark jeans, and chunky white sneakers"
+      "casual": "an oatmeal merino crew under a shearling-collar jacket with wool trousers, a steel dive watch, and desert boots",
+      "sharp": "a charcoal fine-gauge merino knit under a tailored sport coat with flannel trousers, a gold-cased watch, and polished derbies",
+      "street": "a black half-zip sweatshirt under an anorak with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -10031,9 +10031,9 @@ export const DATING_PROMPTS = [
       "homebody": "a kerbside puddle, a lamp post and lit windows"
     },
     "outfits": {
-      "casual": "a stone overshirt over a heather tee with black jeans, and off-white low-profile sneakers",
-      "sharp": "a taupe topcoat over a black polo with charcoal trousers, and brown leather chelsea boots",
-      "street": "a navy quilted jacket over an oat tee with black denim, and black canvas high-tops"
+      "casual": "a camel waffle henley with washed denim, and penny loafers",
+      "sharp": "a navy silk-blend shirt with tailored trousers, and black chelsea boots",
+      "street": "a bone waffle long-sleeve with black denim, and suede runners"
     }
   },
   {
@@ -10060,9 +10060,9 @@ export const DATING_PROMPTS = [
       "homebody": "a kerbside puddle, a lamp post and lit windows"
     },
     "outfits": {
-      "casual": "a chocolate corduroy overshirt over a cream tee with dark jeans, and worn brown leather boots",
-      "sharp": "a stone linen blazer over a black crew-neck tee, and polished black derbies",
-      "street": "a mustard corduroy trucker over a white tee, and chunky white sneakers"
+      "casual": "an olive suede jacket over a knitted polo with dark indigo denim, and leather moccasins",
+      "sharp": "a camel half-canvas blazer over a striped poplin shirt with wool trousers, and suede loafers",
+      "street": "an olive technical shell over a half-zip sweatshirt with cargo trousers, and black high-tops"
     }
   },
   {
@@ -10089,9 +10089,9 @@ export const DATING_PROMPTS = [
       "homebody": "a painted front door, iron railings and a street lamp"
     },
     "outfits": {
-      "casual": "a charcoal hoodie under an open black overshirt, and off-white low-profile sneakers",
-      "sharp": "a charcoal overcoat over a white tee, and brown leather chelsea boots",
-      "street": "a black waxed trucker over a grey tee, and black canvas high-tops"
+      "casual": "a charcoal button-down oxford with the sleeves pushed back and stone chinos, a fine wool scarf, and tan suede derbies",
+      "sharp": "a grey pique polo with the sleeves pushed back and pleated trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate mock-neck knit with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -10118,9 +10118,9 @@ export const DATING_PROMPTS = [
       "homebody": "a painted front door, iron railings and a street lamp"
     },
     "outfits": {
-      "casual": "a sand waffle henley with washed indigo denim, and black suede chukkas",
-      "sharp": "a camel sport coat over a fine navy knit, and clean white leather sneakers",
-      "street": "a sand canvas chore coat over a charcoal tee, and tan suede desert boots"
+      "casual": "a cream chore jacket open over a chambray shirt, moleskin trousers, and suede chukkas",
+      "sharp": "a black double-breasted coat open over a roll-neck, cavalry twill trousers, and brown brogues",
+      "street": "a navy coach jacket open over a heavyweight knit, black denim, and black leather boots"
     }
   },
   {
@@ -10147,9 +10147,9 @@ export const DATING_PROMPTS = [
       "homebody": "a painted front door, iron railings and a street lamp"
     },
     "outfits": {
-      "casual": "an olive flannel over a grey tee with black jeans, and grey runner sneakers",
-      "sharp": "a bottle-green wool overshirt over a white oxford, and oxblood loafers",
-      "street": "an indigo denim jacket over a cream tee, and black leather sneakers"
+      "casual": "a navy suede overshirt under a waxed cotton jacket with selvedge denim, and brown leather boots",
+      "sharp": "a stone silk-blend shirt under a camel overcoat with flannel trousers, and polished loafers",
+      "street": "a cream oversized crewneck under a leather jacket with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -10176,9 +10176,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stoop rail, bin bags and a row of houses"
     },
     "outfits": {
-      "casual": "a cream heavyweight tee under a slate overshirt, and worn brown leather boots",
-      "sharp": "a black band-collar shirt with dark trousers, and polished black derbies",
-      "street": "a rust bomber over a black tee, and chunky white sneakers"
+      "casual": "a rust merino crew with corduroy trousers, tortoiseshell sunglasses, and tan leather sneakers",
+      "sharp": "a burgundy button-down oxford with tailored trousers, a silk pocket square, and polished derbies",
+      "street": "a rust boxy tee with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -10205,9 +10205,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stoop rail, bin bags and a row of houses"
     },
     "outfits": {
-      "casual": "a rust knit polo with dark denim, and off-white low-profile sneakers",
-      "sharp": "a burgundy fine-knit under a grey wool jacket, and brown leather chelsea boots",
-      "street": "a cream boxy overshirt over a washed-black tee, and black canvas high-tops"
+      "casual": "a stone corduroy overshirt over a linen shirt with wool trousers, and desert boots",
+      "sharp": "a forest unstructured jacket over a white poplin shirt with wool trousers, and black chelsea boots",
+      "street": "a charcoal quilted liner jacket over an oversized crewneck with black denim, and suede runners"
     }
   },
   {
@@ -10234,9 +10234,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stoop rail, bin bags and a row of houses"
     },
     "outfits": {
-      "casual": "a forest-green sweatshirt with stone-grey jeans, and black suede chukkas",
-      "sharp": "a light-grey blazer over an ink-blue tee, and clean white leather sneakers",
-      "street": "a forest coach jacket over an oat tee, and tan suede desert boots"
+      "casual": "a forest brushed flannel shirt with the sleeves pushed back and washed denim, and penny loafers",
+      "sharp": "a slate fine-gauge merino knit with the sleeves pushed back and pleated trousers, and suede loafers",
+      "street": "a teal waffle long-sleeve with the sleeves pushed back and cargo trousers, and black high-tops"
     }
   },
   {
@@ -10263,9 +10263,9 @@ export const DATING_PROMPTS = [
       "homebody": "a basement gate, a bicycle and lit sash windows"
     },
     "outfits": {
-      "casual": "an oat brushed-cotton shirt over a white tee, and grey runner sneakers",
-      "sharp": "a rust silk-blend shirt with charcoal trousers, and oxblood loafers",
-      "street": "a slate windbreaker over a white tee, and black leather sneakers"
+      "casual": "a burgundy suede jacket open over a shawl-collar cardigan, dark indigo denim, a leather-strap watch, and leather moccasins",
+      "sharp": "a taupe half-canvas blazer open over a cashmere crew, cavalry twill trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard technical shell open over a half-zip sweatshirt, wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -10292,9 +10292,9 @@ export const DATING_PROMPTS = [
       "homebody": "a basement gate, a bicycle and lit sash windows"
     },
     "outfits": {
-      "casual": "a burgundy waffle henley with black jeans, and worn brown leather boots",
-      "sharp": "a cream shawl-collar knit with dark trousers, and polished black derbies",
-      "street": "a burgundy varsity jacket over a heather tee, and chunky white sneakers"
+      "casual": "a tobacco cable-knit sweater under a chore jacket with stone chinos, and tan suede derbies",
+      "sharp": "a chocolate button-down oxford under a double-breasted coat with flannel trousers, and brown brogues",
+      "street": "a stone mock-neck knit under a coach jacket with black denim, and black leather boots"
     }
   },
   {
@@ -10321,9 +10321,9 @@ export const DATING_PROMPTS = [
       "homebody": "a basement gate, a bicycle and lit sash windows"
     },
     "outfits": {
-      "casual": "a bone tee under an open chambray shirt, and off-white low-profile sneakers",
-      "sharp": "a taupe field coat over a black roll-neck, and brown leather chelsea boots",
-      "street": "a stone utility overshirt over a black tee, and black canvas high-tops"
+      "casual": "a slate suede overshirt with moleskin trousers, and suede chukkas",
+      "sharp": "a teal pique polo with tailored trousers, and polished loafers",
+      "street": "a plum rugby shirt with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -10350,9 +10350,9 @@ export const DATING_PROMPTS = [
       "homebody": "shop awnings, a bike rack and hanging baskets"
     },
     "outfits": {
-      "casual": "a teal crewneck with dark denim, and black suede chukkas",
-      "sharp": "an olive blazer over a sand knit, and clean white leather sneakers",
-      "street": "a brown suede trucker over a bone tee, and tan suede desert boots"
+      "casual": "an oatmeal harrington jacket over a fine-gauge knit with selvedge denim, a steel dive watch, and brown leather boots",
+      "sharp": "a charcoal belted trench over a roll-neck with wool trousers, a gold-cased watch, and polished derbies",
+      "street": "a black down gilet over a mock-neck knit with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -10379,9 +10379,9 @@ export const DATING_PROMPTS = [
       "homebody": "shop awnings, a bike rack and hanging baskets"
     },
     "outfits": {
-      "casual": "a mustard corduroy shirt with charcoal jeans, and grey runner sneakers",
-      "sharp": "a slate merino roll-neck with charcoal trousers, and oxblood loafers",
-      "street": "a charcoal hoodie under a black leather-trim jacket, and black leather sneakers"
+      "casual": "a camel waffle henley with the sleeves pushed back and corduroy trousers, and tan leather sneakers",
+      "sharp": "a navy silk-blend shirt with the sleeves pushed back and pleated trousers, and black chelsea boots",
+      "street": "a bone boxy tee with the sleeves pushed back and black denim, and suede runners"
     }
   },
   {
@@ -10408,9 +10408,9 @@ export const DATING_PROMPTS = [
       "homebody": "shop awnings, a bike rack and hanging baskets"
     },
     "outfits": {
-      "casual": "a plum merino crewneck with washed-black denim, and worn brown leather boots",
-      "sharp": "a tobacco suede blazer over a white shirt, and polished black derbies",
-      "street": "an olive field jacket over a white tee, and chunky white sneakers"
+      "casual": "an olive corduroy overshirt open over a knitted polo, wool trousers, and desert boots",
+      "sharp": "a camel unstructured jacket open over a striped poplin shirt, cavalry twill trousers, and suede loafers",
+      "street": "an olive quilted liner jacket open over an oversized crewneck, cargo trousers, and black high-tops"
     }
   },
   {
@@ -10437,9 +10437,9 @@ export const DATING_PROMPTS = [
       "homebody": "a greengrocer's crates, produce boxes and a narrow pavement"
     },
     "outfits": {
-      "casual": "a stone linen overshirt over a heather tee, and off-white low-profile sneakers",
-      "sharp": "a navy peacoat over a cream crewneck, and brown leather chelsea boots",
-      "street": "an ecru linen overshirt over a grey tee, and black canvas high-tops"
+      "casual": "a charcoal button-down oxford under a suede jacket with washed denim, a fine wool scarf, and penny loafers",
+      "sharp": "a grey pique polo under a half-canvas blazer with flannel trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate waffle long-sleeve under a technical shell with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -10466,9 +10466,9 @@ export const DATING_PROMPTS = [
       "homebody": "a greengrocer's crates, produce boxes and a narrow pavement"
     },
     "outfits": {
-      "casual": "an ecru cable knit with indigo jeans, and black suede chukkas",
-      "sharp": "a plum knit polo with grey trousers, and clean white leather sneakers",
-      "street": "a teal coach jacket over a cream tee, and tan suede desert boots"
+      "casual": "a cream cable-knit sweater with dark indigo denim, and leather moccasins",
+      "sharp": "a black fine-gauge merino knit with tailored trousers, and brown brogues",
+      "street": "a navy heavyweight knit with black denim, and black leather boots"
     }
   },
   {
@@ -10495,9 +10495,9 @@ export const DATING_PROMPTS = [
       "homebody": "a greengrocer's crates, produce boxes and a narrow pavement"
     },
     "outfits": {
-      "casual": "a terracotta long-sleeve tee with dark chinos, and grey runner sneakers",
-      "sharp": "a mid-brown corduroy blazer over an ecru tee, and oxblood loafers",
-      "street": "a chocolate shearling-collar trucker over a black tee, and black leather sneakers"
+      "casual": "a navy quilted gilet over a cashmere crew with stone chinos, and tan suede derbies",
+      "sharp": "a stone navy topcoat over a cashmere crew with wool trousers, and polished loafers",
+      "street": "a cream bomber over a waffle long-sleeve with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -10524,9 +10524,9 @@ export const DATING_PROMPTS = [
       "homebody": "a corner shop, a lit window and a quiet turning"
     },
     "outfits": {
-      "casual": "a grey marl henley with black denim, and worn brown leather boots",
-      "sharp": "a chalk-striped grey jacket over a black tee, and polished black derbies",
-      "street": "a terracotta hooded overshirt over a white tee, and chunky white sneakers"
+      "casual": "a rust merino crew with the sleeves pushed back and moleskin trousers, tortoiseshell sunglasses, and suede chukkas",
+      "sharp": "a burgundy button-down oxford with the sleeves pushed back and pleated trousers, a silk pocket square, and polished derbies",
+      "street": "a rust rugby shirt with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -10553,9 +10553,9 @@ export const DATING_PROMPTS = [
       "homebody": "a corner shop, a lit window and a quiet turning"
     },
     "outfits": {
-      "casual": "an indigo overshirt over a washed white tee, and off-white low-profile sneakers",
-      "sharp": "a forest velvet-trim jacket over a white tee, and brown leather chelsea boots",
-      "street": "a navy bomber over an oat tee, and black canvas high-tops"
+      "casual": "a stone harrington jacket open over a linen shirt, selvedge denim, and brown leather boots",
+      "sharp": "a forest belted trench open over a white poplin shirt, cavalry twill trousers, and black chelsea boots",
+      "street": "a charcoal down gilet open over a mock-neck knit, black denim, and suede runners"
     }
   },
   {
@@ -10582,9 +10582,9 @@ export const DATING_PROMPTS = [
       "homebody": "a corner shop, a lit window and a quiet turning"
     },
     "outfits": {
-      "casual": "a black waffle henley with faded jeans, and black suede chukkas",
-      "sharp": "a soft-grey topcoat over a bone knit, and clean white leather sneakers",
-      "street": "a grey marl hoodie under a stone chore jacket, and tan suede desert boots"
+      "casual": "a forest brushed flannel shirt under a corduroy overshirt with corduroy trousers, and tan leather sneakers",
+      "sharp": "a slate fine-gauge merino knit under an unstructured jacket with flannel trousers, and suede loafers",
+      "street": "a teal boxy tee under a quilted liner jacket with cargo trousers, and black high-tops"
     }
   },
   {
@@ -10611,9 +10611,9 @@ export const DATING_PROMPTS = [
       "homebody": "a shelter, a lit vending cabinet and a gated crossing"
     },
     "outfits": {
-      "casual": "a slate-blue flannel over a cream tee, and grey runner sneakers",
-      "sharp": "an ink-blue overshirt over a charcoal knit, and oxblood loafers",
-      "street": "a black quilted jacket over a cream tee, and black leather sneakers"
+      "casual": "a burgundy button-down oxford with wool trousers, a leather-strap watch, and desert boots",
+      "sharp": "a taupe silk-blend shirt with tailored trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard half-zip sweatshirt with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -10640,9 +10640,9 @@ export const DATING_PROMPTS = [
       "homebody": "a shelter, a lit vending cabinet and a gated crossing"
     },
     "outfits": {
-      "casual": "a faded charcoal henley with black denim, and worn brown leather boots",
-      "sharp": "a graphite overcoat over a white tee with dark trousers, and polished black derbies",
-      "street": "a bleached denim trucker over a black tee with dark jeans, and chunky white sneakers"
+      "casual": "a tobacco shearling-collar jacket over a chambray shirt with washed denim, and penny loafers",
+      "sharp": "a chocolate tailored sport coat over a striped poplin shirt with wool trousers, and brown brogues",
+      "street": "a stone anorak over a boxy tee with black denim, and black leather boots"
     }
   },
   {
@@ -10669,9 +10669,9 @@ export const DATING_PROMPTS = [
       "homebody": "a shelter, a lit vending cabinet and a gated crossing"
     },
     "outfits": {
-      "casual": "a caramel corduroy overshirt over a bone tee with dark jeans, and off-white low-profile sneakers",
-      "sharp": "a sand wool shirt-jacket over a black knit with charcoal trousers, and brown leather chelsea boots",
-      "street": "a coral half-zip over a bone tee with black denim, and black canvas high-tops"
+      "casual": "a slate suede overshirt with the sleeves pushed back and dark indigo denim, and leather moccasins",
+      "sharp": "a teal pique polo with the sleeves pushed back and pleated trousers, and polished loafers",
+      "street": "a plum heavyweight knit with the sleeves pushed back and cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -10698,9 +10698,9 @@ export const DATING_PROMPTS = [
       "homebody": "a platform stripe, a bin and a car park"
     },
     "outfits": {
-      "casual": "a moss knit polo with charcoal denim, and black suede chukkas",
-      "sharp": "a burgundy blazer over an ecru tee with dark trousers, and clean white leather sneakers",
-      "street": "a khaki shacket over a charcoal tee with dark jeans, and tan suede desert boots"
+      "casual": "an oatmeal quilted gilet open over a fine-gauge knit, stone chinos, a steel dive watch, and tan suede derbies",
+      "sharp": "a charcoal navy topcoat open over a roll-neck, cavalry twill trousers, a gold-cased watch, and polished derbies",
+      "street": "a black bomber open over a waffle long-sleeve, wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -10727,9 +10727,9 @@ export const DATING_PROMPTS = [
       "homebody": "a platform stripe, a bin and a car park"
     },
     "outfits": {
-      "casual": "a washed-indigo shirt over a white tee with black jeans, and grey runner sneakers",
-      "sharp": "a midnight roll-neck with grey trousers, and oxblood loafers",
-      "street": "an oxblood bomber over a cream tee with black denim, and black leather sneakers"
+      "casual": "a camel waffle henley under a harrington jacket with moleskin trousers, and suede chukkas",
+      "sharp": "a navy silk-blend shirt under a belted trench with flannel trousers, and black chelsea boots",
+      "street": "a bone rugby shirt under a down gilet with black denim, and suede runners"
     }
   },
   {
@@ -10756,9 +10756,9 @@ export const DATING_PROMPTS = [
       "homebody": "a platform stripe, a bin and a car park"
     },
     "outfits": {
-      "casual": "a maroon waffle knit with dark denim, and worn brown leather boots",
-      "sharp": "a bottle-green sport coat over a cream shirt with dark trousers, and polished black derbies",
-      "street": "a grey wool overshirt over a washed-black tee with dark jeans, and chunky white sneakers"
+      "casual": "an olive brushed flannel shirt with selvedge denim, and brown leather boots",
+      "sharp": "a camel button-down oxford with tailored trousers, and suede loafers",
+      "street": "an olive oversized crewneck with cargo trousers, and black high-tops"
     }
   },
   {
@@ -10787,9 +10787,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stop pole, a cycle rack and back gardens"
     },
     "outfits": {
-      "casual": "a stone overshirt over a heather tee with black jeans, and off-white low-profile sneakers",
-      "sharp": "a taupe topcoat over a black polo with charcoal trousers, and brown leather chelsea boots",
-      "street": "a navy quilted jacket over an oat tee with black denim, and black canvas high-tops"
+      "casual": "a charcoal waxed cotton jacket over a shawl-collar cardigan with corduroy trousers, a fine wool scarf, and tan leather sneakers",
+      "sharp": "a grey camel overcoat over a white poplin shirt with wool trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate leather jacket over a rugby shirt with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -10818,9 +10818,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stop pole, a cycle rack and back gardens"
     },
     "outfits": {
-      "casual": "a chocolate corduroy overshirt over a cream tee with dark jeans, and worn brown leather boots",
-      "sharp": "a stone linen blazer over a black crew-neck tee, and polished black derbies",
-      "street": "a mustard corduroy trucker over a white tee, and chunky white sneakers"
+      "casual": "a cream cable-knit sweater with the sleeves pushed back and wool trousers, and desert boots",
+      "sharp": "a black fine-gauge merino knit with the sleeves pushed back and pleated trousers, and brown brogues",
+      "street": "a navy half-zip sweatshirt with the sleeves pushed back and black denim, and black leather boots"
     }
   },
   {
@@ -10849,9 +10849,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stop pole, a cycle rack and back gardens"
     },
     "outfits": {
-      "casual": "a charcoal hoodie under an open black overshirt, and off-white low-profile sneakers",
-      "sharp": "a charcoal overcoat over a white tee, and brown leather chelsea boots",
-      "street": "a black waxed trucker over a grey tee, and black canvas high-tops"
+      "casual": "a navy shearling-collar jacket open over a cashmere crew, washed denim, and penny loafers",
+      "sharp": "a stone tailored sport coat open over a cashmere crew, cavalry twill trousers, and polished loafers",
+      "street": "a cream anorak open over a boxy tee, cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -10878,9 +10878,9 @@ export const DATING_PROMPTS = [
       "homebody": "a trestle table, fairy lights and lit house windows"
     },
     "outfits": {
-      "casual": "a sand waffle henley with washed indigo denim, and black suede chukkas",
-      "sharp": "a camel sport coat over a fine navy knit, and clean white leather sneakers",
-      "street": "a sand canvas chore coat over a charcoal tee, and tan suede desert boots"
+      "casual": "a rust merino crew under a quilted gilet with dark indigo denim, tortoiseshell sunglasses, and leather moccasins",
+      "sharp": "a burgundy button-down oxford under a navy topcoat with flannel trousers, a silk pocket square, and polished derbies",
+      "street": "a rust heavyweight knit under a bomber with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -10907,9 +10907,9 @@ export const DATING_PROMPTS = [
       "homebody": "a trestle table, fairy lights and lit house windows"
     },
     "outfits": {
-      "casual": "an olive flannel over a grey tee with black jeans, and grey runner sneakers",
-      "sharp": "a bottle-green wool overshirt over a white oxford, and oxblood loafers",
-      "street": "an indigo denim jacket over a cream tee, and black leather sneakers"
+      "casual": "a stone waffle henley with stone chinos, and tan suede derbies",
+      "sharp": "a forest pique polo with tailored trousers, and black chelsea boots",
+      "street": "a charcoal mock-neck knit with black denim, and suede runners"
     }
   },
   {
@@ -10936,9 +10936,9 @@ export const DATING_PROMPTS = [
       "homebody": "a trestle table, fairy lights and lit house windows"
     },
     "outfits": {
-      "casual": "a cream heavyweight tee under a slate overshirt, and worn brown leather boots",
-      "sharp": "a black band-collar shirt with dark trousers, and polished black derbies",
-      "street": "a rust bomber over a black tee, and chunky white sneakers"
+      "casual": "a forest chore jacket over a knitted polo with moleskin trousers, and suede chukkas",
+      "sharp": "a slate double-breasted coat over a roll-neck with wool trousers, and suede loafers",
+      "street": "a teal coach jacket over a heavyweight knit with cargo trousers, and black high-tops"
     }
   },
   {
@@ -10965,9 +10965,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stall awning, a parked van and a garden fence"
     },
     "outfits": {
-      "casual": "a rust knit polo with dark denim, and off-white low-profile sneakers",
-      "sharp": "a burgundy fine-knit under a grey wool jacket, and brown leather chelsea boots",
-      "street": "a cream boxy overshirt over a washed-black tee, and black canvas high-tops"
+      "casual": "a burgundy button-down oxford with the sleeves pushed back and selvedge denim, a leather-strap watch, and brown leather boots",
+      "sharp": "a taupe silk-blend shirt with the sleeves pushed back and pleated trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard oversized crewneck with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -10994,9 +10994,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stall awning, a parked van and a garden fence"
     },
     "outfits": {
-      "casual": "a forest-green sweatshirt with stone-grey jeans, and black suede chukkas",
-      "sharp": "a light-grey blazer over an ink-blue tee, and clean white leather sneakers",
-      "street": "a forest coach jacket over an oat tee, and tan suede desert boots"
+      "casual": "a tobacco waxed cotton jacket open over a chambray shirt, corduroy trousers, and tan leather sneakers",
+      "sharp": "a chocolate camel overcoat open over a striped poplin shirt, cavalry twill trousers, and brown brogues",
+      "street": "a stone leather jacket open over a rugby shirt, black denim, and black leather boots"
     }
   },
   {
@@ -11023,9 +11023,9 @@ export const DATING_PROMPTS = [
       "homebody": "a stall awning, a parked van and a garden fence"
     },
     "outfits": {
-      "casual": "an oat brushed-cotton shirt over a white tee, and grey runner sneakers",
-      "sharp": "a rust silk-blend shirt with charcoal trousers, and oxblood loafers",
-      "street": "a slate windbreaker over a white tee, and black leather sneakers"
+      "casual": "a slate suede overshirt under a shearling-collar jacket with wool trousers, and desert boots",
+      "sharp": "a teal pique polo under a tailored sport coat with flannel trousers, and polished loafers",
+      "street": "a plum half-zip sweatshirt under an anorak with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -11052,9 +11052,9 @@ export const DATING_PROMPTS = [
       "homebody": "shelving, paint tins and a strip light"
     },
     "outfits": {
-      "casual": "a burgundy waffle henley with black jeans, and worn brown leather boots",
-      "sharp": "a cream shawl-collar knit with dark trousers, and polished black derbies",
-      "street": "a burgundy varsity jacket over a heather tee, and chunky white sneakers"
+      "casual": "an oatmeal merino crew with washed denim, a steel dive watch, and penny loafers",
+      "sharp": "a charcoal tailored sport coat over a silk-blend shirt with wool trousers, and polished derbies",
+      "street": "a black waffle long-sleeve with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -11081,9 +11081,9 @@ export const DATING_PROMPTS = [
       "homebody": "shelving, paint tins and a strip light"
     },
     "outfits": {
-      "casual": "a bone tee under an open chambray shirt, and off-white low-profile sneakers",
-      "sharp": "a taupe field coat over a black roll-neck, and brown leather chelsea boots",
-      "street": "a stone utility overshirt over a black tee, and black canvas high-tops"
+      "casual": "a camel suede jacket over a linen shirt with dark indigo denim, and leather moccasins",
+      "sharp": "a navy half-canvas blazer over a cashmere crew with wool trousers, and black chelsea boots",
+      "street": "a bone technical shell over a half-zip sweatshirt with black denim, and suede runners"
     }
   },
   {
@@ -11110,9 +11110,9 @@ export const DATING_PROMPTS = [
       "homebody": "shelving, paint tins and a strip light"
     },
     "outfits": {
-      "casual": "a teal crewneck with dark denim, and black suede chukkas",
-      "sharp": "an olive blazer over a sand knit, and clean white leather sneakers",
-      "street": "a brown suede trucker over a bone tee, and tan suede desert boots"
+      "casual": "an olive brushed flannel shirt with the sleeves pushed back and stone chinos, and tan suede derbies",
+      "sharp": "a camel navy topcoat open over a pique polo, cavalry twill trousers, a fine knitted tie, and suede loafers",
+      "street": "an olive mock-neck knit with the sleeves pushed back and cargo trousers, and black high-tops"
     }
   },
   {
@@ -11139,9 +11139,9 @@ export const DATING_PROMPTS = [
       "homebody": "a tool chest, a bike frame and a cluttered shelf"
     },
     "outfits": {
-      "casual": "a mustard corduroy shirt with charcoal jeans, and grey runner sneakers",
-      "sharp": "a slate merino roll-neck with charcoal trousers, and oxblood loafers",
-      "street": "a charcoal hoodie under a black leather-trim jacket, and black leather sneakers"
+      "casual": "a charcoal chore jacket open over a shawl-collar cardigan, moleskin trousers, a fine wool scarf, and suede chukkas",
+      "sharp": "a grey double-breasted coat open over a white poplin shirt, cavalry twill trousers, a fine knitted tie, and leather oxfords",
+      "street": "a slate coach jacket open over a heavyweight knit, wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -11168,9 +11168,9 @@ export const DATING_PROMPTS = [
       "homebody": "a tool chest, a bike frame and a cluttered shelf"
     },
     "outfits": {
-      "casual": "a plum merino crewneck with washed-black denim, and worn brown leather boots",
-      "sharp": "a tobacco suede blazer over a white shirt, and polished black derbies",
-      "street": "an olive field jacket over a white tee, and chunky white sneakers"
+      "casual": "a cream cable-knit sweater under a waxed cotton jacket with selvedge denim, and brown leather boots",
+      "sharp": "a black fine-gauge merino knit under a camel overcoat with flannel trousers, and brown brogues",
+      "street": "a navy oversized crewneck under a leather jacket with black denim, and black leather boots"
     }
   },
   {
@@ -11197,9 +11197,9 @@ export const DATING_PROMPTS = [
       "homebody": "a tool chest, a bike frame and a cluttered shelf"
     },
     "outfits": {
-      "casual": "a stone linen overshirt over a heather tee, and off-white low-profile sneakers",
-      "sharp": "a navy peacoat over a cream crewneck, and brown leather chelsea boots",
-      "street": "an ecru linen overshirt over a grey tee, and black canvas high-tops"
+      "casual": "a navy suede overshirt with corduroy trousers, and tan leather sneakers",
+      "sharp": "a stone camel overcoat over a button-down oxford with wool trousers, a silk pocket square, and polished loafers",
+      "street": "a cream boxy tee with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -11226,9 +11226,9 @@ export const DATING_PROMPTS = [
       "homebody": "a practice amp, cables and a rug"
     },
     "outfits": {
-      "casual": "an ecru cable knit with indigo jeans, and black suede chukkas",
-      "sharp": "a plum knit polo with grey trousers, and clean white leather sneakers",
-      "street": "a teal coach jacket over a cream tee, and tan suede desert boots"
+      "casual": "a rust corduroy overshirt over a fine-gauge knit with wool trousers, tortoiseshell sunglasses, and desert boots",
+      "sharp": "a burgundy unstructured jacket over a striped poplin shirt with wool trousers, a silk pocket square, and polished derbies",
+      "street": "a rust quilted liner jacket over an oversized crewneck with wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -11255,9 +11255,9 @@ export const DATING_PROMPTS = [
       "homebody": "a practice amp, cables and a rug"
     },
     "outfits": {
-      "casual": "a terracotta long-sleeve tee with dark chinos, and grey runner sneakers",
-      "sharp": "a mid-brown corduroy blazer over an ecru tee, and oxblood loafers",
-      "street": "a chocolate shearling-collar trucker over a black tee, and black leather sneakers"
+      "casual": "a stone waffle henley with the sleeves pushed back and washed denim, and penny loafers",
+      "sharp": "a forest tailored sport coat open over a fine-gauge merino knit, cavalry twill trousers, and black chelsea boots",
+      "street": "a charcoal waffle long-sleeve with the sleeves pushed back and black denim, and suede runners"
     }
   },
   {
@@ -11284,9 +11284,9 @@ export const DATING_PROMPTS = [
       "homebody": "a practice amp, cables and a rug"
     },
     "outfits": {
-      "casual": "a grey marl henley with black denim, and worn brown leather boots",
-      "sharp": "a chalk-striped grey jacket over a black tee, and polished black derbies",
-      "street": "a terracotta hooded overshirt over a white tee, and chunky white sneakers"
+      "casual": "a forest suede jacket open over a knitted polo, dark indigo denim, and leather moccasins",
+      "sharp": "a slate half-canvas blazer open over a roll-neck, cavalry twill trousers, and suede loafers",
+      "street": "a teal technical shell open over a half-zip sweatshirt, cargo trousers, and black high-tops"
     }
   },
   {
@@ -11313,9 +11313,9 @@ export const DATING_PROMPTS = [
       "homebody": "front hedges, parked cars and a row of houses"
     },
     "outfits": {
-      "casual": "an indigo overshirt over a washed white tee, and off-white low-profile sneakers",
-      "sharp": "a forest velvet-trim jacket over a white tee, and brown leather chelsea boots",
-      "street": "a navy bomber over an oat tee, and black canvas high-tops"
+      "casual": "a burgundy button-down oxford under a chore jacket with stone chinos, a leather-strap watch, and tan suede derbies",
+      "sharp": "a taupe silk-blend shirt under a double-breasted coat with flannel trousers, silver cufflinks, and leather oxfords",
+      "street": "a mustard mock-neck knit under a coach jacket with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -11342,9 +11342,9 @@ export const DATING_PROMPTS = [
       "homebody": "front hedges, parked cars and a row of houses"
     },
     "outfits": {
-      "casual": "a black waffle henley with faded jeans, and black suede chukkas",
-      "sharp": "a soft-grey topcoat over a bone knit, and clean white leather sneakers",
-      "street": "a grey marl hoodie under a stone chore jacket, and tan suede desert boots"
+      "casual": "a tobacco cable-knit sweater with moleskin trousers, and suede chukkas",
+      "sharp": "a chocolate double-breasted coat over a pique polo with wool trousers, and brown brogues",
+      "street": "a stone rugby shirt with black denim, and black leather boots"
     }
   },
   {
@@ -11371,9 +11371,9 @@ export const DATING_PROMPTS = [
       "homebody": "front hedges, parked cars and a row of houses"
     },
     "outfits": {
-      "casual": "a slate-blue flannel over a cream tee, and grey runner sneakers",
-      "sharp": "an ink-blue overshirt over a charcoal knit, and oxblood loafers",
-      "street": "a black quilted jacket over a cream tee, and black leather sneakers"
+      "casual": "a slate harrington jacket over a cashmere crew with selvedge denim, and brown leather boots",
+      "sharp": "a teal belted trench over a white poplin shirt with wool trousers, and polished loafers",
+      "street": "a plum down gilet over a mock-neck knit with cargo trousers, and leather chelsea boots"
     }
   },
   {
@@ -11400,9 +11400,9 @@ export const DATING_PROMPTS = [
       "homebody": "a pavement edge, street trees and low walls"
     },
     "outfits": {
-      "casual": "a faded charcoal henley with black denim, and worn brown leather boots",
-      "sharp": "a graphite overcoat over a white tee with dark trousers, and polished black derbies",
-      "street": "a bleached denim trucker over a black tee with dark jeans, and chunky white sneakers"
+      "casual": "an oatmeal merino crew with the sleeves pushed back and corduroy trousers, a steel dive watch, and tan leather sneakers",
+      "sharp": "a charcoal camel overcoat open over a silk-blend shirt, cavalry twill trousers, and polished derbies",
+      "street": "a black boxy tee with the sleeves pushed back and wide-leg trousers, a chunky steel watch, and minimal leather sneakers"
     }
   },
   {
@@ -11429,9 +11429,9 @@ export const DATING_PROMPTS = [
       "homebody": "a pavement edge, street trees and low walls"
     },
     "outfits": {
-      "casual": "a caramel corduroy overshirt over a bone tee with dark jeans, and off-white low-profile sneakers",
-      "sharp": "a sand wool shirt-jacket over a black knit with charcoal trousers, and brown leather chelsea boots",
-      "street": "a coral half-zip over a bone tee with black denim, and black canvas high-tops"
+      "casual": "a camel corduroy overshirt open over a linen shirt, wool trousers, and desert boots",
+      "sharp": "a navy unstructured jacket open over a cashmere crew, cavalry twill trousers, and black chelsea boots",
+      "street": "a bone quilted liner jacket open over an oversized crewneck, black denim, and suede runners"
     }
   },
   {
@@ -11458,9 +11458,9 @@ export const DATING_PROMPTS = [
       "homebody": "a pavement edge, street trees and low walls"
     },
     "outfits": {
-      "casual": "a moss knit polo with charcoal denim, and black suede chukkas",
-      "sharp": "a burgundy blazer over an ecru tee with dark trousers, and clean white leather sneakers",
-      "street": "a khaki shacket over a charcoal tee with dark jeans, and tan suede desert boots"
+      "casual": "an olive brushed flannel shirt under a suede jacket with washed denim, and penny loafers",
+      "sharp": "a camel button-down oxford under a half-canvas blazer with flannel trousers, and suede loafers",
+      "street": "an olive waffle long-sleeve under a technical shell with cargo trousers, and black high-tops"
     }
   },
   {
@@ -11487,9 +11487,9 @@ export const DATING_PROMPTS = [
       "homebody": "a junction, a postbox and quiet roofs"
     },
     "outfits": {
-      "casual": "a washed-indigo shirt over a white tee with black jeans, and grey runner sneakers",
-      "sharp": "a midnight roll-neck with grey trousers, and oxblood loafers",
-      "street": "an oxblood bomber over a cream tee with black denim, and black leather sneakers"
+      "casual": "a charcoal button-down oxford with dark indigo denim, a fine wool scarf, and leather moccasins",
+      "sharp": "a grey half-canvas blazer over a fine-gauge merino knit with wool trousers, and leather oxfords",
+      "street": "a slate heavyweight knit with wide-leg trousers, a chunky steel watch, and suede trainers"
     }
   },
   {
@@ -11516,9 +11516,9 @@ export const DATING_PROMPTS = [
       "homebody": "a junction, a postbox and quiet roofs"
     },
     "outfits": {
-      "casual": "a maroon waffle knit with dark denim, and worn brown leather boots",
-      "sharp": "a bottle-green sport coat over a cream shirt with dark trousers, and polished black derbies",
-      "street": "a grey wool overshirt over a washed-black tee with dark jeans, and chunky white sneakers"
+      "casual": "a cream quilted gilet over a chambray shirt with stone chinos, and tan suede derbies",
+      "sharp": "a black navy topcoat over a roll-neck with wool trousers, and brown brogues",
+      "street": "a navy bomber over a waffle long-sleeve with black denim, and black leather boots"
     }
   },
   {
@@ -11545,9 +11545,9 @@ export const DATING_PROMPTS = [
       "homebody": "a junction, a postbox and quiet roofs"
     },
     "outfits": {
-      "casual": "a stone overshirt over a heather tee with black jeans, and off-white low-profile sneakers",
-      "sharp": "a taupe topcoat over a black polo with charcoal trousers, and brown leather chelsea boots",
-      "street": "a navy quilted jacket over an oat tee with black denim, and black canvas high-tops"
+      "casual": "a navy suede overshirt with the sleeves pushed back and moleskin trousers, and suede chukkas",
+      "sharp": "a stone double-breasted coat open over a button-down oxford, cavalry twill trousers, a silk pocket square, and polished loafers",
+      "street": "a cream rugby shirt with the sleeves pushed back and cargo trousers, and leather chelsea boots"
     }
   }
 ] as const satisfies readonly DatingPromptDefinition[];

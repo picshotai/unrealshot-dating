@@ -59,7 +59,7 @@ Use these freely. Each one is true of every delivery.
 **Behind it (use for depth and credibility sections, not headlines)**
 
 - 390 authored shots, each hand-written — not templated variations of a few
-- 135 locations, 156 lighting setups, 390 outfits in the library
+- 135 locations, 156 lighting setups, 1,170 distinct outfits in the library
 - 3,510 distinct compiled shots the system can draw from
 - Any one delivery reaches about 74% of the library's locations — two men who both buy get near-different sets, and so does the same man buying twice
 
@@ -151,7 +151,7 @@ If a claim is not in this brief, read it out of the code before writing it:
 | --- | --- |
 | 100 photos, credits, exclusions | `lib/dating/types.ts` |
 | No-repeat guarantee (enforced) | `lib/dating/select-delivery.ts` — `assertDeliveryUnique` |
-| 390 shots, 135 locations, 156 lights | `lib/dating/prompt-library.ts` |
+| 390 shots, 135 locations, 156 lights, 1,170 outfits | `lib/dating/prompt-library.ts` |
 | 16 interests, 3 wardrobes, 4 exclusions | `lib/dating/interests.ts` |
 | Section labels | `lib/dating/lineup.ts` — `LINEUP_LABELS` |
 | 30 re-shoots, 1 per regeneration | `app/api/dating-shoot/regenerate/route.ts` |
