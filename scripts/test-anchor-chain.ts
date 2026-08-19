@@ -22,9 +22,41 @@
  *   --no-anchor   generate all five WITHOUT chaining, for an A/B against a run
  *                 that used it. Same prompts, same references, one variable.
  */
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, writeFile, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fal } from "@fal-ai/client";
+import { createClient } from "@supabase/supabase-js";
+
+/**
+ * tsx does not read .env.local the way `next dev` does, and asking a person to
+ * paste four R2 URLs and an API key on a phone is how a test does not get run.
+ */
+async function loadEnvLocal() {
+  try {
+    const raw = await readFile(resolve(process.cwd(), ".env.local"), "utf8");
+    for (const line of raw.split(/\r?\n/)) {
+      const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)$/);
+      if (!match) continue;
+      const value = match[2].trim().replace(/^["']|["']$/g, "");
+      if (!process.env[match[1]]) process.env[match[1]] = value;
+    }
+  } catch {
+    // fall back to whatever is already in the environment
+  }
+}
+
+/** Pulls the reference photos already uploaded for a model. */
+async function selfiesForModel(modelId: number): Promise<string[]> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) throw new Error("Supabase env missing; pass --refs instead");
+  const db = createClient(url, key);
+  const { data, error } = await db.from("samples").select("uri").eq("modelId", modelId);
+  if (error) throw new Error(`samples lookup failed: ${error.message}`);
+  const uris = (data ?? []).map((row: { uri: string }) => row.uri).filter(Boolean);
+  if (uris.length === 0) throw new Error(`model ${modelId} has no samples`);
+  return uris;
+}
 
 const MODEL = "fal-ai/bytedance/seedream/v4.5/edit";
 const OUT = resolve(process.cwd(), "docs/generated/anchor-test");
@@ -84,13 +116,24 @@ async function generate(prompt: string, imageUrls: string[]) {
 }
 
 async function main() {
+  await loadEnvLocal();
+
   const key = process.env.FAL_KEY;
-  if (!key) throw new Error("FAL_KEY is required");
+  if (!key) throw new Error("FAL_KEY not found in .env.local or the environment");
   fal.config({ credentials: key });
 
   const refsArg = process.argv.indexOf("--refs");
-  if (refsArg === -1) throw new Error('pass --refs "url1,url2,..." with your sample photos');
-  const selfies = process.argv[refsArg + 1].split(",").map((s) => s.trim()).filter(Boolean);
+  const modelArg = process.argv.indexOf("--model");
+
+  let selfies: string[];
+  if (refsArg !== -1) {
+    selfies = process.argv[refsArg + 1].split(",").map((s) => s.trim()).filter(Boolean);
+  } else if (modelArg !== -1) {
+    selfies = await selfiesForModel(Number(process.argv[modelArg + 1]));
+  } else {
+    throw new Error('pass --model <id>, or --refs "url1,url2,..."');
+  }
+
   const useAnchor = !process.argv.includes("--no-anchor");
 
   console.log(`\n${selfies.length} reference selfies · anchoring ${useAnchor ? "ON" : "OFF"}\n`);
