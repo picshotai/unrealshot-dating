@@ -152,3 +152,50 @@ less is a photo you would hesitate to put on a profile, which means it is filler
 Three wide/environmental frames, one per shoot, run on their own. That answers
 "can the model hold identity at distance" without contaminating this test. Only
 worth running if this one passes.
+
+---
+
+# RESULTS
+
+## Shoot A — night street, flash — 2 / 5 usable
+
+| # | verdict | reason |
+|---|---|---|
+| A1 | fail | too stylised, flash blown out on lower face and neck |
+| A2 | fail | neck turned too far; a diner is visible in the lit window |
+| A3 | **usable** | reads as a photoshoot on demand rather than a moment, but holds |
+| A4 | fail | the step floats in the middle of a road; pose is bilateral |
+| A5 | **usable** | best of the set — the expression beat worked |
+
+**The format held.** Same coat, same street, same light across all five, identity
+locked throughout. Nothing incoherent in the wardrobe-versus-place sense, which
+is the failure the whole restructure exists to prevent. The losses were craft.
+
+## Rules this round produced
+
+1. **Anchor every physical feature to what owns it.** "A low stone step" became a
+   freestanding kerb in the middle of a road. A step belongs to a doorway; say so.
+   Bare nouns float.
+2. **Bound every pose instruction with a quantity.** "Head turned back before his
+   shoulders follow" is on the model's strengths list, but unbounded it maxes out
+   into a neck that reads broken. Give it degrees.
+3. **Flash needs an exposure, not only a direction.** Asking for a hand "a little
+   brighter than the face" produced clipped skin. Meter for the face; let the
+   falloff happen behind him.
+4. **Never specify a bilateral pose.** Both forearms on both knees with hands
+   linked centrally is symmetry by construction, and symmetry is on the weak
+   list. One shoulder lower, one hand doing something the other is not.
+5. **A lit window behind him is a second-person risk.** The model reads a warm
+   interior as a place to put someone. Keep interiors dark, distant, or absent.
+6. **Eye contact is not candid.** Four of five frames looked into the lens; the
+   only frame with warmth did not. Target roughly two at-lens and three away per
+   shoot, and make the away-frames carry an involuntary expression.
+7. **Location has to signal status.** "A damp narrow street outside a small
+   restaurant" reads as an alley. The buyer is paying to look like a man who is
+   doing well: hotel canopy, club doorway, restaurant forecourt.
+
+## Still open
+
+- Shoots B and C to be run unchanged, so the comparison between flash, overcast
+  and window light stays valid.
+- Revision of all three happens once those land, not before.
