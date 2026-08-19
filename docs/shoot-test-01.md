@@ -199,3 +199,68 @@ is the failure the whole restructure exists to prevent. The losses were craft.
 - Shoots B and C to be run unchanged, so the comparison between flash, overcast
   and window light stays valid.
 - Revision of all three happens once those land, not before.
+
+## Shoot B — harbour wall, overcast — 2 / 5 usable
+
+| # | verdict | reason |
+|---|---|---|
+| B1 | fail | hair rendered longer than the reference; the knit is absent entirely |
+| B2 | **usable** | full outfit named in the prompt, and it rendered |
+| B3 | fail | knit replaced by a white tee; reads plain |
+| B4 | **usable** | best of the set — full outfit, seated, identity holds |
+| B5 | fail | face distorted by the tipped-back head; a warm light appears on the neck under flat overcast |
+
+Running total **4 / 10**.
+
+### The outfit broke because of how it was written
+
+The shoot format promises the same clothes across every frame. In B it did not
+hold, and the cause is exact:
+
+| frame | what the prompt named | what rendered |
+|---|---|---|
+| B1 | "in the olive waxed jacket" | jacket only, no knit |
+| B2 | "a cream fisherman knit under an olive waxed cotton jacket" | both, correct |
+| B3 | "in the olive waxed jacket" | jacket over a white tee |
+| B4 | "in the olive waxed jacket over the cream knit" | both, correct |
+| B5 | "in the cream knit under the olive waxed jacket" | both, correct |
+
+The two frames that dropped the knit are the two frames whose prompt dropped it.
+The model rendered what was written and invented the remainder. Abbreviating the
+wardrobe for prose variety destroys the one thing the format exists to guarantee.
+
+## Rules this round produced
+
+8. **Repeat the outfit verbatim and in full in every frame.** No shortening, no
+   "the same jacket", no relying on the previous frame. Every prompt stands
+   alone because every generation stands alone.
+9. **Name garments so only one object satisfies the words.** "Waxed cotton
+   jacket" spans a field coat, a rain shell and a bomber — and all three
+   appeared. "A waxed cotton field jacket with a corduroy collar and a zip
+   front" has one referent.
+10. **Never let light "catch" a surface in a flat-light setup.** Overcast has no
+    direction, so asking it to catch the underside of a chin makes the model
+    invent a sun. Flat light gets described as filling, not striking.
+11. **Avoid the tipped-back head.** It foreshortens the face and is where
+    identity drifted in both B5 and the earlier A1.
+12. **Location words must exclude the wrong version.** "A stone harbour wall
+    above moored boats" returned an industrial dock with cranes and a working
+    fishing port with a car park. If the intent is a yacht marina, the words
+    have to say white hulls and masts.
+
+## Product bug found: reference watermarks reproduce
+
+The reference photos carry a "SHOT ON REDMI K20 / AI TRIPLE CAMERA" watermark and
+Seedream copies it into the output as garbled text, in both shoots.
+
+Negation cannot fix it — the model reads a forbidden noun as a requested one, so
+"no watermark" asks for a watermark. It has to be solved before generation:
+
+- intake copy must ask for photos with no watermark, no screenshot furniture, no
+  camera-brand stamp;
+- the sample upload route is the place to enforce it;
+- a positive phrase in the prompt ("a clean unmarked frame, edge to edge") is
+  worth testing but must not be relied on.
+
+This is worth fixing before any further authoring, because it degrades every
+photo the product will ever produce regardless of how good the prompt is.
