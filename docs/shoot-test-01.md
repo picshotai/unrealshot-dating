@@ -264,3 +264,71 @@ Negation cannot fix it — the model reads a forbidden noun as a requested one, 
 
 This is worth fixing before any further authoring, because it degrades every
 photo the product will ever produce regardless of how good the prompt is.
+
+## Shoot C — kitchen counter, window light — 4 / 5 usable
+
+| # | verdict | reason |
+|---|---|---|
+| C1 | **usable** | strongest frame of the whole test |
+| C2 | **usable** | upward gaze reads slightly staged, but holds |
+| C3 | fail | bilateral pose — both palms, shoulder-width, elbows locked |
+| C4 | **usable** | clean, identity holds |
+| C5 | **usable** | warm and genuinely candid |
+
+**Final: 8 / 15.** Below the 12 threshold. But the shape matters more than the
+total: **2 → 2 → 4**.
+
+### C winning inverts the assumption the test was built on
+
+C was written as the deliberate hard case, on the theory that indoors is where the
+model produced mannequin faces. It won, and the reasons are legible:
+
+- **one unambiguous garment** — "a white oxford shirt", named in nearly every
+  frame, versus B's "waxed cotton jacket" which rendered as three different coats;
+- **one soft source** — a large window, rather than hard flash or flat overcast;
+- **a controlled interior**, where the model invents less than it does on a street.
+
+The earlier mannequin faces came from *warm dim tungsten*, not from being indoors.
+Bright window light indoors is the strongest condition available, and the library's
+centre of gravity should move there rather than toward night flash.
+
+## Rules this round produced
+
+13. **State light relative to the frame, never to his body.** "A large window to
+    his left" rendered with the window on frame-left — the model resolved it as
+    camera-left, putting it on his right. "The window fills the left edge of the
+    frame" has one reading.
+14. **One light sentence per prompt.** C5 described the light three times — across
+    the face, on the inside of the raised arm, and falling off at the far side.
+    The model satisfied each locally, which reads as three separate sources.
+15. **Re-read the existing draft against every new rule.** C3 is bilateral, which
+    rule 4 forbids. The rule was written after A4 failed the same way, and then
+    never applied backwards to prompts already drafted.
+
+## Background consistency: seeds cannot do it, reference chaining can
+
+A seed fixes the noise a generation starts from. Same seed with the same prompt
+and inputs reproduces an image; change the prompt and the whole path changes. A
+seed carries no record of what was on the counter, and in a reference-conditioned
+edit model the reference images dominate it anyway.
+
+The mechanism that *can* carry scene state is already in the call. `fal.subscribe`
+takes `image_urls`, and today it receives only the selfies. Generating the anchor
+frame first and passing **its output** as an extra reference for the rest of the
+shoot gives the model a photograph of that room — its objects, its window
+position, its light direction, and the clothes.
+
+This is the same fix as Shoot B's jacket problem, which is the strongest evidence
+it is the right one.
+
+**Anchor every frame to frame 1, never to the previous frame.** A chain
+propagates any flaw forward and compounds it; a star keeps each frame one step
+from a known-good image.
+
+Untested risks: a non-face reference may dilute identity, and the model may copy
+the anchor's pose rather than only its room. Both cost about twenty cents to find
+out.
+
+Seeds are still worth sending — a fixed seed per photo makes a retry reproduce
+the identical image, which the pipeline wants for idempotency. That is a
+determinism feature, not a consistency one.
