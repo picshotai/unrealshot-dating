@@ -1,8 +1,14 @@
 import { Resend } from "resend";
 import { getServiceDb } from "./db";
+import {
+  CUSTOM_CREDITS_DEFAULT,
+  FRAMES_PER_SHOOT,
+  SHOOTS_PER_DELIVERY,
+  TOTAL_PHOTOS,
+} from "./types";
 
 /**
- * Sends a transactional email when a 100-photo dating photoshoot is completed.
+ * Sends a transactional email when a delivery finishes.
  * Fails gracefully if RESEND_API_KEY is not configured.
  */
 export async function sendDatingShootReadyNotification(
@@ -42,7 +48,7 @@ export async function sendDatingShootReadyNotification(
     await resend.emails.send({
       from: fromEmail,
       to: userEmail,
-      subject: "Your 100 Dating Photos Are Ready! 📸",
+      subject: `Your ${TOTAL_PHOTOS} dating photos are ready 📸`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -54,20 +60,19 @@ export async function sendDatingShootReadyNotification(
         <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #09090b; color: #f4f4f5; padding: 40px 20px; margin: 0;">
           <div style="max-width: 600px; margin: 0 auto; background-color: #18181b; border: 1px solid #27272a; border-radius: 16px; padding: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
             <h1 style="font-size: 24px; font-weight: 700; color: #ffffff; margin-top: 0; margin-bottom: 16px;">
-              Your 100 Dating Photos Are Ready! 🎉
+              Your ${TOTAL_PHOTOS} dating photos are ready 🎉
             </h1>
             <p style="font-size: 15px; line-height: 1.6; color: #a1a1aa; margin-bottom: 24px;">
-              A hundred photos, sorted into the lineup a profile actually needs.
-              No two share an outfit or a light, and there is one person in every
-              frame &mdash; you.
+              ${SHOOTS_PER_DELIVERY} shoots, ${FRAMES_PER_SHOOT} photos from each.
+              Every shoot is a different place, a different outfit and a different
+              light &mdash; and there is one person in every frame: you.
             </p>
             <div style="background-color: #27272a; border-radius: 12px; padding: 16px 20px; margin-bottom: 28px;">
               <ul style="margin: 0; padding-left: 20px; color: #e4e4e7; font-size: 14px; line-height: 1.8;">
-                <li><strong>Your opener:</strong> the clear, straight-to-camera shots to lead with</li>
-                <li><strong>Your full body:</strong> the ones people scroll for</li>
-                <li><strong>What you do:</strong> built around what you told us you are into</li>
-                <li><strong>Out in the world:</strong> a life happening outside the flat</li>
-                <li><strong>The rest:</strong> every one a different place, outfit and light</li>
+                <li><strong>A close portrait</strong> from every shoot &mdash; that is your opener</li>
+                <li><strong>A half-body</strong> for the second slot</li>
+                <li><strong>A full-length</strong>, because profiles without one get read as hiding something</li>
+                <li><strong>A candid</strong> &mdash; the one people actually message about</li>
               </ul>
             </div>
             <div style="text-align: center; margin-bottom: 28px;">
@@ -76,7 +81,7 @@ export async function sendDatingShootReadyNotification(
               </a>
             </div>
             <p style="font-size: 13px; color: #71717a; text-align: center; margin-bottom: 0;">
-              You also have 30 custom regeneration credits in your dashboard if you want to tweak any shot.
+              You also have ${CUSTOM_CREDITS_DEFAULT} reshoots in your dashboard if you want to redo any frame.
             </p>
           </div>
         </body>

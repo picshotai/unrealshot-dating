@@ -510,7 +510,7 @@ export function CreateModelClient() {
             </div>
 
             <p className="text-[11px] text-zinc-500">
-              Min {MIN_PHOTOS}, max {MAX_PHOTOS}. Photos fill in order — different angles yield better likeness in all 100 photos.
+              Min {MIN_PHOTOS}, max {MAX_PHOTOS}. Photos fill in order — different angles yield a better likeness in every shoot.
             </p>
 
             {error && (

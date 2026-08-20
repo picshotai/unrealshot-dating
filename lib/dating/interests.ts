@@ -59,7 +59,7 @@ export const INTEREST_CHIPS: InterestChip[] = [
   { id: "motorcycles", label: "Motorcycles", emoji: "🏍️", activity: "bike maintenance", vibe: { urban: 0.6, outdoorsy: 0.4 } },
   { id: "art", label: "Art & museums", emoji: "🖼️", activity: "sketching", vibe: { urban: 1 } },
   { id: "surfing", label: "Surf & swim", emoji: "🏄", activity: "surfing", vibe: { outdoorsy: 1 } },
-  // The affluent half of the list. The buyer for a $59 pack does these things,
+  // The affluent half of the list. The buyer for this pack does these things,
   // and until now could not say so.
   { id: "golf", label: "Golf", emoji: "⛳", activity: "golf", vibe: { outdoorsy: 0.7, urban: 0.3 } },
   { id: "tennis", label: "Tennis & padel", emoji: "🎾", activity: "tennis", vibe: { outdoorsy: 0.5, urban: 0.5 } },
@@ -75,8 +75,8 @@ export const INTEREST_CHIPS: InterestChip[] = [
  * Asking "how do you dress?" reads as a description of him, so he expects every
  * photo to match and 65% is a broken promise. The screen now states that a shoot
  * covers all three looks and asks only which to lead with, which is both true
- * and the better product: a hundred photos in one outfit reads flat, so the
- * range is the point rather than a shortfall to apologise for.
+ * and the better product: sixty photos in one outfit reads flat, so the range
+ * is the point rather than a shortfall to apologise for.
  */
 export type DressOption = {
   id: StylePref;

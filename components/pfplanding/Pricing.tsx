@@ -7,16 +7,16 @@ import { Check, ArrowRight, Zap } from "lucide-react"
 const plan = {
     name: "COMPLETE DATING PACK",
     subtitle: "For men done with bad photos",
-    price: "$59",
+    price: "$39",
     priceNote: "one-time",
     features: [
-        { text: "100 photos, no two alike" },
-        { text: "A different outfit and setting in every shot" },
-        { text: "Optimized for Dating Apps" },
-        { text: "Photos of what you actually do" },
+        { text: "15 separate shoots, 60 photos" },
+        { text: "A different place, outfit and light in every shoot" },
+        { text: "Close, half-body, full-length and a candid from each" },
+        { text: "Shoots built around what you actually do" },
         { text: "30 free re-shoots — hate one, replace it" },
     ],
-    cta: "Get My 100 Photos",
+    cta: "Get My 60 Photos",
 }
 
 interface PricingProps {

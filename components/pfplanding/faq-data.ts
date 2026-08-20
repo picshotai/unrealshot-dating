@@ -26,7 +26,7 @@ export const faqData = [
     },
     {
         q: "Is this a subscription?",
-        a: "No. One payment of $59, one complete set of 100 photos. No monthly fee, nothing to cancel, no surprise renewal.",
+        a: "No. One payment of $39, one complete set of 60 photos. No monthly fee, nothing to cancel, no surprise renewal.",
     },
     {
         q: "What about my privacy?",

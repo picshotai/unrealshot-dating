@@ -8,11 +8,11 @@ import { motion } from 'framer-motion';
  * DRAFT — bento dashboard landing for the dating shoot.
  *
  * Every figure rendered here is read from the real system:
- *   100 photos / 100 outfits / 100 locations / 100 lighting setups
- *   wardrobe lean 65 / 20 / 15   (lib/dating/interests.ts)
- *   5 lineup roles               (lib/dating/lineup.ts)
- *   16 interests, max 3 each     (lib/dating/select-delivery.ts)
- *   4 exclusions, 30 re-shoots   (lib/dating/types.ts)
+ *   15 shoots x 4 frames = 60   (lib/dating/shoots.ts)
+ *   wardrobe lean 65 / 20 / 15  (lib/dating/interests.ts)
+ *   5 lineup roles              (lib/dating/roles.ts)
+ *   22 interests, max 3 shoots  (lib/dating/select-shoots.ts)
+ *   4 exclusions, 30 re-shoots  (lib/dating/types.ts)
  * No placeholder imagery — every visual is SVG or CSS.
  * ------------------------------------------------------------------ */
 
@@ -188,7 +188,7 @@ const Donut = () => {
   );
 };
 
-/* --- 100 cells, one per delivered photo --- */
+/* --- 60 cells in 15 groups of four, one group per shoot --- */
 const ROLE_TONES = [
   ACCENT,
   '#e8e8e8',
@@ -198,22 +198,29 @@ const ROLE_TONES = [
 ];
 
 const PhotoGrid = () => (
-  <div className="grid grid-cols-10 gap-[3px]">
-    {[...Array(100)].map((_, i) => {
-      const tone = ROLE_TONES[i % 5];
-      const dim = 0.35 + ((i * 37) % 55) / 100;
-      return (
-        <motion.div
-          key={i}
-          className="aspect-square"
-          style={{ background: tone, opacity: dim }}
-          initial={{ opacity: 0, scale: 0.4 }}
-          animate={{ opacity: dim, scale: 1 }}
-          transition={{ duration: 0.35, delay: i * 0.008 }}
-          whileHover={{ opacity: 1, scale: 1.35, zIndex: 10 }}
-        />
-      );
-    })}
+  // Grouped in fours, because the group is the point: one place, one outfit,
+  // one light, four frames of it. A flat wall of cells says the opposite.
+  <div className="grid grid-cols-5 gap-[7px]">
+    {[...Array(15)].map((_, shoot) => (
+      <div key={shoot} className="grid grid-cols-2 gap-[3px]">
+        {[...Array(4)].map((_, frame) => {
+          const i = shoot * 4 + frame;
+          const tone = ROLE_TONES[shoot % 5];
+          const dim = 0.4 + ((i * 37) % 50) / 100;
+          return (
+            <motion.div
+              key={frame}
+              className="aspect-square"
+              style={{ background: tone, opacity: dim }}
+              initial={{ opacity: 0, scale: 0.4 }}
+              animate={{ opacity: dim, scale: 1 }}
+              transition={{ duration: 0.35, delay: i * 0.012 }}
+              whileHover={{ opacity: 1, scale: 1.35, zIndex: 10 }}
+            />
+          );
+        })}
+      </div>
+    ))}
   </div>
 );
 
@@ -270,15 +277,15 @@ export default function LandingDraft() {
             </div>
 
             <h1 className="font-display text-[44px] leading-[0.92] font-bold uppercase tracking-tight mb-5">
-              100 photos.
+              15 shoots.
               <br />
-              <span className="text-[#CCFF00]">No two alike.</span>
+              <span className="text-[#CCFF00]">60 photos.</span>
             </h1>
 
             <p className="font-mono text-[12px] leading-relaxed text-[#8a8a8e] max-w-xs">
-              Upload 4&ndash;6 selfies. Get a hundred back &mdash; a different
-              outfit, a different place and a different light in every single
-              one.
+              Upload 4&ndash;6 selfies. Get fifteen separate shoots back &mdash;
+              each one a different place, a different outfit and a different
+              light, photographed four ways.
             </p>
           </div>
 
@@ -311,7 +318,7 @@ export default function LandingDraft() {
           <div className="relative z-10 mt-8">
             <Link href="/login" className="block w-full max-w-[260px]">
               <button className="w-full bg-[#CCFF00] text-black font-display text-lg uppercase font-bold py-4 px-6 flex items-center justify-between group hover:bg-white transition-colors">
-                <span>Get my 100 photos</span>
+                <span>Get my 60 photos</span>
                 <span className="font-mono text-xs group-hover:translate-x-1 transition-transform">
                   &rarr;
                 </span>
@@ -330,7 +337,7 @@ export default function LandingDraft() {
           </div>
           <Donut />
           <p className="font-mono text-[9px] text-[#5a5a5c] mt-5 text-center leading-relaxed">
-            A hundred photos in one register reads flat.
+            Sixty photos in one register reads flat.
             <br />
             The range is the product.
           </p>
@@ -379,24 +386,24 @@ export default function LandingDraft() {
 
         {/* ---------------- ROW 2 ---------------- */}
 
-        {/* 4. The 100 */}
+        {/* 4. The 60 */}
         <Card className="lg:col-span-3 justify-between">
           <div>
             <PhotoGrid />
             <p className="text-[13px] text-[#e5e5e5] mt-4">
-              One cell, one photo
+              One block, one shoot
             </p>
           </div>
 
           <div className="mt-10">
             <div className="flex items-baseline">
               <span className="text-[56px] font-bold tracking-tighter leading-none">
-                100
+                15
               </span>
-              <span className="text-xl text-[#8a8a8e] ml-2">/100</span>
+              <span className="text-xl text-[#8a8a8e] ml-2">&times;4</span>
             </div>
             <p className="text-[14px] text-[#8a8a8e] mt-1">
-              distinct outfits, places, lights
+              places, outfits and lights &mdash; four frames each
             </p>
           </div>
         </Card>
@@ -483,7 +490,7 @@ export default function LandingDraft() {
           </div>
 
           <p className="font-mono text-[9px] text-[#5a5a5c] mt-5 leading-relaxed">
-            Capped at 3 photos per interest &mdash; so one hobby never takes
+            Capped at 3 shoots per interest &mdash; so one hobby never takes
             over your profile.
           </p>
         </Card>
@@ -494,7 +501,7 @@ export default function LandingDraft() {
             <CardLabel>One payment</CardLabel>
             <div className="flex items-baseline mt-4">
               <span className="text-[52px] font-bold tracking-tighter leading-none">
-                $59
+                $39
               </span>
             </div>
             <p className="text-[12px] text-[#8a8a8e] mt-1">

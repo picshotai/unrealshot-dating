@@ -21,7 +21,14 @@ import {
   DRESS_OPTIONS,
   type InterestId,
 } from '@/lib/dating/interests';
-import type { StylePref, ExcludableTag } from '@/lib/dating/types';
+import {
+  CUSTOM_CREDITS_DEFAULT,
+  FRAMES_PER_SHOOT,
+  SHOOTS_PER_DELIVERY,
+  TOTAL_PHOTOS,
+  type StylePref,
+  type ExcludableTag,
+} from '@/lib/dating/types';
 
 type Model = {
   id: number;
@@ -396,7 +403,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                   </span>
                 </h2>
                 <p className="text-[11px] text-zinc-500 mt-0.5">
-                  We will completely exclude these themes from your 100 photos.
+                  Any shoot featuring these is dropped from your delivery.
                 </p>
               </div>
 
@@ -469,8 +476,11 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
             {/* Bottom Review Action Bar */}
             <div className="pt-4 border-t border-zinc-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-xs font-mono text-zinc-400 text-center sm:text-left">
-                Includes <span className="text-white font-semibold">100 Photos</span> +{' '}
-                <span className="text-accent font-semibold">30 Custom Retakes</span>
+                Includes{' '}
+                <span className="text-white font-semibold">
+                  {SHOOTS_PER_DELIVERY} shoots · {TOTAL_PHOTOS} photos
+                </span>{' '}
+                + <span className="text-accent font-semibold">{CUSTOM_CREDITS_DEFAULT} reshoots</span>
               </div>
 
               <Button
@@ -509,7 +519,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                     Photoshoot Blueprint Confirmation
                   </h2>
                   <p className="text-xs text-zinc-400">
-                    Review your curated parameters before dispatching 100 AI photo generations.
+                    Review your setup before we shoot {SHOOTS_PER_DELIVERY} sessions for you.
                   </p>
                 </div>
               </div>
@@ -576,47 +586,41 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                 </div>
               </div>
 
-              {/* Card C: 5 Lineup Profile Roles Breakdown */}
+              {/* Card C: what a delivery actually is */}
               <div className="p-4 rounded-xl bg-zinc-900/40 border border-zinc-800/60 space-y-2.5">
                 <div className="flex items-center justify-between text-xs font-oxanium font-medium text-zinc-300">
                   <span className="flex items-center gap-1.5">
                     <Layers className="w-3.5 h-3.5 text-zinc-400" />
-                    Structured Delivery (100 Photos):
+                    {SHOOTS_PER_DELIVERY} shoots · {TOTAL_PHOTOS} photos
                   </span>
-                  <span className="text-white font-mono">100 / 100 Delivered</span>
+                  <span className="text-white font-mono">
+                    {FRAMES_PER_SHOOT} frames each
+                  </span>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center text-xs">
-                  <div className="p-2 rounded-lg bg-zinc-950 border border-zinc-800/80">
-                    <div className="text-white font-bold font-oxanium text-sm">
-                      3
+                <p className="text-[11px] text-zinc-500 leading-relaxed">
+                  Each shoot is one location, one outfit and one light, shot{' '}
+                  {FRAMES_PER_SHOOT} ways — so you get a close portrait, a
+                  half-body, a full-length and a candid from every one of them.
+                </p>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+                  {[
+                    { label: 'Close', hint: 'Your opener' },
+                    { label: 'Half body', hint: 'The follow-up' },
+                    { label: 'Full length', hint: 'Proof you are real' },
+                    { label: 'Candid', hint: 'The one they message about' },
+                  ].map((frame) => (
+                    <div
+                      key={frame.label}
+                      className="p-2 rounded-lg bg-zinc-950 border border-zinc-800/80"
+                    >
+                      <div className="text-white font-bold font-oxanium text-sm">
+                        {frame.label}
+                      </div>
+                      <div className="text-[10px] text-zinc-400">{frame.hint}</div>
                     </div>
-                    <div className="text-[10px] text-zinc-400">Opener</div>
-                  </div>
-                  <div className="p-2 rounded-lg bg-zinc-950 border border-zinc-800/80">
-                    <div className="text-white font-bold font-oxanium text-sm">
-                      23
-                    </div>
-                    <div className="text-[10px] text-zinc-400">Full Body</div>
-                  </div>
-                  <div className="p-2 rounded-lg bg-zinc-950 border border-zinc-800/80">
-                    <div className="text-white font-bold font-oxanium text-sm">
-                      20
-                    </div>
-                    <div className="text-[10px] text-zinc-400">What You Do</div>
-                  </div>
-                  <div className="p-2 rounded-lg bg-zinc-950 border border-zinc-800/80">
-                    <div className="text-white font-bold font-oxanium text-sm">
-                      40
-                    </div>
-                    <div className="text-[10px] text-zinc-400">Out in World</div>
-                  </div>
-                  <div className="p-2 rounded-lg bg-zinc-950 border border-zinc-800/80 col-span-2 sm:col-span-1">
-                    <div className="text-white font-bold font-oxanium text-sm">
-                      14
-                    </div>
-                    <div className="text-[10px] text-zinc-400">The Rest</div>
-                  </div>
+                  ))}
                 </div>
               </div>
 
@@ -663,12 +667,12 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                   {isLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Dispatching 100 Generations...
+                      Booking your shoots...
                     </>
                   ) : (
                     <>
                       <ShieldCheck className="w-4 h-4 text-black" strokeWidth={2.5} />
-                      Confirm & Start 100-Photo Shoot
+                      Confirm &amp; start {SHOOTS_PER_DELIVERY} shoots
                       <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} />
                     </>
                   )}

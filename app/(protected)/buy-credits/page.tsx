@@ -6,7 +6,13 @@ import { Badge } from '@/components/ui/badge';
 import { Sparkles, Check, ShieldCheck, Zap } from 'lucide-react';
 import DodoCheckoutButton from '@/components/dodopayments/DodoCheckoutButton';
 import { commonPageMetadata } from '@/lib/seo';
-import { SHOOT_CREDIT_COST } from '@/lib/dating/types';
+import {
+  CUSTOM_CREDITS_DEFAULT,
+  FRAMES_PER_SHOOT,
+  SHOOT_CREDIT_COST,
+  SHOOTS_PER_DELIVERY,
+  TOTAL_PHOTOS,
+} from '@/lib/dating/types';
 import { ShineBorder } from "@/components/ui/shine-border";
 
 export const metadata: Metadata = commonPageMetadata.buyCredits();
@@ -19,7 +25,7 @@ export default async function BuyCreditsPage() {
     redirect('/login?redirect=/buy-credits');
   }
 
-  // Fetch plan from database if present, otherwise default to $59 Dating Pack
+  // Fetch plan from database if present, otherwise default to the $39 pack
   const { data: dbPlan } = await supabase
     .from('dodo_pricing_plans')
     .select('*')
@@ -27,24 +33,25 @@ export default async function BuyCreditsPage() {
     .maybeSingle();
 
   const plan = {
-    id: dbPlan?.id || 'dating-pack-59',
-    name: dbPlan?.name || '100 Dating Photoshoot Pack',
-    price: dbPlan ? parseFloat(dbPlan.price.toString()) : 59,
+    id: dbPlan?.id || 'dating-pack-39',
+    name: dbPlan?.name || `${TOTAL_PHOTOS} Photo Dating Pack`,
+    price: dbPlan ? parseFloat(dbPlan.price.toString()) : 39,
     // A pack must cover the cost of the shoot it promises.
     credits: dbPlan?.credits || SHOOT_CREDIT_COST,
     currency: dbPlan?.currency || 'USD',
   };
 
-  // Never name the internal buckets here — one of them ("social") no longer
-  // ships, and per-bucket counts are not something delivery guarantees.
+  // "No two alike" is gone with the compositional library: a shoot repeats its
+  // outfit across four frames on purpose, and that repetition is what makes the
+  // set read like real photographs of one day rather than a grid of one-offs.
   const features = [
-    "100 Ultra-Realistic Dating Photos, no two alike",
-    "A different outfit, place and light in every shot",
-    "Sorted into the slots dating apps ask you to fill",
-    "30 Reshoots included — replace any photo you don't love",
-    "No Awkward Gym Selfies or Stiff AI Mannequin Poses",
-    "Instant ZIP Download",
-    "Full Commercial Rights",
+    `${SHOOTS_PER_DELIVERY} separate shoots, ${TOTAL_PHOTOS} photos in total`,
+    "A different place, outfit and light in every shoot",
+    `${FRAMES_PER_SHOOT} shots from each — close, half-body, full-length and a candid`,
+    `${CUSTOM_CREDITS_DEFAULT} reshoots included — redo any frame you don't love`,
+    "Every prompt written and reviewed by a person, not assembled by a machine",
+    "Instant ZIP download, one folder per shoot",
+    "Full commercial rights",
   ];
 
   return (
@@ -55,7 +62,7 @@ export default async function BuyCreditsPage() {
           Single Overhaul Package
         </Badge>
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
-          100 Photos. 5 Archetypes.
+          {SHOOTS_PER_DELIVERY} shoots. {TOTAL_PHOTOS} photos.
         </h1>
         <p className="text-muted-foreground max-w-xl mx-auto text-sm md:text-base">
           Pay once, own forever. Delivered in ~90 minutes directly to your dashboard.
@@ -76,7 +83,7 @@ export default async function BuyCreditsPage() {
               Complete Dating Photoshoot
             </CardTitle>
             <CardDescription className="text-zinc-400 text-sm">
-              100 photos across 5 high-converting styles
+              {TOTAL_PHOTOS} photos from {SHOOTS_PER_DELIVERY} separate shoots
             </CardDescription>
 
             <div className="mt-6 flex items-baseline justify-center gap-2">
@@ -85,7 +92,7 @@ export default async function BuyCreditsPage() {
               </span>
               <span className="text-zinc-400 text-sm font-mono">one-time</span>
               <span className="ml-2 text-xs bg-accent/10 text-accent border border-accent/20 px-2 py-0.5 rounded font-mono">
-                $0.59 / photo
+                ${(plan.price / TOTAL_PHOTOS).toFixed(2)} / photo
               </span>
             </div>
           </CardHeader>
@@ -112,7 +119,7 @@ export default async function BuyCreditsPage() {
               planName={plan.name}
               className="w-full bg-white text-black hover:bg-zinc-200 py-6 text-base font-bold uppercase tracking-wider transition-all"
             >
-              Get Your 100 Photos (${plan.price}) →
+              Get your {TOTAL_PHOTOS} photos (${plan.price}) →
             </DodoCheckoutButton>
 
             <div className="flex items-center justify-center gap-2 text-xs text-zinc-500 font-mono">

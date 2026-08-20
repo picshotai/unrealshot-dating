@@ -37,8 +37,8 @@ export const HowItWorks: React.FC = () => {
                     },
                     {
                         step: '03',
-                        title: 'Download 100 Photos',
-                        desc: 'Get your complete 100-photo pack pre-sorted into your 5 profile lineup slots, plus 30 free custom re-shoots for any individual frame.',
+                        title: 'Download 60 Photos',
+                        desc: 'Fifteen shoots, four photos from each — a close portrait, a half-body, a full-length and a candid. Plus 30 free re-shoots for any frame you do not love.',
                         meta: 'SORTED_LINEUP'
                     }
                 ].map((item, i) => (

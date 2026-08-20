@@ -164,7 +164,7 @@ export const Hero: React.FC = () => {
                 </div>
                 <h3 className="font-display text-3xl uppercase mb-3 text-white">Get Your Matches</h3>
                 <p className="font-mono text-[#a4a4a4] text-xs md:text-sm leading-relaxed">
-    100 HD photos, sorted and ready to upload straight to Tinder, Hinge, or Bumble.          </p>
+    60 HD photos from 15 shoots, ready to upload straight to Tinder, Hinge, or Bumble.          </p>
             </div>
         </div>
 
