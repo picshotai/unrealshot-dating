@@ -80,7 +80,10 @@ export const CRAFT_RULES: CraftRule[] = [
   {
     name: "subject distance",
     why: "without a stated distance the background competes with him",
-    test: (p) => /\bmetres\b/.test(p),
+    // Singular counts. A bare wall right behind him is "half a metre", and the
+    // plural-only version of this rejected three otherwise valid attempts at a
+    // shoot whose whole point was that the background is close.
+    test: (p) => /\bmetres?\b/.test(p),
   },
   {
     name: "skin texture",

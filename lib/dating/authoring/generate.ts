@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { SHOOTS, FRAMINGS, type Shoot } from "../shoots";
+import { AUTHORED_SHOOTS, SHOOTS, FRAMINGS, type Shoot } from "../shoots";
 import { FRAMES_PER_SHOOT } from "../types";
 import { LIGHT_GUIDANCE, type LightFamily, type ShootBrief } from "./briefs";
 import {
@@ -44,7 +44,9 @@ const REFERENCE_BY_LIGHT: Record<LightFamily, string[]> = {
 export function pickReference(light: LightFamily, index: number): Shoot {
   const ids = REFERENCE_BY_LIGHT[light];
   const wanted = ids[index % ids.length];
-  const shoot = SHOOTS.find((s) => s.id === wanted);
+  // Only ever imitate a hand-written shoot. Imitating an imitation is how a
+  // library drifts away from the craft it was built on.
+  const shoot = AUTHORED_SHOOTS.find((s) => s.id === wanted);
   if (!shoot) {
     throw new Error(
       `Reference shoot "${wanted}" is no longer in the library; update REFERENCE_BY_LIGHT.`
@@ -237,6 +239,19 @@ function renderReference(shoot: Shoot): string {
   return `SHOOT "${shoot.title}" (${shoot.kind}, ${shoot.register})\n\n${frames}`;
 }
 
+/**
+ * The tail of a list.
+ *
+ * Every candidate is still validated against the *whole* library, so nothing
+ * slips through by being old. This only limits what the model is asked to read:
+ * past thirty entries the list stops working as a constraint and becomes text
+ * it skims.
+ */
+const SHOWN = 30;
+function recent<T>(values: T[]): T[] {
+  return values.slice(-SHOWN);
+}
+
 export function buildUserPrompt(
   brief: ShootBrief,
   reference: Shoot,
@@ -260,11 +275,11 @@ Everything else must differ from the reference — the location, every garment,
 what he is doing in each frame, and the beats. The four frames stay one session
 in one place in one outfit.
 
-These places are already used in the library. Choose somewhere else entirely:
-${taken.locations.map((l) => `  - ${l}`).join("\n")}
+These places are already used. Choose somewhere else entirely:
+${recent(taken.locations).map((l) => `  - ${l}`).join("\n")}
 
 These outfits are already used. Choose different garments:
-${taken.outfits.map((o) => `  - ${o}`).join("\n")}
+${recent(taken.outfits).map((o) => `  - ${o}`).join("\n")}
 `.trim();
 }
 
@@ -345,10 +360,18 @@ function mergeContext(
   };
 }
 
+export type TokenUsage = {
+  input: number;
+  output: number;
+  /** Reasoning tokens. Billed at the OUTPUT rate and invisible in the response. */
+  thinking: number;
+};
+
 export type GenerateResult = {
   shoot: CandidateShoot | null;
   attempts: number;
   problems: string[];
+  usage: TokenUsage;
 };
 
 /** Model output arrives flat; the library wants imageSize nested. */
@@ -393,6 +416,7 @@ export async function generateShoot(
   const model = options.model ?? "gemini-3-flash-preview";
   const maxAttempts = options.maxAttempts ?? 3;
 
+  const usage: TokenUsage = { input: 0, output: 0, thinking: 0 };
   const reference = pickReference(brief.light, options.referenceIndex ?? 0);
   const context = mergeContext(libraryContext(), options.alreadyGenerated ?? []);
   const basePrompt = buildUserPrompt(brief, reference, context);
@@ -420,8 +444,23 @@ Write the shoot again, fixing every one of them.`;
         responseMimeType: "application/json",
         responseSchema: RESPONSE_SCHEMA as any,
         temperature: 1.0,
+        // Thinking off.
+        //
+        // The first long run cost about ten times the estimate, and reasoning
+        // tokens are the only candidate: they are billed at the output rate and
+        // never appear in the response, so nothing in the visible output
+        // accounts for the difference. This task does not need them — the model
+        // is imitating a worked example against an explicit rule list, and a
+        // failed attempt is caught by the validator and retried for a fraction
+        // of what thinking costs on every attempt.
+        thinkingConfig: { thinkingBudget: 0 },
       },
     });
+
+    const meta = (response as any)?.usageMetadata ?? {};
+    usage.input += Number(meta.promptTokenCount ?? 0);
+    usage.output += Number(meta.candidatesTokenCount ?? 0);
+    usage.thinking += Number(meta.thoughtsTokenCount ?? 0);
 
     let candidate: CandidateShoot;
     try {
@@ -438,9 +477,9 @@ Write the shoot again, fixing every one of them.`;
     options.onAttempt?.(attempt, problems);
 
     if (problems.length === 0) {
-      return { shoot: candidate, attempts: attempt, problems: [] };
+      return { shoot: candidate, attempts: attempt, problems: [], usage };
     }
   }
 
-  return { shoot: null, attempts: maxAttempts, problems };
+  return { shoot: null, attempts: maxAttempts, problems, usage };
 }

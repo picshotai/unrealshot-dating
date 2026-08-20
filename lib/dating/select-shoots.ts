@@ -58,6 +58,26 @@ const MAX_SHOOTS_PER_INTEREST = 3;
 const INTEREST_MATCH = 100;
 const REGISTER_MATCH = 40;
 
+/**
+ * How far the seeded shuffle can move a shoot.
+ *
+ * These three numbers decide how much two customers' deliveries overlap, and
+ * the ordering between them is deliberate:
+ *
+ *   jitter (0-59) < INTEREST_MATCH (100)
+ *     so an interest match always outranks one that has none. A chip is a
+ *     promise, and no amount of shuffling may break it.
+ *
+ *   jitter (0-59) > REGISTER_MATCH (40)
+ *     so the wardrobe lean is a real preference rather than a rule. It was 24,
+ *     below the register bonus, which meant the shuffle could only reorder
+ *     shoots *within* a tier — and with a small library the tiers were about
+ *     the size of a delivery, so two men who answered identically received
+ *     14.3 of the same 15 shoots. Letting the shuffle cross the register
+ *     boundary is what turns a lean back into a lean.
+ */
+const JITTER = 60;
+
 function isBlocked(shoot: Shoot, excluded: readonly ExcludableTag[]): boolean {
   if (excluded.length === 0) return false;
   return (shoot.tags ?? []).some((tag) => excluded.includes(tag));
@@ -95,9 +115,10 @@ export function planShootDelivery(
     let value = 0;
     if (matchedInterests(shoot, interests).length > 0) value += INTEREST_MATCH;
     if (options.dress && shoot.register === options.dress) value += REGISTER_MATCH;
-    // Seeded jitter, so two men with identical answers still get different sets
-    // and the same man ordering twice does too.
-    value += stableHash(`${batchId}:${shoot.id}`) % 25;
+    // Seeded shuffle, so two men with identical answers still get different
+    // sets and the same man ordering twice does too. Seeded from batchId rather
+    // than random, so a retry reproduces the delivery it is retrying.
+    value += stableHash(`${batchId}:${shoot.id}`) % JITTER;
     return value;
   }
 

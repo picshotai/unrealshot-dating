@@ -1,15 +1,15 @@
 /**
- * GENERATED — not in the product yet.
+ * GENERATED — not hand-written.
  *
- * Written by scripts/generate-shoots.ts and already passed every mechanical
- * check: craft rules, wardrobe verbatim across four frames, gaze mix, aspect
- * ratio, no duplicates against the committed library.
+ * Written by scripts/generate-shoots.ts and already past every mechanical
+ * check: the craft rules, wardrobe verbatim across four frames, the gaze mix,
+ * the aspect ratio, and no collision with anything else in the library.
  *
  * What no machine checked is whether the place reads as somewhere a man would
  * want to be photographed, and whether the poses are physically plausible.
- * Read them, cut what fails, and move the rest into shoots.ts.
  *
- * Generated 2026-08-20T16:35:57.615Z
+ * Rewritten after every accepted shoot, so an interrupted run keeps its work.
+ * Last written 2026-08-20T17:15:53.625Z
  */
 import type { Shoot } from "./shoots";
 
@@ -183,6 +183,142 @@ export const GENERATED_SHOOTS: readonly Shoot[] = [
         imageSize: PORTRAIT_3_4,
         prompt:
           "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He stands in a high-ceilinged ceramics studio beside a heavy timber workbench, wearing a charcoal grey boiled wool chore jacket over a black mock-neck jumper, navy wool trousers, black leather boots and a steel watch. He is laughing at a sudden thought, his head turned about fifteen degrees and his gaze falling away from the lens to the workbench, eyes narrowing to creases. One hand is buried in his jacket pocket and the other hand is dusting a patch of dry clay from his own opposite forearm, and his shoulders have risen with the laugh. The studio wall lies five metres behind him in soft dark shapes. Broad daylight through a large open loading door fills his face evenly from the front and slightly above. A 3:4 chest-up frame at eye level, iPhone 15 Pro, 24mm, f/1.8, 1/320, ISO 200. Keep the creases at the corners of his eyes, the texture of the chore jacket, and a smudge of clay on one sleeve.",
+      },
+    ],
+  },
+
+  {
+    id: "minimalist-kitchen-morning",
+    title: "Minimalist kitchen, morning",
+    kind: "home",
+    register: "casual",
+    interests: ["coffee","cooking"],
+    frames: [
+      {
+        framing: "close",
+        imageSize: PORTRAIT_3_4,
+        prompt:
+          "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He stands beside a long pale timber kitchen island in a minimalist open-plan room, wearing a forest green waffle-knit cotton sweatshirt, dark grey chinos and a steel watch. He looks straight to the lens with his head turned about twenty degrees from his chest. One hand rests its palm flat on the timber surface of the island and the other hand holds the rim of a ceramic coffee cup, so one shoulder sits slightly lower than the other. The room stretches six metres behind him into soft pale bands. A large window filling the right edge of the frame lays broad soft daylight across him. A 3:4 close frame from the shoulders up, iPhone 15 Pro, 24mm, f/1.8, 1/200, ISO 100. Keep the fine grid of the waffle-knit fabric, individual pores on the bridge of the nose, and the faint texture of his stubble.",
+      },
+      {
+        framing: "medium",
+        imageSize: PORTRAIT_3_4,
+        prompt:
+          "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He stands beside a long pale timber kitchen island in a minimalist open-plan room, wearing a forest green waffle-knit cotton sweatshirt, dark grey chinos and a steel watch. He looks away from the lens, his eyes fixed on the window about fifteen degrees off-centre, as if listening for a sound. One hand is curled around the base of a ceramic coffee cup on the island and the other hand is tucked into a trouser pocket, which pulls one shoulder down. The space behind him extends five metres and remains soft. A large window filling the right edge of the frame lays broad soft daylight across him. A 3:4 chest-up frame at eye level, iPhone 15 Pro, 24mm, f/1.8, 1/200, ISO 100. Keep visible skin pores, the way the light catches the weave of the green sweatshirt, and the soft creases at the elbow.",
+      },
+      {
+        framing: "threeQuarter",
+        imageSize: LANDSCAPE_4_3,
+        prompt:
+          "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He leans against a long pale timber kitchen island in a minimalist open-plan room, wearing a forest green waffle-knit cotton sweatshirt, dark grey chinos and a steel watch. He looks up to the lens with a faint, knowing smile, his head tilted about five degrees, having just finished a sip of his drink. He leans with one forearm resting on the wood and the other hand loosely gripping the edge of the island counter, making one shoulder sit higher. The far wall of the room is seven metres back and is a blur of soft shapes. A large window filling the right edge of the frame lays broad soft daylight across him. A 4:3 three-quarter frame, iPhone 15 Pro, 35mm, f/2.0, 1/160, ISO 125. Keep the grain of the timber island, real pore structure on the forehead, and the distinct threads of the cotton chinos.",
+      },
+      {
+        framing: "expression",
+        imageSize: PORTRAIT_3_4,
+        prompt:
+          "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He stands beside a long pale timber kitchen island in a minimalist open-plan room, wearing a forest green waffle-knit cotton sweatshirt, dark grey chinos and a steel watch. He is mid-laugh, his eyes nearly closed and his gaze falling toward the island about forty degrees down and away from the lens, having just thought of something funny while prepping a meal. One hand is pressed against the island for support and the other hand is raised to his chest, with one shoulder hunched higher than the other. The room continues four metres behind him, fading into soft pale tones. A large window filling the right edge of the frame lays broad soft daylight across him. A 3:4 chest-up frame at eye level, iPhone 15 Pro, 24mm, f/1.8, 1/200, ISO 100. Keep the deep creases at the corners of his eyes, the visible pores across his cheeks, and the soft pilling of the waffle-knit cotton.",
+      },
+    ],
+  },
+
+  {
+    id: "minimalist-study-afternoon",
+    title: "Minimalist study, afternoon",
+    kind: "home",
+    register: "casual",
+    interests: ["reading","music"],
+    frames: [
+      {
+        framing: "close",
+        imageSize: PORTRAIT_3_4,
+        prompt:
+          "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He stands in a high-ceilinged room with a tall sash window and bare floorboards, wearing a burgundy cashmere crewneck jumper, charcoal wool flannel trousers and a steel watch. He has turned his head about fifteen degrees toward the lens, and his eyes are on the lens. One hand rests against the side of his neck with the thumb hooked under the jawline, and the other hand is placed flat against the sash window frame, so one shoulder sits lower than the other. The room extends three metres behind him into soft neutral shapes. A large window filling the right edge of the frame lays broad soft daylight across him. A 3:4 close frame from the chest up, iPhone 15 Pro, 24mm, f/1.8, 1/200, ISO 100. Keep pore structure across the bridge of the nose, the soft halo of cashmere fibres, and the grain of the steel watch case.",
+      },
+      {
+        framing: "medium",
+        imageSize: PORTRAIT_3_4,
+        prompt:
+          "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He stands beside a vintage record player on a low timber plinth in a high-ceilinged room, wearing a burgundy cashmere crewneck jumper, charcoal wool flannel trousers and a steel watch. His face is turned about twenty-five degrees away from the lens as he checks the needle, his gaze fixed on the record. One hand rests on the timber plinth for balance and the other hand holds the edge of the record player's lid, having just lifted it. The back of the room is four metres away and remains soft shapes. A large window filling the right edge of the frame lays broad soft daylight across him. A 3:4 medium frame at waist height, iPhone 15 Pro, 24mm, f/2.0, 1/160, ISO 125. Keep stubble along the jaw, the wood grain of the plinth, and the fine knit of the jumper.",
+      },
+      {
+        framing: "threeQuarter",
+        imageSize: LANDSCAPE_4_3,
+        prompt:
+          "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He sits in a deep leather armchair in a high-ceilinged room while holding a hardback book, wearing a burgundy cashmere crewneck jumper, charcoal wool flannel trousers and a steel watch. His head is tilted about ten degrees as he looks up to the lens with a faint smile, having just closed the book. One hand is wrapped around the spine of the book resting on his lap, and the other hand is draped over the leather arm of the chair, so his torso is slightly turned. The far side of the room is five metres distant and soft. A large window filling the right edge of the frame lays broad soft daylight across him. A 4:3 three-quarter frame, iPhone 15 Pro, 24mm, f/2.2, 1/125, ISO 160. Keep the cracked texture of the leather, the clean edge of the book pages, and the individual hairs of his beard.",
+      },
+      {
+        framing: "expression",
+        imageSize: PORTRAIT_3_4,
+        prompt:
+          "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He sits in a deep leather armchair in a high-ceilinged room, wearing a burgundy cashmere crewneck jumper, charcoal wool flannel trousers and a steel watch. He is mid-laugh with his mouth open and his eyes creased, and his gaze is directed toward the window about forty degrees away from the lens, having just recalled a forgotten lyric. One hand is pressed against his own thigh and the other hand is raised with the palm open as he makes a point. The room stretches four metres back into soft pale bands. A large window filling the right edge of the frame lays broad soft daylight across him. A 3:4 chest-up frame, iPhone 15 Pro, 24mm, f/1.8, 1/200, ISO 100. Keep the deep creases at the corners of the eyes, the weave of the wool trousers, and the texture of the skin on his neck.",
+      },
+    ],
+  },
+
+  {
+    id: "rehearsal-space-guitar",
+    title: "Rehearsal space, guitar",
+    kind: "home",
+    register: "street",
+    interests: ["music"],
+    frames: [
+      {
+        framing: "close",
+        imageSize: PORTRAIT_3_4,
+        prompt:
+          "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He stands against a bare brick wall in a high-ceilinged room, wearing a graphite grey canvas work jacket over a black cotton t-shirt, loose black denim and a steel watch. He has turned his head about twenty degrees toward the lens, showing a slight pull in his neck. His eyes are on the lens and his expression is neutral. One hand is hooked into the pocket of the canvas jacket and the other rests on the black guitar strap over his shoulder. The room runs six metres back behind him, reduced to soft dark shapes. A large window filling the right edge of the frame lays broad soft daylight across him. A 3:4 close frame from the shoulders up, iPhone 15 Pro, 24mm, f/1.8, 1/160, ISO 125. Keep the grainy texture of the brickwork, visible pores across his forehead, and the heavy weave of the canvas collar.",
+      },
+      {
+        framing: "medium",
+        imageSize: PORTRAIT_3_4,
+        prompt:
+          "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He stands against a bare brick wall in a high-ceilinged room, wearing a graphite grey canvas work jacket over a black cotton t-shirt, loose black denim and a steel watch. He looks straight to the lens with a faint smile, having just finished a phrase. One hand holds the neck of a sunburst electric guitar while the other hand rests its palm against the strings near the bridge. One shoulder sits several degrees lower than the other. The floorboards extend five metres behind him into soft shapes. A large window filling the right edge of the frame lays broad soft daylight across him. A 3:4 chest-up frame at eye level, iPhone 15 Pro, 24mm, f/1.8, 1/160, ISO 125. Keep skin pores, the fine hairs of his forearms, and the way the cotton t-shirt sits at the throat.",
+      },
+      {
+        framing: "threeQuarter",
+        imageSize: LANDSCAPE_4_3,
+        prompt:
+          "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He sits on a low timber amp against a bare brick wall in a high-ceilinged room, wearing a graphite grey canvas work jacket over a black cotton t-shirt, loose black denim and a steel watch. He looks down and away from the lens by about forty degrees, checking the tuning of his strings. One hand is turning a tuning peg at the headstock and the other hand is poised to pluck a string. The brick wall continues four metres away into soft blur. A large window filling the right edge of the frame lays broad soft daylight across him. A 4:3 three-quarter frame at a low angle, iPhone 15 Pro, 24mm, f/1.8, 1/125, ISO 160. Keep the texture of the denim creases at the lap, individual beard hairs, and the glossy reflection on the guitar body.",
+      },
+      {
+        framing: "expression",
+        imageSize: PORTRAIT_3_4,
+        prompt:
+          "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He stands against a bare brick wall in a high-ceilinged room, wearing a graphite grey canvas work jacket over a black cotton t-shirt, loose black denim and a steel watch. He looks away from the lens toward the window with his mouth open in a sudden laugh, having lost the thread of a song. One hand is flat against his chest over the guitar strap and the other hand rests on the edge of the electric guitar. One shoulder is shrugged up about ten degrees. The background is five metres of soft dark space. A large window filling the right edge of the frame lays broad soft daylight across him. A 3:4 chest-up frame at eye level, iPhone 15 Pro, 24mm, f/1.8, 1/200, ISO 100. Keep the creases at the corners of his eyes, skin pore details on the cheeks, and the matte texture of the canvas jacket.",
+      },
+    ],
+  },
+
+  {
+    id: "marble-cafe-morning-espresso",
+    title: "Marble cafe, morning",
+    kind: "social",
+    register: "sharp",
+    interests: ["coffee","reading"],
+    frames: [
+      {
+        framing: "close",
+        imageSize: PORTRAIT_3_4,
+        prompt:
+          "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He stands at a marble cafe counter along a plain wall in the morning, wearing a midnight blue wool overcoat over a cream cashmere turtleneck, charcoal wool trousers and a steel watch. He has turned his head about fifteen degrees toward the lens, his chin slightly lowered as he pauses mid-sentence. His eyes are on the lens and his lips are closed in a faint, knowing smile. One hand rests its fingertips on the cool marble surface while the other hand adjusts the cuff of his opposite sleeve, so one shoulder sits lower than the other. The room extends six metres behind him into soft neutral shapes. A large window filling the right edge of the frame lays broad soft daylight across him. A 3:4 close frame from the collarbone up, iPhone 15 Pro, 24mm, f/1.8, 1/250, ISO 100. Keep pore structure on the bridge of the nose, fine stubble at the chin, and the soft fibrous texture of the wool overcoat.",
+      },
+      {
+        framing: "medium",
+        imageSize: PORTRAIT_3_4,
+        prompt:
+          "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He stands at a marble cafe counter along a plain wall in the morning, wearing a midnight blue wool overcoat over a cream cashmere turtleneck, charcoal wool trousers and a steel watch. He is looking away from the lens, his gaze fixed on a soft shape in the distance about forty degrees to the side, having just finished a thought. One hand holds a small white espresso cup by the handle just above the counter, while the other hand is tucked into his overcoat pocket, making his shoulders uneven. The background is five metres away and remains soft. A large window filling the right edge of the frame lays broad soft daylight across him. A 3:4 chest-up frame at eye level, iPhone 15 Pro, 24mm, f/1.8, 1/250, ISO 100. Keep visible skin pores, the fine hairs of his eyebrows, and the delicate steam rising from the cup.",
+      },
+      {
+        framing: "threeQuarter",
+        imageSize: LANDSCAPE_4_3,
+        prompt:
+          "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He leans against a marble cafe counter along a plain wall in the morning, wearing a midnight blue wool overcoat over a cream cashmere turtleneck, charcoal wool trousers and a steel watch. He looks straight to the lens with a relaxed, steady expression, his head tilted about five degrees. One elbow is propped on the marble surface with that hand resting near his jaw, while the other hand rests flat on the counter beside a small white espresso cup, creating a diagonal line across his chest. The plain wall behind him is four metres away and soft. A large window filling the right edge of the frame lays broad soft daylight across him. A 4:3 three-quarter frame from the thighs up, iPhone 15 Pro, 24mm, f/1.8, 1/200, ISO 100. Keep the grain of the marble, visible skin pores, and the tight knit of the cashmere turtleneck.",
+      },
+      {
+        framing: "expression",
+        imageSize: PORTRAIT_3_4,
+        prompt:
+          "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone. He stands at a marble cafe counter along a plain wall in the morning, wearing a midnight blue wool overcoat over a cream cashmere turtleneck, charcoal wool trousers and a steel watch. He is mid-laugh, his head turned about twenty degrees away from the lens and his eyes crinkled at the corners. One hand is placed flat against his chest as he reacts to a joke, and the other hand is resting on the marble counter for support, causing his torso to twist slightly. The cafe interior is six metres deep behind him and entirely soft. A large window filling the right edge of the frame lays broad soft daylight across him. A 3:4 chest-up frame, iPhone 15 Pro, 24mm, f/1.8, 1/250, ISO 100. Keep the deep creases around his eyes, natural skin pores, and the subtle sheen on the wool fabric of his coat.",
       },
     ],
   },

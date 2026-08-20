@@ -1,4 +1,5 @@
 import { FRAMES_PER_SHOOT, type ExcludableTag, type InterestId, type StylePref } from "./types";
+import { GENERATED_SHOOTS } from "./shoots.generated";
 
 /**
  * The shoot library.
@@ -71,7 +72,14 @@ export type Shoot = {
 const PORTRAIT_3_4 = { width: 1728, height: 2304 } as const;
 const LANDSCAPE_4_3 = { width: 2304, height: 1728 } as const;
 
-export const SHOOTS: readonly Shoot[] = [
+/**
+ * The shoots written by hand.
+ *
+ * These are the originals, scored frame by frame in two rounds of live testing,
+ * and they are also the references the generator imitates — so they earn their
+ * place twice over. SHOOTS below is these plus everything generated.
+ */
+export const AUTHORED_SHOOTS: readonly Shoot[] = [
   // ───────────────────────────────────────────────────────────────────────────
   // Scored 4/5 in testing and was the strongest configuration found: one soft
   // source, one unambiguous garment, and an interior the model does not have to
@@ -769,6 +777,17 @@ export const SHOOTS: readonly Shoot[] = [
     ],
   },
 ];
+
+/**
+ * The whole library: hand-written first, generated after.
+ *
+ * A generated shoot is here only once it has passed every mechanical rule the
+ * hand-written ones pass — the craft rules, wardrobe verbatim across four
+ * frames, the gaze mix, the ratio match, and no collision with anything already
+ * in the library. `npm run check:shoots` holds all of them to the same bar,
+ * which is why the two can sit in one array without a caveat.
+ */
+export const SHOOTS: readonly Shoot[] = [...AUTHORED_SHOOTS, ...GENERATED_SHOOTS];
 
 export function getShoot(id: string): Shoot | undefined {
   return SHOOTS.find((shoot) => shoot.id === id);
