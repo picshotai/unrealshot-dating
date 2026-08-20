@@ -9,7 +9,6 @@ import {
   deriveBias,
   dominantStyle,
   dominantVibe,
-  resolveHobbyText,
   type InterestId,
 } from "./interests";
 import { refundShootCredits, spendShootCredits } from "./credits-gate";
@@ -43,7 +42,6 @@ export type CreateOrderInput = {
   interests?: InterestId[];
   /** How he dresses, answered with pictures rather than the word "style". */
   dress?: StylePref;
-  hobbyText?: string | null;
   /** Content he asked us to leave out: dog, alcohol, bicycle, team sport. */
   excludeTags?: ExcludableTag[];
   /** Legacy callers may still send a locked vibe/style; both become a lean. */
@@ -62,7 +60,6 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
     modelId,
     interests = [],
     dress,
-    hobbyText,
     excludeTags = [],
   } = input;
 
@@ -81,7 +78,6 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
 
   const vibe = dominantVibe(bias);
   const style = dominantStyle(bias);
-  const hobby = resolveHobbyText(interests, hobbyText);
 
   const { data: model, error: modelErr } = await db
     .from("models")
@@ -143,7 +139,6 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
           style,
           interests: interests.length > 0 ? interests : null,
         exclude_tags: excludeTags.length > 0 ? excludeTags : null,
-          hobby_text: hobby,
           updated_at: new Date().toISOString(),
         },
         { onConflict: "user_id" }

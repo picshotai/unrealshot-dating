@@ -31,8 +31,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { modelId, interests, dress, hobbyText, excludeTags, vibe, style } =
-      body;
+    const { modelId, interests, dress, excludeTags, vibe, style } = body;
 
     if (!modelId || typeof modelId !== "number") {
       return NextResponse.json({ error: "modelId is required" }, { status: 400 });
@@ -84,7 +83,6 @@ export async function POST(request: NextRequest) {
       dress: (dress as StylePref | undefined) ?? undefined,
       vibe: (vibe as Vibe | undefined) ?? undefined,
       style: (style as StylePref | undefined) ?? undefined,
-      hobbyText: hobbyText || null,
     });
 
     return NextResponse.json({ success: true, ...result }, { status: 201 });

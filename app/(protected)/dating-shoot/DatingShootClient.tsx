@@ -162,7 +162,6 @@ export function DatingShootClient({
     interests: InterestId[];
     dress: StylePref;
     excludeTags: ExcludableTag[];
-    hobbyText: string;
   }) => {
     setLoading(true);
     setError('');
@@ -177,7 +176,6 @@ export function DatingShootClient({
           interests: params.interests,
           dress: params.dress,
           excludeTags: params.excludeTags,
-          hobbyText: params.hobbyText.trim() || null,
         }),
       });
 

@@ -127,7 +127,7 @@ The intake asks exactly three things. Landing copy should promise nothing that
 contradicts them:
 
 1. **"Which look should we lead with?"** — three photos of wardrobes, not the words casual/sharp/street.
-2. **"What do you actually do?"** — 22 interests, multi-select, plus free text.
+2. **"What do you actually do?"** — 22 interests, multi-select. No free text: every chip is backed by a real shoot, and a typed word that matches nothing could only ever be ignored.
 3. **"Anything to leave out?"** — the four exclusions.
 
 **Critical nuance on question 1.** He picks what to *lead with*, not what he

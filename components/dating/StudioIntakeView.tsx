@@ -46,7 +46,6 @@ interface StudioIntakeViewProps {
     interests: InterestId[];
     dress: StylePref;
     excludeTags: ExcludableTag[];
-    hobbyText: string;
   }) => void;
   onCancel: () => void;
   isLoading: boolean;
@@ -90,7 +89,6 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
   const [dress, setDress] = useState<StylePref>('casual');
   const [interests, setInterests] = useState<InterestId[]>([]);
   const [excludeTags, setExcludeTags] = useState<ExcludableTag[]>([]);
-  const [hobbyText, setHobbyText] = useState('');
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -126,8 +124,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
     );
   };
 
-  const hasSelectedInterests =
-    interests.length > 0 || hobbyText.trim().length > 0;
+  const hasSelectedInterests = interests.length > 0;
   const canProceed =
     Boolean(selectedModelId) && hasSelectedInterests && !isLoading;
 
@@ -138,7 +135,6 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
       interests,
       dress,
       excludeTags,
-      hobbyText,
     });
   };
 
@@ -430,28 +426,6 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
               </div>
             </div>
 
-            {/* Section 4: Custom Specific Hobbies */}
-            <div className="space-y-2">
-              <div>
-                <h2 className="text-xs sm:text-sm font-medium text-zinc-200 font-oxanium">
-                  Custom Specific Hobbies{' '}
-                  <span className="text-zinc-500 font-normal font-sans">
-                    (Optional)
-                  </span>
-                </h2>
-                <p className="text-[11px] text-zinc-500 mt-0.5">
-                  Add any niche interests separated by commas, only one word each.
-                </p>
-              </div>
-              <input
-                type="text"
-                value={hobbyText}
-                onChange={(e) => setHobbyText(e.target.value)}
-                placeholder="e.g. bouldering, vinyl records, film photography"
-                className="w-full bg-zinc-950/90 border border-zinc-800 rounded-lg px-3.5 py-2.5 text-xs sm:text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 transition-colors"
-              />
-            </div>
-
             {/* Errors */}
             {creditError && (
               <div className="p-3.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-start gap-2.5 text-xs">
@@ -571,11 +545,6 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                           </span>
                         );
                       })}
-                      {hobbyText && (
-                        <span className="px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 text-[11px]">
-                          + {hobbyText}
-                        </span>
-                      )}
                     </div>
                     {excludeTags.length > 0 && (
                       <div className="text-[11px] text-red-400 font-mono pt-1">
