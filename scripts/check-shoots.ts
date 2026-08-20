@@ -22,8 +22,14 @@ import {
   type Shoot,
   type ShootFrame,
 } from "../lib/dating/shoots";
-import { FRAMES_PER_SHOOT } from "../lib/dating/types";
+import {
+  EXCLUDABLE_TAGS,
+  FRAMES_PER_SHOOT,
+  SHOOTS_PER_DELIVERY,
+  type ExcludableTag,
+} from "../lib/dating/types";
 import { INTEREST_CHIPS } from "../lib/dating/interests";
+import { assertDeliveryShape, planShootDelivery } from "../lib/dating/select-shoots";
 
 let failures = 0;
 
@@ -218,12 +224,94 @@ for (const shoot of SHOOTS) {
 if (failures === 0) ok("gaze", "every shoot mixes at-lens and away");
 
 // ── Interests a chip can select must be served ─────────────────────────────
+// A chip is a promise. Offering "climbing" and then delivering a generic set is
+// the same broken promise the compositional library made by dropping the word
+// into a template, so an unserved chip fails the build rather than logging.
 const served = new Set(SHOOTS.flatMap((shoot) => shoot.interests ?? []));
 const unserved = INTEREST_CHIPS.filter((chip) => !served.has(chip.id));
-console.log(
-  `  note  ${served.size} of ${INTEREST_CHIPS.length} interests have a shoot; ` +
-    `${unserved.length} still unserved (${unserved.slice(0, 6).map((c) => c.id).join(", ")}${unserved.length > 6 ? "…" : ""})`
-);
+for (const chip of unserved) {
+  fail(chip.id, "interest chip has no shoot; a chip that selects nothing is a lie");
+}
+if (unserved.length === 0) {
+  ok("interests", `all ${INTEREST_CHIPS.length} chips have at least one shoot`);
+}
+
+// ── Every combination of exclusions must still fill a delivery ─────────────
+// An excluded tag drops a shoot whole — its location, outfit and light are
+// fixed, so there is no variant to fall back to. With too few spare shoots a
+// user who excludes dogs and alcohol gets an exception at checkout.
+{
+  const tags = [...EXCLUDABLE_TAGS];
+  let worst = { excluded: [] as ExcludableTag[], available: SHOOTS.length };
+  for (let mask = 0; mask < 1 << tags.length; mask += 1) {
+    const excluded = tags.filter((_, index) => mask & (1 << index));
+    const available = SHOOTS.filter(
+      (shoot) => !(shoot.tags ?? []).some((tag) => excluded.includes(tag))
+    ).length;
+    if (available < worst.available) worst = { excluded, available };
+  }
+  if (worst.available < SHOOTS_PER_DELIVERY) {
+    fail(
+      "exclusions",
+      `excluding [${worst.excluded.join(", ")}] leaves ${worst.available} shoots; ` +
+        `a delivery needs ${SHOOTS_PER_DELIVERY}. Author more untagged shoots.`
+    );
+  } else {
+    ok(
+      "exclusions",
+      `worst case leaves ${worst.available} of ${SHOOTS.length} shoots (need ${SHOOTS_PER_DELIVERY})`
+    );
+  }
+}
+
+// ── Deliveries actually plan ───────────────────────────────────────────────
+// The old library's equivalent of this ran inside createDatingShootOrder, after
+// a customer's credits had been spent. Same coverage, moved to the terminal.
+{
+  const cases: { label: string; options: Parameters<typeof planShootDelivery>[1] }[] = [
+    { label: "no answers", options: {} },
+    { label: "one interest", options: { interests: ["climbing"], dress: "street" } },
+    {
+      label: "many interests",
+      options: {
+        interests: ["golf", "sailing", "dining", "art", "skiing"],
+        dress: "sharp",
+      },
+    },
+    {
+      label: "everything excluded",
+      options: { excludeTags: [...EXCLUDABLE_TAGS], dress: "casual" },
+    },
+  ];
+
+  for (const { label, options } of cases) {
+    try {
+      const plan = planShootDelivery(`check-${label}`, options);
+      assertDeliveryShape(plan);
+      if (plan.length !== SHOOTS_PER_DELIVERY * FRAMES_PER_SHOOT) {
+        fail(label, `planned ${plan.length} frames`);
+      }
+    } catch (error) {
+      fail(label, error instanceof Error ? error.message : String(error));
+    }
+  }
+  if (failures === 0) ok("planning", `${cases.length} preference sets plan cleanly`);
+}
+
+// ── No two shoots wear the same clothes ────────────────────────────────────
+// The delivery's whole claim is that every shoot is a different place, outfit
+// and light. Two shoots in the same outfit make eight photos read as one shoot.
+{
+  const outfits = new Map<string, string>();
+  for (const shoot of SHOOTS) {
+    const match = shoot.frames[0].prompt.match(/wearing ([^.]+)\./);
+    const outfit = match ? match[1].trim().toLowerCase() : shoot.id;
+    const previous = outfits.get(outfit);
+    if (previous) fail(shoot.id, `wears the same outfit as ${previous}`);
+    outfits.set(outfit, shoot.id);
+  }
+  if (failures === 0) ok("variety", `${outfits.size} distinct outfits`);
+}
 
 // ── Verdict ────────────────────────────────────────────────────────────────
 if (failures > 0) {
