@@ -30,6 +30,14 @@ import {
 } from "../lib/dating/types";
 import { INTEREST_CHIPS } from "../lib/dating/interests";
 import { assertDeliveryShape, planShootDelivery } from "../lib/dating/select-shoots";
+// The craft rules live next to the generator that has to satisfy them, so the
+// build check and the generation gate can never drift apart.
+import {
+  CRAFT_RULES,
+  expectedRatio,
+  meetsLens,
+  outfitOf,
+} from "../lib/dating/authoring/rules";
 
 let failures = 0;
 
@@ -89,12 +97,7 @@ for (const { shoot, frame } of allFrames) {
 
   // The ratio named in words must match the authored pixels, or the model is
   // told one shape and handed another.
-  const expected =
-    frame.imageSize.width === frame.imageSize.height
-      ? "1:1"
-      : frame.imageSize.width < frame.imageSize.height
-        ? "3:4"
-        : "4:3";
+  const expected = expectedRatio(frame.imageSize);
   const ratios = prompt.match(/\b\d+:\d+\b/g) ?? [];
   if (ratios.length !== 1 || ratios[0] !== expected) {
     fail(where, `names ${ratios.join(", ") || "no"} ratio; imageSize wants exactly one ${expected}`);
@@ -103,84 +106,7 @@ for (const { shoot, frame } of allFrames) {
 ok("prompts", `${allFrames.length} complete, unique, no tokens`);
 
 // ── Craft rules, each one paid for by a failed frame ────────────────────────
-const RULES: {
-  name: string;
-  why: string;
-  test: (prompt: string) => boolean;
-}[] = [
-  {
-    name: "negation",
-    why: "the model reads a forbidden noun as a requested one",
-    test: (p) =>
-      !/\b(no|not|never|avoid|without|nor|cannot|neither|none|nothing|lack|instead of|rather than|free of)\b|n't\b/i.test(p),
-  },
-  {
-    name: "second person",
-    why: "an undescribed person is rendered with his face",
-    test: (p) =>
-      !/\b(people|someone|somebody|friends?|companions?|guests?|visitors?|figures|crowds?|passers-by|diners|commuters|photographer)\b/i.test(p),
-  },
-  {
-    name: "text objects",
-    why: "rendered as gibberish writing",
-    test: (p) =>
-      !/\b(sign|signs|signage|menu|menus|map|maps|label|labels|poster|posters|timetable|noticeboard|newspaper)\b/i.test(p),
-  },
-  {
-    name: "gaze target",
-    why: "a frame with no stated gaze drifts",
-    test: (p) => /\b(lens|camera)\b/.test(p),
-  },
-  {
-    name: "hands placed",
-    why: "unplaced hands are where anatomy fails",
-    test: (p) =>
-      /\b(hand|hands|palm|palms|forearm|forearms|finger|fingers|elbow|elbows|wrist|knuckles|grip|grips)\b/.test(p),
-  },
-  {
-    name: "subject distance",
-    why: "without a stated distance the background competes with him",
-    test: (p) => /\bmetres\b/.test(p),
-  },
-  {
-    name: "skin texture",
-    why: "the plastic-skin look is what makes a photo read as generated",
-    test: (p) => /\b(pores?|texture|grain|stubble|creases)\b/i.test(p),
-  },
-  {
-    name: "one light source placed",
-    why: "C5 placed the light three times and the model invented a sun for each",
-    // Counts sentences that *place* a source, not every mention of it. A texture
-    // clause saying "forearm hair catching the daylight" describes what to keep,
-    // not where the light is, and the frame that did that scored usable.
-    test: (p) =>
-      p
-        .split(/(?<=\.)\s+/)
-        .filter(
-          (sentence) =>
-            /\b(daylight|flash|sunlight|window light)\b/i.test(sentence) &&
-            /\b(fills?|filling|lays|laying|falls?|reaches?|strikes?|arrives?|comes from)\b/i.test(sentence)
-        ).length <= 1,
-  },
-  {
-    name: "frame-relative light",
-    why: '"a window to his left" rendered on frame-left, which is his right',
-    test: (p) => !/\b(window|light|flash)[^.]{0,40}\bto his (left|right)\b/i.test(p),
-  },
-  {
-    name: "no bilateral pose",
-    why: "symmetry is on the model's weak list and it produced a floating pose",
-    test: (p) =>
-      !/\bboth (palms|hands) (set |resting |flat )?(flat )?(on|across)\b[^.]{0,40}\b(shoulder-width|either side|between them)\b/i.test(p),
-  },
-  {
-    name: "no tipped-back head",
-    why: "it foreshortens the face and is where identity drifted twice",
-    test: (p) => !/\bhead (tipped|tilted) back\b/i.test(p),
-  },
-];
-
-for (const rule of RULES) {
+for (const rule of CRAFT_RULES) {
   const offenders = allFrames.filter(({ frame }) => !rule.test(frame.prompt));
   if (offenders.length > 0) {
     for (const { shoot, frame } of offenders) {
@@ -188,16 +114,13 @@ for (const rule of RULES) {
     }
   }
 }
-if (failures === 0) ok("craft rules", `${RULES.length} rules over ${allFrames.length} frames`);
+if (failures === 0) ok("craft rules", `${CRAFT_RULES.length} rules over ${allFrames.length} frames`);
 
 // ── The outfit must be repeated verbatim in every frame of a shoot ──────────
 // Two frames of shoot B abbreviated it and are exactly the two where the model
 // invented the missing garment.
 for (const shoot of SHOOTS) {
-  const wearing = shoot.frames.map(({ prompt }) => {
-    const match = prompt.match(/wearing ([^.]+)\./);
-    return match ? match[1].trim() : null;
-  });
+  const wearing = shoot.frames.map(({ prompt }) => outfitOf(prompt));
   if (wearing.some((value) => value === null)) {
     fail(shoot.id, "a frame never names the outfit");
     continue;
@@ -214,9 +137,7 @@ if (failures === 0) ok("wardrobe", "identical in every frame of a shoot");
 
 // ── Gaze balance: two frames meet the lens, two look away ──────────────────
 for (const shoot of SHOOTS) {
-  const atLens = shoot.frames.filter(({ prompt }) =>
-    /\b(eyes are on the lens|looks? (up |straight |directly )?to the lens|eyes? (are )?direct to the lens|to the lens with)\b/i.test(prompt)
-  ).length;
+  const atLens = shoot.frames.filter(({ prompt }) => meetsLens(prompt)).length;
   if (atLens < 1 || atLens > FRAMES_PER_SHOOT - 1) {
     fail(shoot.id, `${atLens} of ${FRAMES_PER_SHOOT} frames meet the lens; want a mix`);
   }
@@ -304,8 +225,7 @@ if (unserved.length === 0) {
 {
   const outfits = new Map<string, string>();
   for (const shoot of SHOOTS) {
-    const match = shoot.frames[0].prompt.match(/wearing ([^.]+)\./);
-    const outfit = match ? match[1].trim().toLowerCase() : shoot.id;
+    const outfit = outfitOf(shoot.frames[0].prompt)?.toLowerCase() ?? shoot.id;
     const previous = outfits.get(outfit);
     if (previous) fail(shoot.id, `wears the same outfit as ${previous}`);
     outfits.set(outfit, shoot.id);
