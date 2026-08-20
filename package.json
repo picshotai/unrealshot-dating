@@ -10,7 +10,6 @@
     "trigger:dev": "trigger dev",
     "trigger:deploy": "trigger deploy",
     "trigger:deploy:staging": "trigger deploy --env staging",
-    "export:dating-prompts": "tsx scripts/export-dating-prompts.ts",
     "check:shoots": "tsx scripts/check-shoots.ts",
     "check:variety": "tsx scripts/check-variety.ts",
     "test:anchor": "tsx scripts/test-anchor-chain.ts"
