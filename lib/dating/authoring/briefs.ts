@@ -68,11 +68,15 @@ export const BRIEFS: ShootBrief[] = [
     hint: "a bright neighbourhood bakery or deli counter, mid-morning",
   },
   {
+    // Was register "sharp" with a furniture-heavy reading room, and it scored
+    // 0 of 3: the model put him in a navy blazer and a business shirt, which
+    // reads as a man going to the office, and it rearranged the furniture in
+    // every frame. Sparse location, and the register a man actually reads in.
     serves: ["reading", "coffee"],
-    register: "sharp",
-    kind: "social",
+    register: "casual",
+    kind: "home",
     light: "window",
-    hint: "a tall-windowed reading room with dark timber and green shaded lamps",
+    hint: "a plain window seat against a bare wall, one mug, nothing else in the room",
   },
   {
     serves: ["travel", "hiking"],

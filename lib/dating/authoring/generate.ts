@@ -3,6 +3,7 @@ import { SHOOTS, FRAMINGS, type Shoot } from "../shoots";
 import { FRAMES_PER_SHOOT } from "../types";
 import { LIGHT_GUIDANCE, type LightFamily, type ShootBrief } from "./briefs";
 import {
+  leadGarment,
   outfitOf,
   validateShoot,
   type CandidateShoot,
@@ -137,6 +138,37 @@ place, different clothes, different actions, different beats.
     prompt. Doing so produced "he leans against the parapet of the bridge with
     his weight on one hip on a stone bridge over a wide slow river".
 
+19. OBJECT BUDGET: name at most TWO physical objects in the whole prompt — the
+    one he is touching, and at most one more. Everything else is "soft shapes",
+    "soft pale bands", "soft dark shapes".
+
+    This is the strongest signal in the render data. Every object you name is an
+    object the model must decide where to put, and it decides again from scratch
+    in every frame. A shoot naming eight pieces of furniture scored 0 of 3: a
+    sofa appeared where a bookshelf had been, and a table landed in the gap a
+    man needs to stand in to reach the shelves. The shoot naming one object — a
+    parapet — scored 2 of 2 and was the best of the batch.
+
+    Prefer locations that are naturally sparse. A bridge, a shoreline, a lawn, a
+    plain wall, a long counter. Avoid rooms full of furniture.
+
+20. "Sharp" means well made, NOT corporate. A blazer, a suit, a tie or a
+    business shirt makes him look like he is going to the office, which is the
+    opposite of a dating photograph. Sharp is a heavy knit, wool trousers, a
+    good overcoat, leather boots. Only a bar, a hotel or an evening venue may
+    put him in tailoring.
+
+    The outfit must suit the ACTIVITY, not only the register. A man reading for
+    pleasure wears a jumper. Ask what he would actually have put on that
+    morning.
+
+21. Every frame needs a REASON he is in that position, not only a description of
+    the shape. "Like someone forcefully told me to stand there" is what a
+    described shape looks like when it renders. Give the beat: "still catching
+    his breath", "having just set the cup down", "checking the line before he
+    starts", "having lost the thread of it". The hand-written shoots that worked
+    all do this; the ones that read as stiff do not.
+
 ═══ THE SHAPE OF EACH PROMPT ═══
 
 Follow the reference sentence for sentence:
@@ -265,7 +297,50 @@ export function libraryContext(): {
     validation: {
       takenPrompts: new Set(SHOOTS.flatMap((s) => s.frames.map((f) => f.prompt))),
       takenOutfits: new Set(outfits.map((o) => o.toLowerCase())),
+      takenLeadGarments: new Set(outfits.map((o) => leadGarment(o.toLowerCase()))),
       takenIds: new Set(SHOOTS.map((s) => s.id)),
+    },
+  };
+}
+
+/** Folds this run's accepted shoots into the library context. */
+function mergeContext(
+  base: ReturnType<typeof libraryContext>,
+  generated: readonly CandidateShoot[]
+): ReturnType<typeof libraryContext> {
+  if (generated.length === 0) return base;
+
+  const outfits = generated
+    .map((s) => outfitOf(s.frames[0]?.prompt ?? ""))
+    .filter((o): o is string => Boolean(o));
+
+  const locations = generated.map((s) => {
+    const match = s.frames[0]?.prompt.match(
+      /(?:stands|sits|crouches|leans)\s+([^.]*?),\s*wearing/i
+    );
+    return match ? match[1].trim() : s.title;
+  });
+
+  return {
+    locations: [...base.locations, ...locations],
+    outfits: [...base.outfits, ...outfits],
+    validation: {
+      takenPrompts: new Set([
+        ...(base.validation.takenPrompts ?? []),
+        ...generated.flatMap((s) => s.frames.map((f) => f.prompt)),
+      ]),
+      takenOutfits: new Set([
+        ...(base.validation.takenOutfits ?? []),
+        ...outfits.map((o) => o.toLowerCase()),
+      ]),
+      takenLeadGarments: new Set([
+        ...(base.validation.takenLeadGarments ?? []),
+        ...outfits.map((o) => leadGarment(o.toLowerCase())),
+      ]),
+      takenIds: new Set([
+        ...(base.validation.takenIds ?? []),
+        ...generated.map((s) => s.id),
+      ]),
     },
   };
 }
@@ -299,6 +374,15 @@ export async function generateShoot(
     referenceIndex?: number;
     maxAttempts?: number;
     model?: string;
+    /**
+     * Shoots produced earlier in this same run.
+     *
+     * Without these, the library is the only thing a candidate is compared
+     * against, so two shoots generated minutes apart can both come back in a
+     * navy cashmere jumper — which is exactly what happened. A batch has to
+     * accumulate against itself.
+     */
+    alreadyGenerated?: readonly CandidateShoot[];
     onAttempt?: (attempt: number, problems: string[]) => void;
   } = {}
 ): Promise<GenerateResult> {
@@ -310,7 +394,7 @@ export async function generateShoot(
   const maxAttempts = options.maxAttempts ?? 3;
 
   const reference = pickReference(brief.light, options.referenceIndex ?? 0);
-  const context = libraryContext();
+  const context = mergeContext(libraryContext(), options.alreadyGenerated ?? []);
   const basePrompt = buildUserPrompt(brief, reference, context);
 
   let problems: string[] = [];

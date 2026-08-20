@@ -150,6 +150,37 @@ export const CRAFT_RULES: CraftRule[] = [
   },
 ];
 
+/**
+ * Movable things the prompt asks the model to place somewhere.
+ *
+ * This is not a pass/fail rule, and deliberately so: it is the strongest signal
+ * in the render data but it rests on eight rendered shoots, and a hard cap tuned
+ * to eight data points would fail two shoots in the hand-written library that
+ * have never been rendered. So it is reported, and the generator is instructed
+ * to keep it low.
+ *
+ * The correlation it comes from:
+ *
+ *   8 objects named -> 0 of 3 usable   (a sofa replaced a bookshelf; a table
+ *                                       landed where a man has to stand)
+ *   3 objects named -> 2 of 3 usable
+ *   1 object named  -> 2 of 2 usable   (the best frames of the batch)
+ *
+ * Every named object is one the model re-places from scratch in every frame,
+ * because the anchor carries wardrobe, light and identity but NOT geometry.
+ */
+const PLACED_OBJECT =
+  /\b(sofa|armchair|chair|stool|bench|table|desk|lectern|cabinet|cabinets|shelf|shelves|shelving|bookshelf|lamp|rack|racks|crate|counter|parapet|railing|rail|balustrade|workbench|display case)\b/gi;
+
+export function placedObjects(prompt: string): string[] {
+  return [...new Set((prompt.match(PLACED_OBJECT) ?? []).map((w) => w.toLowerCase()))];
+}
+
+/** The distinct objects a whole shoot asks the model to keep track of. */
+export function sceneDensity(shoot: CandidateShoot): string[] {
+  return [...new Set(shoot.frames.flatMap((f) => placedObjects(f.prompt ?? "")))];
+}
+
 /** The ratio a set of pixels reduces to, as the prompt must name it in words. */
 export function expectedRatio({
   width,
@@ -182,11 +213,49 @@ export function meetsLens(prompt: string): boolean {
   );
 }
 
+/**
+ * Tailoring that reads as an office rather than a date.
+ *
+ * A generated library shoot put him in a navy blazer and a business shirt to
+ * read a book, and the verdict was immediate: "looks like I am going to a
+ * corporate office, I am not here to read books." The same batch put a blazer
+ * and leather loafers in a working ceramics studio.
+ *
+ * The register a customer picks is "sharp", which the model hears as corporate.
+ * Sharp means well made — a heavy knit, wool trousers, a good overcoat. Only a
+ * bar, a hotel or an evening venue earns tailoring, which is why this is keyed
+ * on the shoot's kind rather than banned outright.
+ */
+const CORPORATE_TAILORING = /\b(blazer|suit|tie|loafers|dress shoes|oxfords)\b/i;
+
+/**
+ * The lead garment — the first two words of the outfit, which is the colour and
+ * the material or cut of the top layer.
+ *
+ * Comparing whole outfits for similarity does not work: every one of them ends
+ * in "and a steel watch" and most contain "dark", "trousers" and "leather", so
+ * a word-overlap test fires on almost every pair. The top layer is what a
+ * viewer actually registers, and it separates cleanly — all eighteen authored
+ * shoots have a distinct one.
+ */
+export function leadGarment(outfit: string): string {
+  const stop = new Set(["a", "an", "the", "over", "under", "with"]);
+  return outfit
+    .toLowerCase()
+    .replace(/[^a-z ]/g, " ")
+    .split(/[ ]+/)
+    .filter((word) => word && !stop.has(word))
+    .slice(0, 2)
+    .join(" ");
+}
+
 export type ValidationContext = {
   /** Prompts already in the library. A generated shoot may not reproduce one. */
   takenPrompts?: ReadonlySet<string>;
   /** Outfits already in use, lowercased. Two shoots in one outfit read as one. */
   takenOutfits?: ReadonlySet<string>;
+  /** Lead garments already in use — catches the near-duplicate an exact match misses. */
+  takenLeadGarments?: ReadonlySet<string>;
   /** Shoot ids already in use. */
   takenIds?: ReadonlySet<string>;
 };
@@ -281,6 +350,21 @@ export function validateShoot(
       if (context.takenOutfits?.has(outfit)) {
         problems.push(
           `this outfit is already worn by another shoot in the library; choose different garments`
+        );
+      }
+
+      const lead = leadGarment(outfit);
+      if (context.takenLeadGarments?.has(lead)) {
+        problems.push(
+          `the top layer "${lead}" is already worn by another shoot; change the colour and the material, not just the trousers`
+        );
+      }
+
+      const corporate = outfit.match(CORPORATE_TAILORING);
+      if (corporate && shoot.kind !== "social") {
+        problems.push(
+          `a ${corporate[0]} in a "${shoot.kind}" shoot reads as going to the office rather than on a date; ` +
+            `dress him for the activity — a knit, a jacket, boots. Only a bar or a hotel earns tailoring`
         );
       }
     }

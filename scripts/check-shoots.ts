@@ -35,6 +35,7 @@ import { assertDeliveryShape, planShootDelivery } from "../lib/dating/select-sho
 import {
   CRAFT_RULES,
   expectedRatio,
+  leadGarment,
   meetsLens,
   outfitOf,
 } from "../lib/dating/authoring/rules";
@@ -224,13 +225,28 @@ if (unserved.length === 0) {
 // and light. Two shoots in the same outfit make eight photos read as one shoot.
 {
   const outfits = new Map<string, string>();
+  const leads = new Map<string, string>();
   for (const shoot of SHOOTS) {
     const outfit = outfitOf(shoot.frames[0].prompt)?.toLowerCase() ?? shoot.id;
     const previous = outfits.get(outfit);
     if (previous) fail(shoot.id, `wears the same outfit as ${previous}`);
     outfits.set(outfit, shoot.id);
+
+    // An exact match misses the case that matters: two shoots in a navy
+    // lambswool jumper differ by a word and read as the same photograph.
+    const lead = leadGarment(outfit);
+    const wornBy = leads.get(lead);
+    if (wornBy) fail(shoot.id, `top layer "${lead}" is already worn by ${wornBy}`);
+    leads.set(lead, shoot.id);
+
+    // "Sharp" pulls the model to corporate tailoring, which is the opposite of
+    // a dating photograph everywhere except a bar or a hotel.
+    const corporate = outfit.match(/(blazer|suit|tie|loafers|dress shoes|oxfords)/i);
+    if (corporate && shoot.kind !== "social") {
+      fail(shoot.id, `a ${corporate[0]} in a "${shoot.kind}" shoot reads as the office`);
+    }
   }
-  if (failures === 0) ok("variety", `${outfits.size} distinct outfits`);
+  if (failures === 0) ok("variety", `${outfits.size} distinct outfits, all distinct top layers`);
 }
 
 // ── Verdict ────────────────────────────────────────────────────────────────

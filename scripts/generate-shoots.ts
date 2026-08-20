@@ -95,6 +95,8 @@ async function main() {
     const result = await generateShoot(brief, {
       referenceIndex: index,
       model: arg("model"),
+      // Everything accepted so far this run, so the batch cannot repeat itself.
+      alreadyGenerated: accepted,
       onAttempt: (attempt, problems) => {
         if (problems.length === 0) {
           console.log(`     attempt ${attempt}: passed`);

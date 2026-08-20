@@ -216,3 +216,112 @@ grows to 200+ shoots, which ends the overlap problem entirely.
 3. Which locations read as somewhere a man would want to be photographed, and
    which read like a stock library? No rule can catch that — it is the one
    judgement the generator cannot make for itself.
+
+---
+
+# RESULTS
+
+**4 of 20 prompts run as 8 renders. 4 usable.** Below the 80% bar, but every
+loss traced to something specific and three of the five causes are now encoded.
+
+| shoot | run | usable | what happened |
+|---|---|---|---|
+| A — bakery | 3 | 2 | A1 and A3 hold; A2 flips the counter to the other side of the frame |
+| B — library | 3 | 0 | stiff pose, corporate clothes, furniture rearranged in every frame |
+| C — stone bridge | 2 | 2 | both perfect; the best photographs of the batch |
+
+**The anchor was chained on every run** — the anchor output was passed in
+`image_urls` alongside the selfies. That is what makes these results meaningful
+rather than a re-measurement of the un-anchored pipeline.
+
+## 1. Identity is solved
+
+Top notch across all eight, including the full-length bridge frame. This was the
+largest open risk in the whole rewrite and it is closed. Nothing below is about
+faces.
+
+## 2. What the anchor actually carries
+
+It carries **wardrobe, light and identity**. It does **not** carry **geometry**.
+
+The model is performing an edit, and a follower asks for a different framing and
+a different pose — so it has to re-render the room from a viewpoint it has never
+seen. It has no 3D model of the place. It keeps "library, window light, dark
+wood" and re-imagines where everything sits.
+
+This explains the earlier anchor test, which appeared to hold perfectly: C1 → C3
+were near-identical framings, so nothing had to be re-derived. Once the frames
+genuinely differ, the layout is re-invented.
+
+**Consequence for the product claim:** a shoot is the same place, the same
+clothes, the same light and the same person. It is not a spatially continuous
+walk around one room, and copy should never imply that.
+
+**Consequence for severity:** a counter changing sides between two photos on a
+dating profile is close to invisible — nobody cross-references the geometry of
+two pictures. A table jammed into the gap a man needs to stand in to reach a
+bookshelf is visible *inside one photograph*, and that is the real defect.
+
+## 3. Object count predicts failure
+
+The single strongest signal in the data:
+
+| shoot | distinct objects named | usable |
+|---|---|---|
+| B — library | **8** — bookshelf, shelf, desk, lamp, shelving, armchair, table, chair | 0 of 3 |
+| A — bakery | 3 — counter, wall, display case | 2 of 3 |
+| C — bridge | **1** — parapet | 2 of 2 |
+
+Every named object is one the model must place, and it decides again from
+scratch in every frame. Name eight things and eight things move.
+
+This matches the first format test, where the kitchen — a counter and a window —
+beat both the harbour and the night street. Sparse scenes win, and it now has
+eight more renders behind it.
+
+Encoded as rule 19 (object budget: at most two named objects) and reported as a
+`sceneDensity` metric on every generated shoot. Deliberately **not** a hard
+failure: it rests on eight renders, and a cap tuned to eight data points would
+fail two hand-written shoots that have never been rendered.
+
+**`living-room-window-afternoon` is the densest shoot in the authored library
+(five objects) and is now a suspect. It should be rendered before it ships.**
+
+## 4. "Sharp" pulls the model to corporate
+
+Shoot B put him in a navy blazer and a business shirt to read a book. The
+verdict: *"looks like I am going to a corporate office, I am not here to read
+books."* The same batch put a blazer and leather loafers in a working ceramics
+studio, which is also physically wrong — nobody throws pots in loafers.
+
+Two causes, both fixed:
+
+- The brief paired `reading` with `register: "sharp"`. Nothing checked that the
+  pairing made sense — a small compositional decision that no one reads, which
+  is the exact failure class this rewrite exists to remove, resurfacing one
+  level up. The brief is now `casual`.
+- "Sharp" means well made, not corporate. Now stated in rule 20, and enforced
+  mechanically: a blazer, suit, tie or loafers in any shoot that is not `social`
+  fails. Zero false positives across all eighteen authored shoots.
+
+## 5. Poses need a reason, not a shape
+
+*"Like someone forcefully told me to stand there."*
+
+The hand-written shoots that work always give a motive — "having come off the
+wall", "having lost the chord", "still counting the set". The generated ones
+described a shape and stopped. A described shape renders as a pose; a described
+reason renders as a photograph. Encoded as rule 21.
+
+## 6. The anchor amplifies its own mistakes
+
+B1 had the wrong clothes and a stiff pose, and B2 and B3 inherited both, because
+B1 *was* the reference. The close frame is the highest-leverage frame in a shoot
+and the most expensive one to get wrong. Worth remembering if auto-redraw is
+ever revisited.
+
+## Also found, in the code rather than the renders
+
+Two shoots generated minutes apart both came back in a navy cashmere jumper. The
+duplicate check only compared candidates against the *committed* library, so a
+batch could repeat itself. Batches now accumulate against themselves.
