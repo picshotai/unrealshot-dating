@@ -3,6 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { putR2Object } from "@/lib/r2";
 import { apiRateLimit, checkRateLimit } from "@/utils/rate-limit";
 import { REQUIRED_SAMPLES, setStage } from "@/lib/auth/stage";
+import {
+    detectWatermark,
+    WATERMARK_REJECTION_MESSAGE,
+} from "@/lib/dating/watermark";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -74,14 +78,46 @@ export async function POST(
             return NextResponse.json({ error: "File too large (max 10MB)" }, { status: 413 });
         }
 
+        const arrayBuffer = await file.arrayBuffer();
+        const body = Buffer.from(arrayBuffer);
+
+        // Reject printed-on camera watermarks before the file can ever be used
+        // as a reference. The model copies anything burned into a reference
+        // into its output as garbled lettering, unpredictably, and no prompt
+        // can undo it — a forbidden noun reads to the model as a requested one.
+        // This is the only place the problem is solvable.
+        //
+        // Detection failing is not a reason to block an upload: a customer who
+        // cannot upload their own face is a worse outcome than one bad
+        // delivery, and the detector is deliberately conservative for the same
+        // reason.
+        try {
+            const verdict = await detectWatermark(body);
+            if (verdict.found) {
+                console.warn("Rejected watermarked sample", {
+                    userId: user.id,
+                    modelId,
+                    band: verdict.band,
+                    detail: verdict.detail,
+                });
+                return NextResponse.json(
+                    { error: WATERMARK_REJECTION_MESSAGE, code: "watermark_detected" },
+                    { status: 422 }
+                );
+            }
+        } catch (error) {
+            console.warn("Watermark check failed; allowing upload", {
+                modelId,
+                error: error instanceof Error ? error.message : String(error),
+            });
+        }
+
         // Generate unique key for R2
         const sanitized = sanitizeFilename(providedName);
         const unique = `${Date.now()}-${crypto.randomUUID()}`;
         const key = `models/${user.id}/${modelId}/samples/${unique}-${sanitized}`;
 
         // Upload to R2
-        const arrayBuffer = await file.arrayBuffer();
-        const body = Buffer.from(arrayBuffer);
         await putR2Object(key, body, contentType);
 
         // Construct the public URL

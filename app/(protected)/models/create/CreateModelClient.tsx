@@ -72,6 +72,11 @@ const GUIDE_RULES = [
   'Include front-facing + at least one slight side angle',
   'At least one close-up (head + shoulders) and one half-body',
   'No other people in frame',
+  // Stated here as well as enforced at upload, because the fix is a camera
+  // setting on the user's phone and finding that out after picking six photos
+  // is a bad moment. Anything printed into a reference gets copied into every
+  // generated photo as garbled lettering.
+  'No “Shot on…” camera watermark printed on the photo',
 ];
 
 export function CreateModelClient() {
