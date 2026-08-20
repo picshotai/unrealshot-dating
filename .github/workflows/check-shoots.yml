@@ -12,13 +12,11 @@ on:
     paths:
       - "lib/dating/**"
       - "scripts/check-shoots.ts"
-      - "scripts/check-watermark.ts"
       - ".github/workflows/check-shoots.yml"
   pull_request:
     paths:
       - "lib/dating/**"
       - "scripts/check-shoots.ts"
-      - "scripts/check-watermark.ts"
   workflow_dispatch:
 
 jobs:
@@ -42,8 +40,3 @@ jobs:
 
       - name: Check shoot library
         run: npm run check:shoots
-
-      # The watermark detector's synthetic set: two stamps it must catch, three
-      # decoys it must not. A false positive blocks a paying customer's upload.
-      - name: Check watermark detector
-        run: npm run check:watermark

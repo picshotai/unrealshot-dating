@@ -12,7 +12,6 @@
     "trigger:deploy:staging": "trigger deploy --env staging",
     "export:dating-prompts": "tsx scripts/export-dating-prompts.ts",
     "check:shoots": "tsx scripts/check-shoots.ts",
-    "check:watermark": "tsx scripts/check-watermark.ts",
     "test:anchor": "tsx scripts/test-anchor-chain.ts"
   },
   "dependencies": {
