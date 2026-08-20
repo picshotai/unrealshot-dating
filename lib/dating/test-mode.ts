@@ -1,12 +1,17 @@
-import type { DatingBucket } from "./types";
+import { FRAMES_PER_SHOOT } from "./types";
+import { SHOOT_BY_ID, type ShootKind } from "./shoots";
 
 export type DatingTestMode = "mock" | "sample" | "off";
 
 /**
  * Returns the active testing mode for the dating photoshoot pipeline.
  * - 'mock': 100% simulated, $0.00 cost, zero Fal or R2 calls.
- * - 'sample': 1 real Fal photo per bucket (5 total = $0.20), remaining 95 mocked.
- * - 'off': 100 real Fal photos ($4.00 total) for production.
+ * - 'sample': SAMPLE_SHOOTS whole shoots rendered for real, the rest mocked.
+ * - 'off': the full delivery, real.
+ *
+ * Sample mode renders *whole shoots* rather than scattered frames. A shoot's
+ * only real question is whether its four frames hold the same place, clothes
+ * and light together, and one frame of it cannot answer that.
  */
 export function getDatingTestMode(): DatingTestMode {
   const mode = process.env.DATING_TEST_MODE?.toLowerCase().trim();
@@ -16,44 +21,42 @@ export function getDatingTestMode(): DatingTestMode {
 }
 
 /**
- * Whether a slot (1..SLOTS_PER_BUCKET) should be mocked under the active mode.
+ * Fallback for a child dispatched without the orchestrator's decision.
  *
- * Sample mode is decided by the orchestrator, not here: it can see which slots
- * the delivery actually drew and picks a seeded spread across each bucket. This
- * fallback only applies to a child dispatched without that decision, and it
- * keeps GPU spend at zero rather than guessing which slot deserves a real run.
+ * Which shoots a sample run renders is chosen by the orchestrator, which can see
+ * the whole delivery; a child on its own cannot. So an undecided child under any
+ * test mode mocks, which keeps GPU spend at zero rather than guessing.
  */
-export function shouldUseMockForSlot(testMode: DatingTestMode, _slot: number): boolean {
-  if (testMode === "mock") return true;
-  if (testMode === "sample") return true;
-  return false;
+export function shouldUseMock(testMode: DatingTestMode): boolean {
+  return testMode !== "off";
 }
 
-const BUCKET_COLORS: Record<DatingBucket, { bg: string; accent: string; label: string }> = {
-  // Labelled by the job the photo does, matching what the delivery screen shows.
-  // These placeholders are what a sample run puts in front of you, so they
-  // should not be the last place the internal bucket names survive.
-  anchor: { bg: "#1e1b4b", accent: "#818cf8", label: "Your opener" },
-  social: { bg: "#14532d", accent: "#4ade80", label: "Evening out" },
-  travel: { bg: "#78350f", accent: "#fbbf24", label: "Out in the world" },
-  active: { bg: "#831843", accent: "#f472b6", label: "What you do" },
-  street: { bg: "#18181b", accent: "#a1a1aa", label: "On the street" },
+const KIND_COLORS: Record<ShootKind, { bg: string; accent: string }> = {
+  portrait: { bg: "#1e1b4b", accent: "#818cf8" },
+  home: { bg: "#78350f", accent: "#fbbf24" },
+  outdoors: { bg: "#14532d", accent: "#4ade80" },
+  social: { bg: "#831843", accent: "#f472b6" },
+  activity: { bg: "#18181b", accent: "#a1a1aa" },
 };
+
+const FALLBACK = { bg: "#18181b", accent: "#a1a1aa" };
 
 /**
  * Generates an inline SVG data URI representing a styled preview card.
  * Works offline, renders instantly in any <img> tag with zero network latency.
+ *
+ * It names the shoot and the frame's position within it, because that is the
+ * structure a mock run exists to exercise — a grid of "PHOTO #7" placeholders
+ * cannot show whether the shoot grouping works.
  */
 export function getMockPlaceholderImageUrl(
-  bucket: DatingBucket,
-  slot: number,
+  shootId: string,
+  frameIndex: number,
   aspectRatio: string = "3:4"
 ): string {
-  const theme = BUCKET_COLORS[bucket] || {
-    bg: "#18181b",
-    accent: "#a1a1aa",
-    label: bucket,
-  };
+  const shoot = SHOOT_BY_ID.get(shootId);
+  const theme = shoot ? KIND_COLORS[shoot.kind] ?? FALLBACK : FALLBACK;
+  const label = (shoot?.title ?? shootId).toUpperCase();
 
   const isWide = aspectRatio === "4:3";
   const isTall = aspectRatio === "9:16";
@@ -73,25 +76,19 @@ export function getMockPlaceholderImageUrl(
   </defs>
   <rect width="100%" height="100%" fill="url(#grad)" />
   <rect width="100%" height="100%" fill="url(#grid)" />
-  
-  <!-- Border -->
+
   <rect x="12" y="12" width="${width - 24}" height="${height - 24}" rx="16" fill="none" stroke="${theme.accent}" stroke-opacity="0.3" stroke-width="2" stroke-dasharray="8 8" />
-  
-  <!-- Content -->
+
   <g transform="translate(${width / 2}, ${height / 2})" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
-    <!-- Camera Icon Circle -->
     <circle cx="0" cy="-70" r="44" fill="${theme.accent}" fill-opacity="0.15" />
     <circle cx="0" cy="-70" r="32" fill="none" stroke="${theme.accent}" stroke-width="3" />
     <circle cx="0" cy="-70" r="14" fill="${theme.accent}" />
-    
-    <!-- Bucket Badge -->
-    <rect x="-110" y="0" width="220" height="32" rx="16" fill="${theme.accent}" fill-opacity="0.2" stroke="${theme.accent}" stroke-width="1" />
-    <text x="0" y="21" font-size="13" font-weight="700" fill="${theme.accent}" letter-spacing="1.5">${theme.label.toUpperCase()}</text>
-    
-    <!-- Slot Number -->
-    <text x="0" y="75" font-size="28" font-weight="800" fill="#ffffff">PHOTO #${slot}</text>
-    
-    <!-- Test Mode Label -->
+
+    <rect x="-150" y="0" width="300" height="32" rx="16" fill="${theme.accent}" fill-opacity="0.2" stroke="${theme.accent}" stroke-width="1" />
+    <text x="0" y="21" font-size="13" font-weight="700" fill="${theme.accent}" letter-spacing="1.5">${escapeXml(label)}</text>
+
+    <text x="0" y="75" font-size="28" font-weight="800" fill="#ffffff">FRAME ${frameIndex} OF ${FRAMES_PER_SHOOT}</text>
+
     <text x="0" y="110" font-size="14" font-weight="500" fill="rgba(255,255,255,0.6)">[MOCK TEST PREVIEW]</text>
     <text x="0" y="132" font-size="12" fill="rgba(255,255,255,0.4)">Ratio: ${aspectRatio} · Zero GPU Cost</text>
   </g>
@@ -99,4 +96,12 @@ export function getMockPlaceholderImageUrl(
 `.trim();
 
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
+/** Shoot titles are authored prose, and an ampersand in one breaks the SVG. */
+function escapeXml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }

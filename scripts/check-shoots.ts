@@ -19,10 +19,10 @@ import {
   SHOOTS,
   FRAMINGS,
   ANCHOR_FRAMING,
-  FRAMES_PER_SHOOT,
   type Shoot,
   type ShootFrame,
 } from "../lib/dating/shoots";
+import { FRAMES_PER_SHOOT } from "../lib/dating/types";
 import { INTEREST_CHIPS } from "../lib/dating/interests";
 
 let failures = 0;

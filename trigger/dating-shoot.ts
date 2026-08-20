@@ -8,22 +8,20 @@ import {
 import { getServiceDb } from "@/lib/dating/db";
 import {
   makeDeterministicPhotoId,
-  slotToIndex,
+  makePhotoStorageKey,
 } from "@/lib/dating/deterministic-id";
 import {
   getDatingTestMode,
   getMockPlaceholderImageUrl,
-  shouldUseMockForSlot,
+  shouldUseMock,
 } from "@/lib/dating/test-mode";
 import { sendDatingShootReadyNotification } from "@/lib/dating/notifications";
 import {
-  DATING_BUCKETS,
-  MIN_COMPLETE_THRESHOLD,
-  SAMPLE_PHOTOS_PER_BUCKET,
-  SLOTS_PER_BUCKET,
-  type DatingBucket,
+  FRAMES_PER_SHOOT,
+  MIN_COMPLETE_SHOOTS,
+  SAMPLE_SHOOTS,
 } from "@/lib/dating/types";
-import { stableHash } from "@/lib/dating/select-delivery";
+import { stableHash } from "@/lib/dating/select-shoots";
 
 function configureFal() {
   const key = process.env.FAL_KEY;
@@ -33,31 +31,43 @@ function configureFal() {
 
 // ═══════════════════════════════════════════════════════════
 // TASK 1 — CHILD WORKER (single image run)
-// Invoked up to 100 times as parallel runs of THIS definition.
+// One run per frame. Dispatched in two waves by the parent.
 // ═══════════════════════════════════════════════════════════
 
 export type GenerateSingleImagePayload = {
   userId: string;
   batchId: string; // = orderId
   modelId: number;
-  bucket: DatingBucket;
-  index: number; // 0-based slot index, 0..SLOTS_PER_BUCKET-1
+  /** Which authored shoot this frame belongs to. */
+  shootId: string;
+  /** 1-based position within the shoot, 1..FRAMES_PER_SHOOT. */
+  frameIndex: number;
   /**
-   * Set by the orchestrator in sample mode. Sample mode used to key off "slot
-   * 1", which stopped being reliable once a delivery drew 20 of 26 slots and
-   * slot 1 could simply not be selected.
+   * Set by the orchestrator in sample mode. Sample mode renders whole shoots,
+   * so this is decided per shoot rather than per frame.
    */
   useMock?: boolean;
   prompt: string;
   referenceImageUrls: string[];
-  /** Authored output size. Omitted on legacy rows; resolved from the prompt. */
+  /**
+   * The output of this shoot's anchor frame, passed as an extra reference.
+   *
+   * This is what carries the location, the wardrobe and the light direction
+   * across a shoot. Testing showed it holds across roughly seven generations
+   * where a written description of the same scene drifted every time. Absent on
+   * the anchor itself, and on any mocked frame — a placeholder SVG is garbage as
+   * a scene reference.
+   */
+  anchorImageUrl?: string | null;
+  /** Authored output size. */
   imageWidth?: number | null;
   imageHeight?: number | null;
   /**
    * Makes the R2 object path unique for this run. The key is otherwise derived
-   * from (bucket, index), so a regenerated photo overwrote the original object
-   * and every cache in front of it kept serving the old image. Omitted for the
-   * initial delivery, where a stable path is what makes retries idempotent.
+   * from (shootId, frameIndex), so a regenerated photo overwrote the original
+   * object and every cache in front of it kept serving the old image. Omitted
+   * for the initial delivery, where a stable path is what makes retries
+   * idempotent.
    */
   variantKey?: string;
 };
@@ -66,15 +76,16 @@ export type GenerateSingleImageResult = {
   deterministicId: string;
   status: "completed" | "skipped";
   imageUrl?: string;
-  aestheticScore?: number;
+  /** So the parent can confirm anchoring actually reached fal. */
+  anchored?: boolean;
 };
 
 /**
- * Isolated execution unit for one dating photo.
- * - Deterministic ID: {batchId}_{bucket}_{index}
+ * Isolated execution unit for one frame.
+ * - Deterministic ID: {batchId}_{shootId}_{frameIndex}
  * - Retries: 3 attempts, exponential backoff 2s → 15s
  * - Idempotent upsert: never duplicates on retry/crash
- * - Supports DATING_TEST_MODE='mock' ($0.00) and 'sample' ($0.20 for 5 real photos)
+ * - Supports DATING_TEST_MODE='mock' and 'sample'
  */
 export const generateSingleDatingImage = task({
   id: "generate-single-dating-image",
@@ -99,33 +110,34 @@ export const generateSingleDatingImage = task({
       userId,
       batchId,
       modelId,
-      bucket,
-      index,
+      shootId,
+      frameIndex,
       prompt,
       referenceImageUrls,
+      anchorImageUrl,
       imageWidth,
       imageHeight,
     } = payload;
 
-    // Bounds follow the library, not the delivery size. A delivery is 20 photos
-    // per bucket but it draws them from 26 slots, so indexes run to 25 and this
-    // check rejected roughly a quarter of every order while it read
-    // PHOTOS_PER_BUCKET.
-    if (index < 0 || index >= SLOTS_PER_BUCKET) {
-      throw new Error(`Invalid index ${index}; expected 0..${SLOTS_PER_BUCKET - 1}`);
+    if (frameIndex < 1 || frameIndex > FRAMES_PER_SHOOT) {
+      throw new Error(
+        `Invalid frameIndex ${frameIndex}; expected 1..${FRAMES_PER_SHOOT}`
+      );
     }
 
-    const deterministicId = makeDeterministicPhotoId(batchId, bucket, index);
-    const slot = index + 1;
+    const deterministicId = makeDeterministicPhotoId(
+      batchId,
+      shootId,
+      frameIndex
+    );
 
-    // Check test mode (mock / sample / off)
     const testMode = getDatingTestMode();
-    const useMock = payload.useMock ?? shouldUseMockForSlot(testMode, slot);
+    const useMock = payload.useMock ?? shouldUseMock(testMode);
 
     // Fast path: already successfully completed → zero GPU cost
     const { data: existing } = await db
       .from("order_photos")
-      .select("id, status, image_url, aesthetic_score")
+      .select("id, status, image_url, attempt_count")
       .eq("deterministic_id", deterministicId)
       .maybeSingle();
 
@@ -137,7 +149,8 @@ export const generateSingleDatingImage = task({
     if (
       !isRegeneration &&
       existing &&
-      (existing.status === "completed" || existing.status === "pending_verification") &&
+      (existing.status === "completed" ||
+        existing.status === "pending_verification") &&
       existing.image_url
     ) {
       logger.info("Already completed — skip GPU", { deterministicId });
@@ -145,20 +158,25 @@ export const generateSingleDatingImage = task({
         deterministicId,
         status: "skipped",
         imageUrl: existing.image_url,
-        aestheticScore: existing.aesthetic_score ?? undefined,
       };
     }
 
-    // Mark in_progress (upsert by deterministic_id)
+    // The row identity a child writes. shoot_id and frame_index are set at order
+    // time and never change; repeating them here keeps the upsert able to
+    // recreate a row that was deleted underneath it.
+    const identity = {
+      deterministic_id: deterministicId,
+      order_id: batchId,
+      shoot_id: shootId,
+      frame_index: frameIndex,
+      prompt_template: prompt,
+    };
+
     const now = new Date().toISOString();
-    const nextAttempt = ((existing as { attempt_count?: number } | null)?.attempt_count ?? 0) + 1;
+    const nextAttempt = (existing?.attempt_count ?? 0) + 1;
     await db.from("order_photos").upsert(
       {
-        deterministic_id: deterministicId,
-        order_id: batchId,
-        bucket,
-        slot,
-        prompt_template: prompt,
+        ...identity,
         status: "in_progress",
         attempt_count: nextAttempt,
         updated_at: now,
@@ -170,8 +188,8 @@ export const generateSingleDatingImage = task({
     if (useMock) {
       logger.info("Generating mock test photo (zero GPU cost)", {
         testMode,
-        bucket,
-        slot,
+        shootId,
+        frameIndex,
         deterministicId,
       });
 
@@ -179,18 +197,15 @@ export const generateSingleDatingImage = task({
       await new Promise((r) => setTimeout(r, 150 + Math.random() * 200));
 
       const aspectRatio = resolveDatingAspectRatio(prompt);
-      const mockImageUrl = getMockPlaceholderImageUrl(bucket, slot, aspectRatio);
-      // No quality score is written. It used to be a random number, which is
-      // noise presented as a signal — anything ranking on it ranked randomly.
-      const aestheticScore = undefined;
+      const mockImageUrl = getMockPlaceholderImageUrl(
+        shootId,
+        frameIndex,
+        aspectRatio
+      );
 
       const { error: upsertErr } = await db.from("order_photos").upsert(
         {
-          deterministic_id: deterministicId,
-          order_id: batchId,
-          bucket,
-          slot,
-          prompt_template: prompt,
+          ...identity,
           status: "completed",
           image_url: mockImageUrl,
           fal_request_id: `mock_${deterministicId}`,
@@ -209,7 +224,7 @@ export const generateSingleDatingImage = task({
         deterministicId,
         status: "completed",
         imageUrl: mockImageUrl,
-        aestheticScore,
+        anchored: false,
       };
     }
 
@@ -221,16 +236,26 @@ export const generateSingleDatingImage = task({
         throw new Error("No reference image URLs");
       }
 
+      // The anchor goes last. Its job is the scene, and the selfies before it
+      // are what hold the face — an order the model reads as "this person, in
+      // that place" rather than the reverse.
+      const anchored =
+        Boolean(anchorImageUrl) && !anchorImageUrl!.startsWith("data:");
+      const imageUrls = anchored
+        ? [...referenceImageUrls, anchorImageUrl as string]
+        : referenceImageUrls;
+
       const imageSize = resolveDatingImageDimensions(prompt, {
         width: imageWidth,
         height: imageHeight,
       });
+
       const result = await fal.subscribe(
         "fal-ai/bytedance/seedream/v4.5/edit",
         {
           input: {
             prompt,
-            image_urls: referenceImageUrls,
+            image_urls: imageUrls,
             image_size: imageSize,
             num_images: 1,
             enable_safety_checker: true,
@@ -240,9 +265,7 @@ export const generateSingleDatingImage = task({
       );
 
       const requestId =
-        (result as any)?.requestId ||
-        (result as any)?.request_id ||
-        null;
+        (result as any)?.requestId || (result as any)?.request_id || null;
 
       const falImageUrl =
         (result as any)?.data?.images?.[0]?.url ||
@@ -258,29 +281,22 @@ export const generateSingleDatingImage = task({
       }
 
       const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
-      // Deterministic R2 key so retries overwrite the same object path. A
-      // regeneration passes variantKey to break that determinism on purpose —
-      // without it the new photo lands on the old path and the CDN keeps
-      // serving the image the user just paid to replace.
-      const variantSuffix = payload.variantKey ? `_${payload.variantKey}` : "";
-      const key = `dating/${userId}/${batchId}/${bucket}_${index}${variantSuffix}.png`;
+      const key = makePhotoStorageKey(
+        userId,
+        batchId,
+        shootId,
+        frameIndex,
+        payload.variantKey
+      );
       await putR2Object(key, imageBuffer, "image/png");
 
       const r2BaseUrl = process.env.R2_PUBLIC_URL || "";
       const publicUri = `${r2BaseUrl}/${key}`;
 
-      // No quality score is written. It used to be a random number, which is
-      // noise presented as a signal — anything ranking on it ranked randomly.
-      const aestheticScore = undefined;
-
       // Idempotent upsert: insert or overwrite — never duplicate
       const { error: upsertErr } = await db.from("order_photos").upsert(
         {
-          deterministic_id: deterministicId,
-          order_id: batchId,
-          bucket,
-          slot,
-          prompt_template: prompt,
+          ...identity,
           status: "completed",
           image_url: publicUri,
           fal_request_id: requestId,
@@ -302,12 +318,12 @@ export const generateSingleDatingImage = task({
         logger.warn("images insert skipped", { e: String(e) });
       }
 
-      logger.info("Image completed", { deterministicId, aestheticScore });
+      logger.info("Image completed", { deterministicId, anchored });
       return {
         deterministicId,
         status: "completed",
         imageUrl: publicUri,
-        aestheticScore,
+        anchored,
       };
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unknown error";
@@ -315,11 +331,7 @@ export const generateSingleDatingImage = task({
 
       await db.from("order_photos").upsert(
         {
-          deterministic_id: deterministicId,
-          order_id: batchId,
-          bucket,
-          slot,
-          prompt_template: prompt,
+          ...identity,
           status: "failed",
           failed_reason: message,
           updated_at: new Date().toISOString(),
@@ -335,7 +347,7 @@ export const generateSingleDatingImage = task({
 
 // ═══════════════════════════════════════════════════════════
 // TASK 2 — PARENT ORCHESTRATOR
-// Builds 100 child payloads, batchTriggerAndWait, resume-safe.
+// Two waves: anchors, then the frames that reference them.
 // ═══════════════════════════════════════════════════════════
 
 export type PhotoshootOrchestratorPayload = {
@@ -345,14 +357,31 @@ export type PhotoshootOrchestratorPayload = {
   referenceImageUrls: string[];
 };
 
+type PhotoRow = {
+  id: string;
+  shoot_id: string;
+  frame_index: number;
+  is_anchor: boolean;
+  prompt_template: string;
+  image_width: number | null;
+  image_height: number | null;
+  status: string;
+  image_url: string | null;
+  deterministic_id: string | null;
+};
+
 /**
- * Central state controller for a 100-photo dating shoot.
+ * Central state controller for one delivery.
  *
  * Resume moat:
  * - On start (or parent retry after crash), audit Supabase for completed
  *   deterministic IDs and ONLY batch-trigger incomplete children.
  * - batchTriggerAndWait checkpoints the parent while children run
- *   horizontally — parent crash mid-wait recovers by re-auditing DB.
+ *   horizontally — parent crash mid-wait recovers by re-auditing the database.
+ *
+ * Two waves, because a shoot's frames reference their own anchor's output. The
+ * parent releases its concurrency slot at each wait, so waiting twice does not
+ * consume two of the three parent slots.
  */
 export const datingPhotoshootOrchestrator = task({
   id: "dating-photoshoot-orchestrator",
@@ -377,34 +406,13 @@ export const datingPhotoshootOrchestrator = task({
       throw new Error("No reference images");
     }
 
-    // Load pre-allocated photo rows (created at order time with prompts filled)
-    const { data: photoRows, error: photosErr } = await db
-      .from("order_photos")
-      .select(
-        "id, bucket, slot, prompt_template, image_width, image_height, status, image_url, deterministic_id"
-      )
-      .eq("order_id", batchId)
-      .order("bucket", { ascending: true })
-      .order("slot", { ascending: true });
-
-    if (photosErr || !photoRows?.length) {
-      throw new Error(
-        `No order_photos for batch ${batchId}: ${photosErr?.message || "empty"}`
-      );
-    }
-
+    const photoRows = await loadPhotoRows(db, batchId);
     await markOrder(db, batchId, "developing");
 
     // ── RESUME AUDIT ──────────────────────────────────────
-    // Skip children already completed (or pending_verification with URL)
-    const incomplete = photoRows.filter((row) => {
-      const done =
-        (row.status === "completed" || row.status === "pending_verification") &&
-        !!row.image_url;
-      return !done;
-    });
-
+    const incomplete = photoRows.filter((row) => !isDelivered(row));
     const alreadyDone = photoRows.length - incomplete.length;
+
     logger.info("Orchestrator audit", {
       batchId,
       total: photoRows.length,
@@ -412,141 +420,229 @@ export const datingPhotoshootOrchestrator = task({
       toRun: incomplete.length,
     });
 
-    // If everything already done (parent retried after full success)
     if (incomplete.length === 0) {
-      return finalizeBatch(db, userId, batchId, photoRows.length, 0);
+      return finalizeBatch(db, userId, batchId, photoRows);
     }
 
     // Ensure deterministic_id is set on incomplete rows
     for (const row of incomplete) {
-      const index = slotToIndex(row.slot);
-      const detId =
-        row.deterministic_id ||
-        makeDeterministicPhotoId(batchId, row.bucket, index);
-      if (!row.deterministic_id) {
-        await db
-          .from("order_photos")
-          .update({ deterministic_id: detId, updated_at: new Date().toISOString() })
-          .eq("id", row.id);
-      }
+      if (row.deterministic_id) continue;
+      await db
+        .from("order_photos")
+        .update({
+          deterministic_id: makeDeterministicPhotoId(
+            batchId,
+            row.shoot_id,
+            row.frame_index
+          ),
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", row.id);
     }
 
-    // Sample mode renders a handful of real photos per bucket so the library can
-    // be judged without paying for 100 GPU runs.
-    //
-    // It used to take the lowest slot in each bucket. Because a delivery is
-    // deterministic per order, the lowest selected slot is almost always 1 or 2,
-    // so every sample run rendered the same corner of the library — and every
-    // quality judgement made from it was really a judgement of five prompts.
-    // Sampling now walks the whole bucket, seeded by batchId so a given order
-    // still samples reproducibly across retries.
-    const orchestratorTestMode = getDatingTestMode();
-    const realIds = new Set<string>();
-    if (orchestratorTestMode === "sample") {
-      for (const bucket of DATING_BUCKETS) {
-        const rows = incomplete
-          .filter((row) => row.bucket === bucket)
-          .sort(
-            (a, b) =>
-              (stableHash(`${batchId}:sample:${bucket}:${a.slot}`) % 100000) -
-              (stableHash(`${batchId}:sample:${bucket}:${b.slot}`) % 100000)
-          );
-        for (const row of rows.slice(0, SAMPLE_PHOTOS_PER_BUCKET)) {
-          realIds.add(String(row.id));
-        }
-      }
+    // ── SAMPLE MODE: WHOLE SHOOTS, NEVER LOOSE FRAMES ─────
+    // A shoot's only real question is whether its four frames hold together.
+    // Sampling scattered frames cannot answer it, and the old sampler answered a
+    // different question badly — it took the lowest slot in each bucket, so
+    // every sample run rendered the same corner of the library.
+    const testMode = getDatingTestMode();
+    const shootIds = [...new Set(photoRows.map((row) => row.shoot_id))];
+    const realShoots = new Set<string>();
+
+    if (testMode === "sample") {
+      const ordered = [...shootIds].sort(
+        (a, b) =>
+          (stableHash(`${batchId}:sample:${a}`) % 100000) -
+          (stableHash(`${batchId}:sample:${b}`) % 100000)
+      );
+      for (const id of ordered.slice(0, SAMPLE_SHOOTS)) realShoots.add(id);
       logger.info("Sample mode", {
-        realPhotos: realIds.size,
-        perBucket: SAMPLE_PHOTOS_PER_BUCKET,
+        realShoots: [...realShoots],
+        frames: realShoots.size * FRAMES_PER_SHOOT,
       });
     }
 
-    // Build child payloads — only incomplete
-    const childPayloads = incomplete.map((row) => {
-      const index = slotToIndex(row.slot);
-      const detId = makeDeterministicPhotoId(batchId, row.bucket, index);
-      return {
-        payload: {
-          userId,
-          batchId,
-          modelId,
-          bucket: row.bucket as DatingBucket,
-          index,
-          prompt: row.prompt_template,
-          referenceImageUrls,
-          imageWidth: row.image_width,
-          imageHeight: row.image_height,
-          useMock:
-            orchestratorTestMode === "mock"
-              ? true
-              : orchestratorTestMode === "sample"
-                ? !realIds.has(String(row.id))
-                : false,
-        } satisfies GenerateSingleImagePayload,
-        options: {
-          // Same key → Trigger.dev will not spawn a second successful run
-          idempotencyKey: detId,
-        },
-      };
-    });
+    const isMocked = (row: PhotoRow) => {
+      if (testMode === "mock") return true;
+      if (testMode === "sample") return !realShoots.has(row.shoot_id);
+      return false;
+    };
 
-    // ── BATCH FAN-OUT ─────────────────────────────────────
-    // Parent checkpoints here; children run across the grid.
-    // On parent eviction, retry re-enters from audit above.
-    logger.info("batchTriggerAndWait", {
+    const toPayload = (
+      row: PhotoRow,
+      anchorImageUrl?: string | null
+    ): GenerateSingleImagePayload => ({
+      userId,
       batchId,
-      count: childPayloads.length,
-      buckets: DATING_BUCKETS,
+      modelId,
+      shootId: row.shoot_id,
+      frameIndex: row.frame_index,
+      prompt: row.prompt_template,
+      referenceImageUrls,
+      anchorImageUrl: anchorImageUrl ?? null,
+      imageWidth: row.image_width,
+      imageHeight: row.image_height,
+      useMock: isMocked(row),
     });
 
-    const batchResult = await generateSingleDatingImage.batchTriggerAndWait(
-      childPayloads
-    );
+    const keyFor = (row: PhotoRow) =>
+      row.deterministic_id ??
+      makeDeterministicPhotoId(batchId, row.shoot_id, row.frame_index);
 
-    // Inspect child outcomes
-    const runs = batchResult.runs ?? [];
-    let successCount = 0;
-    let failCount = 0;
+    // ── WAVE 1: ANCHORS ───────────────────────────────────
+    const anchorsToRun = incomplete.filter((row) => row.is_anchor);
 
-    for (const run of runs) {
-      if (run.ok) {
-        successCount += 1;
-      } else {
-        failCount += 1;
-        logger.warn("Child run failed after retries", {
-          id: (run as any).id,
-          error: (run as any).error,
-        });
-      }
+    if (anchorsToRun.length > 0) {
+      logger.info("wave 1 — anchors", { batchId, count: anchorsToRun.length });
+
+      await generateSingleDatingImage.batchTriggerAndWait(
+        anchorsToRun.map((row) => ({
+          payload: toPayload(row),
+          options: {
+            // Same key → Trigger.dev will not spawn a second successful run.
+            idempotencyKey: `${keyFor(row)}:anchor`,
+          },
+        }))
+      );
     }
 
-    // Re-count from DB (source of truth — not just this batch's return)
-    const { count: completedCount } = await db
-      .from("order_photos")
-      .select("*", { count: "exact", head: true })
-      .eq("order_id", batchId)
-      .in("status", ["completed", "pending_verification"]);
+    // ── ANCHOR STATE, RE-READ FROM THE DATABASE ───────────
+    // Not from batchResult.runs[].output: that is lost if the parent crashes
+    // between waves, and this orchestrator's whole resume design rests on
+    // auditing Supabase rather than trusting in-memory state.
+    const afterWaveOne = await loadPhotoRows(db, batchId);
+    const anchorByShoot = new Map<string, PhotoRow>();
+    for (const row of afterWaveOne) {
+      if (row.is_anchor) anchorByShoot.set(row.shoot_id, row);
+    }
 
-    const completed = completedCount ?? alreadyDone + successCount;
-    const { count: failedCount } = await db
-      .from("order_photos")
-      .select("*", { count: "exact", head: true })
-      .eq("order_id", batchId)
-      .eq("status", "failed");
+    // ── WAVE 2: THE FRAMES THAT REFERENCE THEM ────────────
+    const followers = afterWaveOne.filter(
+      (row) => !row.is_anchor && !isDelivered(row)
+    );
 
-    const failed = failedCount ?? failCount;
+    const dispatchable: { row: PhotoRow; anchor: PhotoRow | null }[] = [];
+    const orphaned: PhotoRow[] = [];
 
-    logger.info("Batch resolved", {
-      batchId,
-      completed,
-      failed,
-      childSuccess: successCount,
-      childFail: failCount,
-    });
+    for (const row of followers) {
+      const anchor = anchorByShoot.get(row.shoot_id) ?? null;
 
-    return finalizeBatch(db, userId, batchId, completed, failed);
+      // A mocked frame never anchors — feeding a placeholder SVG to fal as a
+      // scene reference is garbage in — so it does not wait on one either.
+      if (isMocked(row)) {
+        dispatchable.push({ row, anchor: null });
+        continue;
+      }
+
+      if (!anchor || !isDelivered(anchor)) {
+        // Deliberately NOT dispatched un-anchored. The child's fast path treats
+        // a completed row as final, so a frame written once without its anchor
+        // is frozen that way and no later run will upgrade it. Leaving it
+        // undelivered is recoverable; delivering it wrong is not.
+        orphaned.push(row);
+        continue;
+      }
+
+      dispatchable.push({ row, anchor });
+    }
+
+    if (orphaned.length > 0) {
+      logger.warn("Anchor missing — followers held back", {
+        batchId,
+        count: orphaned.length,
+        shoots: [...new Set(orphaned.map((row) => row.shoot_id))],
+      });
+    }
+
+    if (dispatchable.length > 0) {
+      // Record which frame each follower was anchored on, before dispatch.
+      // Stored rather than recomputed so a reshoot reuses the same anchor, and
+      // so reshooting an anchor cannot silently invalidate its siblings.
+      await Promise.all(
+        dispatchable
+          .filter((item) => item.anchor)
+          .map((item) =>
+            db
+              .from("order_photos")
+              .update({
+                anchor_photo_id: item.anchor!.id,
+                updated_at: new Date().toISOString(),
+              })
+              .eq("id", item.row.id)
+          )
+      );
+
+      logger.info("wave 2 — followers", {
+        batchId,
+        count: dispatchable.length,
+        anchored: dispatchable.filter((item) => item.anchor).length,
+      });
+
+      await generateSingleDatingImage.batchTriggerAndWait(
+        dispatchable.map(({ row, anchor }) => ({
+          payload: toPayload(row, anchor?.image_url ?? null),
+          options: {
+            // On this SDK a raw-string idempotency key is run-scoped, and
+            // re-dispatching a key already used in this run returns the original
+            // result — including if it failed. The suffix keeps the two waves
+            // from ever colliding.
+            idempotencyKey: `${keyFor(row)}:follower`,
+          },
+        }))
+      );
+    }
+
+    // A held-back follower is marked failed rather than left pending, so the
+    // delivery screen stops waiting on it. resumeDatingShootOrder resets failed
+    // rows to pending, so a retry re-anchors them properly.
+    if (orphaned.length > 0) {
+      await db
+        .from("order_photos")
+        .update({
+          status: "failed",
+          failed_reason: "Anchor frame for this shoot did not complete",
+          updated_at: new Date().toISOString(),
+        })
+        .in(
+          "id",
+          orphaned.map((row) => row.id)
+        );
+    }
+
+    const finalRows = await loadPhotoRows(db, batchId);
+    return finalizeBatch(db, userId, batchId, finalRows);
   },
 });
+
+/** A row a user can actually see. Written once here, read everywhere. */
+function isDelivered(row: PhotoRow): boolean {
+  return (
+    (row.status === "completed" || row.status === "pending_verification") &&
+    !!row.image_url
+  );
+}
+
+async function loadPhotoRows(
+  db: ReturnType<typeof getServiceDb>,
+  batchId: string
+): Promise<PhotoRow[]> {
+  const { data, error } = await db
+    .from("order_photos")
+    .select(
+      "id, shoot_id, frame_index, is_anchor, prompt_template, image_width, image_height, status, image_url, deterministic_id"
+    )
+    .eq("order_id", batchId)
+    .order("shoot_id", { ascending: true })
+    .order("frame_index", { ascending: true });
+
+  if (error || !data?.length) {
+    throw new Error(
+      `No order_photos for batch ${batchId}: ${error?.message || "empty"}`
+    );
+  }
+
+  return data as unknown as PhotoRow[];
+}
 
 async function markOrder(
   db: ReturnType<typeof getServiceDb>,
@@ -559,15 +655,47 @@ async function markOrder(
     .eq("id", batchId);
 }
 
+/**
+ * Whether the delivery is good enough to hand over, counted in whole shoots.
+ *
+ * The old threshold was a flat photo count of 85, which at 60 photos is
+ * unreachable — completed < 85 was true of every possible delivery, so one
+ * failure anywhere sent the order to failed_components_present. Whole shoots is
+ * also the more honest measure: 55 photos as 11 broken shoots is a worse
+ * delivery than 50 photos as 12 complete ones.
+ */
+function countWholeShoots(rows: PhotoRow[]): number {
+  const byShoot = new Map<string, number>();
+  for (const row of rows) {
+    if (!isDelivered(row)) continue;
+    byShoot.set(row.shoot_id, (byShoot.get(row.shoot_id) ?? 0) + 1);
+  }
+  let whole = 0;
+  for (const count of byShoot.values()) {
+    if (count >= FRAMES_PER_SHOOT) whole += 1;
+  }
+  return whole;
+}
+
 async function finalizeBatch(
   db: ReturnType<typeof getServiceDb>,
   userId: string,
   batchId: string,
-  completed: number,
-  failed: number
+  rows: PhotoRow[]
 ) {
+  const completed = rows.filter(isDelivered).length;
+  const undelivered = rows.length - completed;
+  const wholeShoots = countWholeShoots(rows);
+
+  logger.info("Batch resolved", {
+    batchId,
+    completed,
+    undelivered,
+    wholeShoots,
+  });
+
   // Defect routing
-  if (failed > 0 && completed < MIN_COMPLETE_THRESHOLD) {
+  if (undelivered > 0 && wholeShoots < MIN_COMPLETE_SHOOTS) {
     await db
       .from("user_shoot_orders")
       .update({
@@ -576,15 +704,22 @@ async function finalizeBatch(
       })
       .eq("id", batchId);
 
-    logger.error("failed_components_present", { batchId, completed, failed });
-    // Surface to Trigger.dev dashboard; parent can be retried after fixing failed rows
+    logger.error("failed_components_present", {
+      batchId,
+      completed,
+      undelivered,
+      wholeShoots,
+    });
+    // Surface to the Trigger.dev dashboard; the parent retries from the audit,
+    // which re-dispatches only what is still missing.
     throw new Error(
-      `Batch ${batchId}: ${failed} components failed, only ${completed} completed`
+      `Batch ${batchId}: only ${wholeShoots} whole shoots completed ` +
+        `(${completed}/${rows.length} frames); need ${MIN_COMPLETE_SHOOTS}`
     );
   }
 
-  if (failed > 0) {
-    // Enough photos delivered; mark partial but usable
+  if (undelivered > 0) {
+    // Enough shoots delivered; mark partial but usable
     await db
       .from("user_shoot_orders")
       .update({
@@ -597,10 +732,10 @@ async function finalizeBatch(
     logger.warn("partial_failed but above threshold", {
       batchId,
       completed,
-      failed,
+      undelivered,
+      wholeShoots,
     });
 
-    // Send ready notification asynchronously
     try {
       await sendDatingShootReadyNotification(userId, batchId);
     } catch (e) {
@@ -611,7 +746,8 @@ async function finalizeBatch(
       batchId,
       status: "partial_failed" as const,
       completed,
-      failed,
+      failed: undelivered,
+      wholeShoots,
     };
   }
 
@@ -627,7 +763,6 @@ async function finalizeBatch(
 
   logger.info("Batch complete — ready for delivery", { batchId, completed });
 
-  // Send ready notification asynchronously
   try {
     await sendDatingShootReadyNotification(userId, batchId);
   } catch (e) {
@@ -639,6 +774,7 @@ async function finalizeBatch(
     status: "ready" as const,
     completed,
     failed: 0,
+    wholeShoots,
   };
 }
 

@@ -1,4 +1,4 @@
-import type { InterestId } from "./types";
+import { FRAMES_PER_SHOOT, type ExcludableTag, type InterestId, type StylePref } from "./types";
 
 /**
  * The shoot library.
@@ -55,8 +55,16 @@ export type Shoot = {
   /** Shown to the user, and used for the ZIP folder name. */
   title: string;
   kind: ShootKind;
+  /** Which wardrobe register this shoot's outfit sits in, for the lead question. */
+  register: StylePref;
   /** Interests this shoot genuinely serves, so a chip selects real scenes. */
   interests?: readonly InterestId[];
+  /**
+   * Content a user can exclude. Authored, never inferred — a shoot carrying a
+   * tag is dropped whole, because the outfit and location are fixed and there is
+   * no variant to fall back to.
+   */
+  tags?: readonly ExcludableTag[];
   frames: readonly ShootFrame[];
 };
 
@@ -73,6 +81,7 @@ export const SHOOTS: readonly Shoot[] = [
     id: "kitchen-window-morning",
     title: "Kitchen, morning",
     kind: "home",
+    register: "sharp",
     interests: ["coffee", "cooking"],
     frames: [
       {
@@ -111,6 +120,7 @@ export const SHOOTS: readonly Shoot[] = [
     id: "hotel-forecourt-evening",
     title: "Hotel forecourt, evening",
     kind: "social",
+    register: "sharp",
     interests: ["nightlife", "dining", "travel"],
     frames: [
       {
@@ -149,6 +159,7 @@ export const SHOOTS: readonly Shoot[] = [
     id: "marina-pontoon-overcast",
     title: "Marina, midday",
     kind: "outdoors",
+    register: "casual",
     interests: ["sailing", "travel"],
     frames: [
       {
@@ -179,12 +190,6 @@ export const SHOOTS: readonly Shoot[] = [
   },
 ];
 
-/** How many frames a shoot contains. One of each framing, never two the same. */
-export const FRAMES_PER_SHOOT = FRAMINGS.length;
-
-/** How many shoots one delivery draws. */
-export const SHOOTS_PER_DELIVERY = 15;
-
 export function getShoot(id: string): Shoot | undefined {
   return SHOOTS.find((shoot) => shoot.id === id);
 }
@@ -193,4 +198,22 @@ export function anchorFrameOf(shoot: Shoot): ShootFrame {
   const anchor = shoot.frames.find((frame) => frame.framing === ANCHOR_FRAMING);
   if (!anchor) throw new Error(`Shoot ${shoot.id} has no ${ANCHOR_FRAMING} frame`);
   return anchor;
+}
+
+/** Lookup by id, for the many places that hold only a stored `shoot_id`. */
+export const SHOOT_BY_ID: ReadonlyMap<string, Shoot> = new Map(
+  SHOOTS.map((shoot) => [shoot.id, shoot])
+);
+
+/** The 1-based position of a framing within a shoot, matching `frame_index`. */
+export function frameAt(shoot: Shoot, frameIndex: number): ShootFrame | undefined {
+  return shoot.frames[frameIndex - 1];
+}
+
+/**
+ * The title to show for a stored row whose shoot has since been retired from the
+ * library. A delivered order keeps its photos, so this must never throw.
+ */
+export function shootTitle(shootId: string): string {
+  return SHOOT_BY_ID.get(shootId)?.title ?? shootId;
 }

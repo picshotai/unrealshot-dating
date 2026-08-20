@@ -1,17 +1,14 @@
 import { createAdminClient } from "@/utils/supabase/admin";
-import { compileDatingPrompt } from "./prompt-params";
-import { assertLibraryComplete, getPromptVariants } from "./prompt-library";
-import { makeDeterministicPhotoId, slotToIndex } from "./deterministic-id";
+import { makeDeterministicPhotoId } from "./deterministic-id";
 import {
-  assertDeliveryUnique,
-  planDelivery,
-  type DeliveryBias,
-} from "./select-delivery";
+  assertDeliveryShape,
+  planShootDelivery,
+} from "./select-shoots";
+import type { DeliveryBias } from "./interests";
 import {
   deriveBias,
   dominantStyle,
   dominantVibe,
-  resolveHobbies,
   resolveHobbyText,
   type InterestId,
 } from "./interests";
@@ -84,7 +81,6 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
 
   const vibe = dominantVibe(bias);
   const style = dominantStyle(bias);
-  const hobbies = resolveHobbies(interests, hobbyText);
   const hobby = resolveHobbyText(interests, hobbyText);
 
   const { data: model, error: modelErr } = await db
@@ -159,10 +155,6 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
       throw new Error(`Failed to save preferences: ${prefsErr.message}`);
     }
 
-    // Code is the prompt source of truth. Each order snapshots the exact compiled
-    // prompt into order_photos, so later library updates cannot change retries.
-    assertLibraryComplete();
-
     // Create batch / order
     const { data: order, error: orderErr } = await db
       .from("user_shoot_orders")
@@ -183,46 +175,34 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
 
     const batchId = order.id as string;
 
-    // Plan all 100 photos together rather than looping buckets with one locked
-    // vibe and style. Each photo gets its own vibe, style and variant, which is
-    // what lets a single delivery reach ~95% of the library's locations instead
-    // of 33%. Seeded from batchId, so retries and paid regenerations are stable.
-    const plan = planDelivery(batchId, bias, { excludeTags, hobbies, interests });
-    assertDeliveryUnique(plan);
-
-    const finalRows = plan.map((entry) => {
-      const prompt = getPromptVariants(entry.bucket, entry.slot).find(
-        (candidate) => candidate.variant === entry.variant
-      );
-      if (!prompt) {
-        throw new Error(
-          `Planned ${entry.bucket}:${entry.slot} variant ${entry.variant} is missing`
-        );
-      }
-      const filled = compileDatingPrompt(prompt, {
-        vibe: entry.vibe,
-        style: entry.style,
-        // The per-photo interest that planDelivery dealt to this slot, not the
-        // joined list. Passing the joined string made all ten hobby photos read
-        // "gym, coffee, travel" and left MAX_PHOTOS_PER_HOBBY with nothing to
-        // cap — a man who tapped four things got one repeated activity.
-        hobby: entry.hobby ?? null,
-      });
-      const index = slotToIndex(entry.slot);
-
-      return {
-        order_id: batchId,
-        bucket: entry.bucket,
-        slot: entry.slot,
-        prompt_template: filled,
-        // Snapshot the authored size so the shot renders at the resolution it
-        // was written for, and stays stable across retries and regenerations.
-        image_width: prompt.imageSize?.width ?? null,
-        image_height: prompt.imageSize?.height ?? null,
-        status: "pending" as const,
-        deterministic_id: makeDeterministicPhotoId(batchId, entry.bucket, index),
-      };
+    // Pick which authored shoots this delivery contains. Nothing is composed:
+    // a shoot already fixes its location, outfit and light, so preferences only
+    // decide which ones he receives. Seeded from batchId, so retries and paid
+    // reshoots are stable.
+    const plan = planShootDelivery(batchId, {
+      interests,
+      excludeTags,
+      dress: dress ?? input.style ?? "casual",
     });
+    assertDeliveryShape(plan);
+
+    const finalRows = plan.map((frame) => ({
+      order_id: batchId,
+      shoot_id: frame.shootId,
+      frame_index: frame.frameIndex,
+      is_anchor: frame.isAnchor,
+      // The authored string, stored verbatim. There is nothing left to compile,
+      // and snapshotting it means a later library edit cannot change a retry.
+      prompt_template: frame.prompt,
+      image_width: frame.imageSize.width,
+      image_height: frame.imageSize.height,
+      status: "pending" as const,
+      deterministic_id: makeDeterministicPhotoId(
+        batchId,
+        frame.shootId,
+        frame.frameIndex
+      ),
+    }));
 
     if (finalRows.length !== TOTAL_PHOTOS) {
       await db.from("user_shoot_orders").delete().eq("id", batchId);

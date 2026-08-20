@@ -1,0 +1,42 @@
+name: Check shoot library
+
+# The shoot library's invariants — four frames, one of each framing, exactly one
+# anchor, no substitution tokens, the outfit repeated verbatim — used to be
+# enforced by assertLibraryComplete() inside createDatingShootOrder: that is, at
+# checkout, after a customer's credits had been spent. This moves that failure to
+# CI, along with the prompt-craft rules the test shoots produced.
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "lib/dating/**"
+      - "scripts/check-shoots.ts"
+      - ".github/workflows/check-shoots.yml"
+  pull_request:
+    paths:
+      - "lib/dating/**"
+      - "scripts/check-shoots.ts"
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Check every authored prompt
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install --no-audit
+
+      - name: Check shoot library
+        run: npm run check:dating

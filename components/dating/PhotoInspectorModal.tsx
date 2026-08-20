@@ -15,8 +15,8 @@ import {
   LINEUP_HINTS,
   lineupRoleFor,
   type LineupRole,
-} from '@/lib/dating/lineup';
-import type { DatingBucket } from '@/lib/dating/types';
+} from '@/lib/dating/roles';
+import { FRAMES_PER_SHOOT } from '@/lib/dating/types';
 import {
   ImageGeneration,
   type ImageGenerationStatus,
@@ -24,8 +24,14 @@ import {
 
 export interface PhotoItem {
   id: string;
-  slot: number;
-  bucket: DatingBucket;
+  /** Which authored shoot this frame belongs to. */
+  shootId: string;
+  /** The shoot's user-facing name, e.g. "Kitchen, morning". */
+  shootTitle: string;
+  /** 1-based position within the shoot. */
+  frameIndex: number;
+  /** The frame the other three were generated against. */
+  isAnchor?: boolean;
   /** Null while the photo is queued, generating or being reshot. */
   imageUrl: string | null;
   status?: ImageGenerationStatus;
@@ -34,6 +40,17 @@ export interface PhotoItem {
   role?: LineupRole;
   roleLabel?: string;
   roleHint?: string;
+}
+
+/** Shoot titles are prose ("Kitchen, morning"); filenames are not. */
+export function slugify(value: string): string {
+  return (
+    value
+      .normalize('NFKD')
+      .replace(/[^a-zA-Z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .toLowerCase() || 'shoot'
+  );
 }
 
 interface PhotoInspectorModalProps {
@@ -101,7 +118,9 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
 
   if (!isOpen || !photo) return null;
 
-  const role = photo.role || lineupRoleFor(photo);
+  const role =
+    photo.role ||
+    lineupRoleFor({ shootId: photo.shootId, frameIndex: photo.frameIndex });
   const roleLabel = LINEUP_LABELS[role] || 'Dating Photo';
   const roleHint = LINEUP_HINTS[role] || 'High-converting dating profile photo.';
   const colorClass = ROLE_COLORS[role] || 'bg-zinc-800 text-zinc-300 border-zinc-700';
@@ -154,7 +173,7 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
             {isReady ? (
               <img
                 src={imageUrl ?? undefined}
-                alt={`${roleLabel} - Photo #${photo.slot}`}
+                alt={`${photo.shootTitle} — frame ${photo.frameIndex}`}
                 className="w-full h-full object-contain select-none max-w-full max-h-full"
               />
             ) : (
@@ -222,8 +241,11 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
 
             <div>
               <h3 className="text-xl font-medium text-white tracking-tight">
-                Photo #{photo.slot}
+                {photo.shootTitle}
               </h3>
+              <p className="text-[11px] font-mono text-zinc-500 mt-1">
+                Frame {photo.frameIndex} of {FRAMES_PER_SHOOT}
+              </p>
               <p className="text-xs text-zinc-500 font-sans mt-2 leading-relaxed">
                 {roleHint}
               </p>
@@ -235,7 +257,7 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
             {/* Download Button — nothing to download until the frame lands */}
             <a
               href={imageUrl ?? undefined}
-              download={`dating-photo-${role}-${photo.slot}.${isMock ? 'svg' : 'png'}`}
+              download={`${slugify(photo.shootTitle)}-${photo.frameIndex}.${isMock ? 'svg' : 'png'}`}
               target="_blank"
               rel="noreferrer"
               className={`w-full block ${isReady ? '' : 'pointer-events-none opacity-40'}`}

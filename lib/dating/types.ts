@@ -1,29 +1,3 @@
-export const DATING_BUCKETS = [
-  "anchor",
-  "social",
-  "travel",
-  "active",
-  "street",
-] as const;
-
-export type DatingBucket = (typeof DATING_BUCKETS)[number];
-
-export const BUCKET_LABELS: Record<DatingBucket, string> = {
-  anchor: "The Anchor Portrait",
-  social: "The Social Candid",
-  travel: "The Travel Lifestyle",
-  active: "The Active Vitality",
-  street: "The Casual Streetwear",
-};
-
-export const BUCKET_DESCRIPTIONS: Record<DatingBucket, string> = {
-  anchor: "Trust + facial clarity — your primary profile photo",
-  social: "Extraversion + social proof — mid-shot café energy",
-  travel: "Value + worldliness — golden hour lifestyle",
-  active: "Fitness + momentum — no gym-mirror ego",
-  street: "Authenticity — organic city candid",
-};
-
 export type Vibe = "urban" | "outdoorsy" | "homebody";
 export type StylePref = "casual" | "sharp" | "street";
 
@@ -32,41 +6,47 @@ export type OrderStatus =
   | "developing"
   | "ready"
   | "partial_failed"
-  | "failed";
+  | "failed"
+  // Thrown by finalizeBatch since the pipeline was written, but missing from
+  // this union until now, so anything narrowing on status silently missed it.
+  | "failed_components_present";
 
 export type PhotoStatus = "pending" | "in_progress" | "completed" | "failed";
 
 /**
- * The library holds more slots than a delivery uses. The surplus is what lets
- * an exclusion ("no dog photos", "no alcohol") drop a slot and refill from an
- * unused one, so the delivery keeps 100 photos in 100 different locations
- * instead of repeating a place or quietly shrinking.
+ * A delivery is SHOOTS_PER_DELIVERY shoots of FRAMES_PER_SHOOT frames.
+ *
+ * Four frames, not five: five forced two mediums into every shoot, and frames
+ * competing at the same distance are where the model rendered one as another.
+ * TOTAL_PHOTOS is derived so the three numbers cannot drift apart.
  */
-export const SLOTS_PER_BUCKET = 26;
-export const PHOTOS_PER_BUCKET = 20;
-export const TOTAL_PHOTOS = 100;
+export const FRAMES_PER_SHOOT = 4;
+export const SHOOTS_PER_DELIVERY = Number(
+  // Overridable so the pipeline can be exercised end to end against a partial
+  // library. The authored target is 15; anything lower is a development setting.
+  process.env.DATING_SHOOTS_PER_DELIVERY ?? 15
+);
+export const TOTAL_PHOTOS = SHOOTS_PER_DELIVERY * FRAMES_PER_SHOOT;
+
 /**
- * What one shoot costs the user. A shoot commits ~100 GPU generations, so this
- * is the number that stops the pipeline being free. Override per environment
- * with DATING_SHOOT_CREDIT_COST when pricing changes, without a code change.
+ * What one delivery costs the user. Override per environment with
+ * DATING_SHOOT_CREDIT_COST when pricing changes, without a code change.
  */
 export const SHOOT_CREDIT_COST = Number(
-  process.env.DATING_SHOOT_CREDIT_COST ?? 100
+  process.env.DATING_SHOOT_CREDIT_COST ?? 60
 );
 
 /** Free regenerations included with a delivered shoot. */
 export const CUSTOM_CREDITS_DEFAULT = 30;
 
 /**
- * Real photos per bucket in sample mode — 4 × 5 buckets = 20 per run.
+ * Whole shoots rendered for real in sample mode.
  *
- * One per bucket was too few to judge anything: wardrobe range and scene
- * variety are properties of the spread, not of five images. Override with
- * DATING_SAMPLE_PER_BUCKET when a cheaper or wider run is wanted.
+ * Sampling individual frames cannot answer the only question worth asking of
+ * this library — whether a shoot holds together across its frames. So a sample
+ * run renders complete shoots and mocks the rest.
  */
-export const SAMPLE_PHOTOS_PER_BUCKET = Number(
-  process.env.DATING_SAMPLE_PER_BUCKET ?? 4
-);
+export const SAMPLE_SHOOTS = Number(process.env.DATING_SAMPLE_SHOOTS ?? 2);
 
 /**
  * How many shoots the balance can pay for.
@@ -121,7 +101,12 @@ export const INTEREST_IDS = [
   "boxing",
 ] as const;
 export type InterestId = (typeof INTEREST_IDS)[number];
-export const MIN_COMPLETE_THRESHOLD = 85;
-export const FAL_BATCH_SIZE = 5;
-export const FAL_BATCH_GAP_MS = 3000;
-export const MAX_PHOTO_ATTEMPTS = 3;
+/**
+ * How many whole shoots must survive for a delivery to count as delivered.
+ *
+ * The old threshold was a flat photo count, which at 60 photos was unreachable —
+ * `completed < 85` was true of every possible delivery, so a single failure sent
+ * the order to failed_components_present. Counting shoots is also the more
+ * honest measure: 11 broken shoots is a worse set than 12 whole ones.
+ */
+export const MIN_COMPLETE_SHOOTS = 10;

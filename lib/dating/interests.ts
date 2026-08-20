@@ -1,5 +1,15 @@
-import type { DeliveryBias } from "./select-delivery";
 import type { ExcludableTag, InterestId, StylePref, Vibe } from "./types";
+
+/**
+ * Kept only to satisfy user_preferences.vibe / .style, which are NOT NULL with
+ * check constraints. Nothing in selection reads a weighting any more: a shoot is
+ * coherent when it is authored, so preferences pick whole shoots instead of
+ * tuning the parts of one.
+ */
+export type DeliveryBias = {
+  vibe: Record<Vibe, number>;
+  style: Record<StylePref, number>;
+};
 
 /**
  * The two questions the shoot screen asks.

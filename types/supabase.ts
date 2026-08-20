@@ -517,8 +517,10 @@ export interface Database {
         Row: {
           id: string
           order_id: string
-          bucket: string
-          slot: number
+          shoot_id: string
+          frame_index: number
+          is_anchor: boolean
+          anchor_photo_id: string | null
           prompt_template: string
           image_width: number | null
           image_height: number | null
@@ -536,8 +538,10 @@ export interface Database {
         Insert: {
           id?: string
           order_id: string
-          bucket: string
-          slot: number
+          shoot_id: string
+          frame_index: number
+          is_anchor?: boolean
+          anchor_photo_id?: string | null
           prompt_template: string
           image_width?: number | null
           image_height?: number | null
@@ -555,8 +559,10 @@ export interface Database {
         Update: {
           id?: string
           order_id?: string
-          bucket?: string
-          slot?: number
+          shoot_id?: string
+          frame_index?: number
+          is_anchor?: boolean
+          anchor_photo_id?: string | null
           prompt_template?: string
           image_width?: number | null
           image_height?: number | null

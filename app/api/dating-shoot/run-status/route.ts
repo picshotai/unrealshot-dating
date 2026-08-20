@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
-import { DATING_BUCKETS } from "@/lib/dating/types";
+import { SHOOT_BY_ID } from "@/lib/dating/shoots";
+import { lineupRoleFor, LINEUP_LABELS } from "@/lib/dating/roles";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -56,10 +57,12 @@ export async function GET(request: NextRequest) {
 
   const { data: photos } = await supabase
     .from("order_photos")
-    .select("id, bucket, slot, status, image_url, image_width, image_height")
+    .select(
+      "id, shoot_id, frame_index, is_anchor, status, image_url, image_width, image_height"
+    )
     .eq("order_id", orderId)
-    .order("bucket")
-    .order("slot");
+    .order("shoot_id")
+    .order("frame_index");
 
   const all = photos || [];
   const counts = {
@@ -70,39 +73,57 @@ export async function GET(request: NextRequest) {
     total: all.length,
   };
 
-  const byBucket = Object.fromEntries(
-    DATING_BUCKETS.map((bucket) => {
-      const bucketPhotos = all.filter((p) => p.bucket === bucket);
-      return [
-        bucket,
-        {
-          completed: bucketPhotos.filter((p) => p.status === "completed").length,
-          total: bucketPhotos.length,
-          // Every photo is returned, not just finished ones.
-          //
-          // This used to filter to `completed && image_url`, which meant a photo
-          // being reshot disappeared from the grid and reappeared a minute later
-          // — indistinguishable from a photo that never existed. The client needs
-          // the in-flight rows to hold their place and show progress.
-          photos: bucketPhotos.map((p) => ({
-            id: p.id,
-            slot: p.slot,
-            imageUrl: p.status === "completed" ? p.image_url : null,
-            status: toGenerationStatus(p.status),
-            // the client groups the delivery by lineup role, and a 9:16 frame
-            // is what identifies the full-length shots
-            imageWidth: p.image_width,
-            imageHeight: p.image_height,
-          })),
-        },
-      ];
-    })
-  );
+  // Grouped by shoot, because that is what the delivery *is*: this place, these
+  // clothes, this light, four ways. The old response grouped by bucket, which
+  // was internal architecture leaking into the client — and the buckets no
+  // longer exist.
+  const byShoot = new Map<string, typeof all>();
+  for (const photo of all) {
+    const list = byShoot.get(photo.shoot_id) ?? [];
+    list.push(photo);
+    byShoot.set(photo.shoot_id, list);
+  }
+
+  const shoots = [...byShoot.entries()].map(([shootId, rows]) => {
+    const shoot = SHOOT_BY_ID.get(shootId);
+    return {
+      shootId,
+      // A delivered order keeps its photos even if the shoot later leaves the
+      // library, so the id is the fallback rather than an error.
+      title: shoot?.title ?? shootId,
+      kind: shoot?.kind ?? null,
+      completed: rows.filter((p) => p.status === "completed").length,
+      total: rows.length,
+      // Every photo is returned, not just finished ones.
+      //
+      // This used to filter to `completed && image_url`, which meant a photo
+      // being reshot disappeared from the grid and reappeared a minute later —
+      // indistinguishable from a photo that never existed. The client needs the
+      // in-flight rows to hold their place and show progress.
+      photos: rows.map((p) => {
+        const role = lineupRoleFor({
+          shootId,
+          frameIndex: p.frame_index,
+        });
+        return {
+          id: p.id,
+          frameIndex: p.frame_index,
+          isAnchor: p.is_anchor,
+          imageUrl: p.status === "completed" ? p.image_url : null,
+          status: toGenerationStatus(p.status),
+          imageWidth: p.image_width,
+          imageHeight: p.image_height,
+          role,
+          roleLabel: LINEUP_LABELS[role],
+        };
+      }),
+    };
+  });
 
   return NextResponse.json({
     order,
     counts,
-    byBucket,
+    shoots,
     progressPercent:
       counts.total > 0
         ? Math.round((counts.completed / counts.total) * 100)

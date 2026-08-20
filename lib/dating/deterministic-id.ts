@@ -1,25 +1,38 @@
-import type { DatingBucket } from "./types";
-
 /**
- * Deterministic record ID for idempotent photo writes.
- * Format: {batchId}_{bucket}_{index}
- * index is the 0-based slot index. Slots run to SLOTS_PER_BUCKET, which is
- * larger than the 20 photos a delivery contains, because a delivery draws its
- * 20 from a wider pool.
+ * The stable identity of one photo within one order.
+ *
+ * Used as the upsert key everywhere a photo is written, which is what makes the
+ * pipeline idempotent: a retried child writes the same row rather than a second
+ * one, and the orchestrator can re-audit an order without duplicating work.
+ *
+ * The previous scheme was `{orderId}_{bucket}_{index}` with a 0-based index,
+ * while migration 018 backfilled the same column 1-based — so any backfilled row
+ * carried an id the code could never recompute. Frame indices are 1-based
+ * everywhere now, in the database and here, so there is nothing to convert and
+ * no second convention to get wrong.
  */
 export function makeDeterministicPhotoId(
-  batchId: string,
-  bucket: DatingBucket | string,
-  index: number
+  orderId: string,
+  shootId: string,
+  frameIndex: number
 ): string {
-  return `${batchId}_${bucket}_${index}`;
+  return `${orderId}_${shootId}_${frameIndex}`;
 }
 
-/** slot is 1-based in the DB; index is 0-based for payloads. */
-export function slotToIndex(slot: number): number {
-  return slot - 1;
-}
-
-export function indexToSlot(index: number): number {
-  return index + 1;
+/**
+ * Where this photo's bytes live in R2.
+ *
+ * `variantKey` is what a reshoot passes to break the path. Without it a
+ * regenerated photo overwrites the original object and every cache in front of
+ * it keeps serving the image the user just paid to replace.
+ */
+export function makePhotoStorageKey(
+  userId: string,
+  orderId: string,
+  shootId: string,
+  frameIndex: number,
+  variantKey?: string
+): string {
+  const suffix = variantKey ? `_${variantKey}` : "";
+  return `dating/${userId}/${orderId}/${shootId}_${frameIndex}${suffix}.png`;
 }

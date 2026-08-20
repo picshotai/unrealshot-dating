@@ -2,20 +2,30 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { generateSingleDatingImage } from "@/trigger/dating-shoot";
-import { makeDeterministicPhotoId, slotToIndex } from "@/lib/dating/deterministic-id";
-import { planReplacement } from "@/lib/dating/select-delivery";
-import { deriveBias, isInterestId } from "@/lib/dating/interests";
-import { compileDatingPrompt } from "@/lib/dating/prompt-params";
-import { getPromptVariants } from "@/lib/dating/prompt-library";
-import type { ExcludableTag, StylePref } from "@/lib/dating/types";
-import type { DatingBucket } from "@/lib/dating/types";
+import { makeDeterministicPhotoId } from "@/lib/dating/deterministic-id";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 /**
- * Spend 1 custom credit → single child-task run (not a third task definition).
- * Uses the same generate-single-dating-image child worker.
+ * Spend 1 reshoot → a single run of the same child worker.
+ *
+ * A reshoot now regenerates the frame **in place**: same shoot, same prompt,
+ * same anchor. Under the compositional library that would have been pointless —
+ * the prompt was deterministic, so re-sending it returned the same photo, and
+ * the route had to draw a *different* shot from the library to give the user
+ * anything new. Two things changed that:
+ *
+ *   1. The model is not reproducible in edit mode. Identical prompt, identical
+ *      references and an identical seed return a different image, which testing
+ *      confirmed repeatedly. Re-sending the prompt is a real second take.
+ *   2. A shoot is the unit of coherence. Swapping in a scene from elsewhere
+ *      would put a marina frame inside the kitchen shoot, which is exactly the
+ *      incoherence the whole rewrite exists to remove.
+ *
+ * So the replacement planner, the prompt compiler and the used-slot bookkeeping
+ * are all gone, along with the bug where this route wrote the replacement's slot
+ * while the child wrote the original one back from its payload.
  */
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
@@ -52,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     if ((order.custom_credits_remaining ?? 0) < 1) {
       return NextResponse.json(
-        { error: "No custom credits remaining" },
+        { error: "No reshoots remaining" },
         { status: 402 }
       );
     }
@@ -60,7 +70,7 @@ export async function POST(request: NextRequest) {
     const { data: photo } = await admin
       .from("order_photos")
       .select(
-        "id, bucket, slot, prompt_template, image_width, image_height, deterministic_id"
+        "id, shoot_id, frame_index, is_anchor, anchor_photo_id, prompt_template, image_width, image_height, deterministic_id"
       )
       .eq("id", photoId)
       .eq("order_id", orderId)
@@ -87,6 +97,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // The frame this one was anchored on when the delivery ran. Read from the
+    // stored id rather than recomputed, so a reshoot lands in the same room,
+    // the same clothes and the same light as its three siblings.
+    //
+    // Reshooting the anchor itself deliberately leaves the siblings pointing at
+    // its row: they keep referencing whatever that frame is, and since a reshot
+    // anchor re-runs the same authored prompt it is the same scene either way.
+    let anchorImageUrl: string | null = null;
+    if (!photo.is_anchor && photo.anchor_photo_id) {
+      const { data: anchor } = await admin
+        .from("order_photos")
+        .select("image_url, status")
+        .eq("id", photo.anchor_photo_id)
+        .maybeSingle();
+      if (anchor?.image_url && !anchor.image_url.startsWith("data:")) {
+        anchorImageUrl = anchor.image_url;
+      }
+    }
+
     const { error: creditErr } = await admin
       .from("user_shoot_orders")
       .update({
@@ -98,82 +127,16 @@ export async function POST(request: NextRequest) {
 
     if (creditErr) {
       return NextResponse.json(
-        { error: "Failed to deduct custom credit" },
+        { error: "Failed to deduct reshoot" },
         { status: 500 }
       );
     }
 
-    const index = slotToIndex(photo.slot);
     const deterministicId =
       photo.deterministic_id ||
-      makeDeterministicPhotoId(orderId, photo.bucket, index);
+      makeDeterministicPhotoId(orderId, photo.shoot_id, photo.frame_index);
 
-    // Regeneration used to re-send the stored prompt, so a user who disliked a
-    // photo paid a credit and received the same shot. Draw a shot this delivery
-    // has not used instead: different place, outfit and light.
-    const { data: prefs } = await admin
-      .from("user_preferences")
-      .select("interests, style, exclude_tags, hobby_text")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    const { data: siblings } = await admin
-      .from("order_photos")
-      .select("slot")
-      .eq("order_id", orderId)
-      .eq("bucket", photo.bucket);
-
-    const excludeTags = (prefs?.exclude_tags ?? []) as ExcludableTag[];
-    // Stored as an untyped text[], so validate rather than cast — a stale or
-    // hand-edited row must not put an unknown id into selection.
-    const savedInterests = ((prefs?.interests ?? []) as unknown[]).filter(
-      isInterestId
-    );
-    const bias = deriveBias(savedInterests, (prefs?.style ?? "casual") as StylePref);
-    const usedSlots = (siblings ?? []).map((row) => row.slot as number);
-    // Attempts differ so a second redo of the same photo lands somewhere new.
-    const attempt = Date.now();
-    const replacement = planReplacement(
-      orderId,
-      bias,
-      photo.bucket as DatingBucket,
-      usedSlots,
-      attempt,
-      // Interests travel with the replacement so redoing a cycling photo lands
-      // on another cycling scene rather than a generic one.
-      { excludeTags, interests: savedInterests }
-    );
-
-    let prompt = photo.prompt_template as string;
-    let imageWidth = photo.image_width as number | null;
-    let imageHeight = photo.image_height as number | null;
-
-    if (replacement) {
-      const definition = getPromptVariants(
-        replacement.bucket,
-        replacement.slot
-      ).find((candidate) => candidate.variant === replacement.variant);
-      if (definition) {
-        // Keep his interest on the replacement. Dropping it meant a redo of a
-        // hobby photo came back as the generic version of that scene.
-        const hobbies = (prefs?.hobby_text ?? "")
-          .split(",")
-          .map((part: string) => part.trim())
-          .filter(Boolean);
-        prompt = compileDatingPrompt(definition, {
-          vibe: replacement.vibe,
-          style: replacement.style,
-          hobby:
-            definition.hobbyPromptTemplate && hobbies.length > 0
-              ? hobbies[attempt % hobbies.length]
-              : null,
-        });
-        imageWidth = definition.imageSize.width;
-        imageHeight = definition.imageSize.height;
-      }
-    }
-
-    // Clear completed so child re-generates (upsert will overwrite).
+    // Clear completed so the child re-generates (its upsert will overwrite).
     //
     // This error used to be discarded. When the update failed the row kept its
     // old status and image_url, the child then hit its "already completed" fast
@@ -187,12 +150,6 @@ export async function POST(request: NextRequest) {
         fal_request_id: null,
         failed_reason: null,
         aesthetic_score: null,
-        // The row records the shot it will actually be, so a retry of the
-        // regeneration reproduces the replacement rather than the original.
-        prompt_template: prompt,
-        image_width: imageWidth,
-        image_height: imageHeight,
-        slot: replacement?.slot ?? photo.slot,
         updated_at: new Date().toISOString(),
       })
       .eq("id", photoId);
@@ -213,29 +170,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Unique idempotency key per regen attempt
     const handle = await generateSingleDatingImage.trigger(
       {
         userId: user.id,
         batchId: orderId,
         modelId: order.model_id,
-        bucket: photo.bucket as DatingBucket,
-        index,
-        prompt,
+        shootId: photo.shoot_id,
+        frameIndex: photo.frame_index,
+        prompt: photo.prompt_template,
         referenceImageUrls,
-        imageWidth,
-        imageHeight,
+        anchorImageUrl,
+        imageWidth: photo.image_width,
+        imageHeight: photo.image_height,
         // A reshoot costs the user something, so it must never be served by the
         // mock path. Under DATING_TEST_MODE=mock the placeholder is a pure
-        // function of (bucket, slot) and comes back byte-identical, which is
-        // exactly the "regenerate does nothing" the user reported.
+        // function of (shootId, frameIndex) and comes back byte-identical, which
+        // is exactly the "regenerate does nothing" the user reported.
         useMock: false,
         // Forces a fresh R2 object. The key is otherwise derived from
-        // (bucket, index) alone, so a regenerated photo overwrote the same path
-        // and the CDN kept serving the old image.
+        // (shootId, frameIndex) alone, so a regenerated photo overwrote the same
+        // path and the CDN kept serving the old image.
         variantKey: `r${Date.now().toString(36)}`,
       },
       {
+        // Unique per attempt. A raw-string key is run-scoped on this SDK, and a
+        // reused one returns the earlier run's result — including its failure.
         idempotencyKey: `${deterministicId}_regen_${Date.now()}`,
       }
     );

@@ -9,25 +9,24 @@ import {
   Image as ImageIcon,
 } from 'lucide-react';
 import {
-  DATING_BUCKETS,
-  type DatingBucket,
+  FRAMES_PER_SHOOT,
   type ExcludableTag,
   type StylePref,
 } from '@/lib/dating/types';
 import { type InterestId } from '@/lib/dating/interests';
 import {
-  groupByLineup,
-  lineupRoleFor,
   LINEUP_LABELS,
   LINEUP_HINTS,
   type LineupRole,
-} from '@/lib/dating/lineup';
+} from '@/lib/dating/roles';
 import { StudioHeader } from '@/components/dating/StudioHeader';
-import { LineupPillNav, type LineupFilter } from '@/components/dating/LineupPillNav';
+import { RoleFilterNav, type RoleFilter } from '@/components/dating/RoleFilterNav';
 import {
   PhotoInspectorModal,
+  slugify,
   type PhotoItem,
 } from '@/components/dating/PhotoInspectorModal';
+import { PhotoTile } from '@/components/dating/PhotoTile';
 import { StudioIntakeView } from '@/components/dating/StudioIntakeView';
 import {
   ImageGeneration,
@@ -59,22 +58,30 @@ type StatusResponse = {
     failed: number;
     total: number;
   };
-  byBucket: Record<
-    DatingBucket,
-    {
-      completed: number;
-      total: number;
-      photos: {
-        id: string;
-        slot: number;
-        /** Null until the photo finishes — in-flight rows still hold their place. */
-        imageUrl: string | null;
-        status: ImageGenerationStatus;
-        imageWidth: number | null;
-        imageHeight: number | null;
-      }[];
-    }
-  >;
+  /**
+   * The delivery, grouped the way it was shot. The response used to be keyed by
+   * bucket — internal architecture the client had to know about — and those
+   * buckets no longer exist.
+   */
+  shoots: {
+    shootId: string;
+    title: string;
+    kind: string | null;
+    completed: number;
+    total: number;
+    photos: {
+      id: string;
+      frameIndex: number;
+      isAnchor: boolean;
+      /** Null until the photo finishes — in-flight rows still hold their place. */
+      imageUrl: string | null;
+      status: ImageGenerationStatus;
+      imageWidth: number | null;
+      imageHeight: number | null;
+      role: LineupRole;
+      roleLabel: string;
+    }[];
+  }[];
   progressPercent: number;
 };
 
@@ -97,7 +104,7 @@ export function DatingShootClient({
     initialOrderId || orders[0]?.id || null
   );
   const [status, setStatus] = useState<StatusResponse | null>(null);
-  const [activeTab, setActiveTab] = useState<LineupFilter>('all');
+  const [activeTab, setActiveTab] = useState<RoleFilter>('all');
 
   // If no orders exist, we force the intake view open.
   const hasOrders = orders.length > 0 || activeOrderId !== null;
@@ -127,8 +134,8 @@ export function DatingShootClient({
       // dither field straight into the new photo.
       setRegenLoadingId((current) => {
         if (!current) return current;
-        const photo = Object.values(data.byBucket ?? {})
-          .flatMap((bucket) => bucket.photos)
+        const photo = (data.shoots ?? [])
+          .flatMap((shoot) => shoot.photos)
           .find((p) => p.id === current);
         if (!photo) return current;
         return photo.status === 'complete' || photo.status === 'error'
@@ -240,32 +247,31 @@ export function DatingShootClient({
     }
   };
 
-  // Flat list of all photos mapped with Lineup Roles
-  const allPhotos: PhotoItem[] = useMemo(() => {
-    if (!status?.byBucket) return [];
-    return DATING_BUCKETS.flatMap((bucket) =>
-      (status.byBucket[bucket]?.photos || []).map((photo) => {
-        const role = lineupRoleFor({
-          bucket,
-          slot: photo.slot,
-          imageWidth: photo.imageWidth,
-          imageHeight: photo.imageHeight,
-        });
-        return {
+  // The delivery as shoots, which is how it is shown. Each shoot keeps its own
+  // frames in order, so the anchor leads and its three siblings follow.
+  const shootSections = useMemo(() => {
+    if (!status?.shoots) return [];
+    return status.shoots.map((shoot) => ({
+      shootId: shoot.shootId,
+      title: shoot.title,
+      completed: shoot.completed,
+      total: shoot.total,
+      photos: shoot.photos.map(
+        (photo): PhotoItem => ({
           ...photo,
-          bucket,
-          role,
-          roleLabel: LINEUP_LABELS[role],
-          roleHint: LINEUP_HINTS[role],
-        };
-      })
-    );
+          shootId: shoot.shootId,
+          shootTitle: shoot.title,
+          roleHint: LINEUP_HINTS[photo.role],
+        })
+      ),
+    }));
   }, [status]);
 
-  // Grouping by Lineup Sections
-  const lineupSections = useMemo(() => {
-    return groupByLineup(allPhotos);
-  }, [allPhotos]);
+  // Flat list, in shoot order — what the inspector walks and the filters narrow.
+  const allPhotos: PhotoItem[] = useMemo(
+    () => shootSections.flatMap((shoot) => shoot.photos),
+    [shootSections]
+  );
 
   // Counts by role
   const roleCounts: Record<LineupRole, number> = useMemo(() => {
@@ -311,11 +317,13 @@ export function DatingShootClient({
       let count = 0;
       const totalToDownload = status.counts.completed;
 
-      for (const [index, section] of lineupSections.entries()) {
-        const folderName = `${String(index + 1).padStart(2, '0')}-${section.label.replace(/\s+/g, '-')}`;
+      // One folder per shoot, frames numbered inside it. The folder *is* the
+      // shoot: same place, same clothes, same light, four ways.
+      for (const [index, shoot] of shootSections.entries()) {
+        const folderName = `${String(index + 1).padStart(2, '0')}-${slugify(shoot.title)}`;
         const folder = zip.folder(folderName);
 
-        for (const [position, photo] of section.photos.entries()) {
+        for (const photo of shoot.photos) {
           // Photos still generating have no file yet. They stay in the grid so
           // the user can watch them land, but there is nothing to zip.
           const imageUrl = photo.imageUrl;
@@ -323,7 +331,7 @@ export function DatingShootClient({
 
           count++;
           setZipProgress(`Adding ${count} of ${totalToDownload} photos...`);
-          const base = `${String(position + 1).padStart(2, '0')}`;
+          const base = `${String(photo.frameIndex).padStart(2, '0')}`;
 
           try {
             if (imageUrl.startsWith('data:')) {
@@ -420,244 +428,66 @@ export function DatingShootClient({
 
         {/* 2. Lineup Role Filter Tabs */}
         {status && (
-          <LineupPillNav
+          <RoleFilterNav
             activeTab={activeTab}
             onTabChange={setActiveTab}
             roleCounts={roleCounts}
             totalCompleted={status.counts.completed}
+            shootCount={shootSections.length}
           />
         )}
 
         {/* 3. Photo Gallery Grid */}
         {displayedPhotos.length > 0 ? (
           activeTab === 'all' ? (
-            /* Curated Lineup View (Grouped by Job) */
+            /* Grouped by shoot — this place, these clothes, this light, four ways */
             <div className="space-y-12 pt-4">
-              {lineupSections.map((section) => (
-                <div key={section.role} className="space-y-4">
+              {shootSections.map((shoot, index) => (
+                <div key={shoot.shootId} className="space-y-4">
                   <div className="flex items-baseline justify-between border-b border-zinc-800/80 pb-3">
                     <div className="flex items-center gap-2.5">
+                      <span className="text-[10px] font-mono text-zinc-600 tabular-nums">
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
                       <h3 className="text-xl font-semibold text-white tracking-tight">
-                        {section.label}
+                        {shoot.title}
                       </h3>
                       <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-400">
-                        {section.photos.length}
+                        {shoot.completed}/{shoot.total}
                       </span>
                     </div>
                     <span className="text-xs text-zinc-500 font-sans hidden sm:inline">
-                      {section.hint}
+                      One location, one outfit, {FRAMES_PER_SHOOT} frames
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
-                    {section.photos.map((p) => {
-                      const imageUrl = p.imageUrl;
-                      const isMock = Boolean(
-                        imageUrl?.startsWith('data:image/svg+xml')
-                      );
-                      const isThisRegenerating = regenLoadingId === p.id;
-
-                      // Nothing to show yet. The tile holds its place either way
-                      // — a photo that vanished mid-reshoot and came back was the
-                      // most confusing thing in the old grid.
-                      //
-                      // Only the tile being reshot gets the dither field: it runs
-                      // a requestAnimationFrame canvas per instance, and during
-                      // first delivery all 100 tiles are pending at once.
-                      if (!imageUrl || p.status !== 'complete') {
-                        return (
-                          <div
-                            key={p.id}
-                            className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800/80"
-                          >
-                            {isThisRegenerating ? (
-                              <ImageGeneration
-                                status={p.status ?? 'generating'}
-                                aspectRatio="4 / 5"
-                                size="fluid"
-                                resolution={undefined}
-                                showStatus={false}
-                                interactive={false}
-                              />
-                            ) : (
-                              <div className="w-full h-full animate-pulse bg-zinc-800/60" />
-                            )}
-                            <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono px-2 py-0.5 rounded z-10">
-                              #{p.slot}
-                            </div>
-                          </div>
-                        );
-                      }
-
-                      return (
-                        <div
-                          key={p.id}
-                          onClick={() => openInspector(p)}
-                          className="group relative aspect-[4/5] rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800/80 hover:border-zinc-500 shadow-md transition-all duration-200 cursor-pointer select-none"
-                        >
-                          {/* Photo Display */}
-                          <img
-                            src={imageUrl}
-                            alt={`${section.label} #${p.slot}`}
-                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                            loading="lazy"
-                          />
-
-                          {/* Top Slot Pill */}
-                          <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono px-2 py-0.5 rounded z-10">
-                            #{p.slot}
-                          </div>
-
-                          {/* Hover Overlay with Quick Actions */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-3 flex flex-col justify-between z-20">
-                            {/* Top Right Zoom Icon */}
-                            <div className="flex justify-end">
-                              <div className="w-7 h-7 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center border border-white/10">
-                                <Maximize2 className="w-3.5 h-3.5" strokeWidth={1.5} />
-                              </div>
-                            </div>
-
-                            {/* Bottom Action Buttons */}
-                            <div
-                              className="space-y-1.5"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <div className="text-[11px] font-medium text-white truncate drop-shadow">
-                                {section.label}
-                              </div>
-
-                              <div className="flex gap-1.5">
-                                <a
-                                  href={imageUrl}
-                                  download={`dating-photo-${section.role}-${p.slot}.${isMock ? 'svg' : 'png'}`}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="flex-1 flex items-center justify-center gap-1 text-[11px] font-medium bg-white text-black hover:bg-zinc-200 rounded-lg py-1.5 transition-colors"
-                                >
-                                  <Download className="w-3 h-3" strokeWidth={1.5} /> Save
-                                </a>
-                                <button
-                                  onClick={() => handleRegenerate(p.id)}
-                                  disabled={isThisRegenerating}
-                                  className="flex-1 flex items-center justify-center gap-1 text-[11px] font-medium bg-zinc-800/90 hover:bg-zinc-700 text-white rounded-lg py-1.5 border border-zinc-700 transition-colors"
-                                >
-                                  {isThisRegenerating ? (
-                                    <Loader2 className="w-3 h-3 animate-spin" />
-                                  ) : (
-                                    <RefreshCw className="w-3 h-3" strokeWidth={1.5} />
-                                  )}
-                                  Regen
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-4">
+                    {shoot.photos.map((photo) => (
+                      <PhotoTile
+                        key={photo.id}
+                        photo={photo}
+                        isRegenerating={regenLoadingId === photo.id}
+                        onOpen={openInspector}
+                        onRegenerate={handleRegenerate}
+                      />
+                    ))}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            /* Single Role Filtered View */
+            /* One role, across every shoot */
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4 pt-4">
-              {displayedPhotos.map((p) => {
-                const imageUrl = p.imageUrl;
-                const isMock = Boolean(
-                  imageUrl?.startsWith('data:image/svg+xml')
-                );
-                const isThisRegenerating = regenLoadingId === p.id;
-
-                if (!imageUrl || p.status !== 'complete') {
-                  return (
-                    <div
-                      key={p.id}
-                      className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800/80"
-                    >
-                      {isThisRegenerating ? (
-                        <ImageGeneration
-                          status={p.status ?? 'generating'}
-                          aspectRatio="4 / 5"
-                          size="fluid"
-                          resolution={undefined}
-                          showStatus={false}
-                          interactive={false}
-                        />
-                      ) : (
-                        <div className="w-full h-full animate-pulse bg-zinc-800/60" />
-                      )}
-                      <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono px-2 py-0.5 rounded z-10">
-                        #{p.slot}
-                      </div>
-                    </div>
-                  );
-                }
-
-                return (
-                  <div
-                    key={p.id}
-                    onClick={() => openInspector(p)}
-                    className="group relative aspect-[4/5] rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800/80 hover:border-zinc-500 shadow-md transition-all duration-200 cursor-pointer select-none"
-                  >
-                    {/* Photo Display */}
-                    <img
-                      src={imageUrl}
-                      alt={`${p.roleLabel} #${p.slot}`}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      loading="lazy"
-                    />
-
-                    {/* Top Slot Pill */}
-                    <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono px-2 py-0.5 rounded z-10">
-                      #{p.slot}
-                    </div>
-
-                    {/* Hover Overlay with Quick Actions */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-3 flex flex-col justify-between z-20">
-                      {/* Top Right Zoom Icon */}
-                      <div className="flex justify-end">
-                        <div className="w-7 h-7 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center border border-white/10">
-                          <Maximize2 className="w-3.5 h-3.5" strokeWidth={1.5} />
-                        </div>
-                      </div>
-
-                      {/* Bottom Action Buttons */}
-                      <div
-                        className="space-y-1.5"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <div className="text-[11px] font-medium text-white truncate drop-shadow">
-                          {p.roleLabel}
-                        </div>
-
-                        <div className="flex gap-1.5">
-                          <a
-                            href={imageUrl}
-                            download={`dating-photo-${p.role}-${p.slot}.${isMock ? 'svg' : 'png'}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="flex-1 flex items-center justify-center gap-1 text-[11px] font-medium bg-white text-black hover:bg-zinc-200 rounded-lg py-1.5 transition-colors"
-                          >
-                            <Download className="w-3 h-3" strokeWidth={1.5} /> Save
-                          </a>
-                          <button
-                            onClick={() => handleRegenerate(p.id)}
-                            disabled={isThisRegenerating}
-                            className="flex-1 flex items-center justify-center gap-1 text-[11px] font-medium bg-zinc-800/90 hover:bg-zinc-700 text-white rounded-lg py-1.5 border border-zinc-700 transition-colors"
-                          >
-                            {isThisRegenerating ? (
-                              <Loader2 className="w-3 h-3 animate-spin" />
-                            ) : (
-                              <RefreshCw className="w-3 h-3" strokeWidth={1.5} />
-                            )}
-                            Regen
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+              {displayedPhotos.map((photo) => (
+                <PhotoTile
+                  key={photo.id}
+                  photo={photo}
+                  isRegenerating={regenLoadingId === photo.id}
+                  onOpen={openInspector}
+                  onRegenerate={handleRegenerate}
+                  showShootTitle
+                />
+              ))}
             </div>
           )
         ) : isDeveloping ? (
