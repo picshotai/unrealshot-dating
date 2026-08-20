@@ -31,6 +31,13 @@ interface StudioHeaderProps {
     failedCount: number;
   } | null;
   onOpenNewShoot: () => void;
+  /**
+   * One shoot at a time. createDatingShootOrder refuses a second while one is
+   * queued or developing — and refuses it *before* charging, so nothing is
+   * double-spent — but the button was still live, so the only way to find out
+   * was to fill in the whole form and be turned away at the end.
+   */
+  isShootRunning?: boolean;
   onDownloadZip: () => void;
   isZipLoading: boolean;
   zipProgress: string;
@@ -43,6 +50,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
   selectedModelId,
   status,
   onOpenNewShoot,
+  isShootRunning,
   onDownloadZip,
   isZipLoading,
   zipProgress,
@@ -163,10 +171,18 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
             variant="outline"
             size="sm"
             onClick={onOpenNewShoot}
-            className="flex-1 sm:flex-none border-zinc-800 bg-transparent hover:bg-zinc-900 text-zinc-300 hover:text-white text-xs h-9 px-3 rounded-lg font-medium"
+            disabled={isShootRunning}
+            title={
+              isShootRunning
+                ? 'Your shoot is still developing. You can start another when it finishes.'
+                : undefined
+            }
+            className="flex-1 sm:flex-none border-zinc-800 bg-transparent hover:bg-zinc-900 text-zinc-300 hover:text-white text-xs h-9 px-3 rounded-lg font-medium disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Plus className="w-3.5 h-3.5 sm:mr-1.5 text-zinc-400" />
-            <span className="hidden sm:inline">New Shoot</span>
+            <span className="hidden sm:inline">
+              {isShootRunning ? 'Shoot running' : 'New Shoot'}
+            </span>
           </Button>
         </div>
       </div>

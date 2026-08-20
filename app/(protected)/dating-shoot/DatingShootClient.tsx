@@ -417,6 +417,7 @@ export function DatingShootClient({
               : null
           }
           onOpenNewShoot={() => setIsIntakeOpen(true)}
+          isShootRunning={isDeveloping}
           onDownloadZip={downloadAllZip}
           isZipLoading={zipLoading}
           zipProgress={zipProgress}
@@ -467,6 +468,7 @@ export function DatingShootClient({
                         isRegenerating={regenLoadingId === photo.id}
                         onOpen={openInspector}
                         onRegenerate={handleRegenerate}
+                        reshootsRemaining={status?.order.custom_credits_remaining ?? 0}
                       />
                     ))}
                   </div>
@@ -483,6 +485,7 @@ export function DatingShootClient({
                   isRegenerating={regenLoadingId === photo.id}
                   onOpen={openInspector}
                   onRegenerate={handleRegenerate}
+                  reshootsRemaining={status?.order.custom_credits_remaining ?? 0}
                   showShootTitle
                 />
               ))}

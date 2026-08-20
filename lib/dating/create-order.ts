@@ -165,6 +165,18 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
       .single();
 
     if (orderErr || !order) {
+      // 23505 is the partial unique index from migration 029, which allows one
+      // order per user in 'queued' or 'developing'. Reaching it means a second
+      // request slipped past the check above — two taps landing together, or a
+      // retry — and it is a refusal rather than a fault. Throwing the typed
+      // error hands the client the same 409 it already knows how to render,
+      // and the surrounding catch refunds the credits this request just spent.
+      if ((orderErr as { code?: string } | null)?.code === "23505") {
+        throw new DatingOrderError(
+          "A shoot is already running. Wait for it to finish before starting another.",
+          "order_in_progress"
+        );
+      }
       throw new Error(`Failed to create order: ${orderErr?.message}`);
     }
 

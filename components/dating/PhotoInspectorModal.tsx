@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import {
   X,
   Download,
@@ -21,6 +21,8 @@ import {
   ImageGeneration,
   type ImageGenerationStatus,
 } from '@/components/dating/ImageGeneration';
+import { ConfirmReshootDialog } from '@/components/dating/ConfirmReshootDialog';
+import { downloadPhoto, photoFilename } from '@/lib/dating/download';
 
 export interface PhotoItem {
   id: string;
@@ -82,6 +84,8 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
   isRegenerating,
   customCreditsRemaining,
 }) => {
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
   const currentIndex = photos.findIndex((p) => p.id === photo?.id);
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < photos.length - 1;
@@ -255,29 +259,39 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
           {/* Action Bar */}
           <div className="space-y-2.5 pt-6 mt-auto">
             {/* Download Button — nothing to download until the frame lands */}
-            <a
-              href={imageUrl ?? undefined}
-              download={`${slugify(photo.shootTitle)}-${photo.frameIndex}.${isMock ? 'svg' : 'png'}`}
-              target="_blank"
-              rel="noreferrer"
-              className={`w-full block ${isReady ? '' : 'pointer-events-none opacity-40'}`}
-              aria-disabled={!isReady}
+            <Button
+              variant="default"
+              disabled={!isReady || saving}
+              onClick={async () => {
+                if (!imageUrl) return;
+                setSaving(true);
+                try {
+                  await downloadPhoto(
+                    imageUrl,
+                    photoFilename(photo.shootTitle, photo.frameIndex, isMock)
+                  );
+                } catch {
+                  // The photo is still on screen; a failed save is worth no
+                  // more than the button returning to normal.
+                } finally {
+                  setSaving(false);
+                }
+              }}
+              className="w-full bg-white text-black hover:bg-zinc-200 font-medium h-12 text-sm flex items-center justify-center gap-2 rounded-lg transition-all"
             >
-              <Button
-                variant="default"
-                disabled={!isReady}
-                className="w-full bg-white text-black hover:bg-zinc-200 font-medium h-12 text-sm flex items-center justify-center gap-2 rounded-lg transition-all"
-              >
+              {saving ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
                 <Download className="w-4 h-4" strokeWidth={1.5} />
-                Download Full PNG
-              </Button>
-            </a>
+              )}
+              {saving ? 'Saving…' : 'Download full size'}
+            </Button>
 
             {/* Custom Regenerate Button */}
             <Button
               variant="outline"
-              disabled={isRegenerating || customCreditsRemaining <= 0}
-              onClick={() => onRegenerate(photo.id)}
+              disabled={isRegenerating}
+              onClick={() => setConfirmOpen(true)}
               className="w-full border-zinc-800 hover:border-zinc-700 bg-transparent text-zinc-300 hover:text-white h-12 text-xs font-medium flex items-center justify-center gap-2 rounded-lg transition-colors"
             >
               {isRegenerating ? (
@@ -305,6 +319,19 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
           </div>
         </div>
       </div>
+
+      <ConfirmReshootDialog
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        isRegenerating={isRegenerating}
+        reshootsRemaining={customCreditsRemaining}
+        shootTitle={photo.shootTitle}
+        frameIndex={photo.frameIndex}
+        onConfirm={() => {
+          setConfirmOpen(false);
+          void onRegenerate(photo.id);
+        }}
+      />
     </div>
   );
 };

@@ -128,15 +128,21 @@ export async function proxy(request: NextRequest) {
   //
   // The cookie answers this for free. Only when it is absent do we pay for a
   // query — once per device — and then cache the answer.
+  // Only a 'ready' hint is trusted from the cookie.
+  //
+  // 'new' is a fact with an expiry date: the moment a user finishes onboarding
+  // it is wrong, and it was cached for 180 days. A user whose model predates
+  // this cookie, or whose cookie was written before their fourth upload, was
+  // sent back to /models/create on every single login with no way out. A
+  // positive is stable and worth caching; a negative has to be re-checked.
   let stage: OnboardingStage | null = readStage(request)
   let resolvedThisRequest = false
 
-  if (stage === null) {
+  if (stage !== 'ready') {
     const { data: models, error } = await supabase
       .from('models')
       .select('id, samples(uri)')
       .eq('user_id', user.id)
-      .eq('status', 'ready')
 
     if (error) {
       // A failed lookup is not evidence that the user is new. Sending them to
@@ -147,17 +153,26 @@ export async function proxy(request: NextRequest) {
       return response
     }
 
+    // Sample count decides this, not models.status.
+    //
+    // The query used to require status === 'ready', which is set only by the
+    // sample upload route when the fourth file lands. A model created before
+    // that logic shipped — or by any other path — keeps status 'processing'
+    // forever, so a user with a perfectly good model was classed as new.
+    // createDatingShootOrder itself requires four samples and never looks at
+    // status, so four samples is the honest test.
     const hasUsableModel = (models ?? []).some(
       (model) => ((model as { samples?: unknown[] }).samples?.length ?? 0) >= REQUIRED_SAMPLES
     )
     stage = hasUsableModel ? 'ready' : 'new'
     resolvedThisRequest = true
-    setStage(response, stage)
+    // Cache the positive only; see above.
+    if (stage === 'ready') setStage(response, stage)
   }
 
   const send = (pathname: string) => {
     const target = redirectTo(pathname)
-    if (resolvedThisRequest && stage) setStage(target, stage)
+    if (resolvedThisRequest && stage === 'ready') setStage(target, stage)
     return target
   }
 
