@@ -11,13 +11,13 @@ Current state, verifiable with `npm run check:shoots`:
 
 | | |
 |---|---|
-| Shoots | **70** |
-| Prompts | **280** (70 × 4 frames) |
+| Shoots | **70 total: 68 active, 2 quarantined** |
+| Prompts | **280** (272 currently eligible for delivery) |
 | One delivery | 15 shoots = 60 photos, $39 |
 | Hand-written | 28 |
 | LLM-drafted, human-checked, kept | 42 |
 | Interest chips served | 22 of 22 |
-| Prompts ever rendered as images | **8** — see [Evidence status](#evidence-status) |
+| Catalog entries approved from rendering | **1** — see [Evidence status](#evidence-status) |
 
 ---
 
@@ -35,6 +35,11 @@ type Shoot = {
   interests?: InterestId[];   // which chips this shoot answers
   tags?: ExcludableTag[];     // alcohol | dog | bicycle | teamSport
   frames: ShootFrame[];       // exactly 4
+  conceptFamily: string;      // semantic identity; near-duplicates share this
+  settingFamily: string;      // caps repeated visual environments
+  lightFamily: "window" | "open-door" | "overcast" | "flash";
+  availability: "active" | "quarantined";
+  evidence: "rendered-approved" | "prompt-reviewed" | "quarantined";
 };
 
 type ShootFrame = {
@@ -68,9 +73,13 @@ adding a token, you are rebuilding the thing that failed.
 ```
 lib/dating/
   shoots.ts            the library. 70 shoots, 280 prompts. the product
+  shoot-catalog.ts     semantic families, setting/light families, quarantine and evidence
   authoring/rules.ts   the 13 craft rules + validateShoot(). enforced on build
   authoring/briefs.ts  the brief format and the 53 briefs the library came from
   select-shoots.ts     which 15 shoots a given customer receives
+  selection-history.ts prior-customer history and recent global concept usage
+  plan-order-delivery.ts reserves a globally unique semantic lineup
+  reference-image.ts   strips metadata and crops the unsafe watermark edge
   types.ts             FRAMES_PER_SHOOT, SHOOTS_PER_DELIVERY, prices, env knobs
   roles.ts             opener / full body / what you do — a filter over shoots
   interests.ts         the 22 chips and the 3 wardrobe registers
@@ -195,45 +204,53 @@ identical, so nothing had to be re-derived.
 
 ---
 
-## 5. Selection: which 15 of the 70
+## 5. Selection: which 15 of the 68 active shoots
 
-`lib/dating/select-shoots.ts`. Score, sort, take 15.
+`lib/dating/select-shoots.ts` is history-aware and treats novelty as a hard
+priority, not a small score bonus. It fills a delivery in this order:
 
-```
-interest match   +100    a chip is a promise; nothing may outrank it
-register match    +40    the wardrobe lean
-seeded shuffle   0-59    stableHash(batchId + shootId)
-```
+1. semantic concepts the customer has never received;
+2. exact shoots the customer has never received;
+3. least-recently-used shoots when the finite catalog is exhausted.
 
-The ordering of those numbers is deliberate and load-bearing:
+Within each tier, interests and wardrobe still shape the ranking. Recent global
+concept usage is penalized so popular answers do not make one visual pattern
+dominate all customers.
 
-- shuffle **< 100** so an interest match always wins.
-- shuffle **> 40** so the wardrobe lean stays a lean. It used to be 0–24, below
-  the register bonus, which meant it could only reorder *within* a tier — and two
-  men who answered identically received 14.3 of the same 15 shoots.
+The delivery also enforces:
 
-Seeded from `batchId`, so a retry reproduces the same delivery.
+- one shoot per semantic `conceptFamily`;
+- at most two shoots per `settingFamily`;
+- portfolio bounds across portrait, home, outdoors, social and activity;
+- minimum representation from window, open-door, overcast and flash light;
+- at most two activity/outdoor shoots for any one selected interest;
+- excluded content tags are dropped whole;
+- quarantined shoots can never be selected.
 
-`MAX_SHOOTS_PER_INTEREST = 3` stops one chip owning a delivery. A shoot over the
-cap is deferred to the back rather than dropped, so the delivery still fills.
+Two superficially different IDs are therefore not enough to count as variety.
+The garage and workshop motorcycle shoots from the bad deliveries are both
+quarantined. Any future near-duplicates must share a concept family and cannot
+coexist in one order.
 
-An **excluded tag drops a shoot whole** — its location, outfit and light are
-fixed, so there is no variant to fall back to. `check:shoots` proves all 16
-exclusion combinations still leave enough shoots.
+Before photo rows are created, `plan-order-delivery.ts` reserves a semantic
+fingerprint in a database unique index. Concurrent customers cannot receive the
+same 15-concept lineup. A collision is re-planned up to 32 times.
 
 ### Variety, measured
 
-`npm run check:variety`:
+`npm run check:variety` currently proves the operational guarantees:
 
-```
-                              at 18 shoots    at 70 shoots
-two strangers share            12.0 of 15      3.3 of 15
-two men, identical answers     14.3 of 15      6.3 of 15
-same man, ordering twice       13.0 of 15      8.8 of 15
-```
+- the same customer receives **0 exact shoot repeats** on each of the first three
+  sequential purchases;
+- purchase two receives **0 repeated semantic concepts**;
+- all 68 active shoots are reachable and neither quarantined shoot is selected.
 
-At 18 shoots the **floor was 12** — `2 × 15 − 18` — no matter what the selection
-code did. It is now zero. If you shrink the library, check this first.
+The catalog has 68 active shoots and 37 semantic concept families. Different
+customers can still share individual concepts; the guarantee is that their full
+15-concept lineups differ. Current simulation averages **6.0 shared concepts**
+for both strangers and customers with identical answers; the checker fails if
+either mean rises above 7. More high-quality, rendered-approved concepts are
+required to lower that mathematical overlap further.
 
 ---
 
@@ -268,7 +285,8 @@ outside a small restaurant" came back as an alley.
 
 ## 7. Evidence status — read this before trusting anything
 
-**Of 280 prompts, 8 have ever been rendered as images.**
+**The catalog is still under-rendered. Only one shoot is currently marked
+`rendered-approved`; the rest are prompt-reviewed or quarantined.**
 
 | | |
 |---|---|
@@ -306,21 +324,26 @@ anchor wave competes with another's followers, and anchors have no priority — 
 a busy period stalls every order's critical path. Anchors want their own queue or
 a raised limit.
 
-**Watermarked reference photos still reproduce.** A "SHOT ON REDMI K20" stamp in
-a selfie gets copied into outputs as garbled lettering, unpredictably. A detector
-was built and removed: it passed on synthetic stamps and found nothing on real
-photos, and a detector that does not fire is worse than none. The only mitigation
-now is one line in the upload guidelines. Negation cannot fix it — the model
-reads a forbidden noun as a requested one.
+**Watermarked legacy references cannot be reused.** A "SHOT ON REDMI K20" stamp
+in a selfie gets copied into outputs as garbled lettering. New dating references
+are rotated, stripped of metadata, normalized to JPEG and have the bottom 8%
+removed deterministically before storage. Existing samples are marked unsafe by
+default in the migration; creating or regenerating a dating shoot refuses them
+before charging and asks for a re-upload. This intentionally replaces the old
+detector, which did not fire on real stamped photos. Text outside the cropped
+bottom edge remains a limitation.
 
-**Six interests are thin.** golf 2 shoots; football, tennis, climbing,
-motorcycles, dogs 3 each. With `MAX_SHOOTS_PER_INTEREST = 3`, a man who picks
-only golf gets both golf shoots every time.
+**Some interests are still thin.** The selector caps activity/outdoor delivery
+at two shoots per interest, but thin categories still have limited visual range.
+Motorcycles currently has one active concept because the two incoherent garage
+variants are quarantined.
 
 **Three shoots exceed the object budget** — listed in §3.
 
-**A repeat customer still sees overlap**: 8.8 of 15 on a second order. Growing
-the library is the only lever.
+**Cross-customer concept overlap remains.** A unique complete lineup does not
+mean every individual scene is globally exclusive. Growing the curated,
+rendered-approved concept library is the lever; inventing synonyms for an old
+scene is not.
 
 ---
 

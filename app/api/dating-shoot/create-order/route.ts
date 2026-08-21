@@ -91,7 +91,12 @@ export async function POST(request: NextRequest) {
     // shoot are expected answers the client renders directly, so they get their
     // own status codes rather than a 500 the user cannot act on.
     if (error instanceof DatingOrderError) {
-      const status = error.code === "insufficient_credits" ? 402 : 409;
+      const status =
+        error.code === "insufficient_credits"
+          ? 402
+          : error.code === "references_need_reupload"
+            ? 422
+            : 409;
       return NextResponse.json(
         { error: error.message, code: error.code, ...error.detail },
         { status }

@@ -5,7 +5,7 @@ import { DatingShootClient } from "./DatingShootClient";
 
 export const metadata: Metadata = {
   title: "Dating Photoshoot | Unrealshot AI",
-  description: "100 dating photos across 5 high-converting styles",
+  description: "60 dating photos across 15 distinct shoot concepts",
 };
 
 export default async function DatingShootPage({

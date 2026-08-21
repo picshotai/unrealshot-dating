@@ -3,6 +3,10 @@ import { createClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
 import { generateSingleDatingImage } from "@/trigger/dating-shoot";
 import { makeDeterministicPhotoId } from "@/lib/dating/deterministic-id";
+import {
+  verifiedDatingReferenceUrls,
+  type StoredDatingReference,
+} from "@/lib/dating/reference-image";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -82,17 +86,18 @@ export async function POST(request: NextRequest) {
 
     const { data: model } = await admin
       .from("models")
-      .select("id, samples(uri)")
+      .select("id, samples(uri, reference_sanitized)")
       .eq("id", order.model_id)
       .single();
 
-    const referenceImageUrls = (((model as any)?.samples || []) as { uri: string }[])
-      .map((s) => s.uri)
-      .filter(Boolean);
-
-    if (!referenceImageUrls.length) {
+    let referenceImageUrls: string[];
+    try {
+      referenceImageUrls = verifiedDatingReferenceUrls(
+        ((model as any)?.samples || []) as StoredDatingReference[]
+      );
+    } catch (error) {
       return NextResponse.json(
-        { error: "Model has no sample images" },
+        { error: error instanceof Error ? error.message : "Reference photos are not usable" },
         { status: 400 }
       );
     }

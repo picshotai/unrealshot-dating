@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { putR2Object } from "@/lib/r2";
 import { apiRateLimit, checkRateLimit } from "@/utils/rate-limit";
 import { REQUIRED_SAMPLES, setStage } from "@/lib/auth/stage";
+import { sanitizeDatingReferenceImage } from "@/lib/dating/reference-image";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -75,14 +76,17 @@ export async function POST(
         }
 
         // Generate unique key for R2
-        const sanitized = sanitizeFilename(providedName);
+        const sanitized = sanitizeFilename(providedName).replace(/\.[^.]+$/, "") || "reference";
         const unique = `${Date.now()}-${crypto.randomUUID()}`;
-        const key = `models/${user.id}/${modelId}/samples/${unique}-${sanitized}`;
+        const key = `models/${user.id}/${modelId}/samples/${unique}-${sanitized}.jpg`;
 
-        // Upload to R2
+        // Normalize orientation, strip metadata and remove the bottom camera-stamp
+        // edge before this file can ever become a generation reference. The old
+        // detector missed real "Shot on…" watermarks; deterministic sanitation
+        // closes that failure mode without false-positive upload rejections.
         const arrayBuffer = await file.arrayBuffer();
-        const body = Buffer.from(arrayBuffer);
-        await putR2Object(key, body, contentType);
+        const body = await sanitizeDatingReferenceImage(Buffer.from(arrayBuffer));
+        await putR2Object(key, body, "image/jpeg");
 
         // Construct the public URL
         const r2BaseUrl = process.env.R2_PUBLIC_URL || "";
@@ -94,6 +98,7 @@ export async function POST(
             .insert({
                 uri,
                 modelId: parseInt(modelId),
+                reference_sanitized: true,
             })
             .select()
             .single();

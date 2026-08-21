@@ -1,4 +1,11 @@
-import { SHOOTS, ANCHOR_FRAMING, type Shoot, type ShootFrame } from "./shoots";
+import {
+  SHOOTS,
+  SHOOT_BY_ID,
+  ANCHOR_FRAMING,
+  type Shoot,
+  type ShootFrame,
+  type ShootKind,
+} from "./shoots";
 import {
   FRAMES_PER_SHOOT,
   SHOOTS_PER_DELIVERY,
@@ -6,19 +13,9 @@ import {
   type InterestId,
   type StylePref,
 } from "./types";
+import type { ShootLightFamily } from "./shoot-catalog";
 
-/**
- * Chooses which shoots a delivery contains.
- *
- * The old planner composed each photo from independent parts, which is what let
- * a topcoat land on a forest trail. This one never composes anything: a shoot is
- * already coherent when it is authored, so preferences only decide *which*
- * authored shoots a man receives. That single change is what makes an interest
- * chip a promise — pick hiking and you get shoots written around hiking, rather
- * than a generic venue with the word dropped into it.
- */
-
-/** FNV-1a. Same construction the old planner used, so orders stay reproducible. */
+/** FNV-1a. Selection stays reproducible for retries of the same order. */
 export function stableHash(value: string): number {
   let hash = 0x811c9dc5;
   for (let index = 0; index < value.length; index += 1) {
@@ -44,42 +41,60 @@ export type PlanShootsOptions = {
   excludeTags?: readonly ExcludableTag[];
   /** Which wardrobe register to lean toward. Never a lock. */
   dress?: StylePref;
+  /** Shoot ids from newest use to oldest use for this customer. */
+  previousShootIds?: readonly string[];
+  /** Recent global frequency by concept family, used to spread inventory. */
+  globalConceptUsage?: Readonly<Record<string, number>>;
 };
 
-/**
- * How many shoots one interest may claim.
- *
- * Without a ceiling a man who taps a single chip gets a delivery entirely of
- * that one thing. With it, his interests show up alongside the ordinary shoots
- * rather than replacing them.
- */
-const MAX_SHOOTS_PER_INTEREST = 3;
+/** Two distinct concepts can show an interest; semantic-family repeats cannot. */
+export const MAX_SHOOTS_PER_INTEREST = 2;
+export const MAX_SHOOTS_PER_SETTING_FAMILY = 2;
+
+export const MIN_SHOOTS_BY_KIND: Readonly<Record<ShootKind, number>> = {
+  portrait: 1,
+  home: 2,
+  outdoors: 3,
+  social: 3,
+  activity: 2,
+};
+
+/** Fill scarce dating-profile categories before flexible portrait/activity slots. */
+const KIND_FILL_ORDER: readonly ShootKind[] = [
+  "home",
+  "social",
+  "outdoors",
+  "activity",
+  "portrait",
+];
+
+export const MAX_SHOOTS_BY_KIND: Readonly<Record<ShootKind, number>> = {
+  portrait: 2,
+  home: 3,
+  outdoors: 5,
+  social: 4,
+  activity: 5,
+};
+
+/** Avoid a delivery made entirely from flat overcast or empty window rooms. */
+export const MIN_SHOOTS_BY_LIGHT: Readonly<Record<ShootLightFamily, number>> = {
+  window: 3,
+  "open-door": 1,
+  overcast: 3,
+  // There are three approved flash concepts today. Requiring two would make a
+  // concept-fresh second purchase mathematically impossible.
+  flash: 1,
+};
 
 const INTEREST_MATCH = 100;
 const REGISTER_MATCH = 40;
-
-/**
- * How far the seeded shuffle can move a shoot.
- *
- * These three numbers decide how much two customers' deliveries overlap, and
- * the ordering between them is deliberate:
- *
- *   jitter (0-59) < INTEREST_MATCH (100)
- *     so an interest match always outranks one that has none. A chip is a
- *     promise, and no amount of shuffling may break it.
- *
- *   jitter (0-59) > REGISTER_MATCH (40)
- *     so the wardrobe lean is a real preference rather than a rule. It was 24,
- *     below the register bonus, which meant the shuffle could only reorder
- *     shoots *within* a tier — and with a small library the tiers were about
- *     the size of a delivery, so two men who answered identically received
- *     14.3 of the same 15 shoots. Letting the shuffle cross the register
- *     boundary is what turns a lean back into a lean.
- */
 const JITTER = 60;
+// Inventory rotation outranks a soft preference match. Otherwise identical
+// answers keep drawing the same popular concepts even when their complete
+// fingerprints differ.
+const GLOBAL_USAGE_PENALTY = 120;
 
 function isBlocked(shoot: Shoot, excluded: readonly ExcludableTag[]): boolean {
-  if (excluded.length === 0) return false;
   return (shoot.tags ?? []).some((tag) => excluded.includes(tag));
 }
 
@@ -87,62 +102,336 @@ function matchedInterests(
   shoot: Shoot,
   interests: readonly InterestId[]
 ): InterestId[] {
-  if (interests.length === 0) return [];
   return (shoot.interests ?? []).filter((id) => interests.includes(id));
 }
 
+type SelectionState = {
+  chosen: Shoot[];
+  concepts: Set<string>;
+  settings: Map<string, number>;
+  representedInterests: Set<InterestId>;
+  interests: Map<InterestId, number>;
+  kinds: Map<ShootKind, number>;
+  lights: Map<ShootLightFamily, number>;
+};
+
+function emptyState(): SelectionState {
+  return {
+    chosen: [],
+    concepts: new Set(),
+    settings: new Map(),
+    representedInterests: new Set(),
+    interests: new Map(),
+    kinds: new Map(),
+    lights: new Map(),
+  };
+}
+
+function count<K>(map: ReadonlyMap<K, number>, key: K): number {
+  return map.get(key) ?? 0;
+}
+
+function canTake(
+  state: SelectionState,
+  shoot: Shoot,
+  requestedInterests: readonly InterestId[],
+  enforceKindMaximums: boolean
+): boolean {
+  if (state.concepts.has(shoot.conceptFamily)) return false;
+  if (count(state.settings, shoot.settingFamily) >= MAX_SHOOTS_PER_SETTING_FAMILY) {
+    return false;
+  }
+  if (
+    enforceKindMaximums &&
+    count(state.kinds, shoot.kind) >= MAX_SHOOTS_BY_KIND[shoot.kind]
+  ) {
+    return false;
+  }
+  // Only three active flash concepts exist. Keeping at least one in reserve is
+  // what lets a repeat buyer receive a fully concept-fresh second portfolio.
+  if (shoot.lightFamily === "flash" && count(state.lights, "flash") >= 2) {
+    return false;
+  }
+
+  const matches = matchedInterests(shoot, requestedInterests);
+  const cappedKind = shoot.kind === "activity" || shoot.kind === "outdoors";
+  if (
+    cappedKind &&
+    matches.some((id) => count(state.interests, id) >= MAX_SHOOTS_PER_INTEREST)
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function take(
+  state: SelectionState,
+  shoot: Shoot,
+  requestedInterests: readonly InterestId[]
+): void {
+  state.chosen.push(shoot);
+  state.concepts.add(shoot.conceptFamily);
+  state.settings.set(shoot.settingFamily, count(state.settings, shoot.settingFamily) + 1);
+  state.kinds.set(shoot.kind, count(state.kinds, shoot.kind) + 1);
+  state.lights.set(shoot.lightFamily, count(state.lights, shoot.lightFamily) + 1);
+  for (const id of matchedInterests(shoot, requestedInterests)) {
+    state.representedInterests.add(id);
+    if (shoot.kind === "activity" || shoot.kind === "outdoors") {
+      state.interests.set(id, count(state.interests, id) + 1);
+    }
+  }
+}
+
+function copyState(state: SelectionState): SelectionState {
+  return {
+    chosen: [...state.chosen],
+    concepts: new Set(state.concepts),
+    settings: new Map(state.settings),
+    representedInterests: new Set(state.representedInterests),
+    interests: new Map(state.interests),
+    kinds: new Map(state.kinds),
+    lights: new Map(state.lights),
+  };
+}
+
+/** Fast necessary-capacity check used to keep a fresh second portfolio viable. */
+function hasPortfolioCapacity(pool: readonly Shoot[]): boolean {
+  if (new Set(pool.map((shoot) => shoot.conceptFamily)).size < SHOOTS_PER_DELIVERY) {
+    return false;
+  }
+  for (const kind of KIND_FILL_ORDER) {
+    const concepts = new Set(
+      pool.filter((shoot) => shoot.kind === kind).map((shoot) => shoot.conceptFamily)
+    );
+    if (concepts.size < MIN_SHOOTS_BY_KIND[kind]) return false;
+  }
+  for (const [light, minimum] of Object.entries(MIN_SHOOTS_BY_LIGHT) as Array<
+    [ShootLightFamily, number]
+  >) {
+    const concepts = new Set(
+      pool
+        .filter((shoot) => shoot.lightFamily === light)
+        .map((shoot) => shoot.conceptFamily)
+    );
+    if (concepts.size < minimum) return false;
+  }
+
+  const settings = new Map<string, Set<string>>();
+  for (const shoot of pool) {
+    const concepts = settings.get(shoot.settingFamily) ?? new Set<string>();
+    concepts.add(shoot.conceptFamily);
+    settings.set(shoot.settingFamily, concepts);
+  }
+  const settingCapacity = [...settings.values()].reduce(
+    (sum, concepts) => sum + Math.min(concepts.size, MAX_SHOOTS_PER_SETTING_FAMILY),
+    0
+  );
+  return settingCapacity >= SHOOTS_PER_DELIVERY;
+}
+
+function selectFromPool(
+  pool: readonly Shoot[],
+  ordered: readonly Shoot[],
+  interests: readonly InterestId[],
+  reserveForNext?: readonly Shoot[]
+): Shoot[] | null {
+  const allowed = new Set(pool.map((shoot) => shoot.id));
+  const candidates = ordered.filter((shoot) => allowed.has(shoot.id));
+  let visited = 0;
+
+  const search = (state: SelectionState): Shoot[] | null => {
+    visited += 1;
+    if (state.chosen.length === SHOOTS_PER_DELIVERY) {
+      const kindsPass = KIND_FILL_ORDER.every(
+        (kind) => count(state.kinds, kind) >= MIN_SHOOTS_BY_KIND[kind]
+      );
+      const lightsPass = (
+        Object.entries(MIN_SHOOTS_BY_LIGHT) as Array<[ShootLightFamily, number]>
+      ).every(([light, minimum]) => count(state.lights, light) >= minimum);
+      return kindsPass && lightsPass ? state.chosen : null;
+    }
+
+    const remainingSlots = SHOOTS_PER_DELIVERY - state.chosen.length;
+    const eligible = candidates.filter(
+      (candidate) => {
+        if (
+          state.chosen.some((chosen) => chosen.id === candidate.id) ||
+          !canTake(state, candidate, interests, true)
+        ) {
+          return false;
+        }
+        if (!reserveForNext) return true;
+        const usedConcepts = new Set(state.concepts);
+        usedConcepts.add(candidate.conceptFamily);
+        return hasPortfolioCapacity(
+          reserveForNext.filter(
+            (shoot) => !usedConcepts.has(shoot.conceptFamily)
+          )
+        );
+      }
+    );
+
+    // These cheap bounds stop the search before it walks a branch whose
+    // remaining concepts cannot possibly satisfy a portfolio minimum.
+    if (new Set(eligible.map((shoot) => shoot.conceptFamily)).size < remainingSlots) {
+      return null;
+    }
+
+    type Requirement = {
+      gap: number;
+      candidates: Shoot[];
+    };
+    const requirements: Requirement[] = [];
+    let totalKindGap = 0;
+    for (const kind of KIND_FILL_ORDER) {
+      const gap = Math.max(0, MIN_SHOOTS_BY_KIND[kind] - count(state.kinds, kind));
+      totalKindGap += gap;
+      if (gap > 0) {
+        requirements.push({ gap, candidates: eligible.filter((shoot) => shoot.kind === kind) });
+      }
+    }
+    if (totalKindGap > remainingSlots) return null;
+
+    let totalLightGap = 0;
+    for (const [light, minimum] of Object.entries(MIN_SHOOTS_BY_LIGHT) as Array<
+      [ShootLightFamily, number]
+    >) {
+      const gap = Math.max(0, minimum - count(state.lights, light));
+      totalLightGap += gap;
+      if (gap > 0) {
+        requirements.push({
+          gap,
+          candidates: eligible.filter((shoot) => shoot.lightFamily === light),
+        });
+      }
+    }
+    if (totalLightGap > remainingSlots) return null;
+    if (requirements.some((requirement) => requirement.candidates.length < requirement.gap)) {
+      return null;
+    }
+
+    // Branch on the scarcest unmet requirement first. Candidate order still
+    // carries interest, wardrobe, global-usage and deterministic jitter scores.
+    const requirement = requirements.sort(
+      (left, right) =>
+        left.candidates.length / left.gap - right.candidates.length / right.gap
+    )[0];
+    const branches = requirement?.candidates ?? eligible;
+
+    for (const shoot of branches) {
+      const next = copyState(state);
+      take(next, shoot, interests);
+      const result = search(next);
+      if (result) return result;
+    }
+    return null;
+  };
+
+  const result = search(emptyState());
+  if (!result && process.env.DATING_DEBUG_SELECTION === "1") {
+    console.error("selection constraint search failed", {
+      pool: pool.length,
+      candidates: candidates.length,
+      visited,
+    });
+  }
+  return result;
+}
+
+/**
+ * Chooses a coherent portfolio rather than independently taking the top scores.
+ *
+ * Novelty priority is strict: first try concepts the customer has never seen,
+ * then exact shoots they have never seen, then the whole library with oldest
+ * prior uses ranked first. Each attempt still enforces semantic uniqueness and
+ * portfolio balance. If those constraints cannot fill a delivery, creation
+ * fails loudly instead of silently shipping duplicates.
+ */
 export function planShootDelivery(
-  batchId: string,
+  selectionSeed: string,
   options: PlanShootsOptions = {}
 ): PlannedFrame[] {
   const interests = options.interests ?? [];
   const excluded = options.excludeTags ?? [];
+  const previousShootIds = [...new Set(options.previousShootIds ?? [])];
+  const globalConceptUsage = options.globalConceptUsage ?? {};
+  const previousSet = new Set(previousShootIds);
+  const previousConcepts = new Set(
+    previousShootIds
+      .map((id) => SHOOT_BY_ID.get(id)?.conceptFamily)
+      .filter((value): value is string => Boolean(value))
+  );
+  const historyRank = new Map(previousShootIds.map((id, index) => [id, index]));
 
-  const available = SHOOTS.filter((shoot) => !isBlocked(shoot, excluded));
+  const available = SHOOTS.filter(
+    (shoot) => shoot.availability === "active" && !isBlocked(shoot, excluded)
+  );
 
   if (available.length < SHOOTS_PER_DELIVERY) {
-    // Loud rather than quiet: a short delivery is a broken promise, and with a
-    // hand-authored library the fix is to write more shoots, not to repeat one.
     throw new Error(
-      `Only ${available.length} shoots are usable after exclusions [${excluded.join(", ") || "none"}]; ` +
-        `a delivery needs ${SHOOTS_PER_DELIVERY}. Author more shoots or lower SHOOTS_PER_DELIVERY.`
+      `Only ${available.length} active shoots are usable after exclusions [${excluded.join(", ") || "none"}]; ` +
+        `a delivery needs ${SHOOTS_PER_DELIVERY}.`
     );
   }
 
-  const ranked = [...available].sort((a, b) => score(b) - score(a));
-
-  function score(shoot: Shoot): number {
+  const baseScore = (shoot: Shoot): number => {
     let value = 0;
     if (matchedInterests(shoot, interests).length > 0) value += INTEREST_MATCH;
     if (options.dress && shoot.register === options.dress) value += REGISTER_MATCH;
-    // Seeded shuffle, so two men with identical answers still get different
-    // sets and the same man ordering twice does too. Seeded from batchId rather
-    // than random, so a retry reproduces the delivery it is retrying.
-    value += stableHash(`${batchId}:${shoot.id}`) % JITTER;
+    value -= (globalConceptUsage[shoot.conceptFamily] ?? 0) * GLOBAL_USAGE_PENALTY;
+    value += stableHash(`${selectionSeed}:${shoot.id}`) % JITTER;
     return value;
-  }
+  };
 
-  // Take in ranked order, but stop one interest owning the delivery. A shoot
-  // over its interest's cap drops to the back rather than out, so the delivery
-  // still fills.
-  const claimed = new Map<InterestId, number>();
-  const taken: Shoot[] = [];
-  const deferred: Shoot[] = [];
-
-  for (const shoot of ranked) {
-    const matches = matchedInterests(shoot, interests);
-    const atCap = matches.some(
-      (id) => (claimed.get(id) ?? 0) >= MAX_SHOOTS_PER_INTEREST
-    );
-    if (atCap) {
-      deferred.push(shoot);
-      continue;
+  const ordered = [...available].sort((a, b) => {
+    const aHistory = historyRank.get(a.id);
+    const bHistory = historyRank.get(b.id);
+    if (aHistory === undefined && bHistory !== undefined) return -1;
+    if (aHistory !== undefined && bHistory === undefined) return 1;
+    // History is newest-first, so the larger index is the older and safer reuse.
+    if (aHistory !== undefined && bHistory !== undefined && aHistory !== bHistory) {
+      return bHistory - aHistory;
     }
-    for (const id of matches) claimed.set(id, (claimed.get(id) ?? 0) + 1);
-    taken.push(shoot);
+    return baseScore(b) - baseScore(a) || a.id.localeCompare(b.id);
+  });
+
+  const neverSeenConcept = available.filter(
+    (shoot) => !previousSet.has(shoot.id) && !previousConcepts.has(shoot.conceptFamily)
+  );
+  const neverSeenShoot = available.filter((shoot) => !previousSet.has(shoot.id));
+  const attempts = [
+    neverSeenConcept,
+    neverSeenShoot,
+    available,
+  ];
+
+  let chosen: Shoot[] | null = null;
+  for (const pool of attempts) {
+    if (pool.length < SHOOTS_PER_DELIVERY) continue;
+    const activeConceptCount = new Set(
+      available.map((shoot) => shoot.conceptFamily)
+    ).size;
+    const preserveConceptFreshSecondPurchase =
+      previousShootIds.length === 0 &&
+      activeConceptCount >= SHOOTS_PER_DELIVERY * 2;
+
+    // A valid first portfolio can still consume the only concepts that make a
+    // balanced second portfolio possible. Preserve enough kind/light/setting
+    // capacity in the complement while the constraint search is choosing it.
+    chosen = selectFromPool(
+      pool,
+      ordered,
+      interests,
+      preserveConceptFreshSecondPurchase ? available : undefined
+    );
+    if (chosen) break;
   }
 
-  const chosen = [...taken, ...deferred].slice(0, SHOOTS_PER_DELIVERY);
+  if (!chosen) {
+    throw new Error(
+      "The active shoot library cannot satisfy semantic diversity and portfolio balance for this order"
+    );
+  }
 
   return chosen.flatMap((shoot) =>
     shoot.frames.map((frame, position) => ({
@@ -156,11 +445,33 @@ export function planShootDelivery(
   );
 }
 
+export function shootIdsInPlan(plan: readonly PlannedFrame[]): string[] {
+  return [...new Set(plan.map((frame) => frame.shootId))];
+}
+
+export function deliveryConcepts(plan: readonly PlannedFrame[]): string[] {
+  return [
+    ...new Set(
+      shootIdsInPlan(plan).map((id) => {
+        const shoot = SHOOT_BY_ID.get(id);
+        if (!shoot) throw new Error(`Cannot resolve concept for missing shoot ${id}`);
+        return shoot.conceptFamily;
+      })
+    ),
+  ].sort();
+}
+
 /**
- * Every delivery must contain exactly one anchor per shoot and a full set of
- * frames. Called at order creation, before any GPU work is dispatched, because
- * a shoot missing its anchor cannot carry its own scene.
+ * Stable semantic input for the database's global unique index.
+ *
+ * Exact ids are too weak: two lineups made from different variants of the same
+ * concepts still look like the same product. Version the value so a future
+ * catalog taxonomy can coexist with reservations made under this one.
  */
+export function deliveryFingerprint(plan: readonly PlannedFrame[]): string {
+  return `semantic-v1:${deliveryConcepts(plan).join("|")}`;
+}
+
 export function assertDeliveryShape(plan: PlannedFrame[]): void {
   const byShoot = new Map<string, PlannedFrame[]>();
   for (const frame of plan) {
@@ -170,25 +481,30 @@ export function assertDeliveryShape(plan: PlannedFrame[]): void {
   }
 
   if (byShoot.size !== SHOOTS_PER_DELIVERY) {
-    throw new Error(
-      `Delivery has ${byShoot.size} shoots; expected ${SHOOTS_PER_DELIVERY}`
-    );
+    throw new Error(`Delivery has ${byShoot.size} shoots; expected ${SHOOTS_PER_DELIVERY}`);
   }
 
+  const concepts = new Set<string>();
   for (const [shootId, frames] of byShoot) {
     if (frames.length !== FRAMES_PER_SHOOT) {
       throw new Error(
         `Shoot ${shootId} contributed ${frames.length} frames; expected ${FRAMES_PER_SHOOT}`
       );
     }
+    const shoot = SHOOT_BY_ID.get(shootId);
+    if (!shoot || shoot.availability !== "active") {
+      throw new Error(`Delivery contains missing or quarantined shoot ${shootId}`);
+    }
+    if (concepts.has(shoot.conceptFamily)) {
+      throw new Error(`Delivery repeats concept family ${shoot.conceptFamily}`);
+    }
+    concepts.add(shoot.conceptFamily);
+
     const anchors = frames.filter((frame) => frame.isAnchor);
     if (anchors.length !== 1) {
-      throw new Error(
-        `Shoot ${shootId} has ${anchors.length} anchors; expected exactly 1`
-      );
+      throw new Error(`Shoot ${shootId} has ${anchors.length} anchors; expected exactly 1`);
     }
-    const indices = new Set(frames.map((frame) => frame.frameIndex));
-    if (indices.size !== frames.length) {
+    if (new Set(frames.map((frame) => frame.frameIndex)).size !== frames.length) {
       throw new Error(`Shoot ${shootId} repeats a frame index`);
     }
   }

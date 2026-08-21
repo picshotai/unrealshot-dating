@@ -235,18 +235,21 @@ export interface Database {
           created_at: string
           id: number
           modelId: number
+          reference_sanitized: boolean
           uri: string
         }
         Insert: {
           created_at?: string
           id?: number
           modelId: number
+          reference_sanitized?: boolean
           uri: string
         }
         Update: {
           created_at?: string
           id?: number
           modelId?: number
+          reference_sanitized?: boolean
           uri?: string
         }
         Relationships: [
@@ -464,6 +467,8 @@ export interface Database {
           photos_target: number
           fal_cost_cents: number
           refund_state: string
+          selection_concepts: string[] | null
+          selection_fingerprint: string | null
           created_at: string
           ready_at: string | null
           updated_at: string
@@ -479,6 +484,8 @@ export interface Database {
           photos_target?: number
           fal_cost_cents?: number
           refund_state?: string
+          selection_concepts?: string[] | null
+          selection_fingerprint?: string | null
           created_at?: string
           ready_at?: string | null
           updated_at?: string
@@ -494,6 +501,8 @@ export interface Database {
           photos_target?: number
           fal_cost_cents?: number
           refund_state?: string
+          selection_concepts?: string[] | null
+          selection_fingerprint?: string | null
           created_at?: string
           ready_at?: string | null
           updated_at?: string

@@ -1,4 +1,8 @@
 import { FRAMES_PER_SHOOT, type ExcludableTag, type InterestId, type StylePref } from "./types";
+import {
+  SHOOT_CATALOG,
+  type ShootCatalogMetadata,
+} from "./shoot-catalog";
 
 /**
  * The shoot library.
@@ -50,7 +54,7 @@ export type ShootFrame = {
   prompt: string;
 };
 
-export type Shoot = {
+type ShootDefinition = {
   id: string;
   /** Shown to the user, and used for the ZIP folder name. */
   title: string;
@@ -68,10 +72,13 @@ export type Shoot = {
   frames: readonly ShootFrame[];
 };
 
+/** A selectable shoot plus the human-reviewed meaning used by diversity rules. */
+export type Shoot = ShootDefinition & ShootCatalogMetadata;
+
 const PORTRAIT_3_4 = { width: 1728, height: 2304 } as const;
 const LANDSCAPE_4_3 = { width: 2304, height: 1728 } as const;
 
-export const SHOOTS: readonly Shoot[] = [
+const SHOOT_DEFINITIONS: readonly ShootDefinition[] = [
   // ───────────────────────────────────────────────────────────────────────────
   // Scored 4/5 in testing and was the strongest configuration found: one soft
   // source, one unambiguous garment, and an interior the model does not have to
@@ -2556,6 +2563,20 @@ export const SHOOTS: readonly Shoot[] = [
     ],
   },
 ];
+
+/**
+ * Join prompt prose to its explicit semantic review.
+ *
+ * Missing metadata is a startup/build error. Silently deriving a family from an
+ * id would recreate the exact loophole this layer exists to close.
+ */
+export const SHOOTS: readonly Shoot[] = SHOOT_DEFINITIONS.map((definition) => {
+  const metadata = SHOOT_CATALOG[definition.id];
+  if (!metadata) {
+    throw new Error(`Shoot ${definition.id} is missing shoot-catalog metadata`);
+  }
+  return { ...definition, ...metadata };
+});
 
 export function getShoot(id: string): Shoot | undefined {
   return SHOOTS.find((shoot) => shoot.id === id);

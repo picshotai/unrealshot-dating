@@ -1,48 +1,63 @@
 /**
- * How different are two customers' deliveries?
+ * Measures customer-to-customer overlap and enforces repeat-buyer guarantees.
  *
- * The hand-written library could not answer this well: eighteen shoots against a
- * fifteen-shoot delivery guarantees twelve shared, whatever the selection logic
- * does. `2 x 15 - 18 = 12`. No amount of scoring cleverness escapes that, which
- * is why the library had to grow before this script was worth writing.
- *
- * It measures three things that matter for different reasons:
- *
- *   - two strangers with different answers  — the Reddit screenshot case
- *   - two men with identical answers        — the "same city, same app" case
- *   - the same man ordering twice           — the repeat-purchase case
- *
- *   npm run check:variety
+ * Exact ids alone are not enough: a garage and a workshop can be different ids
+ * while looking identical. This report therefore measures both shoot ids and
+ * human-authored concept families.
  */
-import { SHOOTS } from "../lib/dating/shoots";
-import { planShootDelivery } from "../lib/dating/select-shoots";
+import { SHOOTS, SHOOT_BY_ID } from "../lib/dating/shoots";
+import { planShootDelivery, shootIdsInPlan } from "../lib/dating/select-shoots";
 import { SHOOTS_PER_DELIVERY } from "../lib/dating/types";
 import { INTEREST_CHIPS } from "../lib/dating/interests";
 import type { InterestId, StylePref } from "../lib/dating/types";
 
 const REGISTERS: StylePref[] = ["casual", "sharp", "street"];
+const SAMPLE = 60;
 
-function shootIdsFor(orderId: string, interests: InterestId[], dress: StylePref) {
-  return new Set(
-    planShootDelivery(orderId, { interests, dress }).map((f) => f.shootId)
+type Delivery = { ids: Set<string>; concepts: Set<string> };
+
+function deliveryFor(
+  seed: string,
+  interests: InterestId[],
+  dress: StylePref,
+  previousShootIds: readonly string[] = [],
+  globalConceptUsage: Readonly<Record<string, number>> = {}
+): Delivery {
+  const ids = new Set(
+    shootIdsInPlan(
+      planShootDelivery(seed, {
+        interests,
+        dress,
+        previousShootIds,
+        globalConceptUsage,
+      })
+    )
   );
+  return {
+    ids,
+    concepts: new Set(
+      [...ids].map((id) => {
+        const shoot = SHOOT_BY_ID.get(id);
+        if (!shoot) throw new Error(`Missing shoot ${id}`);
+        return shoot.conceptFamily;
+      })
+    ),
+  };
 }
 
 const shared = (a: Set<string>, b: Set<string>) =>
-  [...a].filter((id) => b.has(id)).length;
+  [...a].filter((value) => b.has(value)).length;
 
 function stats(values: number[]) {
-  const sorted = [...values].sort((x, y) => x - y);
-  const mean = values.reduce((s, v) => s + v, 0) / values.length;
+  const sorted = [...values].sort((a, b) => a - b);
   return {
-    mean,
+    mean: values.reduce((sum, value) => sum + value, 0) / values.length,
     min: sorted[0],
     max: sorted[sorted.length - 1],
     p90: sorted[Math.floor(sorted.length * 0.9)],
   };
 }
 
-/** A deterministic pseudo-random pick, so the report does not move run to run. */
 function seeded(seed: number) {
   let state = seed >>> 0;
   return () => {
@@ -52,77 +67,148 @@ function seeded(seed: number) {
 }
 
 function randomAnswers(rand: () => number) {
-  const count = 1 + Math.floor(rand() * 6);
+  const total = 1 + Math.floor(rand() * 6);
   const interests: InterestId[] = [];
-  while (interests.length < count) {
+  while (interests.length < total) {
     const chip = INTEREST_CHIPS[Math.floor(rand() * INTEREST_CHIPS.length)];
     if (!interests.includes(chip.id)) interests.push(chip.id);
   }
   return { interests, dress: REGISTERS[Math.floor(rand() * REGISTERS.length)] };
 }
 
-const SAMPLE = 60;
-const rand = seeded(20260820);
+const rand = seeded(20260821);
+const active = SHOOTS.filter((shoot) => shoot.availability === "active");
+console.log(`\n${active.length} active shoots, ${SHOOTS_PER_DELIVERY} per delivery\n`);
 
-console.log(
-  `\n${SHOOTS.length} shoots, ${SHOOTS_PER_DELIVERY} per delivery\n` +
-    `floor set by library size: ${Math.max(0, 2 * SHOOTS_PER_DELIVERY - SHOOTS.length)} shared, unavoidable\n`
-);
+const recordUsage = (usage: Record<string, number>, delivery: Delivery) => {
+  for (const concept of delivery.concepts) {
+    usage[concept] = (usage[concept] ?? 0) + 1;
+  }
+};
 
-// ── Different men, different answers ────────────────────────────────────────
-const strangers = Array.from({ length: SAMPLE }, (_, i) => {
-  const { interests, dress } = randomAnswers(rand);
-  return shootIdsFor(`stranger-${i}`, interests, dress);
-});
-const strangerOverlap: number[] = [];
-for (let i = 0; i < strangers.length; i += 1)
-  for (let j = i + 1; j < strangers.length; j += 1)
-    strangerOverlap.push(shared(strangers[i], strangers[j]));
-
-// ── Two men who answered identically ────────────────────────────────────────
-const twins = Array.from({ length: SAMPLE }, (_, i) =>
-  shootIdsFor(`twin-${i}`, ["gym", "travel", "coffee"], "casual")
-);
-const twinOverlap: number[] = [];
-for (let i = 0; i < twins.length; i += 1)
-  for (let j = i + 1; j < twins.length; j += 1)
-    twinOverlap.push(shared(twins[i], twins[j]));
-
-// ── The same man, ordering again ────────────────────────────────────────────
-const repeats: number[] = [];
-for (let i = 0; i < SAMPLE; i += 1) {
-  const { interests, dress } = randomAnswers(rand);
-  repeats.push(
-    shared(
-      shootIdsFor(`order-${i}-a`, interests, dress),
-      shootIdsFor(`order-${i}-b`, interests, dress)
-    )
+const strangerUsage: Record<string, number> = {};
+const strangers = Array.from({ length: SAMPLE }, (_, index) => {
+  const answers = randomAnswers(rand);
+  const delivery = deliveryFor(
+    `stranger-${index}`,
+    answers.interests,
+    answers.dress,
+    [],
+    strangerUsage
   );
+  recordUsage(strangerUsage, delivery);
+  return delivery;
+});
+
+const twinUsage: Record<string, number> = {};
+const twins = Array.from({ length: SAMPLE }, (_, index) => {
+  const delivery = deliveryFor(
+    `twin-${index}`,
+    ["gym", "travel", "coffee"],
+    "casual",
+    [],
+    twinUsage
+  );
+  recordUsage(twinUsage, delivery);
+  return delivery;
+});
+
+function pairwise(deliveries: Delivery[], key: keyof Delivery): number[] {
+  const values: number[] = [];
+  for (let left = 0; left < deliveries.length; left += 1) {
+    for (let right = left + 1; right < deliveries.length; right += 1) {
+      values.push(shared(deliveries[left][key], deliveries[right][key]));
+    }
+  }
+  return values;
 }
 
 const report = (label: string, values: number[]) => {
-  const s = stats(values);
-  const pct = (n: number) => `${((n / SHOOTS_PER_DELIVERY) * 100).toFixed(0)}%`;
+  const result = stats(values);
   console.log(
-    `  ${label.padEnd(34)} mean ${s.mean.toFixed(1)} (${pct(s.mean)})   ` +
-      `range ${s.min}-${s.max}   90th pct ${s.p90}`
+    `  ${label.padEnd(38)} mean ${result.mean.toFixed(1)}   ` +
+      `range ${result.min}-${result.max}   p90 ${result.p90}`
   );
 };
 
-console.log("shared shoots out of " + SHOOTS_PER_DELIVERY + ":\n");
-report("two strangers", strangerOverlap);
-report("two men, identical answers", twinOverlap);
-report("same man, ordering twice", repeats);
+console.log("customer-to-customer overlap out of 15:\n");
+let failures = 0;
+const strangerExactOverlap = pairwise(strangers, "ids");
+const strangerConceptOverlap = pairwise(strangers, "concepts");
+const twinExactOverlap = pairwise(twins, "ids");
+const twinConceptOverlap = pairwise(twins, "concepts");
+report("strangers — exact shoots", strangerExactOverlap);
+report("strangers — semantic concepts", strangerConceptOverlap);
+report("identical answers — exact shoots", twinExactOverlap);
+report("identical answers — semantic concepts", twinConceptOverlap);
 
-// ── How much of the library ever gets used ──────────────────────────────────
-const everUsed = new Set<string>();
-for (const set of [...strangers, ...twins]) for (const id of set) everUsed.add(id);
+// With 37 semantic families and 15 slots, about 6.1 shared concepts is the
+// random-inventory baseline. A mean over 7 means preference scoring has once
+// again overwhelmed global rotation and customers are receiving a house pack.
+if (stats(strangerConceptOverlap).mean > 7 || stats(twinConceptOverlap).mean > 7) {
+  console.error("\nFAIL customer-to-customer semantic overlap exceeds the commercial gate");
+  failures += 1;
+}
+
+const secondExact: number[] = [];
+const secondConcepts: number[] = [];
+const thirdExact: number[] = [];
+
+for (let index = 0; index < SAMPLE; index += 1) {
+  const answers = randomAnswers(rand);
+  const first = deliveryFor(`repeat-${index}-1`, answers.interests, answers.dress);
+  const second = deliveryFor(
+    `repeat-${index}-2`,
+    answers.interests,
+    answers.dress,
+    [...first.ids]
+  );
+  const exact = shared(first.ids, second.ids);
+  const concepts = shared(first.concepts, second.concepts);
+  const third = deliveryFor(
+    `repeat-${index}-3`,
+    answers.interests,
+    answers.dress,
+    [...second.ids, ...first.ids]
+  );
+  const exactOnThird = [...third.ids].filter(
+    (id) => first.ids.has(id) || second.ids.has(id)
+  ).length;
+  secondExact.push(exact);
+  secondConcepts.push(concepts);
+  thirdExact.push(exactOnThird);
+  if (exact !== 0 || concepts !== 0 || exactOnThird !== 0) {
+    console.error(
+      `repeat sample ${index} failed for [${answers.interests.join(", ")}] / ${answers.dress}: ` +
+        `order 2 ${exact} exact / ${concepts} concepts; order 3 ${exactOnThird} exact\n` +
+        `  first: ${[...first.concepts].join(", ")}\n` +
+        `  second: ${[...second.concepts].join(", ")}`
+    );
+    failures += 1;
+  }
+}
+
+console.log("\nrepeat purchase overlap:\n");
+report("second order — exact shoots", secondExact);
+report("second order — semantic concepts", secondConcepts);
+report("third order — exact shoots vs history", thirdExact);
+
+const everUsed = new Set([...strangers, ...twins].flatMap((delivery) => [...delivery.ids]));
+const selectedQuarantined = SHOOTS.filter(
+  (shoot) => shoot.availability === "quarantined" && everUsed.has(shoot.id)
+);
+if (selectedQuarantined.length > 0) {
+  console.error(`\nFAIL quarantined shoots selected: ${selectedQuarantined.map((s) => s.id).join(", ")}`);
+  failures += selectedQuarantined.length;
+}
+
 console.log(
-  `\n  ${everUsed.size} of ${SHOOTS.length} shoots appeared across ${SAMPLE * 2} simulated deliveries`
+  `\n  ${everUsed.size} of ${active.length} active shoots appeared across ${SAMPLE * 2} deliveries`
 );
 
-const unused = SHOOTS.filter((s) => !everUsed.has(s.id));
-if (unused.length > 0) {
-  console.log(`  never selected: ${unused.map((s) => s.id).join(", ")}`);
+if (failures > 0) {
+  console.error(`\nFAIL ${failures} repeat-purchase samples broke a novelty guarantee\n`);
+  process.exit(1);
 }
-console.log();
+
+console.log("\nall repeat-purchase guarantees passed\n");

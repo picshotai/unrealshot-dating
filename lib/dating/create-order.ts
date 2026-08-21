@@ -1,9 +1,14 @@
 import { createAdminClient } from "@/utils/supabase/admin";
 import { makeDeterministicPhotoId } from "./deterministic-id";
+import { planUniqueOrderDelivery } from "./plan-order-delivery";
 import {
-  assertDeliveryShape,
-  planShootDelivery,
-} from "./select-shoots";
+  loadPreviousShootIds,
+  loadRecentGlobalConceptUsage,
+} from "./selection-history";
+import {
+  verifiedDatingReferenceUrls,
+  type StoredDatingReference,
+} from "./reference-image";
 import type { DeliveryBias } from "./interests";
 import {
   deriveBias,
@@ -27,7 +32,10 @@ import { datingPhotoshootOrchestrator } from "@/trigger/dating-shoot";
 export class DatingOrderError extends Error {
   constructor(
     message: string,
-    readonly code: "order_in_progress" | "insufficient_credits",
+    readonly code:
+      | "order_in_progress"
+      | "insufficient_credits"
+      | "references_need_reupload",
     readonly detail: Record<string, unknown> = {}
   ) {
     super(message);
@@ -50,7 +58,7 @@ export type CreateOrderInput = {
 };
 
 /**
- * Create batch (order), pre-allocate 100 order_photos with deterministic IDs,
+ * Create batch (order), pre-allocate 60 order_photos with deterministic IDs,
  * kick off parent orchestrator (exactly one parent task).
  */
 export async function createDatingShootOrder(input: CreateOrderInput) {
@@ -81,7 +89,7 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
 
   const { data: model, error: modelErr } = await db
     .from("models")
-    .select("id, user_id, samples(uri)")
+    .select("id, user_id, samples(uri, reference_sanitized)")
     .eq("id", modelId)
     .single();
 
@@ -89,12 +97,16 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
     throw new Error("Model not found or forbidden");
   }
 
-  const samples = ((model as any).samples || []) as { uri: string }[];
-  if (samples.length < 4) {
-    throw new Error("Upload at least 4 reference photos before ordering");
+  const samples = ((model as any).samples || []) as StoredDatingReference[];
+  let referenceImageUrls: string[];
+  try {
+    referenceImageUrls = verifiedDatingReferenceUrls(samples, 4);
+  } catch (error) {
+    throw new DatingOrderError(
+      error instanceof Error ? error.message : "Re-upload your reference photos",
+      "references_need_reupload"
+    );
   }
-
-  const referenceImageUrls = samples.map((s) => s.uri).filter(Boolean);
 
   // One shoot at a time. Without this a double-click or a second tab starts two
   // hundred-photo runs and charges twice.
@@ -113,6 +125,14 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
     );
   }
 
+  // History is loaded before charging. A second purchase uses unseen semantic
+  // concepts first, then unseen exact shoots, then least-recently-used shoots.
+  // Failing to read history must never quietly degrade into a repeat-heavy pack.
+  const [previousShootIds, globalConceptUsage] = await Promise.all([
+    loadPreviousShootIds(db, userId),
+    loadRecentGlobalConceptUsage(db),
+  ]);
+
   // Charge before any GPU work is dispatched. Charging afterwards means a crash
   // between allocation and dispatch gives away a shoot. Every failure path from
   // here on refunds.
@@ -129,6 +149,8 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
 
   // Everything past the charge runs inside a refund boundary. If allocation or
   // dispatch fails the user must not be left paying for a shoot that never ran.
+  let createdOrderId: string | null = null;
+  let dispatchAttempted = false;
   try {
     const { data: prefs, error: prefsErr } = await db
       .from("user_preferences")
@@ -138,7 +160,7 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
           vibe,
           style,
           interests: interests.length > 0 ? interests : null,
-        exclude_tags: excludeTags.length > 0 ? excludeTags : null,
+          exclude_tags: excludeTags.length > 0 ? excludeTags : null,
           updated_at: new Date().toISOString(),
         },
         { onConflict: "user_id" }
@@ -181,17 +203,18 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
     }
 
     const batchId = order.id as string;
+    createdOrderId = batchId;
 
-    // Pick which authored shoots this delivery contains. Nothing is composed:
-    // a shoot already fixes its location, outfit and light, so preferences only
-    // decide which ones he receives. Seeded from batchId, so retries and paid
-    // reshoots are stable.
-    const plan = planShootDelivery(batchId, {
+    // Reserve a globally unique, semantically diverse portfolio. The exact
+    // authored prompts are snapshotted below, so retries and reshoots remain
+    // stable after this one selection step.
+    const plan = await planUniqueOrderDelivery(db, batchId, {
       interests,
       excludeTags,
       dress: dress ?? input.style ?? "casual",
+      previousShootIds,
+      globalConceptUsage,
     });
-    assertDeliveryShape(plan);
 
     const finalRows = plan.map((frame) => ({
       order_id: batchId,
@@ -223,6 +246,10 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
     }
 
     // Kick off PARENT orchestrator only (children spawned inside)
+    // After this point a network failure is ambiguous: Trigger.dev may have
+    // accepted the run even if the client did not receive the handle. Keep the
+    // snapshotted order for audit/recovery instead of deleting work in flight.
+    dispatchAttempted = true;
     const handle = await datingPhotoshootOrchestrator.trigger({
       userId,
       batchId,
@@ -246,6 +273,15 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
       photosAllocated: finalRows.length,
     };
   } catch (error) {
+    if (createdOrderId && !dispatchAttempted) {
+      const { error: cleanupError } = await db
+        .from("user_shoot_orders")
+        .delete()
+        .eq("id", createdOrderId);
+      if (cleanupError) {
+        console.error("Failed to clean up an undispatched dating order:", cleanupError);
+      }
+    }
     await refundShootCredits(userId, SHOOT_CREDIT_COST);
     throw error;
   }
@@ -270,17 +306,13 @@ export async function resumeDatingShootOrder(orderId: string, userId: string) {
 
   const { data: model } = await db
     .from("models")
-    .select("id, samples(uri)")
+    .select("id, samples(uri, reference_sanitized)")
     .eq("id", order.model_id)
     .single();
 
-  const referenceImageUrls = (((model as any)?.samples || []) as { uri: string }[])
-    .map((s) => s.uri)
-    .filter(Boolean);
-
-  if (!referenceImageUrls.length) {
-    throw new Error("Model has no sample images");
-  }
+  const referenceImageUrls = verifiedDatingReferenceUrls(
+    ((model as any)?.samples || []) as StoredDatingReference[]
+  );
 
   // Reset failed → pending so parent will pick them up
   await db
