@@ -211,7 +211,7 @@ export function outfitOf(prompt: string): string | null {
 
 /** Frames whose gaze meets the lens. A shoot wants a mix, never all four. */
 export function meetsLens(prompt: string): boolean {
-  return /\b(eyes are on the lens|looks? (up |straight |directly )?to the lens|eyes? (are )?direct to the lens|to the lens with)\b/i.test(
+  return /\b(eyes are on the lens|looks? (up |straight |directly )?to the lens|looks? (straight |directly )?into the lens|eyes? (are )?direct to the lens|eyes? (?:are )?(look(?:ing)?|meet(?:s|ing)?) directly (into )?the lens|eyes? meet(?:ing|s)? the lens directly|meet(?:s|ing)? the (camera|lens) directly|to the lens with)\b/i.test(
     prompt
   );
 }

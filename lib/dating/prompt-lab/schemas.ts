@@ -4,7 +4,7 @@ import { EXCLUDABLE_TAGS, INTEREST_IDS } from "@/lib/dating/types";
 
 export const PROMPT_LAB_MODEL = "gemini-3.7-flash" as const;
 export const PROMPT_LAB_THINKING_LEVEL = "low" as const;
-export const PROMPT_SYSTEM_VERSION = "dating-scene-v1" as const;
+export const PROMPT_SYSTEM_VERSION = "dating-scene-v2" as const;
 
 export const SHOOT_KINDS = ["portrait", "home", "outdoors", "social", "activity"] as const;
 export const LIGHT_FAMILIES = ["window", "open-door", "overcast", "flash"] as const;
@@ -89,12 +89,24 @@ export const promptLabOutputSchema = z.object({
     location: z.string().trim().min(10).max(300),
     activity: z.string().trim().min(5).max(240),
     activityReason: z.string().trim().min(10).max(300),
-    outfit: z.string().trim().min(20).max(350),
+    outfit: z.string().trim().min(20).max(350).transform((value) => value.replace(/\.+$/, "")),
+    wardrobeState: z.union([
+      z.literal(""),
+      z.string().trim().min(20).max(350),
+    ]).default(""),
     light: z.string().trim().min(10).max(280),
+    environment: z.union([
+      z.literal(""),
+      z.string().trim().min(30).max(600),
+    ]).default(""),
+    environmentAnchors: z.union([
+      z.tuple([]),
+      z.array(z.string().trim().min(5).max(160)).min(2).max(3),
+    ]).default([]),
     lightFamily: z.enum(LIGHT_FAMILIES),
     kind: z.enum(SHOOT_KINDS),
     register: z.enum(DRESS_STYLES),
-    props: z.array(z.string().trim().min(2).max(60)).max(2),
+    props: z.array(z.string().trim().min(2).max(120)).max(2),
     rationale: z.string().trim().min(20).max(500),
   }).strict(),
   frames: z.array(promptLabFrameSchema).length(4),
@@ -110,7 +122,8 @@ export const GEMINI_OUTPUT_JSON_SCHEMA = {
       additionalProperties: false,
       required: [
         "id", "title", "conceptFamily", "settingFamily", "datingSignal", "location",
-        "activity", "activityReason", "outfit", "light", "lightFamily", "kind",
+        "activity", "activityReason", "outfit", "wardrobeState", "light", "environment",
+        "environmentAnchors", "lightFamily", "kind",
         "register", "props", "rationale",
       ],
       properties: {
@@ -123,7 +136,15 @@ export const GEMINI_OUTPUT_JSON_SCHEMA = {
         activity: { type: "string" },
         activityReason: { type: "string" },
         outfit: { type: "string" },
+        wardrobeState: { type: "string" },
         light: { type: "string" },
+        environment: { type: "string" },
+        environmentAnchors: {
+          type: "array",
+          minItems: 2,
+          maxItems: 3,
+          items: { type: "string" },
+        },
         lightFamily: { type: "string", enum: LIGHT_FAMILIES },
         kind: { type: "string", enum: SHOOT_KINDS },
         register: { type: "string", enum: DRESS_STYLES },

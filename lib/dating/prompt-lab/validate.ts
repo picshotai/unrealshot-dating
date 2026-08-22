@@ -9,6 +9,7 @@ import { SHOOTS } from "@/lib/dating/shoots";
 
 import type { PromptLabInput, PromptLabOutput, RecentScene } from "./schemas";
 import type { PromptLabPlan } from "./planner";
+import { SCENE_ANCHOR_PROMPT_SENTENCE } from "./system-instruction";
 
 export type PromptLabValidation = {
   passed: boolean;
@@ -26,6 +27,23 @@ const EXCLUSION_TERMS: Record<string, RegExp> = {
   teamSport: /\b(football|soccer|team sport|teammate|pitch touchline)\b/i,
 };
 
+const CONTINUITY_ELEMENTS: Readonly<Record<string, RegExp>> = {
+  wall: /\bwalls?\b/i,
+  bench: /\bbenches?\b/i,
+  chair: /\bchairs?\b|\barmchairs?\b/i,
+  stool: /\bstools?\b/i,
+  table: /\btables?\b/i,
+  counter: /\bcounters?\b/i,
+  railing: /\brailings?\b|\bbalustrades?\b|\bparapets?\b/i,
+  window: /\bwindows?\b|\bglazing\b/i,
+  doorway: /\bdoorways?\b|\bdoor frames?\b/i,
+  planter: /\bplanters?\b/i,
+  column: /\bcolumns?\b|\bpillars?\b/i,
+  steps: /\bsteps?\b|\bstaircases?\b/i,
+  floor: /\bfloors?\b|\bdecking\b|\bboards?\b/i,
+  shelf: /\bshelves?\b|\bshelving\b|\bbookshelves?\b/i,
+};
+
 function normalise(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
 }
@@ -41,6 +59,12 @@ function similarity(first: string, second: string): number {
   if (!a.size || !b.size) return 0;
   const shared = [...a].filter((token) => b.has(token)).length;
   return shared / new Set([...a, ...b]).size;
+}
+
+function continuityElements(value: string): string[] {
+  return Object.entries(CONTINUITY_ELEMENTS)
+    .filter(([, pattern]) => pattern.test(value))
+    .map(([name]) => name);
 }
 
 function libraryContext() {
@@ -99,6 +123,8 @@ export function validatePromptLabOutput(args: {
     output.scene.location,
     output.scene.activity,
     output.scene.activityReason,
+    output.scene.environment,
+    output.scene.wardrobeState,
     output.scene.rationale,
     ...output.frames.map((frame) => frame.prompt),
   ].join(" ");
@@ -112,6 +138,36 @@ export function validatePromptLabOutput(args: {
   if (new Set(output.scene.props.map(normalise)).size !== output.scene.props.length) {
     problems.push("the props list contains duplicates");
   }
+  if (!output.scene.environment) {
+    problems.push("scene.environment is missing; lock two permanent background landmarks across all four frames");
+  }
+  if (output.scene.environmentAnchors.length < 2) {
+    problems.push("scene.environmentAnchors must name at least two permanent landmarks");
+  }
+  for (const anchor of output.scene.environmentAnchors) {
+    if (!normalise(output.scene.environment).includes(normalise(anchor))) {
+      problems.push(`environment anchor "${anchor}" is not written verbatim inside scene.environment`);
+    }
+  }
+  if (!output.scene.wardrobeState) {
+    problems.push("scene.wardrobeState is missing; lock sleeves, fastenings, hems and accessories across all frames");
+  } else {
+    for (const term of ["clean", "continuous", "intact"]) {
+      if (!normalise(output.scene.wardrobeState).includes(term)) {
+        problems.push(`scene.wardrobeState must describe fabric edges as ${term}`);
+      }
+    }
+  }
+
+  const declaredProps = normalise(output.scene.props.join(" "));
+  for (const object of density) {
+    if (!declaredProps.includes(normalise(object))) {
+      problems.push(`the prompts introduce an undeclared scene object: ${object}; declare it in scene.props and establish it in scene.environment`);
+    }
+  }
+  const declaredContinuity = new Set(continuityElements(
+    `${output.scene.environment} ${output.scene.props.join(" ")}`
+  ));
 
   for (const exclusion of input.exclusions) {
     if (EXCLUSION_TERMS[exclusion]?.test(sceneText)) {
@@ -129,6 +185,20 @@ export function validatePromptLabOutput(args: {
     }
     if (!frame.prompt.includes(output.scene.light)) {
       problems.push(`frame "${frame.framing}" does not repeat the exact scene.light sentence`);
+    }
+    if (output.scene.environment && !frame.prompt.includes(output.scene.environment)) {
+      problems.push(`frame "${frame.framing}" does not repeat the exact scene.environment sentence`);
+    }
+    if (output.scene.wardrobeState && !frame.prompt.includes(output.scene.wardrobeState)) {
+      problems.push(`frame "${frame.framing}" does not repeat the exact scene.wardrobeState sentence`);
+    }
+    if (frame.framing !== "close" && !frame.prompt.includes(SCENE_ANCHOR_PROMPT_SENTENCE)) {
+      problems.push(`frame "${frame.framing}" is missing the exact scene-anchor instruction`);
+    }
+    for (const element of continuityElements(frame.prompt)) {
+      if (!declaredContinuity.has(element)) {
+        problems.push(`frame "${frame.framing}" invents an undeclared ${element}; establish every fixed element in scene.environment`);
+      }
     }
     if (!normalise(frame.prompt).includes(normalise(output.scene.location))) {
       problems.push(`frame "${frame.framing}" does not name the exact scene location`);
@@ -153,4 +223,3 @@ export function validatePromptLabOutput(args: {
 
   return { passed: problems.length === 0, problems: [...new Set(problems)], sceneDensity: density };
 }
-

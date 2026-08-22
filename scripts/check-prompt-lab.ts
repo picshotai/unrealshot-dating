@@ -24,14 +24,22 @@ import {
 import { executePromptLabGeneration } from "../lib/dating/prompt-lab/service";
 import { validatePromptLabOutput } from "../lib/dating/prompt-lab/validate";
 import { SHOOT_CATALOG } from "../lib/dating/shoot-catalog";
+import { meetsLens } from "../lib/dating/authoring/rules";
+import { SCENE_ANCHOR_PROMPT_SENTENCE } from "../lib/dating/prompt-lab/system-instruction";
 
 const identity = "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone.";
 const outfit = "a moss green cotton overshirt over a cream henley, dark denim, brown leather boots and a steel watch";
 const light = "A tall window filling the right edge of the frame lays broad soft daylight across him.";
 const location = "a bright conservatory beside a quiet neighbourhood cafe";
+const wardrobeState = "The overshirt sleeves are rolled twice to mid-forearm, every button and hem stays fixed, and all fabric edges are clean, continuous and intact.";
+const environmentAnchors = [
+  "floor-to-ceiling black-framed window along the right edge",
+  "pale plaster wall across the rear",
+];
+const environment = "A floor-to-ceiling black-framed window along the right edge and a pale plaster wall across the rear remain the two fixed background landmarks.";
 
-function prompt(framing: string, gaze: string, ratio = "3:4") {
-  return `${identity} He stands in ${location}, wearing ${outfit}. He settles his weight onto one leg while one hand rests against his own thigh and the other hangs loose, creating different shoulder heights. ${gaze} The pale wall carries four metres behind him into soft shapes. ${light} A ${ratio} ${framing} frame at eye level, iPhone 15 Pro, 24mm, f/1.8, 1/200, ISO 100. Keep visible pores across his cheeks, faint stubble along the jaw, natural eye creases and the cotton grain of the overshirt. The moment feels grounded in a relaxed pause before his morning coffee arrives.`;
+function prompt(framing: string, gaze: string, sceneAnchor: boolean, ratio = "3:4") {
+  return `${identity} ${sceneAnchor ? `${SCENE_ANCHOR_PROMPT_SENTENCE} ` : ""}He stands in ${location}, wearing ${outfit}. ${wardrobeState} ${environment} He settles his weight onto one leg while one hand rests against his own thigh and the other hangs loose, creating different shoulder heights. ${gaze} The pale wall carries four metres behind him into soft shapes. ${light} A ${ratio} ${framing} frame at eye level, iPhone 15 Pro, 24mm, f/1.8, 1/200, ISO 100. Keep visible pores across his cheeks, faint stubble along the jaw, natural eye creases and the cotton grain of the overshirt. The moment feels grounded in a relaxed pause before his morning coffee arrives.`;
 }
 
 const output: PromptLabOutput = {
@@ -45,7 +53,10 @@ const output: PromptLabOutput = {
     activity: "pausing before a morning coffee",
     activityReason: "he has arrived early and is taking in the calm room before ordering",
     outfit,
+    wardrobeState,
     light,
+    environment,
+    environmentAnchors,
     lightFamily: "window",
     kind: "social",
     register: "casual",
@@ -53,10 +64,10 @@ const output: PromptLabOutput = {
     rationale: "The quiet public setting and relaxed body language make him feel warm, present and easy to meet.",
   },
   frames: [
-    { framing: "close", width: 1728, height: 2304, prompt: prompt("close shoulders-up", "His eyes are on the lens and his mouth lifts at one corner.") },
-    { framing: "medium", width: 1728, height: 2304, prompt: prompt("medium chest-up", "His gaze goes past the lens toward the window.") },
-    { framing: "threeQuarter", width: 1728, height: 2304, prompt: prompt("three-quarter", "He looks directly to the lens with a quiet smile.") },
-    { framing: "expression", width: 1728, height: 2304, prompt: prompt("close expression", "He laughs while his gaze falls away from the camera.") },
+    { framing: "close", width: 1728, height: 2304, prompt: prompt("close shoulders-up", "His eyes are on the lens and his mouth lifts at one corner.", false) },
+    { framing: "medium", width: 1728, height: 2304, prompt: prompt("medium chest-up", "His gaze goes past the lens toward the window.", true) },
+    { framing: "threeQuarter", width: 1728, height: 2304, prompt: prompt("three-quarter", "He looks directly to the lens with a quiet smile.", true) },
+    { framing: "expression", width: 1728, height: 2304, prompt: prompt("close expression", "He laughs while his gaze falls away from the camera.", true) },
   ],
 };
 
@@ -133,6 +144,22 @@ async function main() {
   assert(!promptLabInputSchema.safeParse({ ...baseInput, interests: ["coffee", "gym", "art", "music", "travel", "reading", "golf"] }).success, "seven interests must fail");
   assert(promptLabOutputSchema.safeParse(output).success, "four-frame structured output should parse");
   assert(!promptLabOutputSchema.safeParse({ ...output, frames: output.frames.slice(0, 3) }).success, "three frames must fail");
+  const detailedProp = "a heavy rocks glass holding an amber drink with a large ice cube";
+  assert(detailedProp.length > 60);
+  assert(promptLabOutputSchema.safeParse({ ...output, scene: { ...output.scene, props: [detailedProp] } }).success, "normal detailed props must not fail an arbitrary 60-character limit");
+  const dottedOutfit = promptLabOutputSchema.parse({ ...output, scene: { ...output.scene, outfit: `${outfit}.` } });
+  assert.equal(dottedOutfit.scene.outfit, outfit, "trailing outfit punctuation must be normalised before exact-clause validation");
+  assert(meetsLens("His eyes are looking directly into the lens with a relaxed expression."), "natural direct-gaze wording must be recognised");
+  const legacyScene = { ...output.scene } as Record<string, unknown>;
+  delete legacyScene.environment;
+  delete legacyScene.environmentAnchors;
+  delete legacyScene.wardrobeState;
+  const legacyParsed = promptLabOutputSchema.safeParse({ ...output, scene: legacyScene });
+  assert(legacyParsed.success, "saved v1 candidates must remain readable in history");
+  if (legacyParsed.success) {
+    const legacyCheck = validatePromptLabOutput({ output: legacyParsed.data, input: baseInput, plan: { kind: "social", light: "window" } });
+    assert(legacyCheck.problems.some((problem) => problem.includes("scene.environment is missing")), "legacy candidates must be clearly marked as missing the new continuity contract");
+  }
 
   const recent: RecentScene[] = [{
     id: "old", title: "Old", conceptFamily: "old-family", settingFamily: "home",
@@ -171,6 +198,15 @@ async function main() {
   forbidden.frames = forbidden.frames.map((frame) => ({ ...frame, prompt: frame.prompt.replace(location, forbidden.scene.location) })) as PromptLabOutput["frames"];
   const forbiddenCheck = validatePromptLabOutput({ output: forbidden, input: baseInput, plan: { kind: "social", light: "window" } });
   assert(forbiddenCheck.problems.some((problem) => problem.includes("garage, workshop")), "workshop concept must fail the scene contract");
+
+  const inventedFurniture = structuredClone(output);
+  inventedFurniture.frames[2].prompt += " A timber bench now fills the centre of the floor.";
+  const continuityCheck = validatePromptLabOutput({ output: inventedFurniture, input: baseInput, plan: { kind: "social", light: "window" } });
+  assert(continuityCheck.problems.some((problem) => problem.includes("undeclared scene object: bench") || problem.includes("undeclared bench")), "a frame-only bench must fail continuity validation");
+  const changedWardrobe = structuredClone(output);
+  changedWardrobe.frames[3].prompt = changedWardrobe.frames[3].prompt.replace(wardrobeState, "The overshirt hangs with a loose sleeve edge.");
+  const wardrobeCheck = validatePromptLabOutput({ output: changedWardrobe, input: baseInput, plan: { kind: "social", light: "window" } });
+  assert(wardrobeCheck.problems.some((problem) => problem.includes("does not repeat the exact scene.wardrobeState")), "a changed sleeve or fabric state must fail continuity validation");
 
   const repository = new MemoryRepository();
   let calls = 0;

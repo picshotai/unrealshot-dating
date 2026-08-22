@@ -74,7 +74,7 @@ export function PromptLabResult({ run, busy, onSaveFeedback, onRetry }: {
           </div>
           <p className="text-sm text-muted-foreground">
             Reference: <span className="text-foreground">{run.referenceShootId}</span> ({run.referenceEvidence}) ·
-            {" "}{run.model} · thinking {run.thinkingLevel}
+            {" "}{run.model} · thinking {run.thinkingLevel} · {run.promptSystemVersion}
           </p>
         </CardHeader>
         <CardContent className="space-y-5">
@@ -94,9 +94,11 @@ export function PromptLabResult({ run, busy, onSaveFeedback, onRetry }: {
                 <Detail label="Concept family" value={parsed.data.scene.conceptFamily} />
                 <Detail label="Location" value={parsed.data.scene.location} />
                 <Detail label="Activity" value={parsed.data.scene.activity} />
+                <Detail label="Environment lock" value={parsed.data.scene.environment || "Missing in this older run"} />
                 <Detail label="Why he is doing it" value={parsed.data.scene.activityReason} />
                 <Detail label="Light" value={`${parsed.data.scene.lightFamily} — ${parsed.data.scene.light}`} />
                 <Detail label="Outfit" value={parsed.data.scene.outfit} />
+                <Detail label="Wardrobe lock" value={parsed.data.scene.wardrobeState || "Missing in this older run"} />
                 <Detail label="Props / density" value={`${parsed.data.scene.props.join(", ") || "none"} / ${run.sceneDensity.join(", ") || "none detected"}`} />
                 <div className="md:col-span-2"><Detail label="Scene rationale" value={parsed.data.scene.rationale} /></div>
               </div>
@@ -127,6 +129,9 @@ export function PromptLabResult({ run, busy, onSaveFeedback, onRetry }: {
                     </CardContent>
                   </Card>
                 ))}
+              </div>
+              <div className="rounded-lg border border-sky-500/40 bg-sky-500/10 p-4 text-sm text-sky-100">
+                <strong>Manual render order:</strong> generate the close frame first. Attach that close result alongside the identity references when generating medium, three-quarter and expression. Repeating text helps, but the scene-anchor image is what prevents the image model from rebuilding different walls or furniture.
               </div>
             </>
           ) : run.output !== null ? (
@@ -204,4 +209,3 @@ function Metric({ label, value }: { label: string; value: string }) {
 function Detail({ label, value }: { label: string; value: string }) {
   return <div><p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p><p className="mt-1 leading-6">{value}</p></div>;
 }
-
