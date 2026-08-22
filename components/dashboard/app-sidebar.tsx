@@ -16,6 +16,7 @@ import {
   ImagePlus,
   MessageCircleCodeIcon,
   WandSparklesIcon,
+  FlaskConicalIcon,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -107,6 +108,11 @@ export function AppSidebar({
       url: "/dating-shoot",
       icon: WandSparklesIcon,
       isActive: true,
+    },
+    {
+      title: "Prompt Lab",
+      url: "/prompt-lab",
+      icon: FlaskConicalIcon,
     },
     {
       title: "Create Model",

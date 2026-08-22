@@ -9,6 +9,95 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      prompt_lab_runs: {
+        Row: {
+          id: string
+          user_id: string
+          client_request_id: string
+          parent_run_id: string | null
+          status: string
+          model: string
+          thinking_level: string
+          prompt_system_version: string
+          reference_shoot_id: string
+          reference_evidence: string
+          input: Json
+          output: Json | null
+          validation_errors: Json
+          scene_density: Json
+          input_tokens: number
+          output_tokens: number
+          reasoning_tokens: number
+          total_tokens: number
+          estimated_cost_usd: number
+          pricing_snapshot: Json
+          feedback: Json
+          api_error: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          client_request_id: string
+          parent_run_id?: string | null
+          status: string
+          model: string
+          thinking_level: string
+          prompt_system_version: string
+          reference_shoot_id: string
+          reference_evidence: string
+          input: Json
+          output?: Json | null
+          validation_errors?: Json
+          scene_density?: Json
+          input_tokens?: number
+          output_tokens?: number
+          reasoning_tokens?: number
+          total_tokens?: number
+          estimated_cost_usd?: number
+          pricing_snapshot: Json
+          feedback?: Json
+          api_error?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          client_request_id?: string
+          parent_run_id?: string | null
+          status?: string
+          model?: string
+          thinking_level?: string
+          prompt_system_version?: string
+          reference_shoot_id?: string
+          reference_evidence?: string
+          input?: Json
+          output?: Json | null
+          validation_errors?: Json
+          scene_density?: Json
+          input_tokens?: number
+          output_tokens?: number
+          reasoning_tokens?: number
+          total_tokens?: number
+          estimated_cost_usd?: number
+          pricing_snapshot?: Json
+          feedback?: Json
+          api_error?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompt_lab_runs_parent_run_id_fkey"
+            columns: ["parent_run_id"]
+            isOneToOne: false
+            referencedRelation: "prompt_lab_runs"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       credits: {
         Row: {
           id: number

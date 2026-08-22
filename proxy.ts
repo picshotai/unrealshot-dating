@@ -21,6 +21,7 @@ const PROTECTED_ROUTES = [
   '/models',
   '/buy-credits',
   '/dating-shoot',
+  '/prompt-lab',
   '/gallery',
 ]
 
