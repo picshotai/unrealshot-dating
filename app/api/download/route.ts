@@ -1,47 +1,98 @@
-import { NextResponse } from 'next/server';
-import axios from 'axios';
+import { NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
 
-const rateLimit = 100; // Number of requests allowed in the time window
-const rateLimitWindow = 15 * 60 * 1000; // 15 minutes in milliseconds
-const ipRequests = new Map<string, { count: number, resetTime: number }>();
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 
-export async function POST(request: Request) {
-  const ip = request.headers.get('x-forwarded-for') || 'unknown';
-  const now = Date.now();
+function safeFilename(value: string | null, photoId: string): string {
+  const fallback = `unrealshot-${photoId.slice(0, 8)}.jpg`;
+  if (!value) return fallback;
 
-  let reqInfo = ipRequests.get(ip);
-  if (!reqInfo || now > reqInfo.resetTime) {
-    reqInfo = { count: 0, resetTime: now + rateLimitWindow };
+  const sanitized = value
+    .normalize("NFKD")
+    .replace(/[^a-zA-Z0-9._-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 120);
+
+  return sanitized || fallback;
+}
+
+/**
+ * Streams one delivered photo through our own origin.
+ *
+ * The old endpoint accepted an arbitrary image URL and the gallery fetched R2
+ * directly in the browser. That was both an SSRF risk and dependent on the
+ * storage domain's CORS behavior. Looking the photo up by id lets RLS verify
+ * ownership before this server fetches the trusted, stored URL.
+ */
+export async function GET(request: Request) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (reqInfo.count >= rateLimit) {
-    return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
+  const url = new URL(request.url);
+  const photoId = url.searchParams.get("photoId");
+  if (!photoId) {
+    return NextResponse.json({ error: "photoId required" }, { status: 400 });
   }
 
-  reqInfo.count++;
-  ipRequests.set(ip, reqInfo);
+  // order_photos RLS permits reads only when the parent order belongs to this
+  // authenticated user, so another customer's id behaves like a missing photo.
+  const { data: photo, error: photoError } = await supabase
+    .from("order_photos")
+    .select("id, status, image_url")
+    .eq("id", photoId)
+    .single();
+
+  if (photoError || !photo) {
+    return NextResponse.json({ error: "Photo not found" }, { status: 404 });
+  }
+  if (photo.status !== "completed" || !photo.image_url) {
+    return NextResponse.json(
+      { error: "Photo is not ready to download" },
+      { status: 409 }
+    );
+  }
 
   try {
-    const { imageUrl } = await request.json();
-
-    if (!imageUrl) {
-      return NextResponse.json({ error: 'Image URL is required' }, { status: 400 });
+    const upstream = await fetch(photo.image_url, { cache: "no-store" });
+    if (!upstream.ok || !upstream.body) {
+      console.error("photo download: upstream failed", {
+        photoId,
+        status: upstream.status,
+      });
+      return NextResponse.json(
+        { error: "Photo storage is temporarily unavailable" },
+        { status: 502 }
+      );
     }
 
-    const response = await axios.get(imageUrl, {
-      responseType: 'arraybuffer'
+    const filename = safeFilename(url.searchParams.get("filename"), photoId);
+    const headers = new Headers({
+      "Content-Type":
+        upstream.headers.get("content-type") || "application/octet-stream",
+      "Content-Disposition": `attachment; filename="${filename}"`,
+      "Cache-Control": "private, no-store",
+      "X-Content-Type-Options": "nosniff",
     });
+    const contentLength = upstream.headers.get("content-length");
+    if (contentLength) headers.set("Content-Length", contentLength);
 
-    const headers = new Headers();
-    headers.set('Content-Type', 'image/jpeg');
-    headers.set('Content-Disposition', 'attachment; filename="download.jpg"');
-
-    return new NextResponse(Buffer.from(response.data, 'binary'), {
-      status: 200,
-      headers: headers,
-    });
+    return new Response(upstream.body, { status: 200, headers });
   } catch (error) {
-    console.error('Error downloading image:', error);
-    return NextResponse.json({ error: 'Failed to download image' }, { status: 500 });
+    console.error("photo download failed", {
+      photoId,
+      message: error instanceof Error ? error.message : "Unknown error",
+    });
+    return NextResponse.json(
+      { error: "Failed to download photo" },
+      { status: 502 }
+    );
   }
 }

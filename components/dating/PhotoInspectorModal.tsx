@@ -86,6 +86,7 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
 }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
   const currentIndex = photos.findIndex((p) => p.id === photo?.id);
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < photos.length - 1;
@@ -265,14 +266,19 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
               onClick={async () => {
                 if (!imageUrl) return;
                 setSaving(true);
+                setSaveError('');
                 try {
                   await downloadPhoto(
+                    photo.id,
                     imageUrl,
                     photoFilename(photo.shootTitle, photo.frameIndex, isMock)
                   );
-                } catch {
-                  // The photo is still on screen; a failed save is worth no
-                  // more than the button returning to normal.
+                } catch (error) {
+                  setSaveError(
+                    error instanceof Error
+                      ? error.message
+                      : 'Download failed. Try again.'
+                  );
                 } finally {
                   setSaving(false);
                 }
@@ -286,6 +292,11 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
               )}
               {saving ? 'Saving…' : 'Download full size'}
             </Button>
+            {saveError && (
+              <p className="text-xs text-red-400 text-center" role="alert">
+                {saveError}
+              </p>
+            )}
 
             {/* Custom Regenerate Button */}
             <Button

@@ -7,12 +7,13 @@
  * showing the picture, which is what a user reported. On mobile it is worse:
  * the tab opens and the photo is still not in their camera roll.
  *
- * Fetching the bytes and handing over a blob URL makes the download same-origin
- * as far as the browser is concerned, so the filename and the save both work.
- * The gallery ZIP already fetches these URLs directly, which is how we know R2
- * allows it.
+ * The authenticated download endpoint verifies ownership, fetches the trusted
+ * stored URL on the server, and returns the bytes through this origin. Turning
+ * that response into a blob URL gives every supported browser a reliable save
+ * with the requested filename.
  */
 export async function downloadPhoto(
+  photoId: string,
   url: string,
   filename: string
 ): Promise<void> {
@@ -22,9 +23,15 @@ export async function downloadPhoto(
     return;
   }
 
-  const response = await fetch(url);
+  const params = new URLSearchParams({ photoId, filename });
+  const response = await fetch(`/api/download?${params.toString()}`);
   if (!response.ok) {
-    throw new Error(`Could not fetch the photo (${response.status})`);
+    const payload = (await response.json().catch(() => null)) as
+      | { error?: string }
+      | null;
+    throw new Error(
+      payload?.error || `Could not download the photo (${response.status})`
+    );
   }
 
   const blob = await response.blob();

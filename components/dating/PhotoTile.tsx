@@ -33,6 +33,7 @@ export const PhotoTile: React.FC<{
 }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
   const imageUrl = photo.imageUrl;
   const isMock = Boolean(imageUrl?.startsWith('data:image/svg+xml'));
 
@@ -40,14 +41,17 @@ export const PhotoTile: React.FC<{
     event.stopPropagation();
     if (!imageUrl || saving) return;
     setSaving(true);
+    setSaveError('');
     try {
       await downloadPhoto(
+        photo.id,
         imageUrl,
         photoFilename(photo.shootTitle, photo.frameIndex, isMock)
       );
-    } catch {
-      // The photo is still on screen and the inspector offers the same action;
-      // a failed save is worth no more than the button returning to normal.
+    } catch (error) {
+      setSaveError(
+        error instanceof Error ? error.message : 'Download failed. Try again.'
+      );
     } finally {
       setSaving(false);
     }
@@ -171,6 +175,11 @@ export const PhotoTile: React.FC<{
                 Reshoot
               </button>
             </div>
+            {saveError && (
+              <p className="text-[10px] leading-tight text-red-300" role="alert">
+                {saveError}
+              </p>
+            )}
           </div>
         </div>
       </div>
