@@ -22,11 +22,15 @@ import {
   CUSTOM_CREDITS_DEFAULT,
   type ExcludableTag,
   SHOOT_CREDIT_COST,
-  TOTAL_PHOTOS,
   type StylePref,
   type Vibe,
 } from "./types";
 import { datingPhotoshootOrchestrator } from "@/trigger/dating-shoot";
+import { dynamicPromptsEnabled, getDatingProductConfig } from "./config";
+import { isAdminEmail } from "@/lib/auth/admin-access";
+import { reserveProductionPortfolio } from "./production-prompts/store";
+import { RECIPE_PLANNER_VERSION } from "./scene-recipes";
+import { PROMPT_SYSTEM_VERSION } from "./prompt-lab/schemas";
 
 /** Refusals the API can translate into a status code, as distinct from faults. */
 export class DatingOrderError extends Error {
@@ -45,6 +49,8 @@ export class DatingOrderError extends Error {
 
 export type CreateOrderInput = {
   userId: string;
+  userEmail?: string | null;
+  clientRequestId: string;
   modelId: number;
   /** What he actually does. Drives the vibe weighting and the hobby prompts. */
   interests?: InterestId[];
@@ -70,6 +76,30 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
     dress,
     excludeTags = [],
   } = input;
+  const productConfig = getDatingProductConfig();
+  const useDynamicPrompts = dynamicPromptsEnabled({
+    userId,
+    isOwner: isAdminEmail(input.userEmail),
+    config: productConfig,
+  });
+
+  // Browser retries and double-clicks return the original order before any
+  // model lookup, credit spend, planning or Trigger dispatch.
+  const { data: priorRequest } = await (db as any)
+    .from("user_shoot_orders")
+    .select("id, trigger_run_id, photos_target")
+    .eq("user_id", userId)
+    .eq("client_request_id", input.clientRequestId)
+    .maybeSingle();
+  if (priorRequest) {
+    return {
+      orderId: priorRequest.id as string,
+      batchId: priorRequest.id as string,
+      triggerRunId: priorRequest.trigger_run_id as string | null,
+      photosAllocated: Number(priorRequest.photos_target ?? 0),
+      reused: true,
+    };
+  }
 
   // A locked vibe/style from an older client is honoured as a strong lean so
   // in-flight sessions keep working, but nothing locks the delivery any more.
@@ -128,10 +158,12 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
   // History is loaded before charging. A second purchase uses unseen semantic
   // concepts first, then unseen exact shoots, then least-recently-used shoots.
   // Failing to read history must never quietly degrade into a repeat-heavy pack.
-  const [previousShootIds, globalConceptUsage] = await Promise.all([
-    loadPreviousShootIds(db, userId),
-    loadRecentGlobalConceptUsage(db),
-  ]);
+  const [previousShootIds, globalConceptUsage] = useDynamicPrompts
+    ? [[], {}]
+    : await Promise.all([
+        loadPreviousShootIds(db, userId),
+        loadRecentGlobalConceptUsage(db),
+      ]);
 
   // Charge before any GPU work is dispatched. Charging afterwards means a crash
   // between allocation and dispatch gives away a shoot. Every failure path from
@@ -173,7 +205,7 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
     }
 
     // Create batch / order
-    const { data: order, error: orderErr } = await db
+    const { data: order, error: orderErr } = await (db as any)
       .from("user_shoot_orders")
       .insert({
         user_id: userId,
@@ -181,7 +213,14 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
         preferences_id: prefs?.id ?? null,
         status: "queued",
         custom_credits_remaining: CUSTOM_CREDITS_DEFAULT,
-        photos_target: TOTAL_PHOTOS,
+        photos_target: productConfig.photosPerDelivery,
+        shoots_target: productConfig.shootsPerDelivery,
+        client_request_id: input.clientRequestId,
+        creative_input: { interests, dress: dress ?? input.style ?? "casual", excludeTags },
+        pipeline_mode: useDynamicPrompts ? "dynamic" : "authored",
+        pipeline_stage: useDynamicPrompts ? "planning" : "rendering_photos",
+        planner_version: useDynamicPrompts ? RECIPE_PLANNER_VERSION : null,
+        prompt_system_version: useDynamicPrompts ? PROMPT_SYSTEM_VERSION : null,
       })
       .select()
       .single();
@@ -194,6 +233,22 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
       // error hands the client the same 409 it already knows how to render,
       // and the surrounding catch refunds the credits this request just spent.
       if ((orderErr as { code?: string } | null)?.code === "23505") {
+        const { data: duplicate } = await (db as any)
+          .from("user_shoot_orders")
+          .select("id, trigger_run_id, photos_target")
+          .eq("user_id", userId)
+          .eq("client_request_id", input.clientRequestId)
+          .maybeSingle();
+        if (duplicate) {
+          await refundShootCredits(userId, SHOOT_CREDIT_COST);
+          return {
+            orderId: duplicate.id as string,
+            batchId: duplicate.id as string,
+            triggerRunId: duplicate.trigger_run_id as string | null,
+            photosAllocated: Number(duplicate.photos_target ?? 0),
+            reused: true,
+          };
+        }
         throw new DatingOrderError(
           "A shoot is already running. Wait for it to finish before starting another.",
           "order_in_progress"
@@ -205,18 +260,13 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
     const batchId = order.id as string;
     createdOrderId = batchId;
 
-    // Reserve a globally unique, semantically diverse portfolio. The exact
-    // authored prompts are snapshotted below, so retries and reshoots remain
-    // stable after this one selection step.
-    const plan = await planUniqueOrderDelivery(db, batchId, {
+    const finalRows = useDynamicPrompts ? [] : (await planUniqueOrderDelivery(db, batchId, {
       interests,
       excludeTags,
       dress: dress ?? input.style ?? "casual",
       previousShootIds,
       globalConceptUsage,
-    });
-
-    const finalRows = plan.map((frame) => ({
+    })).map((frame) => ({
       order_id: batchId,
       shoot_id: frame.shootId,
       frame_index: frame.frameIndex,
@@ -234,15 +284,33 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
       ),
     }));
 
-    if (finalRows.length !== TOTAL_PHOTOS) {
-      await db.from("user_shoot_orders").delete().eq("id", batchId);
-      throw new Error(`Expected ${TOTAL_PHOTOS} rows, got ${finalRows.length}`);
+    if (useDynamicPrompts) {
+      await reserveProductionPortfolio({
+        db,
+        orderId: batchId,
+        userId,
+        input: {
+          count: productConfig.shootsPerDelivery,
+          interests,
+          dress: dress ?? input.style ?? "casual",
+          exclusions: excludeTags,
+        },
+      });
     }
 
-    const { error: photosErr } = await db.from("order_photos").insert(finalRows);
-    if (photosErr) {
+    if (!useDynamicPrompts && finalRows.length !== productConfig.photosPerDelivery) {
       await db.from("user_shoot_orders").delete().eq("id", batchId);
-      throw new Error(`Failed to allocate photos: ${photosErr.message}`);
+      throw new Error(
+        `Expected ${productConfig.photosPerDelivery} rows, got ${finalRows.length}`
+      );
+    }
+
+    if (!useDynamicPrompts) {
+      const { error: photosErr } = await db.from("order_photos").insert(finalRows);
+      if (photosErr) {
+        await db.from("user_shoot_orders").delete().eq("id", batchId);
+        throw new Error(`Failed to allocate photos: ${photosErr.message}`);
+      }
     }
 
     // Kick off PARENT orchestrator only (children spawned inside)
@@ -257,11 +325,11 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
       referenceImageUrls,
     });
 
-    await db
+    await (db as any)
       .from("user_shoot_orders")
       .update({
         trigger_run_id: handle.id,
-        status: "developing",
+        status: useDynamicPrompts ? "queued" : "developing",
         updated_at: new Date().toISOString(),
       })
       .eq("id", batchId);
@@ -271,6 +339,7 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
       batchId,
       triggerRunId: handle.id,
       photosAllocated: finalRows.length,
+      reused: false,
     };
   } catch (error) {
     if (createdOrderId && !dispatchAttempted) {
@@ -281,6 +350,20 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
       if (cleanupError) {
         console.error("Failed to clean up an undispatched dating order:", cleanupError);
       }
+    }
+    if (useDynamicPrompts && createdOrderId && dispatchAttempted) {
+      await (db as any)
+        .from("user_shoot_orders")
+        .update({
+          status: "queued",
+          pipeline_stage: "attention_required",
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", createdOrderId);
+      // Trigger acceptance is ambiguous after dispatch begins. The persisted
+      // dynamic order will be reconciled and delivered, so refunding here would
+      // both fulfill the order and return its payment.
+      throw error;
     }
     await refundShootCredits(userId, SHOOT_CREDIT_COST);
     throw error;
@@ -295,9 +378,9 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
 export async function resumeDatingShootOrder(orderId: string, userId: string) {
   const db = createAdminClient();
 
-  const { data: order } = await db
+  const { data: order } = await (db as any)
     .from("user_shoot_orders")
-    .select("id, user_id, model_id, status")
+    .select("id, user_id, model_id, status, pipeline_mode, pipeline_stage")
     .eq("id", orderId)
     .eq("user_id", userId)
     .single();
@@ -335,6 +418,11 @@ export async function resumeDatingShootOrder(orderId: string, userId: string) {
     .eq("order_id", orderId)
     .eq("status", "in_progress");
 
+  const { count: allocatedPhotos } = await db
+    .from("order_photos")
+    .select("id", { count: "exact", head: true })
+    .eq("order_id", orderId);
+
   const handle = await datingPhotoshootOrchestrator.trigger({
     userId: order.user_id,
     batchId: order.id,
@@ -342,11 +430,13 @@ export async function resumeDatingShootOrder(orderId: string, userId: string) {
     referenceImageUrls,
   });
 
-  await db
+  const promptOnly = order.pipeline_mode === "dynamic" && (allocatedPhotos ?? 0) === 0;
+  await (db as any)
     .from("user_shoot_orders")
     .update({
       trigger_run_id: handle.id,
-      status: "developing",
+      status: promptOnly ? "queued" : "developing",
+      pipeline_stage: promptOnly ? "writing_prompts" : order.pipeline_stage,
       updated_at: new Date().toISOString(),
     })
     .eq("id", orderId);

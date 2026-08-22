@@ -2,11 +2,15 @@ import { Metadata } from "next";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { DatingShootClient } from "./DatingShootClient";
+import { getDatingProductConfig } from "@/lib/dating/config";
 
-export const metadata: Metadata = {
-  title: "Dating Photoshoot | Unrealshot AI",
-  description: "60 dating photos across 15 distinct shoot concepts",
-};
+export function generateMetadata(): Metadata {
+  const config = getDatingProductConfig();
+  return {
+    title: "Dating Photoshoot | Unrealshot AI",
+    description: `${config.photosPerDelivery} dating photos across ${config.shootsPerDelivery} distinct shoot concepts`,
+  };
+}
 
 export default async function DatingShootPage({
   searchParams,
@@ -21,6 +25,7 @@ export default async function DatingShootPage({
   if (!user) redirect("/login");
 
   const params = await searchParams;
+  const productConfig = getDatingProductConfig();
 
   // Fetch all trained models for this user
   const { data: models, error: modelsError } = await supabase
@@ -54,6 +59,10 @@ export default async function DatingShootPage({
       orders={orders || []}
       initialModelId={params.modelId ? Number(params.modelId) : null}
       initialOrderId={params.orderId || null}
+      deliveryConfig={{
+        shoots: productConfig.shootsPerDelivery,
+        photos: productConfig.photosPerDelivery,
+      }}
     />
   );
 }

@@ -24,8 +24,6 @@ import {
 import {
   CUSTOM_CREDITS_DEFAULT,
   FRAMES_PER_SHOOT,
-  SHOOTS_PER_DELIVERY,
-  TOTAL_PHOTOS,
   type StylePref,
   type ExcludableTag,
 } from '@/lib/dating/types';
@@ -52,6 +50,8 @@ interface StudioIntakeViewProps {
   creditError: string;
   generalError: string;
   showCancel: boolean;
+  shootsPerDelivery: number;
+  totalPhotos: number;
 }
 
 /**
@@ -84,6 +84,8 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
   creditError,
   generalError,
   showCancel,
+  shootsPerDelivery,
+  totalPhotos,
 }) => {
   const [step, setStep] = useState<'configure' | 'confirm'>('configure');
   const [dress, setDress] = useState<StylePref>('casual');
@@ -452,7 +454,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
               <div className="text-xs font-mono text-zinc-400 text-center sm:text-left">
                 Includes{' '}
                 <span className="text-white font-semibold">
-                  {SHOOTS_PER_DELIVERY} shoots · {TOTAL_PHOTOS} photos
+                  {shootsPerDelivery} shoots · {totalPhotos} photos
                 </span>{' '}
                 + <span className="text-accent font-semibold">{CUSTOM_CREDITS_DEFAULT} reshoots</span>
               </div>
@@ -493,7 +495,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                     Photoshoot Blueprint Confirmation
                   </h2>
                   <p className="text-xs text-zinc-400">
-                    Review your setup before we shoot {SHOOTS_PER_DELIVERY} sessions for you.
+                    Review your setup before we shoot {shootsPerDelivery} sessions for you.
                   </p>
                 </div>
               </div>
@@ -560,7 +562,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                 <div className="flex items-center justify-between text-xs font-oxanium font-medium text-zinc-300">
                   <span className="flex items-center gap-1.5">
                     <Layers className="w-3.5 h-3.5 text-zinc-400" />
-                    {SHOOTS_PER_DELIVERY} shoots · {TOTAL_PHOTOS} photos
+                    {shootsPerDelivery} shoots · {totalPhotos} photos
                   </span>
                   <span className="text-white font-mono">
                     {FRAMES_PER_SHOOT} frames each
@@ -641,7 +643,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                   ) : (
                     <>
                       <ShieldCheck className="w-4 h-4 text-black" strokeWidth={2.5} />
-                      Confirm &amp; start {SHOOTS_PER_DELIVERY} shoots
+                      Confirm &amp; start {shootsPerDelivery} shoots
                       <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} />
                     </>
                   )}

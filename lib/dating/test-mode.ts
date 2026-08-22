@@ -52,11 +52,13 @@ const FALLBACK = { bg: "#18181b", accent: "#a1a1aa" };
 export function getMockPlaceholderImageUrl(
   shootId: string,
   frameIndex: number,
-  aspectRatio: string = "3:4"
+  aspectRatio: string = "3:4",
+  metadata?: { title?: string | null; kind?: ShootKind | null }
 ): string {
   const shoot = SHOOT_BY_ID.get(shootId);
-  const theme = shoot ? KIND_COLORS[shoot.kind] ?? FALLBACK : FALLBACK;
-  const label = (shoot?.title ?? shootId).toUpperCase();
+  const kind = metadata?.kind ?? shoot?.kind;
+  const theme = kind ? KIND_COLORS[kind] ?? FALLBACK : FALLBACK;
+  const label = (metadata?.title ?? shoot?.title ?? shootId).toUpperCase();
 
   const isWide = aspectRatio === "4:3";
   const isTall = aspectRatio === "9:16";

@@ -13,6 +13,16 @@ export type OrderStatus =
 
 export type PhotoStatus = "pending" | "in_progress" | "completed" | "failed";
 
+export {
+  FRAMES_PER_SHOOT,
+  SAMPLE_SHOOTS,
+  SHOOTS_PER_DELIVERY,
+  TOTAL_PHOTOS,
+} from "./product-settings";
+import {
+  SHOOTS_PER_DELIVERY,
+} from "./product-settings";
+
 /**
  * A delivery is SHOOTS_PER_DELIVERY shoots of FRAMES_PER_SHOOT frames.
  *
@@ -20,13 +30,6 @@ export type PhotoStatus = "pending" | "in_progress" | "completed" | "failed";
  * competing at the same distance are where the model rendered one as another.
  * TOTAL_PHOTOS is derived so the three numbers cannot drift apart.
  */
-export const FRAMES_PER_SHOOT = 4;
-export const SHOOTS_PER_DELIVERY = Number(
-  // Overridable so the pipeline can be exercised end to end against a partial
-  // library. The authored target is 15; anything lower is a development setting.
-  process.env.DATING_SHOOTS_PER_DELIVERY ?? 15
-);
-export const TOTAL_PHOTOS = SHOOTS_PER_DELIVERY * FRAMES_PER_SHOOT;
 
 /**
  * What one delivery costs the user. Override per environment with
@@ -46,7 +49,6 @@ export const CUSTOM_CREDITS_DEFAULT = 30;
  * this library — whether a shoot holds together across its frames. So a sample
  * run renders complete shoots and mocks the rest.
  */
-export const SAMPLE_SHOOTS = Number(process.env.DATING_SAMPLE_SHOOTS ?? 2);
 
 /**
  * How many shoots the balance can pay for.

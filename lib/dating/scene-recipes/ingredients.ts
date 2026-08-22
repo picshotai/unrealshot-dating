@@ -1,0 +1,182 @@
+import type {
+  ActivityRecipe,
+  DatingSignal,
+  EnvironmentTopology,
+  ReasonRecipe,
+  VenueRecipe,
+} from "./types";
+import type { InterestId } from "@/lib/dating/types";
+import type { PromptLabKind, PromptLabLight } from "@/lib/dating/prompt-lab/schemas";
+
+const ZONES = [
+  ["clear-centre", "the clear standing area at the centre"],
+  ["open-edge-left", "the uncluttered open edge on the left"],
+  ["open-edge-right", "the uncluttered open edge on the right"],
+  ["landmark-left", "the clear area with the permanent landmark held deep on frame-left"],
+  ["landmark-right", "the clear area with the permanent landmark held deep on frame-right"],
+  ["short-walk-in", "the short unobstructed walking line toward the centre"],
+  ["short-walk-out", "the short unobstructed walking line away from the centre"],
+  ["near-entry", "the open standing area just inside the public entry"],
+  ["far-entry", "the open standing area beyond the public entry"],
+  ["quiet-third-left", "the empty left third of the usable floor area"],
+  ["quiet-third-right", "the empty right third of the usable floor area"],
+  ["background-gap", "the open area aligned with a gap in the distant background"],
+  ["side-light-zone", "the open area where the existing light crosses from one side"],
+  ["deep-background-zone", "the open area that keeps the permanent background several metres behind him"],
+  ["foreground-clearance", "the open area with clean foreground clearance"],
+  ["turning-point", "the unobstructed turning point along the natural walking line"],
+  ["entry-sightline-left", "the open area that keeps the existing entry sightline on frame-left"],
+  ["entry-sightline-right", "the open area that keeps the existing entry sightline on frame-right"],
+  ["landmark-depth-left", "the clear area that holds the permanent landmark far behind him on frame-left"],
+  ["landmark-depth-right", "the clear area that holds the permanent landmark far behind him on frame-right"],
+  ["long-axis-near", "the near end of the venue's unobstructed long axis"],
+  ["long-axis-far", "the far end of the venue's unobstructed long axis"],
+  ["cross-light-near", "the clear near-side area reached by the existing cross-light"],
+  ["cross-light-far", "the clear far-side area reached by the existing cross-light"],
+] as const;
+
+function venue(
+  id: string,
+  label: string,
+  settingFamily: string,
+  kind: PromptLabKind,
+  interests: readonly InterestId[],
+  lights: readonly PromptLabLight[],
+  signals: readonly DatingSignal[],
+  topologyIds: readonly string[]
+): VenueRecipe {
+  return {
+    id,
+    label,
+    location: `the ${label}`,
+    conceptFamily: id,
+    settingFamily,
+    kind,
+    interests,
+    lights,
+    signals,
+    topologyIds,
+    zones: ZONES.map(([zoneId, direction]) => ({
+      id: zoneId,
+      direction: `${direction} of the ${label}`,
+    })),
+  };
+}
+
+/** Credible places a person could genuinely visit, never status props or service spaces. */
+export const VENUES: readonly VenueRecipe[] = [
+  venue("conservatory-morning", "bright neighbourhood conservatory", "residential-glazing", "home", ["coffee", "reading"], ["window", "open-door"], ["warmth", "social-ease"], ["glazing-plaster", "doorway-wall"]),
+  venue("kitchen-window", "calm apartment kitchen window area", "residential-kitchen", "home", ["coffee", "cooking"], ["window"], ["warmth", "competence"], ["window-tile", "glazing-plaster"]),
+  venue("reading-nook", "quiet apartment reading nook", "residential-lounge", "home", ["reading", "music"], ["window", "open-door"], ["warmth"], ["glazing-plaster", "doorway-wall"]),
+  venue("courtyard-home", "sunlit residential courtyard", "residential-outdoor", "home", ["coffee", "cooking"], ["open-door", "overcast"], ["warmth", "social-ease"], ["doorway-wall", "stone-opening"]),
+  venue("balcony-garden", "simple planted apartment balcony", "residential-outdoor", "home", ["reading", "coffee"], ["overcast", "window"], ["warmth"], ["railing-sky", "glazing-plaster"]),
+  venue("music-room", "minimal home music room", "residential-lounge", "home", ["music"], ["window"], ["warmth", "competence"], ["window-tile", "doorway-wall"]),
+  venue("dining-window", "bright home dining-window area", "residential-kitchen", "home", ["dining", "cooking"], ["window"], ["warmth"], ["glazing-plaster", "window-tile"]),
+  venue("terrace-herbs", "small herb-lined home terrace", "residential-glazing", "home", ["cooking", "coffee"], ["overcast", "open-door"], ["warmth", "competence"], ["railing-sky", "doorway-wall"]),
+
+  venue("coastal-promenade", "clean coastal promenade", "coast", "outdoors", ["travel", "running", "surfing"], ["overcast"], ["adventure", "social-ease"], ["shoreline-horizon", "path-landmark"]),
+  venue("riverside-walk", "wide riverside walking path", "park", "outdoors", ["running", "travel"], ["overcast"], ["warmth", "adventure"], ["path-landmark", "stone-opening"]),
+  venue("hill-overlook", "open hillside overlook", "upland", "outdoors", ["hiking", "travel"], ["overcast"], ["adventure", "competence"], ["stone-landscape", "path-landmark"]),
+  venue("botanical-walk", "quiet botanical-garden walkway", "garden", "outdoors", ["art", "travel", "reading"], ["overcast"], ["warmth", "social-ease"], ["path-landmark", "stone-opening"]),
+  venue("marina-boardwalk", "public marina boardwalk", "waterfront", "outdoors", ["sailing", "travel"], ["overcast"], ["adventure", "social-ease"], ["railing-sky", "shoreline-horizon"]),
+  venue("moorland-path", "open moorland footpath", "upland", "outdoors", ["hiking", "running"], ["overcast"], ["adventure"], ["path-landmark", "stone-landscape"]),
+  venue("dune-path", "open dune path above the beach", "coast", "outdoors", ["surfing", "travel"], ["overcast"], ["adventure"], ["shoreline-horizon", "path-landmark"]),
+  venue("city-river-steps", "broad city river steps", "city", "outdoors", ["travel", "art"], ["overcast"], ["social-ease", "competence"], ["stone-opening", "railing-sky"]),
+
+  venue("cafe-terrace", "welcoming neighbourhood cafe terrace", "hospitality", "social", ["coffee", "dining"], ["window", "overcast"], ["warmth", "social-ease"], ["doorway-wall", "glazing-plaster"]),
+  venue("bookshop-lounge", "independent bookshop lounge", "retail-cultural", "social", ["reading", "art"], ["window"], ["warmth", "competence"], ["glazing-plaster", "doorway-wall"]),
+  venue("gallery-courtyard", "contemporary gallery courtyard", "art-space", "social", ["art", "travel"], ["overcast", "open-door"], ["competence", "social-ease"], ["stone-opening", "doorway-wall"]),
+  venue("market-arcade", "bright covered market arcade", "city", "social", ["travel", "dining"], ["open-door", "overcast"], ["social-ease", "warmth"], ["colonnade-depth", "doorway-wall"]),
+  venue("guesthouse-terrace", "relaxed coastal guesthouse terrace", "terrace", "social", ["travel", "dining"], ["overcast", "window"], ["warmth", "social-ease"], ["railing-sky", "doorway-wall"]),
+  venue("museum-courtyard", "quiet museum courtyard", "art-space", "social", ["art", "travel"], ["overcast", "open-door"], ["competence", "social-ease"], ["colonnade-depth", "stone-opening"]),
+  venue("bakery-window", "neighbourhood bakery window", "hospitality", "social", ["coffee", "dining"], ["window"], ["warmth"], ["glazing-plaster", "window-tile"]),
+  venue("music-venue-courtyard", "small live-music venue courtyard", "nightlife", "social", ["music", "nightlife"], ["flash", "open-door"], ["social-ease", "warmth"], ["doorway-wall", "stone-opening"]),
+
+  venue("clay-tennis", "empty clay tennis court", "sports-court", "activity", ["tennis"], ["overcast"], ["competence", "adventure"], ["court-sky", "path-landmark"]),
+  venue("running-track", "quiet outdoor running track", "sports-court", "activity", ["running", "gym"], ["overcast"], ["competence", "adventure"], ["court-sky", "path-landmark"]),
+  venue("climbing-wall", "bright uncluttered climbing wall", "fitness-studio", "activity", ["climbing", "gym"], ["window", "open-door"], ["competence", "adventure"], ["glazing-plaster", "doorway-wall"]),
+  venue("boxing-corner", "clean daylight boxing-gym corner", "fitness-studio", "activity", ["boxing", "gym"], ["window", "open-door"], ["competence"], ["glazing-plaster", "doorway-wall"]),
+  venue("links-path", "open links-course walking path", "golf", "activity", ["golf", "travel"], ["overcast"], ["competence", "social-ease"], ["path-landmark", "stone-landscape"]),
+  venue("public-jetty", "open public sailing jetty", "waterfront", "activity", ["sailing", "travel"], ["overcast"], ["adventure", "competence"], ["shoreline-horizon", "railing-sky"]),
+  venue("art-studio-courtyard", "bright community art-studio courtyard", "art-space", "activity", ["art"], ["open-door", "overcast"], ["competence", "warmth"], ["doorway-wall", "stone-opening"]),
+  venue("snow-trail", "open snow trail above the treeline", "snow", "activity", ["skiing", "travel"], ["overcast"], ["adventure", "competence"], ["path-landmark", "stone-landscape"]),
+
+  venue("pale-window-wall", "pale wall beside a tall window", "plain-wall", "portrait", ["reading", "art"], ["window"], ["warmth", "competence"], ["glazing-plaster", "window-tile"]),
+  venue("garden-wall", "clean garden wall with open sky", "garden", "portrait", ["travel", "coffee"], ["overcast"], ["warmth", "social-ease"], ["stone-landscape", "path-landmark"]),
+  venue("coastal-wall", "white coastal wall above the sea", "coast", "portrait", ["travel", "surfing"], ["overcast"], ["adventure", "social-ease"], ["shoreline-horizon", "stone-landscape"]),
+  venue("gallery-window-wall", "bare gallery wall beside high glazing", "art-space", "portrait", ["art"], ["window"], ["competence"], ["glazing-plaster", "doorway-wall"]),
+  venue("brick-courtyard-wall", "warm brick courtyard wall", "city", "portrait", ["music", "nightlife"], ["overcast", "flash"], ["warmth", "social-ease"], ["doorway-wall", "stone-opening"]),
+  venue("clubhouse-exterior", "plain clubhouse exterior wall", "golf", "portrait", ["golf", "tennis"], ["overcast"], ["competence", "social-ease"], ["stone-opening", "path-landmark"]),
+  venue("glasshouse-wall", "botanical glasshouse exterior", "garden", "portrait", ["travel", "art"], ["overcast", "window"], ["warmth", "social-ease"], ["glazing-plaster", "path-landmark"]),
+  venue("seafront-arch", "simple seafront stone arch", "coast", "portrait", ["travel", "sailing"], ["overcast"], ["adventure", "competence"], ["stone-opening", "shoreline-horizon"]),
+] as const;
+
+export const TOPOLOGIES: readonly EnvironmentTopology[] = [
+  { id: "glazing-plaster", direction: "Keep tall glazing on the frame-right edge and one pale uninterrupted wall across the rear.", anchors: ["tall glazing on the frame-right edge", "pale uninterrupted rear wall"], supportSurface: null },
+  { id: "doorway-wall", direction: "Keep one broad doorway on the frame-left edge and one continuous wall receding behind him.", anchors: ["broad doorway on the frame-left edge", "continuous wall receding behind him"], supportSurface: null },
+  { id: "window-tile", direction: "Keep a tall window at the frame-left edge and a clean tiled plane across the rear.", anchors: ["tall window at the frame-left edge", "clean tiled rear plane"], supportSurface: null },
+  { id: "railing-sky", direction: "Keep the slim railing entirely in the distant background and the open skyline above it; his body never touches the railing.", anchors: ["slim distant-background railing", "open skyline above it"], supportSurface: null },
+  { id: "stone-opening", direction: "Keep one pale stone plane along the frame-left edge and a broad open passage on frame-right.", anchors: ["pale stone plane on the frame-left edge", "broad open passage on frame-right"], supportSurface: null },
+  { id: "shoreline-horizon", direction: "Keep the shoreline running across the lower background and one uninterrupted horizon across the upper background.", anchors: ["shoreline across the lower background", "uninterrupted upper-background horizon"], supportSurface: null },
+  { id: "path-landmark", direction: "Keep the clear path entering from the lower frame and one distant natural landmark in the upper background.", anchors: ["clear path entering from the lower frame", "single distant upper-background landmark"], supportSurface: null },
+  { id: "stone-landscape", direction: "Keep one low stone boundary deep in the background and the open landscape rising behind it; his body never touches the boundary.", anchors: ["low distant-background stone boundary", "open landscape rising behind it"], supportSurface: null },
+  { id: "colonnade-depth", direction: "Keep one column at the frame-left edge and the open arcade receding through the frame-right background.", anchors: ["single column at the frame-left edge", "open arcade in the frame-right background"], supportSurface: null },
+  { id: "court-sky", direction: "Keep the court markings beneath him and one distant fence line below the open sky; his body never touches the fence.", anchors: ["court markings beneath him", "distant fence line below open sky"], supportSurface: null },
+] as const;
+
+export const PROPS: Readonly<Record<string, string>> = {
+  cup: "one plain ceramic cup held only in his hand",
+  book: "one closed clothbound book held only in his hand",
+  racket: "one unbranded racket held only in his hand",
+  ball: "one plain sports ball held only in his hand",
+  rope: "one coiled skipping rope held only in his hands",
+  guitar: "one unbranded acoustic guitar carried on its strap",
+  board: "one unbranded surfboard carried under one arm",
+  dog: "one calm dog standing beside him",
+};
+
+export const ACTIVITIES: readonly ActivityRecipe[] = [
+  { id: "arriving-pause", activity: "pausing naturally just after arriving", kinds: ["home", "social", "outdoors", "portrait"], signals: ["warmth", "social-ease"], propIds: [] },
+  { id: "unhurried-walk", activity: "taking a few unhurried steps through the clear shooting zone", kinds: ["social", "outdoors", "activity"], signals: ["warmth", "adventure", "social-ease"], propIds: [] },
+  { id: "view-pause", activity: "stopping briefly to take in the view", kinds: ["outdoors", "social", "portrait"], signals: ["adventure", "social-ease"], propIds: [] },
+  { id: "cuff-settle", activity: "settling one cuff before continuing with his plans", kinds: ["home", "social", "portrait"], signals: ["competence", "social-ease"], propIds: [] },
+  { id: "coffee-break", activity: "taking a quiet coffee break", interest: "coffee", kinds: ["home", "social"], signals: ["warmth", "social-ease"], propIds: ["cup"] },
+  { id: "book-pause", activity: "closing a book after finding a passage he liked", interest: "reading", kinds: ["home", "social"], signals: ["warmth", "competence"], propIds: ["book"] },
+  { id: "post-run-breath", activity: "slowing down after a short relaxed run", interest: "running", kinds: ["outdoors", "activity"], signals: ["competence", "adventure"], propIds: [] },
+  { id: "mobility-reset", activity: "finishing a light mobility warm-up", interest: "gym", kinds: ["activity", "outdoors"], signals: ["competence"], propIds: [] },
+  { id: "tennis-reset", activity: "resetting between two casual tennis points", interest: "tennis", kinds: ["activity"], signals: ["competence", "social-ease"], propIds: ["racket", "ball"] },
+  { id: "boxing-wraps", activity: "loosening his hand wraps after a short boxing session", interest: "boxing", kinds: ["activity"], signals: ["competence"], propIds: [] },
+  { id: "climb-review", activity: "looking over the next easy climbing sequence", interest: "climbing", kinds: ["activity"], signals: ["competence", "adventure"], propIds: [] },
+  { id: "golf-walk", activity: "walking between two relaxed holes", interest: "golf", kinds: ["activity", "outdoors"], signals: ["competence", "social-ease"], propIds: [] },
+  { id: "music-break", activity: "pausing between two songs he has been practising", interest: "music", kinds: ["home", "social"], signals: ["warmth", "competence"], propIds: ["guitar"] },
+  { id: "surf-walk", activity: "walking back from checking the water", interest: "surfing", kinds: ["activity", "outdoors"], signals: ["adventure"], propIds: ["board"] },
+  { id: "gallery-look", activity: "taking a quiet second look at the room around him", interest: "art", kinds: ["social", "portrait"], signals: ["competence", "warmth"], propIds: [] },
+  { id: "travel-orient", activity: "pausing to enjoy a place he has just reached", interest: "travel", kinds: ["social", "outdoors", "portrait"], signals: ["adventure", "social-ease"], propIds: [] },
+  { id: "dog-walk", activity: "pausing during an easy walk with his dog", interest: "dogs", kinds: ["outdoors"], signals: ["warmth"], propIds: ["dog"], excludedTags: ["dog"] },
+  { id: "cycling-stop", activity: "taking a short break during a relaxed ride", interest: "cycling", kinds: ["outdoors", "activity"], signals: ["adventure", "competence"], propIds: [], excludedTags: ["bicycle"] },
+  { id: "football-cooldown", activity: "cooling down after a casual football game", interest: "football", kinds: ["activity"], signals: ["social-ease", "competence"], propIds: ["ball"], excludedTags: ["teamSport"] },
+  { id: "trail-pause", activity: "taking a short pause during an easy day hike", interest: "hiking", kinds: ["outdoors", "activity"], signals: ["adventure", "competence"], propIds: [] },
+  { id: "recipe-pause", activity: "pausing after preparing one part of an easy meal", interest: "cooking", kinds: ["home"], signals: ["warmth", "competence"], propIds: [] },
+  { id: "evening-arrival", activity: "arriving early for an easy evening with friends", interest: "nightlife", kinds: ["social", "portrait"], signals: ["social-ease", "warmth"], propIds: [] },
+  { id: "sailing-pause", activity: "pausing after checking the conditions for a relaxed sail", interest: "sailing", kinds: ["outdoors", "activity"], signals: ["adventure", "competence"], propIds: [] },
+  { id: "snow-route-pause", activity: "taking a calm break while considering the next easy snow route", interest: "skiing", kinds: ["outdoors", "activity"], signals: ["adventure", "competence"], propIds: [] },
+  { id: "dinner-arrival", activity: "arriving a little early for a relaxed dinner", interest: "dining", kinds: ["social", "home"], signals: ["warmth", "social-ease"], propIds: [] },
+  { id: "road-trip-story", activity: "pausing after sharing a favourite road-trip story", interest: "motorcycles", kinds: ["social", "portrait"], signals: ["adventure", "social-ease"], propIds: [] },
+] as const;
+
+export const REASONS: readonly ReasonRecipe[] = [
+  { id: "early-arrival", reason: "he arrived a few minutes early and is enjoying the unhurried pause", signals: ["warmth", "social-ease"] },
+  { id: "between-plans", reason: "he has a calm moment between two plans and is taking in the place", signals: ["warmth", "social-ease"] },
+  { id: "small-progress", reason: "he has just made a little progress and is quietly pleased with it", signals: ["competence", "warmth"] },
+  { id: "familiar-routine", reason: "this is a familiar part of his week and he feels naturally at ease", signals: ["warmth", "competence"] },
+  { id: "weekend-start", reason: "his weekend has just started and he has nowhere he needs to rush", signals: ["warmth", "social-ease"] },
+  { id: "weather-break", reason: "the weather has opened briefly and he is making the most of it", signals: ["adventure", "warmth"] },
+  { id: "next-step", reason: "he is considering his next easy step before carrying on", signals: ["competence", "adventure"] },
+  { id: "good-memory", reason: "something about the moment has reminded him of a good story", signals: ["warmth", "social-ease"] },
+  { id: "quiet-confidence", reason: "he has finished what he came to do and can relax into the moment", signals: ["competence", "warmth"] },
+  { id: "curious-pause", reason: "he has noticed one interesting detail and gives it his attention", signals: ["competence", "adventure"] },
+  { id: "fresh-air", reason: "he stepped outside for fresh air and is glad he did", signals: ["adventure", "warmth"] },
+  { id: "easy-company", reason: "he is waiting for easy company and already feels comfortable there", signals: ["social-ease", "warmth"] },
+] as const;
+
+export const TOPOLOGY_BY_ID = new Map(TOPOLOGIES.map((item) => [item.id, item]));

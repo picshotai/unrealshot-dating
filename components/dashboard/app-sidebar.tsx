@@ -82,8 +82,10 @@ function CreditsCard({ userId }: { userId?: string }) {
 
 export function AppSidebar({
   user,
+  showPromptLab = false,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
+  showPromptLab?: boolean
   user?: {
     name: string
     email: string
@@ -109,11 +111,11 @@ export function AppSidebar({
       icon: WandSparklesIcon,
       isActive: true,
     },
-    {
+    ...(showPromptLab ? [{
       title: "Prompt Lab",
       url: "/prompt-lab",
       icon: FlaskConicalIcon,
-    },
+    }] : []),
     {
       title: "Create Model",
       url: "/models/create",
@@ -129,7 +131,7 @@ export function AppSidebar({
       url: "/models",
       icon: DatabaseBackup,
     },
-  ], [])
+  ], [showPromptLab])
 
   return (
     <Sidebar variant="inset" {...props}>

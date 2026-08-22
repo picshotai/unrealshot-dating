@@ -10,6 +10,7 @@ import { SHOOTS } from "@/lib/dating/shoots";
 import type { PromptLabInput, PromptLabOutput, RecentScene } from "./schemas";
 import type { PromptLabPlan } from "./planner";
 import { SCENE_ANCHOR_PROMPT_SENTENCE } from "./system-instruction";
+import type { DatingSceneBrief } from "@/lib/dating/scene-recipes/types";
 
 export type PromptLabValidation = {
   passed: boolean;
@@ -39,7 +40,7 @@ const CONTINUITY_ELEMENTS: Readonly<Record<string, RegExp>> = {
   doorway: /\bdoorways?\b|\bdoor frames?\b/i,
   planter: /\bplanters?\b/i,
   column: /\bcolumns?\b|\bpillars?\b/i,
-  steps: /\bsteps?\b|\bstaircases?\b/i,
+  steps: /\b(?:stone|concrete|broad|fixed|stair) steps\b|\bstaircases?\b/i,
   floor: /\bfloors?\b|\bdecking\b|\bboards?\b/i,
   shelf: /\bshelves?\b|\bshelving\b|\bbookshelves?\b/i,
 };
@@ -87,8 +88,9 @@ export function validatePromptLabOutput(args: {
   input: PromptLabInput;
   plan: PromptLabPlan;
   recentScenes?: readonly RecentScene[];
+  lockedBrief?: DatingSceneBrief;
 }): PromptLabValidation {
-  const { output, input, plan, recentScenes = [] } = args;
+  const { output, input, plan, recentScenes = [], lockedBrief } = args;
   const candidate: CandidateShoot = {
     id: output.scene.id,
     title: output.scene.title,
@@ -116,6 +118,46 @@ export function validatePromptLabOutput(args: {
     problems.push(`dress register is "${output.scene.register}"; it must be "${input.dress}"`);
   }
 
+  if (lockedBrief) {
+    const exactFields: Array<[string, string, string]> = [
+      ["scene.id", output.scene.id, lockedBrief.sceneId],
+      ["scene.conceptFamily", output.scene.conceptFamily, lockedBrief.conceptFamily],
+      ["scene.settingFamily", output.scene.settingFamily, lockedBrief.settingFamily],
+      ["scene.location", output.scene.location, lockedBrief.location],
+      ["scene.activity", output.scene.activity, lockedBrief.activity],
+      ["scene.activityReason", output.scene.activityReason, lockedBrief.activityReason],
+      ["scene.datingSignal", output.scene.datingSignal, lockedBrief.datingSignal],
+      ["scene.kind", output.scene.kind, lockedBrief.kind],
+      ["scene.lightFamily", output.scene.lightFamily, lockedBrief.lightFamily],
+    ];
+    for (const [field, actual, expected] of exactFields) {
+      if (actual !== expected) {
+        problems.push(`${field} changed the reserved brief; expected "${expected}"`);
+      }
+    }
+    const actualProps = output.scene.props.map(normalise).sort();
+    const expectedProps = lockedBrief.props.map(normalise).sort();
+    if (JSON.stringify(actualProps) !== JSON.stringify(expectedProps)) {
+      problems.push("scene.props changed the reserved brief's movable-prop list");
+    }
+    for (const anchor of lockedBrief.environmentAnchors) {
+      if (!normalise(output.scene.environment).includes(normalise(anchor))) {
+        problems.push(`scene.environment omits reserved environment anchor "${anchor}"`);
+      }
+    }
+    if (!lockedBrief.supportSurface) {
+      const bodySupport =
+        /\b(leans?|sits?|seated|perches?|rests? (?:his |one )?(?:hand|palm|forearm|elbow|body) (?:on|against)|places? .{0,40} (?:on|against))\b/i;
+      for (const frame of output.frames) {
+        if (bodySupport.test(frame.prompt)) {
+          problems.push(
+            `frame "${frame.framing}" makes the body or a prop depend on undeclared scene geometry`
+          );
+        }
+      }
+    }
+  }
+
   const sceneText = [
     output.scene.title,
     output.scene.conceptFamily,
@@ -132,8 +174,8 @@ export function validatePromptLabOutput(args: {
   if (FORBIDDEN_SCENE.test(sceneText)) {
     problems.push("the candidate uses a quarantined garage, workshop, repair, warehouse or industrial-service concept");
   }
-  if (output.scene.props.length > 2 || density.length > 2) {
-    problems.push(`the scene asks the image model to track ${Math.max(output.scene.props.length, density.length)} props; use at most two`);
+  if (output.scene.props.length > 2) {
+    problems.push(`the scene asks the image model to track ${output.scene.props.length} movable props; use at most two`);
   }
   if (new Set(output.scene.props.map(normalise)).size !== output.scene.props.length) {
     problems.push("the props list contains duplicates");
@@ -159,10 +201,12 @@ export function validatePromptLabOutput(args: {
     }
   }
 
-  const declaredProps = normalise(output.scene.props.join(" "));
+  const declaredSceneObjects = normalise(
+    `${output.scene.environment} ${output.scene.props.join(" ")}`
+  );
   for (const object of density) {
-    if (!declaredProps.includes(normalise(object))) {
-      problems.push(`the prompts introduce an undeclared scene object: ${object}; declare it in scene.props and establish it in scene.environment`);
+    if (!declaredSceneObjects.includes(normalise(object))) {
+      problems.push(`the prompts introduce an undeclared scene object: ${object}; establish fixed geometry in scene.environment or movable objects in scene.props`);
     }
   }
   const declaredContinuity = new Set(continuityElements(
@@ -205,20 +249,22 @@ export function validatePromptLabOutput(args: {
     }
   }
 
-  const priorFamily = recentScenes.find((scene) =>
-    normalise(scene.conceptFamily) === normalise(output.scene.conceptFamily)
-  );
-  if (priorFamily) {
-    problems.push(`concept family "${output.scene.conceptFamily}" repeats recent scene "${priorFamily.title}"`);
-  }
-  const semanticDuplicate = recentScenes.find((scene) =>
-    similarity(
-      `${scene.location} ${scene.activity}`,
-      `${output.scene.location} ${output.scene.activity}`
-    ) >= 0.55
-  );
-  if (semanticDuplicate) {
-    problems.push(`location and activity are too similar to recent scene "${semanticDuplicate.title}"`);
+  if (!lockedBrief) {
+    const priorFamily = recentScenes.find((scene) =>
+      normalise(scene.conceptFamily) === normalise(output.scene.conceptFamily)
+    );
+    if (priorFamily) {
+      problems.push(`concept family "${output.scene.conceptFamily}" repeats recent scene "${priorFamily.title}"`);
+    }
+    const semanticDuplicate = recentScenes.find((scene) =>
+      similarity(
+        `${scene.location} ${scene.activity}`,
+        `${output.scene.location} ${output.scene.activity}`
+      ) >= 0.55
+    );
+    if (semanticDuplicate) {
+      problems.push(`location and activity are too similar to recent scene "${semanticDuplicate.title}"`);
+    }
   }
 
   return { passed: problems.length === 0, problems: [...new Set(problems)], sceneDensity: density };

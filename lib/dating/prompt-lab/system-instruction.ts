@@ -43,8 +43,8 @@ ENVIRONMENT CONTINUITY
 - Place the photographer inside one small shooting zone and keep the camera facing the same general background across all four frames. Change crop, height and the man's action; never reverse to an unrelated side of the venue.
 - The environment sentence must establish two stable landmarks, for example glazing and a terrace railing, a doorway and a stone wall, or a window and a fixed counter. State where they sit relative to the frame.
 - Preserve those landmarks even when they become soft or partly cropped in a close frame. A close frame still names the exact environment sentence.
-- Any chair, bench, stool, table, rail or surface that supports his body must be declared in scene.props and established in the environment sentence from the start. Never invent furniture for only one frame.
-- Portable props may be used in a subset of frames, but architecture, furniture and backdrop geometry remain constant.
+- A fixed surface may support his body only when the supplied brief explicitly names that support surface. It belongs in the environment sentence, never in the movable-props list. Never invent support geometry for a pose.
+- Every portable prop is fixed by the supplied brief and established in the opener. Later prompts must account for the same prop without adding furniture or changing architecture to hold it.
 - Do not replace a visible bar, doorway, railing, wall, window, skyline or floor pattern with a new background in a later frame.
 - The close frame is the scene anchor and is rendered first. Each other prompt must contain this exact sentence: "${SCENE_ANCHOR_PROMPT_SENTENCE}"
 - Keep every prompt complete enough to work alone, while the scene-anchor image provides the strongest continuity when frames are rendered in sequence.

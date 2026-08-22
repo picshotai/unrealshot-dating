@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { isAdminEmail } from "@/lib/auth/admin-access";
 import { executePromptLabGeneration, PromptLabServiceError } from "@/lib/dating/prompt-lab/service";
 import { promptLabInputSchema } from "@/lib/dating/prompt-lab/schemas";
 import { SupabasePromptLabRepository } from "@/lib/dating/prompt-lab/supabase-repository";
@@ -14,6 +15,9 @@ export async function POST(request: Request) {
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (!isAdminEmail(user.email)) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
   let body: unknown;

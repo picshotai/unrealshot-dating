@@ -13,6 +13,9 @@
     "check:shoots": "tsx scripts/check-shoots.ts",
     "check:variety": "tsx scripts/check-variety.ts",
     "check:prompt-lab": "tsx scripts/check-prompt-lab.ts",
+    "check:recipes": "tsx scripts/check-scene-recipes.ts",
+    "check:production-prompts": "tsx scripts/check-production-prompts.ts",
+    "check:production-types": "tsc -p tsconfig.dating-pipeline.json --pretty false",
     "test:anchor": "tsx scripts/test-anchor-chain.ts"
   },
   "dependencies": {

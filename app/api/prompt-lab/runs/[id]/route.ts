@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import type { Json } from "@/types/supabase";
+import { isAdminEmail } from "@/lib/auth/admin-access";
 import { mapPromptLabRow } from "@/lib/dating/prompt-lab/supabase-repository";
 import { promptLabFeedbackSchema } from "@/lib/dating/prompt-lab/schemas";
 import { createClient } from "@/utils/supabase/server";
@@ -13,6 +14,9 @@ export async function PATCH(
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (!isAdminEmail(user.email)) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
   let body: unknown;
@@ -39,4 +43,3 @@ export async function PATCH(
   if (!data) return NextResponse.json({ error: "Prompt run not found." }, { status: 404 });
   return NextResponse.json({ run: mapPromptLabRow(data as Record<string, unknown>) });
 }
-

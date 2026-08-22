@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Loader2,
   Download,
@@ -50,7 +50,7 @@ type Order = {
 };
 
 type StatusResponse = {
-  order: Order & { photos_target: number };
+  order: Order & { photos_target: number; shoots_target?: number; pipeline_stage?: string };
   counts: {
     pending: number;
     in_progress: number;
@@ -58,6 +58,15 @@ type StatusResponse = {
     failed: number;
     total: number;
   };
+  promptCounts?: {
+    reserved: number;
+    generating: number;
+    passed: number;
+    replanning: number;
+    total: number;
+  };
+  stage?: string;
+  stageLabel?: string;
   /**
    * The delivery, grouped the way it was shot. The response used to be keyed by
    * bucket — internal architecture the client had to know about — and those
@@ -90,13 +99,16 @@ export function DatingShootClient({
   orders,
   initialModelId,
   initialOrderId,
+  deliveryConfig,
 }: {
   userId: string;
   models: Model[];
   orders: Order[];
   initialModelId: number | null;
   initialOrderId: string | null;
+  deliveryConfig: { shoots: number; photos: number };
 }) {
+  const launchRequestId = useRef<string | null>(null);
   const [modelId, setModelId] = useState<number | null>(
     initialModelId || models[0]?.id || null
   );
@@ -166,12 +178,14 @@ export function DatingShootClient({
     setLoading(true);
     setError('');
     setCreditError('');
+    launchRequestId.current ??= crypto.randomUUID();
 
     try {
       const res = await fetch('/api/dating-shoot/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          clientRequestId: launchRequestId.current,
           modelId: params.modelId,
           interests: params.interests,
           dress: params.dress,
@@ -190,6 +204,7 @@ export function DatingShootClient({
           setActiveOrderId(data.orderId);
           await fetchStatus(data.orderId);
           setIsIntakeOpen(false);
+          launchRequestId.current = null;
           return;
         }
         throw new Error(data.error || 'Failed to start photoshoot');
@@ -198,6 +213,7 @@ export function DatingShootClient({
       setActiveOrderId(data.orderId);
       await fetchStatus(data.orderId);
       setIsIntakeOpen(false);
+      launchRequestId.current = null;
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to launch shoot');
     } finally {
@@ -391,6 +407,8 @@ export function DatingShootClient({
         creditError={creditError}
         generalError={error}
         showCancel={hasOrders}
+        shootsPerDelivery={deliveryConfig.shoots}
+        totalPhotos={deliveryConfig.photos}
       />
     );
   }
@@ -413,6 +431,7 @@ export function DatingShootClient({
                   progressPercent: status.progressPercent,
                   customCreditsRemaining: status.order.custom_credits_remaining,
                   failedCount: status.counts.failed,
+                  stageLabel: status.stageLabel,
                 }
               : null
           }
@@ -433,11 +452,13 @@ export function DatingShootClient({
             roleCounts={roleCounts}
             totalCompleted={status.counts.completed}
             shootCount={shootSections.length}
+            expectedShootCount={deliveryConfig.shoots}
+            expectedTotalPhotos={deliveryConfig.photos}
           />
         )}
 
         {/* 3. Photo Gallery Grid */}
-        {displayedPhotos.length > 0 ? (
+        {(activeTab === 'all' && shootSections.length > 0) || displayedPhotos.length > 0 ? (
           activeTab === 'all' ? (
             /* Grouped by shoot — this place, these clothes, this light, four ways */
             <div className="space-y-12 pt-4">
@@ -508,43 +529,7 @@ export function DatingShootClient({
           </div>
         ) : null}
 
-        {/* 4. Past Shoots Drawer / History */}
-        {orders.length > 1 && (
-          <div className="pt-12 border-t border-zinc-900 mt-12">
-            <h3 className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-4">
-              Previous Photoshoots ({orders.length})
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-              {orders.map((o) => (
-                <button
-                  key={o.id}
-                  onClick={() => setActiveOrderId(o.id)}
-                  className={`text-left p-4 rounded-xl border transition-all flex items-center justify-between ${
-                    activeOrderId === o.id
-                      ? 'border-white bg-zinc-900 text-white'
-                      : 'border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white hover:border-zinc-700 hover:bg-zinc-900'
-                  }`}
-                >
-                  <div>
-                    <div className="font-semibold text-sm capitalize text-white mb-0.5">
-                      {o.status.replace('_', ' ')}
-                    </div>
-                    <div className="text-[11px] text-zinc-500 font-mono">
-                      {new Date(o.created_at).toLocaleDateString(undefined, {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                      })}
-                    </div>
-                  </div>
-                  <span className="text-[11px] font-mono text-zinc-500 bg-zinc-900 px-2 py-1 rounded">
-                    {o.custom_credits_remaining} reshoots
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+
       </div>
 
       {/* 5. Full-Screen Photo Inspector Lightbox Modal */}

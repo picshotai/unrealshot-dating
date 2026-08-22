@@ -4,7 +4,6 @@ import {
   CUSTOM_CREDITS_DEFAULT,
   FRAMES_PER_SHOOT,
   SHOOTS_PER_DELIVERY,
-  TOTAL_PHOTOS,
 } from "./types";
 
 /**
@@ -36,6 +35,16 @@ export async function sendDatingShootReadyNotification(
       return { ok: false, message: "User email not found" };
     }
 
+    const { data: order } = await (db as any)
+      .from("user_shoot_orders")
+      .select("shoots_target, photos_target, custom_credits_remaining")
+      .eq("id", orderId)
+      .eq("user_id", userId)
+      .single();
+    const shootsTarget = Number(order?.shoots_target ?? SHOOTS_PER_DELIVERY);
+    const photosTarget = Number(order?.photos_target ?? shootsTarget * FRAMES_PER_SHOOT);
+    const reshoots = Number(order?.custom_credits_remaining ?? CUSTOM_CREDITS_DEFAULT);
+
     const appUrl =
       process.env.NEXT_PUBLIC_APP_URL ||
       (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://unrealshot.com");
@@ -48,7 +57,7 @@ export async function sendDatingShootReadyNotification(
     await resend.emails.send({
       from: fromEmail,
       to: userEmail,
-      subject: `Your ${TOTAL_PHOTOS} dating photos are ready 📸`,
+      subject: `Your ${photosTarget} dating photos are ready 📸`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -60,10 +69,10 @@ export async function sendDatingShootReadyNotification(
         <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #09090b; color: #f4f4f5; padding: 40px 20px; margin: 0;">
           <div style="max-width: 600px; margin: 0 auto; background-color: #18181b; border: 1px solid #27272a; border-radius: 16px; padding: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
             <h1 style="font-size: 24px; font-weight: 700; color: #ffffff; margin-top: 0; margin-bottom: 16px;">
-              Your ${TOTAL_PHOTOS} dating photos are ready 🎉
+              Your ${photosTarget} dating photos are ready 🎉
             </h1>
             <p style="font-size: 15px; line-height: 1.6; color: #a1a1aa; margin-bottom: 24px;">
-              ${SHOOTS_PER_DELIVERY} shoots, ${FRAMES_PER_SHOOT} photos from each.
+              ${shootsTarget} shoots, ${FRAMES_PER_SHOOT} photos from each.
               Every shoot is a different place, a different outfit and a different
               light &mdash; and there is one person in every frame: you.
             </p>
@@ -81,7 +90,7 @@ export async function sendDatingShootReadyNotification(
               </a>
             </div>
             <p style="font-size: 13px; color: #71717a; text-align: center; margin-bottom: 0;">
-              You also have ${CUSTOM_CREDITS_DEFAULT} reshoots in your dashboard if you want to redo any frame.
+              You also have ${reshoots} reshoots in your dashboard if you want to redo any frame.
             </p>
           </div>
         </body>

@@ -14,6 +14,7 @@ import {
 } from "./schemas";
 import { DATING_SCENE_SYSTEM_INSTRUCTION } from "./system-instruction";
 import { validatePromptLabOutput, type PromptLabValidation } from "./validate";
+import type { DatingSceneBrief } from "@/lib/dating/scene-recipes/types";
 
 export type ModelResponse = {
   text: string;
@@ -75,6 +76,7 @@ export async function generatePromptLabCandidate(args: {
   reference: PromptLabReference;
   recentScenes: readonly RecentScene[];
   retry?: RetryContext;
+  lockedBrief?: DatingSceneBrief;
   modelCall?: PromptLabModelCall;
 }): Promise<PromptLabGeneration> {
   const contents = buildPromptLabRequest(args);
@@ -99,6 +101,7 @@ export async function generatePromptLabCandidate(args: {
         input: args.input,
         plan: args.plan,
         recentScenes: args.recentScenes,
+        lockedBrief: args.lockedBrief,
       })
     : {
         passed: false,

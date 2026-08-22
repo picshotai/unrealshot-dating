@@ -29,6 +29,7 @@ interface StudioHeaderProps {
     progressPercent: number;
     customCreditsRemaining: number;
     failedCount: number;
+    stageLabel?: string;
   } | null;
   onOpenNewShoot: () => void;
   /**
@@ -101,7 +102,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
                     {isReady
                       ? 'Ready'
                       : isDeveloping
-                      ? `${status.progressPercent}%`
+                      ? status.stageLabel || `${status.progressPercent}%`
                       : status.orderStatus}
                   </span>
                 </div>

@@ -15,7 +15,6 @@ import {
   LINEUP_ROLES,
   type LineupRole,
 } from '@/lib/dating/roles';
-import { SHOOTS_PER_DELIVERY, TOTAL_PHOTOS } from '@/lib/dating/types';
 
 /**
  * The role filter over a delivery.
@@ -35,6 +34,8 @@ interface RoleFilterNavProps {
   roleCounts: Record<LineupRole, number>;
   totalCompleted: number;
   shootCount: number;
+  expectedShootCount: number;
+  expectedTotalPhotos: number;
 }
 
 const LINEUP_ICONS: Record<LineupRole, React.ElementType> = {
@@ -51,10 +52,12 @@ export const RoleFilterNav: React.FC<RoleFilterNavProps> = ({
   roleCounts,
   totalCompleted,
   shootCount,
+  expectedShootCount,
+  expectedTotalPhotos,
 }) => {
   const currentHint =
     activeTab === 'all'
-      ? `${shootCount || SHOOTS_PER_DELIVERY} shoots, four frames each — every shoot a different place, outfit and light.`
+      ? `${shootCount || expectedShootCount} shoots, four frames each — every shoot a different place, outfit and light.`
       : LINEUP_HINTS[activeTab];
 
   const pill = (isActive: boolean) =>
@@ -79,7 +82,7 @@ export const RoleFilterNav: React.FC<RoleFilterNavProps> = ({
           />
           <span>By shoot</span>
           <span className={badge(activeTab === 'all')}>
-            {totalCompleted || TOTAL_PHOTOS}
+            {totalCompleted || expectedTotalPhotos}
           </span>
         </button>
 

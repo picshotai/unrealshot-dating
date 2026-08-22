@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
   const { data: order, error: orderErr } = await supabase
     .from("user_shoot_orders")
     .select(
-      "id, status, model_id, custom_credits_remaining, photos_target, trigger_run_id, created_at, ready_at"
+      "id, status, model_id, custom_credits_remaining, photos_target, shoots_target, pipeline_mode, pipeline_stage, trigger_run_id, created_at, ready_at"
     )
     .eq("id", orderId)
     .eq("user_id", user.id)
@@ -58,19 +58,45 @@ export async function GET(request: NextRequest) {
   const { data: photos } = await supabase
     .from("order_photos")
     .select(
-      "id, shoot_id, frame_index, is_anchor, status, image_url, image_width, image_height"
+      "id, order_shoot_id, shoot_id, frame_index, framing, is_anchor, status, image_url, image_width, image_height"
     )
     .eq("order_id", orderId)
     .order("shoot_id")
     .order("frame_index");
 
   const all = photos || [];
+  const { data: dynamicShoots } = order.pipeline_mode === "dynamic"
+    ? await supabase
+        .from("dating_order_shoots" as any)
+        .select("id, slot_index, title, kind, status")
+        .eq("order_id", orderId)
+        .neq("status", "abandoned")
+        .order("slot_index")
+    : { data: null };
+  const promptRows = (dynamicShoots ?? []) as unknown as Array<{
+    id: string;
+    slot_index: number;
+    title: string | null;
+    kind: string;
+    status: string;
+  }>;
+  const photosTarget = Number(order.photos_target ?? all.length);
   const counts = {
-    pending: all.filter((p) => p.status === "pending").length,
+    pending: Math.max(
+      0,
+      photosTarget - all.filter((p) => p.status !== "pending").length
+    ),
     in_progress: all.filter((p) => p.status === "in_progress").length,
     completed: all.filter((p) => p.status === "completed").length,
     failed: all.filter((p) => p.status === "failed").length,
-    total: all.length,
+    total: photosTarget,
+  };
+  const promptCounts = {
+    reserved: promptRows.filter((row) => row.status === "reserved").length,
+    generating: promptRows.filter((row) => row.status === "generating").length,
+    passed: promptRows.filter((row) => row.status === "passed").length,
+    replanning: promptRows.filter((row) => row.status === "replanning").length,
+    total: Number(order.shoots_target ?? 0),
   };
 
   // Grouped by shoot, because that is what the delivery *is*: this place, these
@@ -84,16 +110,23 @@ export async function GET(request: NextRequest) {
     byShoot.set(photo.shoot_id, list);
   }
 
-  const shoots = [...byShoot.entries()].map(([shootId, rows]) => {
+  const dynamicById = new Map(promptRows.map((row) => [row.id, row]));
+  const orderedShootIds = order.pipeline_mode === "dynamic"
+    ? promptRows.filter((row) => row.status === "passed").map((row) => row.id)
+    : [...byShoot.keys()];
+  const shoots = orderedShootIds.map((shootId) => {
+    const rows = byShoot.get(shootId) ?? [];
     const shoot = SHOOT_BY_ID.get(shootId);
+    const dynamicShoot = dynamicById.get(shootId);
+    const shootKind = dynamicShoot?.kind ?? shoot?.kind ?? null;
     return {
       shootId,
       // A delivered order keeps its photos even if the shoot later leaves the
       // library, so the id is the fallback rather than an error.
-      title: shoot?.title ?? shootId,
-      kind: shoot?.kind ?? null,
+      title: dynamicShoot?.title ?? shoot?.title ?? `Shoot ${dynamicShoot?.slot_index ?? ""}`.trim(),
+      kind: shootKind,
       completed: rows.filter((p) => p.status === "completed").length,
-      total: rows.length,
+      total: dynamicShoot ? 4 : rows.length,
       // Every photo is returned, not just finished ones.
       //
       // This used to filter to `completed && image_url`, which meant a photo
@@ -104,6 +137,8 @@ export async function GET(request: NextRequest) {
         const role = lineupRoleFor({
           shootId,
           frameIndex: p.frame_index,
+          framing: p.framing as any,
+          kind: shootKind as any,
         });
         return {
           id: p.id,
@@ -120,13 +155,35 @@ export async function GET(request: NextRequest) {
     };
   });
 
+  const stage = String(order.pipeline_stage ?? "rendering_photos");
+  const completedShoots = shoots.filter((shoot) => shoot.completed >= 4).length;
+  const completedOpeners = all.filter(
+    (row) => row.is_anchor && row.status === "completed"
+  ).length;
+  const progressPercent = order.status === "ready"
+    ? 100
+    : stage === "planning"
+      ? 2
+      : stage === "writing_prompts" || (stage === "attention_required" && all.length === 0)
+        ? 5 + Math.round(20 * promptCounts.passed / Math.max(1, promptCounts.total))
+        : stage === "rendering_anchors"
+          ? 25 + Math.round(20 * all.filter((row) => row.is_anchor && row.status === "completed").length / Math.max(1, Number(order.shoots_target)))
+          : 45 + Math.round(55 * counts.completed / Math.max(1, counts.total));
+
   return NextResponse.json({
     order,
     counts,
+    promptCounts,
     shoots,
-    progressPercent:
-      counts.total > 0
-        ? Math.round((counts.completed / counts.total) * 100)
-        : 0,
+    progressPercent: order.status === "ready" ? 100 : Math.min(99, progressPercent),
+    stage,
+    stageLabel:
+      stage === "planning" ? "Planning your shoots"
+      : stage === "writing_prompts" ? `Writing shoot prompts — ${promptCounts.passed}/${promptCounts.total}`
+      : stage === "rendering_anchors" ? `Photographing openers — ${completedOpeners}/${promptCounts.total || order.shoots_target}`
+      : stage === "rendering_photos" ? `Completing your shoots — ${completedShoots}/${order.shoots_target}`
+      : stage === "attention_required" ? "Delayed, still retrying"
+      : stage === "ready" ? "Ready"
+      : "Preparing your shoot",
   });
 }

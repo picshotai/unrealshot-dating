@@ -14,6 +14,7 @@ import { creditService } from "@/lib/credits"
 import { redirect } from "next/navigation"
 import Script from "next/script"
 import ClarityInit from "@/components/ClarityInit"
+import { isAdminEmail } from "@/lib/auth/admin-access"
 
 export default async function DashboardLayout({
   children,
@@ -82,6 +83,7 @@ export default async function DashboardLayout({
       </Script>
       <SidebarProvider>
         <AppSidebar
+          showPromptLab={isAdminEmail(user.email)}
           user={{
             name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
             email: user.email || '',

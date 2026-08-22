@@ -49,7 +49,7 @@ export default async function BuyCreditsPage() {
     "A different place, outfit and light in every shoot",
     `${FRAMES_PER_SHOOT} shots from each — close, half-body, full-length and a candid`,
     `${CUSTOM_CREDITS_DEFAULT} reshoots included — redo any frame you don't love`,
-    "Every prompt written and reviewed by a person, not assembled by a machine",
+    "Every scene planned for variety and every generated prompt mechanically validated before rendering",
     "Instant ZIP download, one folder per shoot",
     "Full commercial rights",
   ];

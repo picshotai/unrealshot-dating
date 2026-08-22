@@ -31,24 +31,41 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { modelId, interests, dress, excludeTags, vibe, style } = body;
+    const { modelId, interests, dress, excludeTags, vibe, style, clientRequestId } = body;
 
-    if (!modelId || typeof modelId !== "number") {
+    if (!Number.isInteger(modelId) || modelId <= 0) {
       return NextResponse.json({ error: "modelId is required" }, { status: 400 });
+    }
+    if (
+      typeof clientRequestId !== "string" ||
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(clientRequestId)
+    ) {
+      return NextResponse.json({ error: "clientRequestId must be a UUID" }, { status: 400 });
     }
 
     // The screen now sends interests + dress. vibe/style are still accepted so
     // a client mid-session keeps working; both are treated as a lean, and
     // neither locks the delivery any more.
-    const cleanInterests: InterestId[] = Array.isArray(interests)
-      ? interests.filter(isInterestId)
-      : [];
+    if (!Array.isArray(interests) || interests.some((value) => !isInterestId(value))) {
+      return NextResponse.json({ error: "interests contains an unsupported value" }, { status: 400 });
+    }
+    const cleanInterests: InterestId[] = [...new Set(interests as InterestId[])];
+    if (cleanInterests.length < 1 || cleanInterests.length > 6) {
+      return NextResponse.json(
+        { error: "Choose between 1 and 6 interests" },
+        { status: 400 }
+      );
+    }
 
-    const cleanExclusions: ExcludableTag[] = Array.isArray(excludeTags)
-      ? excludeTags.filter((tag: unknown): tag is ExcludableTag =>
-          (EXCLUDABLE_TAGS as readonly string[]).includes(tag as string)
-        )
-      : [];
+    if (excludeTags !== undefined && (
+      !Array.isArray(excludeTags) ||
+      excludeTags.some((tag: unknown) => !(EXCLUDABLE_TAGS as readonly unknown[]).includes(tag))
+    )) {
+      return NextResponse.json({ error: "excludeTags contains an unsupported value" }, { status: 400 });
+    }
+    const cleanExclusions: ExcludableTag[] = [
+      ...new Set((excludeTags ?? []) as ExcludableTag[]),
+    ];
 
     if (dress !== undefined && !STYLES.includes(dress)) {
       return NextResponse.json(
@@ -77,6 +94,8 @@ export async function POST(request: NextRequest) {
 
     const result = await createDatingShootOrder({
       userId: user.id,
+      userEmail: user.email,
+      clientRequestId,
       modelId,
       interests: cleanInterests,
       excludeTags: cleanExclusions,

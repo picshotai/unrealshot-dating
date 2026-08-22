@@ -1,0 +1,34 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "incremental": false
+  },
+  "include": [
+    "next-env.d.ts",
+    "lib/auth/admin-access.ts",
+    "lib/dating/config.ts",
+    "lib/dating/product-settings.ts",
+    "lib/dating/create-order.ts",
+    "lib/dating/roles.ts",
+    "lib/dating/test-mode.ts",
+    "lib/dating/types.ts",
+    "lib/dating/prompt-lab/**/*.ts",
+    "lib/dating/prompt-engine/**/*.ts",
+    "lib/dating/production-prompts/**/*.ts",
+    "lib/dating/scene-recipes/**/*.ts",
+    "trigger/dating-prompt.ts",
+    "trigger/dating-reconcile.ts",
+    "trigger/dating-shoot.ts",
+    "app/api/dating-shoot/create-order/route.ts",
+    "app/api/dating-shoot/run-status/route.ts",
+    "app/api/prompt-lab/**/*.ts",
+    "app/(protected)/dating-shoot/**/*.tsx",
+    "app/(protected)/prompt-lab/**/*.tsx",
+    "app/(protected)/layout.tsx",
+    "components/dashboard/app-sidebar.tsx",
+    "components/dating/RoleFilterNav.tsx",
+    "components/dating/StudioHeader.tsx",
+    "components/dating/StudioIntakeView.tsx"
+  ]
+}

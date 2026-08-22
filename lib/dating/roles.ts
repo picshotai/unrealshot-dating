@@ -1,5 +1,5 @@
 import { SHOOT_BY_ID } from "./shoots";
-import type { Framing } from "./shoots";
+import type { Framing, ShootKind } from "./shoots";
 
 /**
  * The job a photo does, which is what a buyer actually wants to know.
@@ -46,20 +46,22 @@ export const LINEUP_HINTS: Record<LineupRole, string> = {
 export type RoleInput = {
   shootId: string;
   frameIndex: number;
+  framing?: Framing | null;
+  kind?: ShootKind | null;
 };
 
 export function lineupRoleFor(input: RoleInput): LineupRole {
   const shoot = SHOOT_BY_ID.get(input.shootId);
   // A row whose shoot has left the library still has to land somewhere.
-  if (!shoot) return "more";
-
-  const framing: Framing | undefined = shoot.frames[input.frameIndex - 1]?.framing;
+  const framing: Framing | undefined =
+    input.framing ?? shoot?.frames[input.frameIndex - 1]?.framing;
+  const kind = input.kind ?? shoot?.kind;
 
   // The opener has to be a face, so it is the close frame and nothing else —
   // which is also the frame the whole shoot was anchored on.
   if (framing === "close") return "opener";
   if (framing === "threeQuarter") return "fullBody";
-  if (shoot.kind === "activity") return "whatYouDo";
-  if (shoot.kind === "outdoors" || shoot.kind === "social") return "outThere";
+  if (kind === "activity") return "whatYouDo";
+  if (kind === "outdoors" || kind === "social") return "outThere";
   return "more";
 }

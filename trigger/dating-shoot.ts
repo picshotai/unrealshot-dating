@@ -1,4 +1,4 @@
-import { logger, task } from "@trigger.dev/sdk";
+import { idempotencyKeys, logger, task } from "@trigger.dev/sdk";
 import { fal } from "@fal-ai/client";
 import { putR2Object } from "@/lib/r2";
 import {
@@ -22,6 +22,15 @@ import {
   SAMPLE_SHOOTS,
 } from "@/lib/dating/types";
 import { stableHash } from "@/lib/dating/select-shoots";
+import { generateDatingShootPrompts } from "@/trigger/dating-prompt";
+import {
+  ensureProductionAttempt,
+  loadProductionShoots,
+  previousDynamicConcepts,
+  reserveProductionPortfolio,
+  replaceProductionBrief,
+} from "@/lib/dating/production-prompts/store";
+import type { InterestId, StylePref, ExcludableTag } from "@/lib/dating/types";
 
 function configureFal() {
   const key = process.env.FAL_KEY;
@@ -62,6 +71,8 @@ export type GenerateSingleImagePayload = {
   /** Authored output size. */
   imageWidth?: number | null;
   imageHeight?: number | null;
+  shootTitle?: string | null;
+  shootKind?: "portrait" | "home" | "outdoors" | "social" | "activity" | null;
   /**
    * Makes the R2 object path unique for this run. The key is otherwise derived
    * from (shootId, frameIndex), so a regenerated photo overwrote the original
@@ -200,7 +211,8 @@ export const generateSingleDatingImage = task({
       const mockImageUrl = getMockPlaceholderImageUrl(
         shootId,
         frameIndex,
-        aspectRatio
+        aspectRatio,
+        { title: payload.shootTitle, kind: payload.shootKind }
       );
 
       const { error: upsertErr } = await db.from("order_photos").upsert(
@@ -368,7 +380,128 @@ type PhotoRow = {
   status: string;
   image_url: string | null;
   deterministic_id: string | null;
+  attempt_count: number | null;
 };
+
+type PipelineOrder = {
+  id: string;
+  pipeline_mode: "authored" | "dynamic";
+  pipeline_stage: string;
+  shoots_target: number;
+  creative_input: {
+    interests?: InterestId[];
+    dress?: StylePref;
+    excludeTags?: ExcludableTag[];
+  } | null;
+};
+
+async function prepareDynamicOrder(args: {
+  db: ReturnType<typeof getServiceDb>;
+  order: PipelineOrder;
+  userId: string;
+}) {
+  const raw = args.db as any;
+  const creative = args.order.creative_input ?? {};
+  const recipeInput = {
+    orderId: args.order.id,
+    count: args.order.shoots_target,
+    interests: creative.interests ?? [],
+    dress: creative.dress ?? ("casual" as const),
+    exclusions: creative.excludeTags ?? [],
+    previousConceptFamilies: await previousDynamicConcepts(raw, args.userId),
+  };
+
+  await raw.from("user_shoot_orders").update({
+    pipeline_stage: "writing_prompts",
+    updated_at: new Date().toISOString(),
+  }).eq("id", args.order.id);
+
+  // One parent run can normally resolve all validation revisions. A provider
+  // outage exits early and lets Trigger/reconciliation supply the backoff.
+  for (let cycle = 0; cycle < 8; cycle += 1) {
+    let shoots = await loadProductionShoots(raw, args.order.id);
+    if (shoots.length === 0) {
+      await reserveProductionPortfolio({
+        db: raw,
+        orderId: args.order.id,
+        userId: args.userId,
+        input: {
+          count: recipeInput.count,
+          interests: recipeInput.interests,
+          dress: recipeInput.dress,
+          exclusions: recipeInput.exclusions,
+        },
+      });
+      shoots = await loadProductionShoots(raw, args.order.id);
+    }
+    if (shoots.length !== args.order.shoots_target) {
+      throw new Error(
+        `Dynamic order ${args.order.id} has ${shoots.length}/${args.order.shoots_target} scene reservations.`
+      );
+    }
+
+    for (const shoot of shoots.filter((item) => item.status === "replanning")) {
+      await replaceProductionBrief({ db: raw, shoot, recipeInput });
+    }
+    shoots = await loadProductionShoots(raw, args.order.id);
+
+    if (shoots.every((shoot) => shoot.status === "passed")) {
+      const { error } = await raw.rpc("materialize_dynamic_order_photos", {
+        p_order_id: args.order.id,
+      });
+      if (error) throw new Error(`Failed to allocate dynamic photos: ${error.message}`);
+      return;
+    }
+
+    const runnable = shoots.filter(
+      (shoot) => shoot.status === "reserved" || shoot.status === "generating"
+    );
+    if (runnable.length === 0) {
+      throw new Error(`Dynamic order ${args.order.id} has no runnable prompt slots.`);
+    }
+    const attempts = await Promise.all(
+      runnable.map((shoot) => ensureProductionAttempt(raw, shoot))
+    );
+    const items = await Promise.all(
+      attempts.map(async (attempt) => ({
+        payload: {
+          userId: args.userId,
+          orderShootId: attempt.order_shoot_id,
+          attemptNumber: attempt.attempt_number,
+        },
+        options: {
+          idempotencyKey: await idempotencyKeys.create(
+            `dating-prompt:${attempt.id}`,
+            { scope: "global" }
+          ),
+          idempotencyKeyTTL: "30d" as const,
+        },
+      }))
+    );
+    const results = await generateDatingShootPrompts.batchTriggerAndWait(items);
+    const taskFailed = results.runs.some((run: any) => !run.ok);
+    const providerFailed = results.runs.some(
+      (run: any) => run.ok && run.output?.apiError
+    );
+    if (taskFailed || providerFailed) {
+      await raw.from("user_shoot_orders").update({
+        pipeline_stage: "attention_required",
+        updated_at: new Date().toISOString(),
+      }).eq("id", args.order.id);
+      throw new Error(
+        providerFailed
+          ? `Gemini is temporarily unavailable for order ${args.order.id}.`
+          : `Prompt persistence needs reconciliation for order ${args.order.id}.`
+      );
+    }
+  }
+
+  await raw.from("user_shoot_orders").update({
+    pipeline_stage: "attention_required",
+    updated_at: new Date().toISOString(),
+  }).eq("id", args.order.id);
+  throw new Error(`Prompt preparation needs another pass for order ${args.order.id}.`);
+}
 
 /**
  * Central state controller for one delivery.
@@ -401,12 +534,32 @@ export const datingPhotoshootOrchestrator = task({
     const db = getServiceDb();
     const { userId, batchId, modelId, referenceImageUrls } = payload;
 
+    const { data: pipelineOrder, error: pipelineOrderError } = await (db as any)
+      .from("user_shoot_orders")
+      .select("id, pipeline_mode, pipeline_stage, shoots_target, creative_input")
+      .eq("id", batchId)
+      .single();
+    if (pipelineOrderError || !pipelineOrder) {
+      throw new Error(`Order ${batchId} is unavailable: ${pipelineOrderError?.message}`);
+    }
+
     if (!referenceImageUrls?.length) {
       await markOrder(db, batchId, "failed");
       throw new Error("No reference images");
     }
 
+    if (pipelineOrder.pipeline_mode === "dynamic") {
+      await prepareDynamicOrder({
+        db,
+        order: pipelineOrder as PipelineOrder,
+        userId,
+      });
+    }
+
     const photoRows = await loadPhotoRows(db, batchId);
+    const dynamicShootMetadata = pipelineOrder.pipeline_mode === "dynamic"
+      ? new Map((await loadProductionShoots(db as any, batchId)).map((shoot) => [shoot.id, shoot]))
+      : new Map();
     await markOrder(db, batchId, "developing");
 
     // ── RESUME AUDIT ──────────────────────────────────────
@@ -421,7 +574,13 @@ export const datingPhotoshootOrchestrator = task({
     });
 
     if (incomplete.length === 0) {
-      return finalizeBatch(db, userId, batchId, photoRows);
+      return finalizeBatch(
+        db,
+        userId,
+        batchId,
+        photoRows,
+        pipelineOrder.pipeline_mode
+      );
     }
 
     // Ensure deterministic_id is set on incomplete rows
@@ -482,6 +641,8 @@ export const datingPhotoshootOrchestrator = task({
       anchorImageUrl: anchorImageUrl ?? null,
       imageWidth: row.image_width,
       imageHeight: row.image_height,
+      shootTitle: dynamicShootMetadata.get(row.shoot_id)?.title ?? null,
+      shootKind: dynamicShootMetadata.get(row.shoot_id)?.kind ?? null,
       useMock: isMocked(row),
     });
 
@@ -493,17 +654,27 @@ export const datingPhotoshootOrchestrator = task({
     const anchorsToRun = incomplete.filter((row) => row.is_anchor);
 
     if (anchorsToRun.length > 0) {
+      if (pipelineOrder.pipeline_mode === "dynamic") {
+        await (db as any).from("user_shoot_orders").update({
+          pipeline_stage: "rendering_anchors",
+          updated_at: new Date().toISOString(),
+        }).eq("id", batchId);
+      }
       logger.info("wave 1 — anchors", { batchId, count: anchorsToRun.length });
 
-      await generateSingleDatingImage.batchTriggerAndWait(
-        anchorsToRun.map((row) => ({
+      const anchorItems = await Promise.all(
+        anchorsToRun.map(async (row) => ({
           payload: toPayload(row),
           options: {
-            // Same key → Trigger.dev will not spawn a second successful run.
-            idempotencyKey: `${keyFor(row)}:anchor`,
+            idempotencyKey: await idempotencyKeys.create(
+              `dating-image:${keyFor(row)}:anchor:attempt:${row.attempt_count ?? 0}`,
+              { scope: "global" }
+            ),
+            idempotencyKeyTTL: "30d" as const,
           },
         }))
       );
+      await generateSingleDatingImage.batchTriggerAndWait(anchorItems);
     }
 
     // ── ANCHOR STATE, RE-READ FROM THE DATABASE ───────────
@@ -555,6 +726,12 @@ export const datingPhotoshootOrchestrator = task({
     }
 
     if (dispatchable.length > 0) {
+      if (pipelineOrder.pipeline_mode === "dynamic") {
+        await (db as any).from("user_shoot_orders").update({
+          pipeline_stage: "rendering_photos",
+          updated_at: new Date().toISOString(),
+        }).eq("id", batchId);
+      }
       // Record which frame each follower was anchored on, before dispatch.
       // Stored rather than recomputed so a reshoot reuses the same anchor, and
       // so reshooting an anchor cannot silently invalidate its siblings.
@@ -578,18 +755,19 @@ export const datingPhotoshootOrchestrator = task({
         anchored: dispatchable.filter((item) => item.anchor).length,
       });
 
-      await generateSingleDatingImage.batchTriggerAndWait(
-        dispatchable.map(({ row, anchor }) => ({
+      const followerItems = await Promise.all(
+        dispatchable.map(async ({ row, anchor }) => ({
           payload: toPayload(row, anchor?.image_url ?? null),
           options: {
-            // On this SDK a raw-string idempotency key is run-scoped, and
-            // re-dispatching a key already used in this run returns the original
-            // result — including if it failed. The suffix keeps the two waves
-            // from ever colliding.
-            idempotencyKey: `${keyFor(row)}:follower`,
+            idempotencyKey: await idempotencyKeys.create(
+              `dating-image:${keyFor(row)}:follower:attempt:${row.attempt_count ?? 0}`,
+              { scope: "global" }
+            ),
+            idempotencyKeyTTL: "30d" as const,
           },
         }))
       );
+      await generateSingleDatingImage.batchTriggerAndWait(followerItems);
     }
 
     // A held-back follower is marked failed rather than left pending, so the
@@ -610,7 +788,13 @@ export const datingPhotoshootOrchestrator = task({
     }
 
     const finalRows = await loadPhotoRows(db, batchId);
-    return finalizeBatch(db, userId, batchId, finalRows);
+    return finalizeBatch(
+      db,
+      userId,
+      batchId,
+      finalRows,
+      pipelineOrder.pipeline_mode
+    );
   },
 });
 
@@ -629,7 +813,7 @@ async function loadPhotoRows(
   const { data, error } = await db
     .from("order_photos")
     .select(
-      "id, shoot_id, frame_index, is_anchor, prompt_template, image_width, image_height, status, image_url, deterministic_id"
+      "id, shoot_id, frame_index, is_anchor, prompt_template, image_width, image_height, status, image_url, deterministic_id, attempt_count"
     )
     .eq("order_id", batchId)
     .order("shoot_id", { ascending: true })
@@ -681,7 +865,8 @@ async function finalizeBatch(
   db: ReturnType<typeof getServiceDb>,
   userId: string,
   batchId: string,
-  rows: PhotoRow[]
+  rows: PhotoRow[],
+  pipelineMode: "authored" | "dynamic" = "authored"
 ) {
   const completed = rows.filter(isDelivered).length;
   const undelivered = rows.length - completed;
@@ -693,6 +878,20 @@ async function finalizeBatch(
     undelivered,
     wholeShoots,
   });
+
+  if (pipelineMode === "dynamic" && undelivered > 0) {
+    await (db as any)
+      .from("user_shoot_orders")
+      .update({
+        status: "developing",
+        pipeline_stage: "attention_required",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", batchId);
+    throw new Error(
+      `Dynamic batch ${batchId} is incomplete (${completed}/${rows.length}); it remains retryable.`
+    );
+  }
 
   // Defect routing
   if (undelivered > 0 && wholeShoots < MIN_COMPLETE_SHOOTS) {
@@ -756,6 +955,7 @@ async function finalizeBatch(
     .from("user_shoot_orders")
     .update({
       status: "ready",
+      ...(pipelineMode === "dynamic" ? { pipeline_stage: "ready" } : {}),
       ready_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     })
