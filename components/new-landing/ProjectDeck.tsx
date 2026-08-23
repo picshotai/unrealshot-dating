@@ -1,408 +1,204 @@
-'use client';
+"use client";
 
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
-import Image from 'next/image';
+import Image from "next/image";
+import Link from "next/link";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useRef } from "react";
+import { shootCards } from "./data";
 
-interface Project {
-  id: string;
-  tabNumber: string;
-  date: string;
-  title: string;
-  tagline: string;
-  link: string;
-  tags: string[];
-  image: string;
-  bgColor: string;
-  textColor: string;
-  badgeBg: string;
-  badgeText: string;
-  imageBadgeText: string;
-  hasUserCursor?: boolean;
+type ShootCard = (typeof shootCards)[number];
+
+function ImageFrame({ card, priority = false }: { card: ShootCard; priority?: boolean }) {
+  return (
+    <div className="relative aspect-[3/4] w-full border border-white/30 bg-black lg:h-full lg:w-auto lg:max-w-full">
+      <span className="absolute -left-1.5 -top-1.5 z-20 h-3 w-3 border border-black bg-white" />
+      <span className="absolute -right-1.5 -top-1.5 z-20 h-3 w-3 border border-black bg-white" />
+      <span className="absolute -bottom-1.5 -left-1.5 z-20 h-3 w-3 border border-black bg-white" />
+      <span className="absolute -bottom-1.5 -right-1.5 z-20 h-3 w-3 border border-black bg-white" />
+      <span className="absolute right-3 top-3 z-20 bg-white px-2 py-1 font-mono text-[9px] font-bold tracking-[0.12em] text-black">
+        ◫ FRAME.JPG
+      </span>
+      <Image
+        src={card.image}
+        alt={card.title}
+        fill
+        priority={priority}
+        className="object-cover object-center"
+        sizes="(max-width: 1024px) 92vw, 650px"
+      />
+    </div>
+  );
 }
 
-const projects: Project[] = [
-  {
-    id: 'meridian-health',
-    tabNumber: 'PROJECT 01',
-    date: 'MAR 19, 2026',
-    title: 'Meridian Health',
-    tagline: 'When therapists spend less time clicking, they have more time for patients.',
-    link: '#meridian-health',
-    tags: ['HEALTHCARE', 'WORKFLOW DESIGN'],
-    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1400&q=80',
-    bgColor: '#24bcf0',
-    textColor: 'text-black',
-    badgeBg: 'bg-black',
-    badgeText: 'text-[#24bcf0]',
-    imageBadgeText: 'text-black',
-  },
-  {
-    id: 'stylebook',
-    tabNumber: 'PROJECT 02',
-    date: 'MAR 2, 2026',
-    title: 'StyleBook',
-    tagline: "From 'I hate this system' to 'Can we show other salons?'",
-    link: '#stylebook',
-    tags: ['SAAS', 'TRANSFORMATION'],
-    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1400&q=80',
-    bgColor: '#111111',
-    textColor: 'text-white',
-    badgeBg: 'bg-white',
-    badgeText: 'text-black',
-    imageBadgeText: 'text-black',
-  },
-  {
-    id: 'homestead',
-    tabNumber: 'PROJECT 03',
-    date: 'JAN 2, 2025',
-    title: 'Homestead',
-    tagline: "Helping first-time homebuyers actually understand what they're looking at.",
-    link: '#homestead',
-    tags: ['PROPTECH', '0 -> 1'],
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1400&q=80',
-    bgColor: '#ebaf2e',
-    textColor: 'text-black',
-    badgeBg: 'bg-black',
-    badgeText: 'text-[#ebaf2e]',
-    imageBadgeText: 'text-black',
-  },
-  {
-    id: 'north-light',
-    tabNumber: 'PROJECT 04',
-    date: 'MAR 19, 2026',
-    title: 'North Light',
-    tagline: "Getting seven stakeholders to agree on what they're actually building.",
-    link: '#north-light',
-    tags: ['STRATEGY', 'ENTERPRISE'],
-    image: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=1400&q=80',
-    bgColor: '#d61858',
-    textColor: 'text-white',
-    badgeBg: 'bg-white',
-    badgeText: 'text-[#d61858]',
-    imageBadgeText: 'text-[#d61858]',
-    hasUserCursor: true,
-  },
-];
+function CardContent({ card, index, mobile = false }: { card: ShootCard; index: number; mobile?: boolean }) {
+  return (
+    <div
+      className={`relative flex h-full flex-col gap-7 p-6 sm:p-8 ${mobile ? "" : "lg:grid lg:grid-cols-12 lg:gap-10 lg:p-11"}`}
+      style={{ backgroundColor: card.bg, color: card.ink }}
+    >
+      <div className={`${mobile ? "" : "lg:col-span-5"} flex min-w-0 flex-col justify-between`}>
+        <div>
+          <div className="mb-5 flex items-center gap-2.5 font-mono text-[10px] font-bold tracking-[0.13em] opacity-75 sm:text-[11px]">
+            <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: card.ink }} />
+            {card.index} · UNREALSHOT SYSTEM
+          </div>
+          <h3 className="max-w-lg font-[family-name:var(--font-space-grotesk)] text-[clamp(2.25rem,4.5vw,4.25rem)] font-medium leading-[0.96] tracking-[-0.06em]">
+            {card.title}
+          </h3>
+          <p className="mt-5 max-w-md text-[14px] leading-6 opacity-75 sm:text-base sm:leading-7">{card.copy}</p>
+          <Link
+            href="/login"
+            className="mt-7 inline-flex border-b-2 pb-1 font-mono text-[10px] font-bold tracking-[0.13em] transition-opacity hover:opacity-60 sm:text-[11px]"
+            style={{ borderColor: card.ink }}
+          >
+            START MY 15 SHOOTS ↗
+          </Link>
+        </div>
+
+        <div className="mt-8 flex flex-wrap gap-2 lg:mt-auto">
+          {card.tags.map((tag) => (
+            <span
+              key={tag}
+              className="px-3 py-2 font-mono text-[9px] font-bold tracking-[0.11em] sm:text-[10px]"
+              style={{ backgroundColor: card.ink, color: card.bg }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div className={`${mobile ? "" : "lg:col-span-7 lg:flex lg:items-center lg:justify-center"} min-h-0`}>
+        <ImageFrame card={card} priority={!mobile && index === 0} />
+      </div>
+
+      {index === 3 && (
+        <div className={`absolute ${mobile ? "right-4 top-1/2" : "left-[38%] top-[43%]"} flex items-center`}>
+          <span className="h-3.5 w-3.5 rounded-full bg-[#00e699]" />
+          <span className="-ml-1 mt-4 rounded-full bg-[#00e699] px-2 py-0.5 font-mono text-[9px] font-bold text-black">YOU</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Tab({ card, index, desktop = false }: { card: ShootCard; index: number; desktop?: boolean }) {
+  if (desktop) {
+    const tabStyle = index === 0
+      ? {
+          left: "0%",
+          width: "calc(25% + 16px)",
+          clipPath: "polygon(0 0, calc(100% - 28px) 0, 100% 100%, 0 100%)",
+        }
+      : index === 1
+        ? {
+            left: "calc(25% - 12px)",
+            width: "calc(25% + 16px)",
+            clipPath: "polygon(0 100%, 28px 0, calc(100% - 28px) 0, 100% 100%)",
+          }
+        : index === 2
+          ? {
+              left: "calc(50% - 24px)",
+              width: "calc(25% + 16px)",
+              clipPath: "polygon(0 100%, 28px 0, calc(100% - 28px) 0, 100% 100%)",
+            }
+          : {
+              left: "calc(75% - 36px)",
+              width: "calc(25% + 36px)",
+              clipPath: "polygon(0 100%, 28px 0, calc(100% - 28px) 0, 100% 100%)",
+            };
+
+    return (
+      <div
+        className="absolute top-0 z-20 flex h-[76px] items-center px-6"
+        style={{ ...tabStyle, backgroundColor: card.bg, color: card.ink }}
+      >
+        <div className={`flex items-center gap-2.5 whitespace-nowrap ${index > 0 ? "pl-4" : ""} font-mono text-[13px] font-bold tracking-[0.04em] xl:text-[15px]`}>
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 15 15" fill="none" className="shrink-0">
+            <path d="M1 14V8H6V2H14V14H1Z" fill="currentColor" />
+          </svg>
+          <span>{card.tab}</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="z-20 flex h-12 w-fit items-center px-4 pr-10 font-mono text-[10px] font-bold tracking-[0.12em] sm:text-[11px]"
+      style={{
+        clipPath: "polygon(0 0, calc(100% - 22px) 0, 100% 100%, 0 100%)",
+        backgroundColor: card.bg,
+        color: card.ink,
+      }}
+    >
+      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 15 15" fill="none" className="mr-2 shrink-0">
+        <path d="M1 14V8H6V2H14V14H1Z" fill="currentColor" />
+      </svg>
+      {card.tab}
+    </div>
+  );
+}
 
 export default function ProjectDeck() {
   const containerRef = useRef<HTMLDivElement>(null);
-  
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
-  });
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
 
-  // Staggered slide-in animations for cards 2, 3, and 4
-  const card2Y = useTransform(scrollYProgress, [0.10, 0.32], ['100vh', '0vh']);
-  const card3Y = useTransform(scrollYProgress, [0.42, 0.64], ['100vh', '0vh']);
-  const card4Y = useTransform(scrollYProgress, [0.74, 0.96], ['100vh', '0vh']);
-
-  const cardTransforms = [null, card2Y, card3Y, card4Y];
-
-  // Specific geometry for each card's solitary tab
-  const getTabStyle = (index: number) => {
-    if (index === 0) {
-      return {
-        left: '0%',
-        width: 'calc(25% + 16px)',
-        clipPath: 'polygon(0 0, calc(100% - 28px) 0, 100% 100%, 0 100%)',
-      };
-    }
-    if (index === 1) {
-      return {
-        left: 'calc(25% - 12px)',
-        width: 'calc(25% + 16px)',
-        clipPath: 'polygon(0 100%, 28px 0, calc(100% - 28px) 0, 100% 100%)',
-      };
-    }
-    if (index === 2) {
-      return {
-        left: 'calc(50% - 24px)',
-        width: 'calc(25% + 16px)',
-        clipPath: 'polygon(0 100%, 28px 0, calc(100% - 28px) 0, 100% 100%)',
-      };
-    }
-    return {
-      left: 'calc(75% - 36px)',
-      width: 'calc(25% + 36px)',
-      clipPath: 'polygon(0 100%, 28px 0, calc(100% - 28px) 0, 100% 100%)',
-    };
-  };
+  const card2Y = useTransform(scrollYProgress, [0.1, 0.32], ["105vh", "0vh"]);
+  const card3Y = useTransform(scrollYProgress, [0.42, 0.64], ["105vh", "0vh"]);
+  const card4Y = useTransform(scrollYProgress, [0.74, 0.96], ["105vh", "0vh"]);
+  const transforms = [null, card2Y, card3Y, card4Y];
 
   return (
-    <div className="w-full">
-      {/* =========================================================================
-          MOBILE LAYOUT: Vertical List (hidden on lg+ screens)
-          ========================================================================= */}
-      <div className="flex lg:hidden flex-col gap-16 px-4 sm:px-6 py-12 w-full max-w-2xl mx-auto">
-        {projects.map((proj, index) => (
-          <div key={`mobile-card-${proj.id}`} className="relative w-full flex flex-col">
-            {/* Mobile Tab (Simplified geometry for narrow screens) */}
-            <div
-              className={`h-[44px] flex items-center px-4 sm:px-5 z-20 ${proj.textColor} w-fit pr-10`}
-              style={{
-                backgroundColor: proj.bgColor,
-                clipPath: 'polygon(0 0, calc(100% - 24px) 0, 100% 100%, 0 100%)',
-              }}
-            >
-              <div className="flex items-center space-x-2">
-                <svg width="14" height="14" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-                  <path d="M1 14V8H6V2H14V14H1Z" fill="currentColor" />
-                </svg>
-                <span className="font-mono text-[13px] font-bold tracking-wider uppercase">
-                  {proj.tabNumber}
-                </span>
-              </div>
+    <section id="shoots" className="scroll-mt-8 py-16 lg:py-0">
+      <div className="mx-auto mb-8 max-w-4xl px-4 text-center sm:px-6 lg:mb-0 lg:pb-16">
+        <span className="font-serif text-2xl italic text-black">inside the system</span>
+        <h2 className="mt-2 font-[family-name:var(--font-space-grotesk)] text-[clamp(2.5rem,6vw,5.5rem)] font-medium leading-[0.95] tracking-[-0.065em] text-black">
+          The profile is built <span className="text-[#ec2578]">as a whole.</span>
+        </h2>
+      </div>
+
+      <div className="mx-auto flex max-w-2xl flex-col gap-14 px-4 sm:px-6 lg:hidden">
+        {shootCards.map((card, index) => (
+          <article key={card.id} className="relative">
+            <Tab card={card} index={index} />
+            <div className="relative min-h-[660px] sm:min-h-[720px]">
+              <CardContent card={card} index={index} mobile />
             </div>
-
-            {/* Mobile Card Body */}
-            <div 
-              className={`w-full ${proj.textColor} p-6 sm:p-8 flex flex-col justify-between`}
-              style={{ backgroundColor: proj.bgColor }}
-            >
-              <div className="flex flex-col gap-8">
-                {/* Text Content */}
-                <div>
-                  <div className="flex items-center space-x-2.5 mb-3 sm:mb-4">
-                    <span className={`w-2.5 h-2.5 rounded-full inline-block ${index === 0 || index === 2 ? 'bg-black' : 'bg-white'}`}></span>
-                    <span className="font-mono text-xs font-semibold tracking-wider uppercase opacity-90">
-                      {proj.date}
-                    </span>
-                  </div>
-
-                  <h3 className="font-sans text-3xl sm:text-4xl font-normal tracking-tight leading-[1.05]">
-                    {proj.title}
-                  </h3>
-
-                  <p className="font-sans text-base sm:text-[17px] leading-snug mt-3 sm:mt-4 font-normal opacity-90">
-                    {proj.tagline}
-                  </p>
-
-                  <div className="mt-6">
-                    <a
-                      href={proj.link}
-                      className={`inline-flex items-center space-x-1.5 font-mono text-xs font-bold tracking-wider uppercase border-b-2 ${index === 0 || index === 2 ? 'border-black text-black' : 'border-white text-white'} pb-0.5`}
-                    >
-                      <span>VIEW PROJECT</span>
-                      <span className="text-sm leading-none">↗</span>
-                    </a>
-                  </div>
-                </div>
-
-                {/* Hero Image */}
-                <div className="relative w-full aspect-[4/3] bg-black border border-white/20">
-                  {/* Corners */}
-                  <div className="absolute -top-1.5 -left-1.5 w-3 h-3 bg-white border border-black z-30 pointer-events-none"></div>
-                  <div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white border border-black z-30 pointer-events-none"></div>
-                  <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-white border border-black z-30 pointer-events-none"></div>
-                  <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-white border border-black z-30 pointer-events-none"></div>
-
-                  <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-white text-black font-mono text-[10px] sm:text-[11px] font-bold px-2 py-1 flex items-center space-x-1.5 z-20 select-none">
-                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="1" y="1" width="10" height="10" stroke="currentColor" strokeWidth="1.2" />
-                      <path d="M1 8L4 5L8 9" stroke="currentColor" strokeWidth="1.2" />
-                      <circle cx="8.5" cy="4" r="1" fill="currentColor" />
-                    </svg>
-                    <span className={proj.imageBadgeText}>IMAGE.JPG</span>
-                  </div>
-
-                  <div className="relative w-full h-full overflow-hidden">
-                    <Image
-                      src={proj.image}
-                      alt={`${proj.title} Showcase`}
-                      fill
-                      className="object-cover object-center"
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Badges */}
-              <div className="flex flex-wrap items-end gap-2 mt-8 pt-2">
-                {proj.tags.map((tag, tIdx) => (
-                  <div
-                    key={`tag-${tIdx}`}
-                    className={`${proj.badgeBg} ${proj.badgeText} font-mono text-[10px] sm:text-[11px] font-bold tracking-wider px-3 sm:px-4 pt-2.5 pb-2 select-none`}
-                    style={{
-                      clipPath: tIdx === 0 
-                        ? 'polygon(0 6px, 10px 0, calc(100% - 10px) 0, 100% 6px, 100% 100%, 0 100%)'
-                        : 'polygon(0 6px, 10px 6px, 16px 0, calc(100% - 10px) 0, 100% 6px, 100% 100%, 0 100%)'
-                    }}
-                  >
-                    {tag}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          </article>
         ))}
       </div>
 
-      {/* =========================================================================
-          DESKTOP LAYOUT: Sticky Scroll Deck (hidden on mobile)
-          ========================================================================= */}
-      <div ref={containerRef} className="hidden lg:block relative h-[360vh] w-full">
-        {/* Sticky viewport frame that locks in the center of the screen */}
-        <div className="sticky top-0 h-screen w-full flex items-center justify-center z-20 px-4 sm:px-6 lg:px-8 py-6">
-          <div className="relative w-full max-w-[1240px] h-[580px] sm:h-[540px] md:h-[560px]">
-          
-          {projects.map((proj, index) => {
-            const yTransform = cardTransforms[index];
-            const tabStyle = getTabStyle(index);
-
-            const cardNode = (
-              <div className="w-full h-full relative select-none">
-                {/* Each card holds ONLY its OWN individual tab at the top */}
-                <div
-                  className={`absolute top-0 h-[48px] flex items-center px-4 sm:px-6 z-20 ${proj.textColor}`}
-                  style={{
-                    ...tabStyle,
-                    backgroundColor: proj.bgColor,
-                  }}
-                >
-                  <div className={`flex items-center space-x-2 ${index > 0 ? 'pl-3 sm:pl-4' : ''}`}>
-                    <svg width="14" height="14" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-                      <path d="M1 14V8H6V2H14V14H1Z" fill="currentColor" />
-                    </svg>
-                    <span className="font-mono text-xs sm:text-[13px] font-bold tracking-wider uppercase truncate">
-                      {proj.tabNumber}
-                    </span>
+      <div ref={containerRef} className="relative hidden h-[360vh] w-full lg:block">
+        <div className="sticky top-0 flex h-screen items-center justify-center px-8 py-6">
+          <div className="relative h-[clamp(650px,calc(100vh-48px),1034px)] w-full max-w-[1240px]">
+            {shootCards.map((card, index) => {
+              const node = (
+                <article className="relative h-full w-full select-none">
+                  <Tab card={card} index={index} desktop />
+                  <div className="absolute inset-x-0 bottom-0 top-[76px]">
+                    <CardContent card={card} index={index} />
                   </div>
-                </div>
-
-                {/* Main Card Body - Perfectly aligned at top: 48px */}
-                <div 
-                  className={`absolute top-[48px] inset-x-0 bottom-0 ${proj.textColor} p-6 sm:p-8 md:p-10 lg:p-12 flex flex-col justify-between`}
-                  style={{ backgroundColor: proj.bgColor }}
-                >
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 h-full items-stretch">
-                    
-                    {/* Left Column */}
-                    <div className="lg:col-span-5 flex flex-col justify-between z-20 relative">
-                      <div>
-                        {/* Date Tag */}
-                        <div className="flex items-center space-x-2.5 mb-4">
-                          <span className={`w-2.5 h-2.5 rounded-full inline-block ${index === 0 || index === 2 ? 'bg-black' : 'bg-white'}`}></span>
-                          <span className="font-mono text-xs font-semibold tracking-wider uppercase opacity-90">
-                            {proj.date}
-                          </span>
-                        </div>
-
-                        {/* Title */}
-                        <h3 className="font-sans text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-normal tracking-tight leading-[1.05]">
-                          {proj.title}
-                        </h3>
-
-                        {/* Tagline */}
-                        <p className="font-sans text-base sm:text-[17px] md:text-lg leading-snug mt-4 sm:mt-5 font-normal opacity-90 max-w-md">
-                          {proj.tagline}
-                        </p>
-
-                        {/* CTA Link */}
-                        <div className="mt-6 sm:mt-8">
-                          <a
-                            href={proj.link}
-                            className={`inline-flex items-center space-x-1.5 font-mono text-xs sm:text-sm font-bold tracking-wider uppercase border-b-2 ${index === 0 || index === 2 ? 'border-black text-black' : 'border-white text-white'} pb-0.5 hover:opacity-75 transition-opacity`}
-                          >
-                            <span>VIEW PROJECT</span>
-                            <span className="text-base leading-none">↗</span>
-                          </a>
-                        </div>
-                      </div>
-
-                      {/* Mint-Green "YOU" cursor indicator on Card 4 */}
-                      {proj.hasUserCursor && (
-                        <div className="hidden sm:flex absolute right-0 top-[45%] items-center select-none pointer-events-none z-30">
-                          <div className="w-3.5 h-3.5 bg-[#00e699] rounded-full"></div>
-                          <div className="bg-[#00e699] text-black text-[10px] font-mono font-bold tracking-wider px-2 py-0.5 rounded-full -ml-1 mt-4">
-                            YOU
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Chamfered Badges */}
-                      <div className="flex flex-wrap items-end gap-2.5 mt-8 lg:mt-auto pt-2">
-                        {proj.tags.map((tag, tIdx) => (
-                          <div
-                            key={`tag-${tIdx}`}
-                            className={`${proj.badgeBg} ${proj.badgeText} font-mono text-[11px] sm:text-xs font-bold tracking-wider px-4 pt-2.5 pb-2 select-none`}
-                            style={{
-                              clipPath: tIdx === 0 
-                                ? 'polygon(0 6px, 10px 0, 36px 0, 44px 6px, 100% 6px, 100% 100%, 0 100%)'
-                                : 'polygon(0 6px, 10px 6px, 16px 0, 48px 0, 54px 6px, 100% 6px, 100% 100%, 0 100%)'
-                            }}
-                          >
-                            {tag}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Right Column: Framed Image with Technical Corner Nodes */}
-                    <div className="lg:col-span-7 flex items-center justify-center relative my-auto h-full max-h-[380px]">
-                      <div className="relative w-full h-full aspect-[4/3] sm:aspect-[16/11] lg:aspect-[16/10] bg-black border border-white/20 overflow-visible">
-                        {/* 4 Corner Square Handles */}
-                        <div className="absolute -top-1.5 -left-1.5 w-3 h-3 bg-white border border-black z-30 pointer-events-none"></div>
-                        <div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white border border-black z-30 pointer-events-none"></div>
-                        <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-white border border-black z-30 pointer-events-none"></div>
-                        <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-white border border-black z-30 pointer-events-none"></div>
-
-                        {/* Top-right Image Metadata Badge */}
-                        <div className="absolute top-3 right-3 bg-white text-black font-mono text-[10.5px] sm:text-[11.5px] font-bold px-2.5 py-1 flex items-center space-x-1.5 z-20 select-none">
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="1" y="1" width="10" height="10" stroke="currentColor" strokeWidth="1.2" />
-                            <path d="M1 8L4 5L8 9" stroke="currentColor" strokeWidth="1.2" />
-                            <circle cx="8.5" cy="4" r="1" fill="currentColor" />
-                          </svg>
-                          <span className={proj.imageBadgeText}>IMAGE.JPG</span>
-                        </div>
-
-                        {/* Image */}
-                        <div className="relative w-full h-full overflow-hidden">
-                          <Image
-                            src={proj.image}
-                            alt={`${proj.title} Showcase`}
-                            fill
-                            className="object-cover object-center"
-                            referrerPolicy="no-referrer"
-                            priority={index === 0}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-            );
-
-            if (index === 0) {
-              return (
-                <div
-                  key={`card-${proj.id}`}
-                  className="absolute inset-0 z-10"
-                >
-                  {cardNode}
-                </div>
+                </article>
               );
-            }
 
-            return (
-              <motion.div
-                key={`card-${proj.id}`}
-                style={{ y: yTransform ?? '0vh', zIndex: 10 + index * 10 }}
-                className="absolute inset-0"
-              >
-                {cardNode}
-              </motion.div>
-            );
-          })}
+              if (index === 0) {
+                return <div key={card.id} className="absolute inset-0 z-10">{node}</div>;
+              }
 
+              return (
+                <motion.div
+                  key={card.id}
+                  className="absolute inset-0"
+                  style={{ y: transforms[index] ?? "0vh", zIndex: 10 + index * 10 }}
+                >
+                  {node}
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
-    </div>
-    </div>
+    </section>
   );
 }

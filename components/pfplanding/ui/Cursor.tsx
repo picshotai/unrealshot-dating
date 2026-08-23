@@ -1,12 +1,17 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 export const Cursor: React.FC = () => {
+  const pathname = usePathname();
   const cursorRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
+  const isEditorLanding = pathname === '/' || pathname === '/new-landing';
 
   useEffect(() => {
+    if (isEditorLanding) return;
+
     // Direct DOM update for 60fps+ performance (bypassing React state)
     const updatePosition = (e: MouseEvent) => {
       if (cursorRef.current) {
@@ -43,7 +48,9 @@ export const Cursor: React.FC = () => {
       window.removeEventListener('mousemove', updatePosition);
       window.removeEventListener('mouseover', updateHoverState);
     };
-  }, []);
+  }, [isEditorLanding]);
+
+  if (isEditorLanding) return null;
 
   return (
     <div

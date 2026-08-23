@@ -63,7 +63,7 @@ export interface OrganizationSchema {
 // Default SEO Configuration
 export const defaultSEO: SEOConfig = {
   title: 'AI Dating Photos Generator for Tinder, Hinge & Bumble | Unrealshot AI',
-  description: 'Get 100 realistic AI dating photos pre-sorted into 5 profile lineup roles from 4–6 selfies. 100 distinct outfits, locations, and lighting setups with zero repeats.',
+  description: 'Turn 4–6 selfies into 60 dating photos from 15 coherent shoots. Four frames per shoot, 30 included re-shoots, and one finished profile for $39.',
   keywords: [
     'AI dating photos',
     'AI dating photoshoot',
