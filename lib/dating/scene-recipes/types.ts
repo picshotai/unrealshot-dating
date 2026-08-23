@@ -3,6 +3,7 @@ import type {
   PromptLabKind,
   PromptLabLight,
 } from "@/lib/dating/prompt-lab/schemas";
+import type { DatingSceneCompositionPolicy } from "@/lib/dating/frame-composition";
 
 export const RECIPE_PLANNER_VERSION = "dating-recipes-v2" as const;
 
@@ -92,6 +93,8 @@ export type DatingSceneBrief = {
   representedInterest: InterestId | null;
   /** Scene-derived face and gaze direction for all four moments. */
   momentPlan?: SceneMomentPlan;
+  /** Portfolio-budgeted formats from which the prompt writer may choose. */
+  compositionPolicy: DatingSceneCompositionPolicy;
   interests: readonly InterestId[];
   exclusions: readonly ExcludableTag[];
   geometryContract: readonly string[];

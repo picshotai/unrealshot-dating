@@ -16,6 +16,10 @@ import {
 import type { DatingSceneBrief } from "@/lib/dating/scene-recipes/types";
 import { activityWardrobeProblems } from "@/lib/dating/scene-recipes/wardrobe";
 import { resolveSceneMomentPlan } from "@/lib/dating/scene-recipes/moments";
+import {
+  DEFAULT_SCENE_COMPOSITION_POLICY,
+  allowedDynamicFrameDimensions,
+} from "@/lib/dating/frame-composition";
 
 export type PromptLabValidation = {
   passed: boolean;
@@ -83,11 +87,6 @@ function libraryContext() {
   };
 }
 
-function expectedDimensions(framing: PromptLabOutput["frames"][number]["framing"]) {
-  if (framing === "threeQuarter") return ["1728x2304", "2304x1728"];
-  return ["1728x2304"];
-}
-
 export function validatePromptLabOutput(args: {
   output: PromptLabOutput;
   input: PromptLabInput;
@@ -96,6 +95,7 @@ export function validatePromptLabOutput(args: {
   lockedBrief?: DatingSceneBrief;
 }): PromptLabValidation {
   const { output, input, plan, recentScenes = [], lockedBrief } = args;
+  const compositionPolicy = lockedBrief?.compositionPolicy ?? DEFAULT_SCENE_COMPOSITION_POLICY;
   const candidate: CandidateShoot = {
     id: output.scene.id,
     title: output.scene.title,
@@ -244,8 +244,12 @@ export function validatePromptLabOutput(args: {
 
   for (const frame of output.frames) {
     const actual = `${frame.width}x${frame.height}`;
-    if (!expectedDimensions(frame.framing).includes(actual)) {
-      problems.push(`frame "${frame.framing}" uses ${actual}; use ${expectedDimensions(frame.framing).join(" or ")}`);
+    const expectedDimensions = allowedDynamicFrameDimensions(
+      frame.framing,
+      compositionPolicy
+    ).map(({ width, height }) => `${width}x${height}`);
+    if (!expectedDimensions.includes(actual)) {
+      problems.push(`frame "${frame.framing}" uses ${actual}; use ${expectedDimensions.join(" or ")}`);
     }
     if (outfitOf(frame.prompt) !== output.scene.outfit) {
       problems.push(`frame "${frame.framing}" does not repeat scene.outfit exactly after "wearing"`);

@@ -192,8 +192,10 @@ export function expectedRatio({
   width: number;
   height: number;
 }): string {
-  if (width === height) return "1:1";
-  return width < height ? "3:4" : "4:3";
+  const greatestCommonDivisor = (first: number, second: number): number =>
+    second === 0 ? first : greatestCommonDivisor(second, first % second);
+  const divisor = greatestCommonDivisor(width, height);
+  return `${width / divisor}:${height / divisor}`;
 }
 
 /**

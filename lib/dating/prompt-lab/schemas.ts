@@ -4,7 +4,7 @@ import { EXCLUDABLE_TAGS, INTEREST_IDS } from "@/lib/dating/types";
 
 export const PROMPT_LAB_MODEL = "gemini-3.7-flash" as const;
 export const PROMPT_LAB_THINKING_LEVEL = "low" as const;
-export const PROMPT_SYSTEM_VERSION = "dating-scene-v4" as const;
+export const PROMPT_SYSTEM_VERSION = "dating-scene-v5" as const;
 
 export const SHOOT_KINDS = ["portrait", "home", "outdoors", "social", "activity"] as const;
 export const LIGHT_FAMILIES = ["window", "open-door", "overcast", "flash"] as const;

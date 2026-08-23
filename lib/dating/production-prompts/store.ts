@@ -15,6 +15,7 @@ import {
   type DatingSceneBrief,
   type PlanRecipeInput,
 } from "@/lib/dating/scene-recipes";
+import { DEFAULT_SCENE_COMPOSITION_POLICY } from "@/lib/dating/frame-composition";
 
 type AdminDb = ReturnType<typeof createAdminClient>;
 
@@ -167,10 +168,17 @@ export async function replaceProductionBrief(args: {
   );
   for (let salt = args.shoot.slot_index * 1000; salt < args.shoot.slot_index * 1000 + 512; salt += 1) {
     const portfolio = planDatingSceneBriefs({ ...args.recipeInput, salt });
-    const brief = portfolio[args.shoot.slot_index - 1];
-    if (!brief || usedConcepts.has(brief.conceptFamily) || brief.ideaKey === args.shoot.idea_key) {
+    const plannedBrief = portfolio[args.shoot.slot_index - 1];
+    if (!plannedBrief || usedConcepts.has(plannedBrief.conceptFamily) || plannedBrief.ideaKey === args.shoot.idea_key) {
       continue;
     }
+    // Replanning one failed slot must not move the portfolio's rare 9:16
+    // permission to a second slot after siblings have already been accepted.
+    const brief: DatingSceneBrief = {
+      ...plannedBrief,
+      compositionPolicy:
+        args.shoot.brief.compositionPolicy ?? DEFAULT_SCENE_COMPOSITION_POLICY,
+    };
     const { data, error } = await raw
       .from("dating_order_shoots")
       .update({

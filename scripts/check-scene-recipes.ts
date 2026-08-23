@@ -12,6 +12,10 @@ import {
 } from "../lib/dating/scene-recipes/planner";
 import { RECIPE_PLANNER_VERSION } from "../lib/dating/scene-recipes/types";
 import type { InterestId } from "../lib/dating/types";
+import {
+  compositionPolicyAllowsLandscape,
+  compositionPolicyAllowsTall,
+} from "../lib/dating/frame-composition";
 
 const interests: InterestId[] = ["coffee", "reading", "hiking", "art", "tennis", "music"];
 const lightWeights = { window: 0.4, overcast: 0.35, "open-door": 0.2, flash: 0.05 } as const;
@@ -102,6 +106,20 @@ function assertPortfolio(count: number, salt: number) {
   assert(briefs.every((brief) =>
     !brief.representedInterest || interests.includes(brief.representedInterest)
   ), "a recipe may not portray an unselected customer interest");
+  assert.equal(
+    briefs.filter((brief) => compositionPolicyAllowsTall(brief.compositionPolicy)).length,
+    Math.floor(count / 15),
+    "9:16 permission must remain capped at one scene per fifteen shoots"
+  );
+  assert.equal(
+    briefs.filter((brief) => compositionPolicyAllowsLandscape(brief.compositionPolicy)).length,
+    Math.floor(count / 6),
+    "4:3 permission must remain capped at two scenes in a standard delivery"
+  );
+  assert(briefs.every((brief) => !(
+    compositionPolicyAllowsTall(brief.compositionPolicy) &&
+    compositionPolicyAllowsLandscape(brief.compositionPolicy)
+  )), "one scene must not receive both exceptional ratio options");
   assert(briefs.every((brief) =>
     !/ceramic|pottery|garage|workshop|warehouse|farmhouse|barn|lay-?by/i.test(
       `${brief.venue} ${brief.location}`

@@ -26,6 +26,13 @@ import { validatePromptLabOutput } from "../lib/dating/prompt-lab/validate";
 import { SHOOT_CATALOG } from "../lib/dating/shoot-catalog";
 import { meetsLens } from "../lib/dating/authoring/rules";
 import { SCENE_ANCHOR_PROMPT_SENTENCE } from "../lib/dating/prompt-lab/system-instruction";
+import {
+  LANDSCAPE_4_3,
+  LANDSCAPE_ELIGIBLE_SCENE_COMPOSITION_POLICY,
+  TALL_ELIGIBLE_SCENE_COMPOSITION_POLICY,
+  TALL_9_16,
+} from "../lib/dating/frame-composition";
+import { planDatingSceneBriefs } from "../lib/dating/scene-recipes";
 
 const identity = "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone.";
 const outfit = "a moss green cotton overshirt over a cream henley, dark denim, brown leather boots and a steel watch";
@@ -207,6 +214,89 @@ async function main() {
   changedWardrobe.frames[3].prompt = changedWardrobe.frames[3].prompt.replace(wardrobeState, "The overshirt hangs with a loose sleeve edge.");
   const wardrobeCheck = validatePromptLabOutput({ output: changedWardrobe, input: baseInput, plan: { kind: "social", light: "window" } });
   assert(wardrobeCheck.problems.some((problem) => problem.includes("does not repeat the exact scene.wardrobeState")), "a changed sleeve or fabric state must fail continuity validation");
+
+  const unbudgetedTall = structuredClone(output);
+  unbudgetedTall.frames[2] = {
+    ...unbudgetedTall.frames[2],
+    width: TALL_9_16.width,
+    height: TALL_9_16.height,
+    prompt: unbudgetedTall.frames[2].prompt.replace("A 3:4", "A 9:16"),
+  };
+  const unbudgetedTallCheck = validatePromptLabOutput({
+    output: unbudgetedTall,
+    input: baseInput,
+    plan: { kind: "social", light: "window" },
+  });
+  assert(
+    unbudgetedTallCheck.problems.some((problem) => problem.includes("uses 1512x2688")),
+    "standalone generation must reject an unbudgeted 9:16 frame"
+  );
+
+  const lockedBrief = planDatingSceneBriefs({
+    orderId: "52ec6022-c51e-4cbb-a79a-783d619aa50a",
+    count: 1,
+    interests: ["coffee", "reading"],
+    dress: "casual",
+    exclusions: ["alcohol"],
+  })[0];
+  const tallAllowedCheck = validatePromptLabOutput({
+    output: unbudgetedTall,
+    input: baseInput,
+    plan: { kind: "social", light: "window" },
+    lockedBrief: {
+      ...lockedBrief,
+      sceneId: output.scene.id,
+      conceptFamily: output.scene.conceptFamily,
+      settingFamily: output.scene.settingFamily,
+      location: output.scene.location,
+      activity: output.scene.activity,
+      activityReason: output.scene.activityReason,
+      datingSignal: output.scene.datingSignal,
+      kind: output.scene.kind,
+      lightFamily: output.scene.lightFamily,
+      register: output.scene.register,
+      props: output.scene.props,
+      environmentAnchors: output.scene.environmentAnchors as [string, string],
+      compositionPolicy: TALL_ELIGIBLE_SCENE_COMPOSITION_POLICY,
+    },
+  });
+  assert(
+    !tallAllowedCheck.problems.some((problem) => problem.includes("uses 1512x2688")),
+    "a portfolio-budgeted anchor may choose 9:16"
+  );
+
+  const landscapeAnchor = structuredClone(output);
+  landscapeAnchor.frames[2] = {
+    ...landscapeAnchor.frames[2],
+    width: LANDSCAPE_4_3.width,
+    height: LANDSCAPE_4_3.height,
+    prompt: landscapeAnchor.frames[2].prompt.replace("A 3:4", "A 4:3"),
+  };
+  const landscapeAllowedCheck = validatePromptLabOutput({
+    output: landscapeAnchor,
+    input: baseInput,
+    plan: { kind: "social", light: "window" },
+    lockedBrief: {
+      ...lockedBrief,
+      sceneId: output.scene.id,
+      conceptFamily: output.scene.conceptFamily,
+      settingFamily: output.scene.settingFamily,
+      location: output.scene.location,
+      activity: output.scene.activity,
+      activityReason: output.scene.activityReason,
+      datingSignal: output.scene.datingSignal,
+      kind: output.scene.kind,
+      lightFamily: output.scene.lightFamily,
+      register: output.scene.register,
+      props: output.scene.props,
+      environmentAnchors: output.scene.environmentAnchors as [string, string],
+      compositionPolicy: LANDSCAPE_ELIGIBLE_SCENE_COMPOSITION_POLICY,
+    },
+  });
+  assert(
+    !landscapeAllowedCheck.problems.some((problem) => problem.includes("uses 2304x1728")),
+    "a portfolio-budgeted anchor may choose 4:3"
+  );
 
   const repository = new MemoryRepository();
   let calls = 0;

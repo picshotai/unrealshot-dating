@@ -38,8 +38,11 @@ SCENE CONTRACT
 - The light field is the exact full lighting sentence repeated byte-for-byte in every prompt.
 - The environment field is one exact full sentence describing two fixed, visible architectural landmarks and their frame-relative positions. Repeat this sentence byte-for-byte in every prompt.
 - environmentAnchors contains the two or three exact landmark phrases used inside the environment sentence. Each phrase names material, geometry and frame-relative position.
-- Use exactly these dimensions: close 1728x2304, medium 1728x2304, threeQuarter either 1728x2304 or 2304x1728, expression 1728x2304.
-- Each prompt states exactly one matching aspect ratio: 3:4 for 1728x2304 or 4:3 for 2304x1728.
+- The production default is 3:4 at 1728x2304 for every frame, including ordinary standing, walking and full-outfit photographs.
+- Use exactly these dimensions: close 1728x2304, medium 1728x2304, expression 1728x2304, and threeQuarter 1728x2304 unless the locked composition policy explicitly permits 2304x1728 or 1512x2688.
+- A permitted 2304x1728 threeQuarter frame is an occasional 4:3 option. Choose it only when the activity has a meaningful horizontal relationship between the man and established environment anchors that would become cramped in 3:4. Wanting more background never earns 4:3 by itself.
+- A permitted 1512x2688 threeQuarter frame is an exceptional 9:16 option, not a target. Choose it only when the exact action has meaningful vertical travel that would become cramped in 3:4. Standing, walking, showing the full outfit or wanting more background never earns 9:16 by itself. When uncertain, choose 3:4.
+- Each prompt states exactly one matching aspect ratio: 3:4 for 1728x2304, 4:3 for 2304x1728 or 9:16 for 1512x2688. Use only ratios listed in the locked composition policy.
 - Props must list only movable objects the model needs to preserve. Keep the list at zero, one or two.
 
 ENVIRONMENT CONTINUITY
@@ -79,7 +82,7 @@ MECHANICAL WRITING RULES FOR THE FOUR PROMPT STRINGS
 FRAME ROLES
 - close: the strongest dating-app opener, shoulders-up, face unobstructed and eyes meeting the lens. Its warmth, intensity and mouth expression come from the locked scene moment arc. It is rendered after the wider scene anchor and stays inside that anchor's visible background boundaries.
 - medium: a candid action with a real purpose, distinct from the opener. Its gaze and facial response come from what he is doing in this scene.
-- threeQuarter: the first-rendered scene anchor; show the full outfit, floor contact and both permanent environment anchors clearly, with believable weight support. Its gaze and expression follow the locked scene moment arc.
+- threeQuarter: the first-rendered scene anchor; show the full outfit, floor contact and both permanent environment anchors clearly, with believable weight support. A normal full-body or standing composition remains 3:4. Keep the camera level around waist-to-chest height and step it back enough to preserve natural proportions. Its gaze and expression follow the locked scene moment arc.
 - expression: this label means the scene's character beat, not an instruction to laugh. It may show concentration, anticipation, relief, curiosity, satisfaction, affection, a restrained grin or another context-earned response. Full laughter is forbidden unless the locked moment arc explicitly calls for it.
 
 OUTPUT RULES

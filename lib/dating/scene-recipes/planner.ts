@@ -1,4 +1,12 @@
 import type { PromptLabKind, PromptLabLight } from "@/lib/dating/prompt-lab/schemas";
+import {
+  DEFAULT_SCENE_COMPOSITION_POLICY,
+  LANDSCAPE_ELIGIBLE_SCENE_COMPOSITION_POLICY,
+  TALL_ELIGIBLE_SCENE_COMPOSITION_POLICY,
+  landscapeAspectEligibleIdeaKeys,
+  tallAspectEligibleIdeaKeys,
+  type DatingSceneCompositionPolicy,
+} from "@/lib/dating/frame-composition";
 
 import {
   ACTIVITIES,
@@ -276,6 +284,7 @@ function makeBrief(args: {
   topologyId?: string;
   activity?: (typeof ACTIVITIES)[number];
   reason?: (typeof REASONS)[number];
+  compositionPolicy?: DatingSceneCompositionPolicy;
 }): DatingSceneBrief {
   const { input, slotIndex, venue, light, seed, preferredInterest } = args;
   const preferredSignals = preferredInterest
@@ -369,6 +378,7 @@ function makeBrief(args: {
     props: activity.propIds.map((id) => PROPS[id]).filter(Boolean),
     representedInterest: activity.interest ?? null,
     momentPlan,
+    compositionPolicy: args.compositionPolicy ?? DEFAULT_SCENE_COMPOSITION_POLICY,
     interests: input.interests,
     exclusions: input.exclusions,
     geometryContract: [
@@ -563,7 +573,19 @@ export function planDatingSceneBriefs(input: PlanRecipeInput): DatingSceneBrief[
     );
   }
 
-  return selected;
+  const tallEligibleIdeas = tallAspectEligibleIdeaKeys(selected);
+  const landscapeEligibleIdeas = landscapeAspectEligibleIdeaKeys(
+    selected,
+    tallEligibleIdeas
+  );
+  return selected.map((brief) => ({
+    ...brief,
+    compositionPolicy: tallEligibleIdeas.has(brief.ideaKey)
+      ? TALL_ELIGIBLE_SCENE_COMPOSITION_POLICY
+      : landscapeEligibleIdeas.has(brief.ideaKey)
+        ? LANDSCAPE_ELIGIBLE_SCENE_COMPOSITION_POLICY
+        : DEFAULT_SCENE_COMPOSITION_POLICY,
+  }));
 }
 
 /**
@@ -604,6 +626,7 @@ export function expandDatingSceneBrief(
               topologyId,
               activity,
               reason,
+              compositionPolicy: base.compositionPolicy,
             }));
             if (variants.length >= limit) return variants;
           }

@@ -121,6 +121,14 @@ const anchorMigration = readFileSync(
   "utf8"
 );
 assert.match(anchorMigration, /dating-scene-v3', 'dating-scene-v4'[\s\S]*threeQuarter/);
+const compositionMigration = readFileSync(
+  join(process.cwd(), "supabase", "migrations", "036_dynamic_prompt_v5_composition.sql"),
+  "utf8"
+);
+assert.match(
+  compositionMigration,
+  /dating-scene-v3', 'dating-scene-v4', 'dating-scene-v5'[\s\S]*threeQuarter/
+);
 
 const gymMoments = resolveSceneMomentPlan({
   ...brief,
