@@ -95,6 +95,14 @@ function assertPortfolio(count: number, salt: number) {
   }
   assert(briefs.every((brief) => brief.props.length <= 2));
   assert(briefs.every((brief) => brief.environmentAnchors.length === 2));
+  assert(briefs.every((brief) =>
+    !brief.representedInterest || interests.includes(brief.representedInterest)
+  ), "a recipe may not portray an unselected customer interest");
+  assert(briefs.every((brief) =>
+    !/ceramic|pottery|garage|workshop|warehouse|farmhouse|barn|lay-?by/i.test(
+      `${brief.venue} ${brief.location}`
+    )
+  ), "quarantined low-dating-value settings may not enter the recipe portfolio");
 }
 
 for (let count = 1; count <= 30; count += 1) {

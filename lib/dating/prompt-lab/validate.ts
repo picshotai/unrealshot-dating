@@ -9,8 +9,12 @@ import { SHOOTS } from "@/lib/dating/shoots";
 
 import type { PromptLabInput, PromptLabOutput, RecentScene } from "./schemas";
 import type { PromptLabPlan } from "./planner";
-import { SCENE_ANCHOR_PROMPT_SENTENCE } from "./system-instruction";
+import {
+  SCENE_ANCHOR_FRAMING,
+  SCENE_ANCHOR_PROMPT_SENTENCE,
+} from "./system-instruction";
 import type { DatingSceneBrief } from "@/lib/dating/scene-recipes/types";
+import { activityWardrobeProblems } from "@/lib/dating/scene-recipes/wardrobe";
 
 export type PromptLabValidation = {
   passed: boolean;
@@ -19,7 +23,7 @@ export type PromptLabValidation = {
 };
 
 const FORBIDDEN_SCENE =
-  /\b(garage|workshop|warehouse|loading bay|storage unit|repair shop|repairing|maintenance|servicing|showroom|factory floor|industrial unit|mechanic)\b/i;
+  /\b(garage|workshop|warehouse|loading bay|storage unit|repair shop|repairing|maintenance|servicing|showroom|factory floor|industrial unit|mechanic|ceramics studio|pottery studio|pottery workshop|craft workshop|barn|farmhouse|lay-?by)\b/i;
 
 const EXCLUSION_TERMS: Record<string, RegExp> = {
   alcohol: /\b(wine|beer|cocktail|whisky|whiskey|champagne|alcohol|pint)\b/i,
@@ -114,8 +118,9 @@ export function validatePromptLabOutput(args: {
   if (output.scene.lightFamily !== plan.light) {
     problems.push(`light family is "${output.scene.lightFamily}"; it must be the planned "${plan.light}"`);
   }
-  if (output.scene.register !== input.dress) {
-    problems.push(`dress register is "${output.scene.register}"; it must be "${input.dress}"`);
+  const expectedRegister = lockedBrief?.register ?? input.dress;
+  if (output.scene.register !== expectedRegister) {
+    problems.push(`scene wardrobe register is "${output.scene.register}"; it must be "${expectedRegister}"`);
   }
 
   if (lockedBrief) {
@@ -155,6 +160,13 @@ export function validatePromptLabOutput(args: {
           );
         }
       }
+    }
+    for (const wardrobeProblem of activityWardrobeProblems({
+      kind: lockedBrief.kind,
+      representedInterest: lockedBrief.representedInterest,
+      outfit: output.scene.outfit,
+    })) {
+      problems.push(wardrobeProblem);
     }
   }
 
@@ -236,7 +248,7 @@ export function validatePromptLabOutput(args: {
     if (output.scene.wardrobeState && !frame.prompt.includes(output.scene.wardrobeState)) {
       problems.push(`frame "${frame.framing}" does not repeat the exact scene.wardrobeState sentence`);
     }
-    if (frame.framing !== "close" && !frame.prompt.includes(SCENE_ANCHOR_PROMPT_SENTENCE)) {
+    if (frame.framing !== SCENE_ANCHOR_FRAMING && !frame.prompt.includes(SCENE_ANCHOR_PROMPT_SENTENCE)) {
       problems.push(`frame "${frame.framing}" is missing the exact scene-anchor instruction`);
     }
     for (const element of continuityElements(frame.prompt)) {

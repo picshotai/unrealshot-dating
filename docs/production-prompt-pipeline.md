@@ -1,8 +1,9 @@
 # Production dating prompt pipeline
 
 New orders can use the recipe-first production path without changing legacy
-authored orders. Apply `supabase/migrations/033_dynamic_dating_prompt_pipeline.sql`
-before enabling it.
+authored orders. Fresh databases apply migrations `033_dynamic_dating_prompt_pipeline.sql`
+and `034_wide_dynamic_scene_anchor.sql` in order. Databases that already applied 033
+must leave it untouched and apply only the new 034 migration.
 
 ## Configuration
 
@@ -26,9 +27,23 @@ DATING_PROMPT_ATTEMPTS_PER_IDEA=3
 The shoot count is copied onto each order. Later environment changes do not
 change an active order's target, dashboard progress, or ready notification.
 
+Sample selection maximises coverage of the customer's selected interests before
+filling spare real-render slots. Because the default sample is two shoots, it can
+prove at most two distinct selected interests in one paid test.
+
+The clothing answer is a customer-style preference, not an order-wide outfit
+lock. Every recipe resolves its own scene register and wardrobe contract. Sport,
+home and outdoor requirements outrank the preference; only compatible social or
+evening scenes may use tailoring.
+
+Prompt system v3 renders the three-quarter frame first as the scene anchor. It
+shows the widest environment and full wardrobe. The close dating-app opener and
+the other two frames are then edited inside that established view.
+
 ## Safe rollout
 
-1. Deploy the migration and code with pipeline mode `off`.
+1. On a fresh database, deploy migrations 033 and 034. If 033 was already applied,
+   deploy only 034. Keep pipeline mode `off` during the deployment.
 2. Set mode to `owner` and test a full order in `mock` mode.
 3. Test complete anchored shoots in `sample` mode.
 4. Test one owner order with test mode `off`.

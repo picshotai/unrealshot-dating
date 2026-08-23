@@ -267,6 +267,10 @@
     text-rendering: optimizeLegibility;
   }
 
+  button {
+    cursor: pointer;
+  }
+
   /* Enhanced heading styles with Oxanium */
   h1,
   h2,

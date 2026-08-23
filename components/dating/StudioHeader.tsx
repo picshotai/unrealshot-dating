@@ -30,6 +30,7 @@ interface StudioHeaderProps {
     customCreditsRemaining: number;
     failedCount: number;
     stageLabel?: string;
+    pipelineMode?: 'authored' | 'dynamic';
   } | null;
   onOpenNewShoot: () => void;
   /**
@@ -121,6 +122,13 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
                 'Configure and launch your shoot'
               )}
             </p>
+            {status?.pipelineMode && (
+              <p className="text-[10px] text-zinc-600 font-mono mt-1">
+                Owner diagnostic: {status.pipelineMode === 'dynamic'
+                  ? 'recipe → Gemini prompts'
+                  : 'legacy authored catalogue'}
+              </p>
+            )}
           </div>
         </div>
 

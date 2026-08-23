@@ -340,10 +340,15 @@ function inspectPlan(
   }
 }
 
-// ── Complete lineups are unique across a representative global sample ──────
+// ── Legacy fallback lineups remain varied across a bounded sample ──────────
+// Production uniqueness now belongs to the recipe registry and its 10,000-order
+// capacity check. The authored catalogue remains only for already-snapshotted
+// orders and rollback, so testing it as an unbounded global allocator would
+// reintroduce rejected scenes merely to manufacture more combinations.
 {
+  const sampleSize = 200;
   const fingerprints = new Set<string>();
-  for (let index = 0; index < 500; index += 1) {
+  for (let index = 0; index < sampleSize; index += 1) {
     let claimed = false;
     for (let attempt = 0; attempt < 32; attempt += 1) {
       const plan = planShootDelivery(`global-${index}:selection:${attempt}`, {
@@ -361,7 +366,9 @@ function inspectPlan(
       break;
     }
   }
-  if (fingerprints.size === 500) ok("global uniqueness", "500 distinct complete lineups");
+  if (fingerprints.size === sampleSize) {
+    ok("legacy variety", `${sampleSize} distinct complete fallback lineups`);
+  }
 }
 
 // ── No two shoots wear the same clothes ────────────────────────────────────

@@ -2,9 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { SHOOT_BY_ID } from "@/lib/dating/shoots";
 import { lineupRoleFor, LINEUP_LABELS } from "@/lib/dating/roles";
+import { isAdminEmail } from "@/lib/auth/admin-access";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+
+function isMissingPipelineColumn(error: { code?: string; message?: string } | null) {
+  return error?.code === "42703" ||
+    error?.code === "PGRST204" ||
+    /column .* does not exist|could not find .* column/i.test(error?.message ?? "");
+}
 
 /**
  * Maps a row's pipeline status onto the vocabulary the studio's loader speaks.
@@ -42,7 +49,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "orderId required" }, { status: 400 });
   }
 
-  const { data: order, error: orderErr } = await supabase
+  let { data: order, error: orderErr } = await supabase
     .from("user_shoot_orders")
     .select(
       "id, status, model_id, custom_credits_remaining, photos_target, shoots_target, pipeline_mode, pipeline_stage, trigger_run_id, created_at, ready_at"
@@ -51,11 +58,48 @@ export async function GET(request: NextRequest) {
     .eq("user_id", user.id)
     .single();
 
-  if (orderErr || !order) {
-    return NextResponse.json({ error: "Order not found" }, { status: 404 });
+  // Migration 033 is deliberately deployed before the dynamic rollout flag.
+  // During that gap, legacy orders must remain viewable instead of turning a
+  // missing new column into a false 404 and polling it forever.
+  if (isMissingPipelineColumn(orderErr)) {
+    const legacy = await supabase
+      .from("user_shoot_orders")
+      .select(
+        "id, status, model_id, custom_credits_remaining, photos_target, trigger_run_id, created_at, ready_at"
+      )
+      .eq("id", orderId)
+      .eq("user_id", user.id)
+      .single();
+    orderErr = legacy.error;
+    order = legacy.data
+      ? ({
+          ...legacy.data,
+          shoots_target: Math.max(
+            1,
+            Math.ceil(Number(legacy.data.photos_target ?? 0) / 4)
+          ),
+          pipeline_mode: "authored",
+          pipeline_stage:
+            legacy.data.status === "ready" ? "ready" : "rendering_photos",
+        } as typeof order)
+      : null;
   }
 
-  const { data: photos } = await supabase
+  if (orderErr || !order) {
+    if (orderErr?.code !== "PGRST116") {
+      console.error("dating run status: order lookup failed", {
+        orderId,
+        code: orderErr?.code,
+        message: orderErr?.message,
+      });
+    }
+    return NextResponse.json(
+      { error: orderErr?.code === "PGRST116" ? "Order not found" : "Failed to load order" },
+      { status: orderErr?.code === "PGRST116" ? 404 : 500 }
+    );
+  }
+
+  let { data: photos, error: photosError } = await supabase
     .from("order_photos")
     .select(
       "id, order_shoot_id, shoot_id, frame_index, framing, is_anchor, status, image_url, image_width, image_height"
@@ -63,6 +107,35 @@ export async function GET(request: NextRequest) {
     .eq("order_id", orderId)
     .order("shoot_id")
     .order("frame_index");
+
+  if (isMissingPipelineColumn(photosError)) {
+    const legacyPhotos = await supabase
+      .from("order_photos")
+      .select(
+        "id, shoot_id, frame_index, is_anchor, status, image_url, image_width, image_height"
+      )
+      .eq("order_id", orderId)
+      .order("shoot_id")
+      .order("frame_index");
+    photosError = legacyPhotos.error;
+    photos = (legacyPhotos.data ?? []).map((photo) => ({
+      ...photo,
+      order_shoot_id: null,
+      framing:
+        photo.frame_index === 1 ? "close"
+        : photo.frame_index === 2 ? "medium"
+        : photo.frame_index === 3 ? "threeQuarter"
+        : "expression",
+    })) as typeof photos;
+  }
+  if (photosError) {
+    console.error("dating run status: photo lookup failed", {
+      orderId,
+      code: photosError.code,
+      message: photosError.message,
+    });
+    return NextResponse.json({ error: "Failed to load photos" }, { status: 500 });
+  }
 
   const all = photos || [];
   const { data: dynamicShoots } = order.pipeline_mode === "dynamic"
@@ -157,7 +230,7 @@ export async function GET(request: NextRequest) {
 
   const stage = String(order.pipeline_stage ?? "rendering_photos");
   const completedShoots = shoots.filter((shoot) => shoot.completed >= 4).length;
-  const completedOpeners = all.filter(
+  const completedSceneAnchors = all.filter(
     (row) => row.is_anchor && row.status === "completed"
   ).length;
   const progressPercent = order.status === "ready"
@@ -176,11 +249,12 @@ export async function GET(request: NextRequest) {
     promptCounts,
     shoots,
     progressPercent: order.status === "ready" ? 100 : Math.min(99, progressPercent),
+    pipelineMode: isAdminEmail(user.email) ? order.pipeline_mode : undefined,
     stage,
     stageLabel:
       stage === "planning" ? "Planning your shoots"
       : stage === "writing_prompts" ? `Writing shoot prompts — ${promptCounts.passed}/${promptCounts.total}`
-      : stage === "rendering_anchors" ? `Photographing openers — ${completedOpeners}/${promptCounts.total || order.shoots_target}`
+      : stage === "rendering_anchors" ? `Establishing your scenes — ${completedSceneAnchors}/${promptCounts.total || order.shoots_target}`
       : stage === "rendering_photos" ? `Completing your shoots — ${completedShoots}/${order.shoots_target}`
       : stage === "attention_required" ? "Delayed, still retrying"
       : stage === "ready" ? "Ready"

@@ -295,14 +295,14 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
               <div>
                 <div className="flex items-center justify-between">
                   <h2 className="text-xs sm:text-sm font-medium text-zinc-200 font-oxanium">
-                    Which look should we lead with?
+                    What do you usually wear?
                   </h2>
                   <span className="text-[11px] text-zinc-500 font-mono">
                     All three included
                   </span>
                 </div>
                 <p className="text-[11px] text-zinc-500 mt-0.5">
-                  Every shoot covers all three looks. This is the one it leans on.
+                  This guides colour and fit only. Each location still gets the clothes it requires — sportswear on courts, relaxed clothes at home, and sharper clothes only where they make sense.
                 </p>
               </div>
 

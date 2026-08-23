@@ -1127,7 +1127,7 @@ const SHOOT_DEFINITIONS: readonly ShootDefinition[] = [
     title: "Mountain pass, midday",
     kind: "outdoors",
     register: "casual",
-    interests: ["hiking","travel"],
+    interests: ["hiking","travel","motorcycles"],
     frames: [
       {
         framing: "close",

@@ -78,7 +78,12 @@ export const SHOOT_CATALOG: Readonly<Record<string, ShootCatalogMetadata>> = {
   "window-seat-reading-afternoon": active("quiet-home-window", "home-interior", "window"),
   "stone-bridge-hills-overcast": active("country-bridge", "upland", "overcast"),
   "venue-entrance-evening": active("music-night-out", "nightlife", "flash"),
-  "ceramics-studio-afternoon": active("ceramics-making", "art-space", "open-door"),
+  "ceramics-studio-afternoon": quarantined(
+    "ceramics-making",
+    "art-space",
+    "open-door",
+    "Rendered as a cold working studio rather than an attractive dating-profile moment"
+  ),
   "minimalist-kitchen-morning": active("kitchen-window", "home-interior", "window"),
   "minimalist-study-afternoon": active("quiet-home-window", "home-interior", "window"),
   "guitar-brick-wall-home": active("guitar-at-home", "home-interior", "window"),
@@ -96,8 +101,18 @@ export const SHOOT_CATALOG: Readonly<Record<string, ShootCatalogMetadata>> = {
   "high-fell-hiking-afternoon": active("moorland-hike", "upland", "overcast"),
   "running-track-overcast": active("outdoor-run", "sports-court", "overcast"),
   "tennis-baseline-midday": active("tennis-clay", "sports-court", "overcast"),
-  "padel-court-afternoon": active("padel-court", "sports-court", "open-door"),
-  "boxing-warehouse-daylight": active("boxing-training", "fitness-studio", "open-door"),
+  "padel-court-afternoon": quarantined(
+    "padel-court",
+    "sports-court",
+    "open-door",
+    "Rendered with changing glass-wall geometry and non-sport wardrobe across its four frames"
+  ),
+  "boxing-warehouse-daylight": quarantined(
+    "boxing-training",
+    "fitness-studio",
+    "open-door",
+    "A warehouse is a quarantined industrial setting for this dating product"
+  ),
   "gym-private-daylight": active("strength-training", "fitness-studio", "open-door"),
   "boxing-gym-daylight": active("boxing-training", "fitness-studio", "window"),
   "football-pitch-touchline-overcast": active("football-day", "sports-field", "overcast"),
@@ -112,11 +127,21 @@ export const SHOOT_CATALOG: Readonly<Record<string, ShootCatalogMetadata>> = {
     "open-door",
     "Rendered as a prop-dominated workshop catalogue and duplicates garage-motorcycle-daylight"
   ),
-  "mountain-layby-motorcycle": active("motorcycle-road-trip", "road", "overcast"),
+  "mountain-layby-motorcycle": quarantined(
+    "motorcycle-road-trip",
+    "road",
+    "overcast",
+    "The vehicle and roadside lay-by dominate the portrait instead of the person"
+  ),
   "hotel-canopy-night-sharp": active("hotel-arrival", "hotel", "flash"),
   "club-doorway-night": active("music-night-out", "nightlife", "flash"),
   "restaurant-terrace-afternoon": active("terrace-dining", "terrace", "window"),
-  "minimalist-art-studio-daylight": active("drawing-studio", "art-space", "window"),
+  "minimalist-art-studio-daylight": quarantined(
+    "drawing-studio",
+    "art-space",
+    "window",
+    "A bare working studio reads as occupational documentation rather than a dating photo"
+  ),
   "hotel-corridor-sharp": active("hotel-portrait", "hotel", "window"),
   "minimalist-boxing-daylight": active("boxing-training", "fitness-studio", "open-door"),
   "minimalist-kitchen-morning-coffee": active("kitchen-window", "home-interior", "window"),
@@ -126,10 +151,14 @@ export const SHOOT_CATALOG: Readonly<Record<string, ShootCatalogMetadata>> = {
   "cafe-window-bicycle-morning": active("cycling-day", "hospitality", "window"),
   "dune-path-board-midday": active("surf-coast", "coast", "overcast"),
   "hotel-breakfast-terrace-morning": active("terrace-breakfast", "terrace", "window"),
-  "pottery-doorway-afternoon": active("ceramics-making", "art-space", "open-door"),
+  "pottery-doorway-afternoon": quarantined(
+    "ceramics-making",
+    "art-space",
+    "open-door",
+    "Duplicates the rejected ceramics-studio concept and has the same dating-value problem"
+  ),
   "cafe-doorway-square-morning": active("cafe-counter", "hospitality", "open-door"),
   "pale-wall-portrait-afternoon": active("minimal-wall-portrait", "plain-wall", "window"),
   "dark-wall-flash-night": active("minimal-wall-portrait", "plain-wall", "flash"),
   "clubhouse-wall-overcast": active("golf-day", "golf", "overcast"),
 };
-

@@ -177,7 +177,11 @@ for (let index = 0; index < SAMPLE; index += 1) {
   secondExact.push(exact);
   secondConcepts.push(concepts);
   thirdExact.push(exactOnThird);
-  if (exact !== 0 || concepts !== 0 || exactOnThird !== 0) {
+  // The authored catalogue is now a bounded rollback/legacy path. Rejected
+  // concepts stay quarantined even when that means a rare second legacy order
+  // must revisit a broad semantic family. Exact shoots may never repeat. The
+  // production recipe registry owns the stronger global semantic guarantee.
+  if (exact !== 0 || exactOnThird !== 0) {
     console.error(
       `repeat sample ${index} failed for [${answers.interests.join(", ")}] / ${answers.dress}: ` +
         `order 2 ${exact} exact / ${concepts} concepts; order 3 ${exactOnThird} exact\n` +
@@ -207,8 +211,8 @@ console.log(
 );
 
 if (failures > 0) {
-  console.error(`\nFAIL ${failures} repeat-purchase samples broke a novelty guarantee\n`);
+  console.error(`\nFAIL ${failures} repeat-purchase samples repeated an exact authored shoot\n`);
   process.exit(1);
 }
 
-console.log("\nall repeat-purchase guarantees passed\n");
+console.log("\nall authored fallback exact-repeat guarantees passed\n");

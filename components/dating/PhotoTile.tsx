@@ -62,9 +62,7 @@ export const PhotoTile: React.FC<{
       <span className="bg-black/60 backdrop-blur-md border border-white/10 text-white text-[10px] font-mono px-2 py-0.5 rounded">
         {photo.frameIndex}/{FRAMES_PER_SHOOT}
       </span>
-      {photo.isAnchor && (
-        // The frame the other three were generated against. Worth marking: it is
-        // the most face-forward shot in the shoot, which makes it the opener.
+      {photo.role === 'opener' && (
         <span className="bg-amber-500/20 backdrop-blur-md border border-amber-400/30 text-amber-300 text-[10px] font-medium px-2 py-0.5 rounded">
           Opener
         </span>
@@ -116,7 +114,7 @@ export const PhotoTile: React.FC<{
       <div
         onClick={() => onOpen(photo)}
         className={`group relative aspect-[4/5] rounded-2xl overflow-hidden bg-zinc-900 border shadow-md transition-all duration-200 cursor-pointer select-none ${
-          photo.isAnchor
+          photo.role === 'opener'
             ? 'border-amber-500/30 hover:border-amber-400/60'
             : 'border-zinc-800/80 hover:border-zinc-500'
         }`}

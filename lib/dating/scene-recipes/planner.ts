@@ -14,6 +14,7 @@ import {
   type PlanRecipeInput,
   type VenueRecipe,
 } from "./types";
+import { resolveSceneWardrobe } from "./wardrobe";
 
 const KIND_WEIGHTS: Readonly<Record<PromptLabKind, number>> = {
   portrait: 0.1,
@@ -29,6 +30,44 @@ const LIGHT_WEIGHTS: Readonly<Record<PromptLabLight, number>> = {
   "open-door": 0.2,
   flash: 0.05,
 };
+
+const GENERIC_ACTIVITY_VENUES = new Set([
+  "city-park-walk",
+  "coastal-steps-walk",
+  "arcade-weekend-walk",
+  "glasshouse-weekend-walk",
+  "seafront-colonnade-walk",
+  "museum-atrium-weekend",
+  "covered-garden-passage",
+]);
+
+function activityFitsVenue(
+  venue: VenueRecipe,
+  activity: (typeof ACTIVITIES)[number],
+  input: PlanRecipeInput
+): boolean {
+  if (!activity.kinds.includes(venue.kind)) return false;
+  if (activity.excludedTags?.some((tag) => input.exclusions.includes(tag))) return false;
+  if (activity.interest) {
+    return input.interests.includes(activity.interest) &&
+      venue.interests.includes(activity.interest);
+  }
+  if (venue.kind !== "activity") return true;
+  return GENERIC_ACTIVITY_VENUES.has(venue.id) && activity.id === "unhurried-walk";
+}
+
+function venueRepresentsInterest(
+  venue: VenueRecipe,
+  interest: PlanRecipeInput["interests"][number],
+  input: PlanRecipeInput
+): boolean {
+  return venue.interests.includes(interest) && ACTIVITIES.some(
+    (activity) =>
+      activity.interest === interest &&
+      activityFitsVenue(venue, activity, input) &&
+      activity.signals.some((signal) => venue.signals.includes(signal))
+  );
+}
 
 function stableNumber(value: string): number {
   let hash = 2166136261;
@@ -126,13 +165,7 @@ function assignCompatibleLights(
         kinds.some((kind, index) => VENUES.some((venue) =>
           venue.kind === kind &&
           venue.lights.includes(result[index]!) &&
-          venue.interests.includes(interest) &&
-          ACTIVITIES.some((activity) =>
-            activity.interest === interest &&
-            activity.kinds.includes(kind) &&
-            activity.signals.some((signal) => venue.signals.includes(signal)) &&
-            !activity.excludedTags?.some((tag) => input.exclusions.includes(tag))
-          )
+          venueRepresentsInterest(venue, interest, input)
         ))
       );
     }
@@ -180,13 +213,7 @@ function assignInterestSlots(
     kinds.flatMap((kind, index) => VENUES.filter((venue) =>
         venue.kind === kind &&
         venue.lights.includes(lights[index]) &&
-        venue.interests.includes(interest) &&
-        ACTIVITIES.some((activity) =>
-          activity.interest === interest &&
-          activity.kinds.includes(kind) &&
-          activity.signals.some((signal) => venue.signals.includes(signal)) &&
-          !activity.excludedTags?.some((tag) => input.exclusions.includes(tag))
-        )
+        venueRepresentsInterest(venue, interest, input)
       ).map((venue) => ({ index, venue })));
   const interests = [...input.interests].sort(
     (left, right) => compatibleSlots(left).length - compatibleSlots(right).length
@@ -219,13 +246,13 @@ function blockedVenue(venue: VenueRecipe, exclusions: PlanRecipeInput["exclusion
 }
 
 function activityCandidates(
-  kind: PromptLabKind,
+  venue: VenueRecipe,
   signal: DatingSignal,
   input: PlanRecipeInput
 ) {
   const allowed = ACTIVITIES.filter(
     (activity) =>
-      activity.kinds.includes(kind) &&
+      activityFitsVenue(venue, activity, input) &&
       activity.signals.includes(signal) &&
       !activity.excludedTags?.some((tag) => input.exclusions.includes(tag))
   );
@@ -251,7 +278,7 @@ function makeBrief(args: {
 }): DatingSceneBrief {
   const { input, slotIndex, venue, light, seed, preferredInterest } = args;
   const preferredSignals = preferredInterest
-    ? venue.signals.filter((signal) => activityCandidates(venue.kind, signal, input)
+    ? venue.signals.filter((signal) => activityCandidates(venue, signal, input)
       .some((activity) => activity.interest === preferredInterest))
     : [];
   const signal = args.signal ?? orderBySeed(
@@ -268,7 +295,7 @@ function makeBrief(args: {
   const topology = TOPOLOGY_BY_ID.get(topologyId);
   if (!topology) throw new Error(`Unknown recipe topology ${topologyId}.`);
 
-  const compatibleActivities = activityCandidates(venue.kind, signal, input);
+  const compatibleActivities = activityCandidates(venue, signal, input);
   const preferredActivities = preferredInterest
     ? compatibleActivities.filter((item) => item.interest === preferredInterest)
     : [];
@@ -298,11 +325,11 @@ function makeBrief(args: {
   ];
   const ideaKey = ideaParts.join(":");
   const sceneId = `${venue.id}-${zone.id}-${activity.id}-${reason.id}`;
-  const wardrobeContract = venue.kind === "activity"
-    ? "Choose clean, fitted activity clothing that is credible for the named activity, with no team branding, costume styling or luxury signalling."
-    : venue.kind === "home"
-      ? "Choose relaxed, polished home clothing that looks intentional enough for a dating profile, never sleepwear or office clothing."
-      : "Choose understated, well-fitted clothing appropriate to the exact venue and dress register, with no visible logos, fake luxury or corporate uniform styling.";
+  const wardrobe = resolveSceneWardrobe({
+    kind: venue.kind,
+    representedInterest: activity.interest ?? null,
+    customerStyle: input.dress,
+  });
 
   return {
     plannerVersion: RECIPE_PLANNER_VERSION,
@@ -314,8 +341,9 @@ function makeBrief(args: {
     kind: venue.kind,
     lightFamily: light,
     datingSignal: signal,
-    register: input.dress,
-    wardrobeContract,
+    stylePreference: input.dress,
+    register: wardrobe.register,
+    wardrobeContract: wardrobe.contract,
     venueId: venue.id,
     venue: venue.label,
     location,
@@ -378,12 +406,7 @@ export function planDatingSceneBriefs(input: PlanRecipeInput): DatingSceneBrief[
     interest,
     VENUES.filter((venue) =>
       venue.interests.includes(interest) &&
-      ACTIVITIES.some((activity) =>
-        activity.interest === interest &&
-        activity.kinds.includes(venue.kind) &&
-        activity.signals.some((signal) => venue.signals.includes(signal)) &&
-        !activity.excludedTags?.some((tag) => input.exclusions.includes(tag))
-      )
+      venueRepresentsInterest(venue, interest, input)
     ).length,
   ]));
   const settingCounts = new Map<string, number>();
@@ -546,7 +569,7 @@ export function expandDatingSceneBrief(
   const variants: DatingSceneBrief[] = [];
   const expansionSeed = `${input.orderId}:expand:${base.slotIndex}`;
   for (const signal of orderBySeed(venue.signals, expansionSeed, (item) => item)) {
-    const activities = orderBySeed(activityCandidates(venue.kind, signal, input).filter(
+    const activities = orderBySeed(activityCandidates(venue, signal, input).filter(
       (activity) => !base.representedInterest || activity.interest === base.representedInterest
     ), expansionSeed, (activity) => activity.id);
     for (const zone of orderBySeed(venue.zones, expansionSeed, (item) => item.id)) {

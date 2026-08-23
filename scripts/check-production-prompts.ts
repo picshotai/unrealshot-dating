@@ -11,6 +11,8 @@ import { buildPromptLabRequest } from "../lib/dating/prompt-lab/prompt";
 import { selectPromptLabReference } from "../lib/dating/prompt-lab/references";
 import { PROMPT_LAB_MODEL, PROMPT_LAB_THINKING_LEVEL } from "../lib/dating/prompt-lab/schemas";
 import { planDatingSceneBriefs } from "../lib/dating/scene-recipes";
+import { activityWardrobeProblems } from "../lib/dating/scene-recipes/wardrobe";
+import { selectSampleShootIds } from "../lib/dating/sample-selection";
 
 function filesUnder(root: string): string[] {
   return readdirSync(root).flatMap((name) => {
@@ -47,6 +49,28 @@ assert(request.includes(brief.environmentAnchors[0]));
 assert(request.includes(brief.wardrobeContract));
 assert.equal(PROMPT_LAB_MODEL, "gemini-3.7-flash");
 assert.equal(PROMPT_LAB_THINKING_LEVEL, "low");
+
+const sample = selectSampleShootIds({
+  candidates: [
+    { shootId: "unrelated-a", representedInterests: ["coffee"] },
+    { shootId: "selected-tennis", representedInterests: ["tennis"] },
+    { shootId: "unrelated-b", representedInterests: ["reading"] },
+  ],
+  selectedInterests: ["tennis"],
+  count: 1,
+  seed: "sample-regression",
+});
+assert.deepEqual([...sample], ["selected-tennis"]);
+assert(activityWardrobeProblems({
+  kind: "activity",
+  representedInterest: "tennis",
+  outfit: "a brown hoodie, black cargo trousers, leather boots and a steel watch",
+}).length >= 2);
+assert.deepEqual(activityWardrobeProblems({
+  kind: "activity",
+  representedInterest: "tennis",
+  outfit: "a fitted breathable tennis polo, tapered technical trousers, white court trainers and a steel watch",
+}), []);
 
 const baseConfig: DatingProductConfig = {
   pipelineMode: "off",
@@ -89,6 +113,7 @@ assert.match(migration, /dating_order_shoots_active_idea_unique/);
 assert.match(migration, /unique\(order_id, slot_index\)/);
 assert.match(migration, /complete_dating_prompt_attempt/);
 assert.match(migration, /v_allocated <> v_target \* 4/);
+assert.match(migration, /dating-scene-v3[\s\S]*threeQuarter/);
 
 generateProductionPromptCandidate({
   brief,

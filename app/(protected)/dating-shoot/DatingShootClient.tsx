@@ -92,6 +92,7 @@ type StatusResponse = {
     }[];
   }[];
   progressPercent: number;
+  pipelineMode?: 'authored' | 'dynamic';
 };
 
 export function DatingShootClient({
@@ -432,6 +433,7 @@ export function DatingShootClient({
                   customCreditsRemaining: status.order.custom_credits_remaining,
                   failedCount: status.counts.failed,
                   stageLabel: status.stageLabel,
+                  pipelineMode: status.pipelineMode,
                 }
               : null
           }

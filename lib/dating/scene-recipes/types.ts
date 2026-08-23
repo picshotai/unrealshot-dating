@@ -4,7 +4,7 @@ import type {
   PromptLabLight,
 } from "@/lib/dating/prompt-lab/schemas";
 
-export const RECIPE_PLANNER_VERSION = "dating-recipes-v1" as const;
+export const RECIPE_PLANNER_VERSION = "dating-recipes-v2" as const;
 
 export type DatingSignal = "warmth" | "competence" | "adventure" | "social-ease";
 
@@ -56,6 +56,9 @@ export type DatingSceneBrief = {
   kind: PromptLabKind;
   lightFamily: PromptLabLight;
   datingSignal: DatingSignal;
+  /** The customer's broad taste; it may influence only compatible details. */
+  stylePreference?: StylePref;
+  /** The scene-resolved register Gemini must actually dress for. */
   register: StylePref;
   wardrobeContract: string;
   venueId: string;

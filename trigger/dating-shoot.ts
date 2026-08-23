@@ -21,7 +21,8 @@ import {
   MIN_COMPLETE_SHOOTS,
   SAMPLE_SHOOTS,
 } from "@/lib/dating/types";
-import { stableHash } from "@/lib/dating/select-shoots";
+import { SHOOT_BY_ID } from "@/lib/dating/shoots";
+import { selectSampleShootIds } from "@/lib/dating/sample-selection";
 import { generateDatingShootPrompts } from "@/trigger/dating-prompt";
 import {
   ensureProductionAttempt,
@@ -606,17 +607,27 @@ export const datingPhotoshootOrchestrator = task({
     // every sample run rendered the same corner of the library.
     const testMode = getDatingTestMode();
     const shootIds = [...new Set(photoRows.map((row) => row.shoot_id))];
-    const realShoots = new Set<string>();
+    let realShoots = new Set<string>();
 
     if (testMode === "sample") {
-      const ordered = [...shootIds].sort(
-        (a, b) =>
-          (stableHash(`${batchId}:sample:${a}`) % 100000) -
-          (stableHash(`${batchId}:sample:${b}`) % 100000)
-      );
-      for (const id of ordered.slice(0, SAMPLE_SHOOTS)) realShoots.add(id);
+      realShoots = selectSampleShootIds({
+        candidates: shootIds.map((shootId) => {
+          const dynamicInterest = dynamicShootMetadata.get(shootId)?.brief
+            .representedInterest;
+          return {
+            shootId,
+            representedInterests: dynamicInterest
+              ? [dynamicInterest]
+              : SHOOT_BY_ID.get(shootId)?.interests ?? [],
+          };
+        }),
+        selectedInterests: pipelineOrder.creative_input?.interests ?? [],
+        count: SAMPLE_SHOOTS,
+        seed: `${batchId}:sample`,
+      });
       logger.info("Sample mode", {
         realShoots: [...realShoots],
+        selectedInterests: pipelineOrder.creative_input?.interests ?? [],
         frames: realShoots.size * FRAMES_PER_SHOOT,
       });
     }
@@ -650,7 +661,7 @@ export const datingPhotoshootOrchestrator = task({
       row.deterministic_id ??
       makeDeterministicPhotoId(batchId, row.shoot_id, row.frame_index);
 
-    // ── WAVE 1: ANCHORS ───────────────────────────────────
+    // ── WAVE 1: WIDE SCENE ANCHORS ────────────────────────
     const anchorsToRun = incomplete.filter((row) => row.is_anchor);
 
     if (anchorsToRun.length > 0) {
