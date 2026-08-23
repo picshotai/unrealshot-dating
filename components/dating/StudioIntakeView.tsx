@@ -52,6 +52,11 @@ interface StudioIntakeViewProps {
   showCancel: boolean;
   shootsPerDelivery: number;
   totalPhotos: number;
+  ownerDiagnostics?: {
+    pipelineMode: 'off' | 'owner' | 'all';
+    testMode: 'mock' | 'sample' | 'off';
+    sampleShoots: number;
+  } | null;
 }
 
 /**
@@ -86,6 +91,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
   showCancel,
   shootsPerDelivery,
   totalPhotos,
+  ownerDiagnostics,
 }) => {
   const [step, setStep] = useState<'configure' | 'confirm'>('configure');
   const [dress, setDress] = useState<StylePref>('casual');
@@ -286,6 +292,29 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
           )}
         </div>
 
+        {ownerDiagnostics && (
+          <div className={`rounded-lg border px-3.5 py-3 text-xs ${
+            ownerDiagnostics.pipelineMode === 'off'
+              ? 'border-amber-500/30 bg-amber-500/10 text-amber-200'
+              : 'border-emerald-500/25 bg-emerald-500/10 text-emerald-200'
+          }`}>
+            <p className="font-semibold font-oxanium">
+              Owner test: {ownerDiagnostics.pipelineMode === 'off'
+                ? 'legacy authored catalogue'
+                : 'recipe → Gemini prompts'}
+            </p>
+            <p className="mt-1 opacity-80 font-mono text-[10px] leading-relaxed">
+              Mode {ownerDiagnostics.pipelineMode} · test {ownerDiagnostics.testMode}
+              {ownerDiagnostics.testMode === 'sample'
+                ? ` · ${ownerDiagnostics.sampleShoots} complete Fal sample shoots`
+                : ''}
+              {ownerDiagnostics.pipelineMode === 'off'
+                ? ' · dynamic scene planning and scene-specific expressions are disabled'
+                : ''}
+            </p>
+          </div>
+        )}
+
         {/* 2. MAIN WORKFLOW: Step 1 (Configure) vs Step 2 (Inline Smooth Confirmation) */}
         {step === 'configure' ? (
           /* STEP 1: CONFIGURATION FORM */
@@ -366,7 +395,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                   </span>
                 </div>
                 <p className="text-[11px] text-zinc-500 mt-0.5">
-                  Tap the activities that represent your genuine lifestyle.
+                  Tap the activities that represent your genuine lifestyle. Every compatible selection is reserved into at least one shoot in the full delivery.
                 </p>
               </div>
 

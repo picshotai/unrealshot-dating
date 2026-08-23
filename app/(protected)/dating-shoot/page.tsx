@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { DatingShootClient } from "./DatingShootClient";
 import { getDatingProductConfig } from "@/lib/dating/config";
+import { isAdminEmail } from "@/lib/auth/admin-access";
 
 export function generateMetadata(): Metadata {
   const config = getDatingProductConfig();
@@ -63,6 +64,11 @@ export default async function DatingShootPage({
         shoots: productConfig.shootsPerDelivery,
         photos: productConfig.photosPerDelivery,
       }}
+      ownerDiagnostics={isAdminEmail(user.email) ? {
+        pipelineMode: productConfig.pipelineMode,
+        testMode: productConfig.testMode,
+        sampleShoots: productConfig.sampleShoots,
+      } : null}
     />
   );
 }

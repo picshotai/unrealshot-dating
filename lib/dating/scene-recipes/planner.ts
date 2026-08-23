@@ -15,6 +15,7 @@ import {
   type VenueRecipe,
 } from "./types";
 import { resolveSceneWardrobe } from "./wardrobe";
+import { resolveSceneMomentPlan } from "./moments";
 
 const KIND_WEIGHTS: Readonly<Record<PromptLabKind, number>> = {
   portrait: 0.1,
@@ -331,6 +332,14 @@ function makeBrief(args: {
     customerStyle: input.dress,
   });
 
+  const momentPlan = resolveSceneMomentPlan({
+    activity: activity.activity,
+    activityReason: reason.reason,
+    datingSignal: signal,
+    kind: venue.kind,
+    representedInterest: activity.interest ?? null,
+  });
+
   return {
     plannerVersion: RECIPE_PLANNER_VERSION,
     ideaKey,
@@ -359,6 +368,7 @@ function makeBrief(args: {
     supportSurface: topology.supportSurface,
     props: activity.propIds.map((id) => PROPS[id]).filter(Boolean),
     representedInterest: activity.interest ?? null,
+    momentPlan,
     interests: input.interests,
     exclusions: input.exclusions,
     geometryContract: [
@@ -414,7 +424,9 @@ export function planDatingSceneBriefs(input: PlanRecipeInput): DatingSceneBrief[
 
   let furthestSlot = 0;
   const fillSlot = (slot: number): boolean => {
-    if (slot === input.count) return true;
+    if (slot === input.count) {
+      return input.count < 15 || uncoveredInterests.size === 0;
+    }
     furthestSlot = Math.max(furthestSlot, slot);
     const kind = kinds[slot];
     const requiredAssignment = requiredInterestBySlot.get(slot);

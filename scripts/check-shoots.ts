@@ -28,6 +28,7 @@ import {
   FRAMES_PER_SHOOT,
   SHOOTS_PER_DELIVERY,
   type ExcludableTag,
+  type InterestId,
 } from "../lib/dating/types";
 import { INTEREST_CHIPS } from "../lib/dating/interests";
 import {
@@ -220,7 +221,7 @@ if (unserved.length === 0) {
 function inspectPlan(
   label: string,
   plan: ReturnType<typeof planShootDelivery>,
-  requestedInterests: readonly string[] = []
+  requestedInterests: readonly InterestId[] = []
 ) {
   assertDeliveryShape(plan);
   const selected = shootIdsInPlan(plan).map((id) => {
@@ -266,6 +267,11 @@ function inspectPlan(
       fail(label, `${interest} owns ${total} activity/outdoor shoots`);
     }
   }
+  for (const interest of requestedInterests) {
+    if (!selected.some((shoot) => (shoot.interests ?? []).includes(interest))) {
+      fail(label, `selected interest ${interest} is absent from the delivery`);
+    }
+  }
 }
 
 // ── Deliveries actually plan ───────────────────────────────────────────────
@@ -278,6 +284,7 @@ function inspectPlan(
   }[] = [
     { label: "no answers", options: {} },
     { label: "one interest", options: { interests: ["climbing"], dress: "street" } },
+    { label: "gym interest", options: { interests: ["gym"], dress: "sharp" } },
     {
       label: "many interests",
       options: {

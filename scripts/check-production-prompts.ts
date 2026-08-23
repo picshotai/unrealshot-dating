@@ -12,6 +12,7 @@ import { selectPromptLabReference } from "../lib/dating/prompt-lab/references";
 import { PROMPT_LAB_MODEL, PROMPT_LAB_THINKING_LEVEL } from "../lib/dating/prompt-lab/schemas";
 import { planDatingSceneBriefs } from "../lib/dating/scene-recipes";
 import { activityWardrobeProblems } from "../lib/dating/scene-recipes/wardrobe";
+import { resolveSceneMomentPlan } from "../lib/dating/scene-recipes/moments";
 import { selectSampleShootIds } from "../lib/dating/sample-selection";
 
 function filesUnder(root: string): string[] {
@@ -47,6 +48,8 @@ assert(request.includes(`scene.conceptFamily (exact): ${brief.conceptFamily}`));
 assert(request.includes(`scene.settingFamily (exact): ${brief.settingFamily}`));
 assert(request.includes(brief.environmentAnchors[0]));
 assert(request.includes(brief.wardrobeContract));
+assert(request.includes("LOCKED SCENE MOMENT ARC"));
+assert(request.includes(brief.momentPlan!.profileId));
 assert.equal(PROMPT_LAB_MODEL, "gemini-3.7-flash");
 assert.equal(PROMPT_LAB_THINKING_LEVEL, "low");
 
@@ -105,15 +108,27 @@ assert(orchestrator.indexOf("prepareDynamicOrder") < orchestrator.indexOf("loadP
 assert(orchestrator.indexOf("anchorsToRun") < orchestrator.indexOf("dispatchable"));
 assert.match(orchestrator, /anchorImageUrl: anchorImageUrl \?\? null/);
 
-const migration = readFileSync(
+const baseMigration = readFileSync(
   join(process.cwd(), "supabase", "migrations", "033_dynamic_dating_prompt_pipeline.sql"),
   "utf8"
 );
-assert.match(migration, /dating_order_shoots_active_idea_unique/);
-assert.match(migration, /unique\(order_id, slot_index\)/);
-assert.match(migration, /complete_dating_prompt_attempt/);
-assert.match(migration, /v_allocated <> v_target \* 4/);
-assert.match(migration, /dating-scene-v3[\s\S]*threeQuarter/);
+assert.match(baseMigration, /dating_order_shoots_active_idea_unique/);
+assert.match(baseMigration, /unique\(order_id, slot_index\)/);
+assert.match(baseMigration, /complete_dating_prompt_attempt/);
+assert.match(baseMigration, /v_allocated <> v_target \* 4/);
+const anchorMigration = readFileSync(
+  join(process.cwd(), "supabase", "migrations", "035_dynamic_prompt_v4_anchor.sql"),
+  "utf8"
+);
+assert.match(anchorMigration, /dating-scene-v3', 'dating-scene-v4'[\s\S]*threeQuarter/);
+
+const gymMoments = resolveSceneMomentPlan({
+  ...brief,
+  representedInterest: "gym",
+  activity: "finishing a light mobility warm-up",
+});
+assert.equal(gymMoments.profileId, "focused-recovery");
+assert(!/laugh/i.test(gymMoments.frames.expression));
 
 generateProductionPromptCandidate({
   brief,

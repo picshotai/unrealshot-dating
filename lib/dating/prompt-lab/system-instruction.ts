@@ -20,13 +20,14 @@ THE PRODUCT STANDARD
 - Keep the scene sparse. Across the whole shoot, name at most two meaningful movable props.
 - Keep one exact location, one exact outfit and one exact lighting setup across all four prompts.
 - Lock the visible environment, not merely its location name. The same two permanent background landmarks must remain recognizable in every frame.
-- Make four genuinely different moments: a close opener, a medium candid, a three-quarter body moment and a spontaneous expression. Changing only a hand or camera crop is insufficient.
+- Make four genuinely different moments: a close opener, a medium candid, a three-quarter body moment and a scene-driven character beat. Changing only a hand or camera crop is insufficient.
+- Facial expression, gaze and emotional energy must come from the supplied scene moment arc. Never apply a standard neutral → candid → composed → laughing sequence across shoots.
 
 DISALLOWED CONCEPTS
 Never choose a garage, workshop, warehouse, loading bay, storage unit, repair setting, ceramics or pottery workspace, working craft studio, barn, old farmhouse, bleak industrial interior or service-work scene. Never make a vehicle, machine, luxury object, logo or expensive prop the hero. Never create fake luxury, rented-wealth signalling, executive leisure, corporate-looking recreation, nightclub queue imagery or a scene whose appeal depends on status goods. A motorcycle interest can inspire an attractive travel scene, but never maintenance, repair, a showroom, a lay-by or a vehicle-dominated portrait.
 
 REFERENCE DISCIPLINE
-The supplied reference demonstrates sentence completeness, photographic specificity, identity language and four-frame variation. It is not a concept suggestion. Do not reuse its location, outfit, activity, title, props or concept family. Produce original scene content.
+The supplied reference demonstrates sentence completeness, photographic specificity, identity language and four-frame variation. It is not a concept suggestion. Do not reuse its location, outfit, activity, title, props, concept family, poses, gaze pattern, facial expressions or emotional sequence. The locked scene moment arc outranks the reference. Produce original scene content.
 
 SCENE CONTRACT
 - Obey the supplied kind, light family, scene wardrobe register and wardrobe contract exactly.
@@ -57,7 +58,7 @@ Every one of the four prompt strings must include all of the following, even whe
 2. Name the same precise location, exact outfit clause, exact wardrobeState sentence and exact environment sentence.
 3. Describe one physically possible body position, with asymmetry and clear support for his weight.
 4. Place every visible hand or forearm. Avoid ambiguous limbs and mirrored instructions.
-5. State a gaze target using the word lens or camera. Across the shoot, two frames meet the lens and two look away.
+5. State a gaze target using the word lens or camera. The close opener meets the lens; the other gaze targets follow the locked scene moment arc. At least one frame and no more than three frames may meet the lens.
 6. State the background distance in metres so the subject remains dominant.
 7. Repeat the exact lighting sentence. Place one light source only, using frame-relative language when direction matters.
 8. State crop, camera height or angle, iPhone 15 Pro, 24mm, aperture, shutter speed and ISO.
@@ -76,10 +77,10 @@ MECHANICAL WRITING RULES FOR THE FOUR PROMPT STRINGS
 - Use plain photographic English, not poetry, advertising language or abstract mood words.
 
 FRAME ROLES
-- close: the strongest dating-app opener, shoulders-up, confident and approachable, eyes meeting the lens. It is rendered after the wider scene anchor and stays inside that anchor's visible background boundaries.
-- medium: a candid action with a real purpose, distinct from the opener, gaze away from the lens.
-- threeQuarter: the first-rendered scene anchor; show the full outfit, floor contact and both permanent environment anchors clearly, with believable weight support and gaze meeting the lens.
-- expression: a warm spontaneous laugh or smile caused by the same activity; gaze away from the lens.
+- close: the strongest dating-app opener, shoulders-up, face unobstructed and eyes meeting the lens. Its warmth, intensity and mouth expression come from the locked scene moment arc. It is rendered after the wider scene anchor and stays inside that anchor's visible background boundaries.
+- medium: a candid action with a real purpose, distinct from the opener. Its gaze and facial response come from what he is doing in this scene.
+- threeQuarter: the first-rendered scene anchor; show the full outfit, floor contact and both permanent environment anchors clearly, with believable weight support. Its gaze and expression follow the locked scene moment arc.
+- expression: this label means the scene's character beat, not an instruction to laugh. It may show concentration, anticipation, relief, curiosity, satisfaction, affection, a restrained grin or another context-earned response. Full laughter is forbidden unless the locked moment arc explicitly calls for it.
 
 OUTPUT RULES
 Return only JSON matching the provided response schema. Return one scene and exactly four frames, one of each required framing. Do not add markdown or commentary. The structured metadata describes what you actually wrote; it must not make claims that the prompts contradict.

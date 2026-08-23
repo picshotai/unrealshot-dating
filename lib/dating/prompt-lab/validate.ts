@@ -15,6 +15,7 @@ import {
 } from "./system-instruction";
 import type { DatingSceneBrief } from "@/lib/dating/scene-recipes/types";
 import { activityWardrobeProblems } from "@/lib/dating/scene-recipes/wardrobe";
+import { resolveSceneMomentPlan } from "@/lib/dating/scene-recipes/moments";
 
 export type PromptLabValidation = {
   passed: boolean;
@@ -167,6 +168,16 @@ export function validatePromptLabOutput(args: {
       outfit: output.scene.outfit,
     })) {
       problems.push(wardrobeProblem);
+    }
+    const momentPlan = lockedBrief.momentPlan ?? resolveSceneMomentPlan(lockedBrief);
+    if (!momentPlan.allowsFullLaugh) {
+      for (const frame of output.frames) {
+        if (/\b(laugh|laughs|laughed|laughing|laughter)\b/i.test(frame.prompt)) {
+          problems.push(
+            `frame "${frame.framing}" introduces laughter even though the reserved ${momentPlan.profileId} moment arc does not permit it`
+          );
+        }
+      }
     }
   }
 

@@ -94,9 +94,10 @@ export const VENUES: readonly VenueRecipe[] = [
   venue("music-venue-courtyard", "small live-music venue courtyard", "nightlife", "social", ["music", "nightlife"], ["flash", "open-door"], ["social-ease", "warmth"], ["doorway-wall", "stone-opening"]),
 
   venue("clay-tennis", "empty clay tennis court", "sports-court", "activity", ["tennis"], ["overcast"], ["competence", "adventure"], ["court-sky", "path-landmark"]),
-  venue("running-track", "quiet outdoor running track", "sports-court", "activity", ["running", "gym"], ["overcast"], ["competence", "adventure"], ["court-sky", "path-landmark"]),
-  venue("climbing-wall", "bright uncluttered climbing wall", "fitness-studio", "activity", ["climbing", "gym"], ["window", "open-door"], ["competence", "adventure"], ["glazing-plaster", "doorway-wall"]),
-  venue("boxing-corner", "clean daylight boxing-gym corner", "fitness-studio", "activity", ["boxing", "gym"], ["window", "open-door"], ["competence"], ["glazing-plaster", "doorway-wall"]),
+  venue("running-track", "quiet outdoor running track", "sports-court", "activity", ["running"], ["overcast"], ["competence", "adventure"], ["court-sky", "path-landmark"]),
+  venue("bright-training-studio", "bright uncluttered neighbourhood training studio", "fitness-studio", "activity", ["gym"], ["window", "open-door"], ["competence"], ["glazing-plaster", "window-tile"]),
+  venue("climbing-wall", "bright uncluttered climbing wall", "fitness-studio", "activity", ["climbing"], ["window", "open-door"], ["competence", "adventure"], ["glazing-plaster", "doorway-wall"]),
+  venue("boxing-corner", "clean daylight boxing-gym corner", "fitness-studio", "activity", ["boxing"], ["window", "open-door"], ["competence"], ["glazing-plaster", "doorway-wall"]),
   venue("links-path", "open links-course walking path", "golf", "activity", ["golf", "travel"], ["overcast"], ["competence", "social-ease"], ["path-landmark", "stone-landscape"]),
   venue("public-jetty", "open public sailing jetty", "waterfront", "activity", ["sailing", "travel"], ["overcast"], ["adventure", "competence"], ["shoreline-horizon", "railing-sky"]),
   venue("sculpture-garden-walk", "landscaped contemporary sculpture garden", "garden", "activity", ["art", "travel"], ["overcast"], ["warmth", "competence", "social-ease"], ["path-landmark", "stone-landscape"]),

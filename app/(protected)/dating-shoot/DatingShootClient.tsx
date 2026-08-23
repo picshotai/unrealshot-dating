@@ -101,6 +101,7 @@ export function DatingShootClient({
   initialModelId,
   initialOrderId,
   deliveryConfig,
+  ownerDiagnostics,
 }: {
   userId: string;
   models: Model[];
@@ -108,6 +109,11 @@ export function DatingShootClient({
   initialModelId: number | null;
   initialOrderId: string | null;
   deliveryConfig: { shoots: number; photos: number };
+  ownerDiagnostics: {
+    pipelineMode: 'off' | 'owner' | 'all';
+    testMode: 'mock' | 'sample' | 'off';
+    sampleShoots: number;
+  } | null;
 }) {
   const launchRequestId = useRef<string | null>(null);
   const [modelId, setModelId] = useState<number | null>(
@@ -410,6 +416,7 @@ export function DatingShootClient({
         showCancel={hasOrders}
         shootsPerDelivery={deliveryConfig.shoots}
         totalPhotos={deliveryConfig.photos}
+        ownerDiagnostics={ownerDiagnostics}
       />
     );
   }

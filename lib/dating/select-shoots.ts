@@ -233,10 +233,16 @@ function selectFromPool(
   pool: readonly Shoot[],
   ordered: readonly Shoot[],
   interests: readonly InterestId[],
-  reserveForNext?: readonly Shoot[]
+  reserveForNext?: readonly Shoot[],
+  requireInterestCoverage = true
 ): Shoot[] | null {
   const allowed = new Set(pool.map((shoot) => shoot.id));
   const candidates = ordered.filter((shoot) => allowed.has(shoot.id));
+  const requiredInterests = requireInterestCoverage && interests.length <= SHOOTS_PER_DELIVERY
+    ? [...new Set(interests)].filter((interest) =>
+        candidates.some((shoot) => matchedInterests(shoot, interests).includes(interest))
+      )
+    : [];
   let visited = 0;
 
   const search = (state: SelectionState): Shoot[] | null => {
@@ -248,7 +254,10 @@ function selectFromPool(
       const lightsPass = (
         Object.entries(MIN_SHOOTS_BY_LIGHT) as Array<[ShootLightFamily, number]>
       ).every(([light, minimum]) => count(state.lights, light) >= minimum);
-      return kindsPass && lightsPass ? state.chosen : null;
+      const interestsPass = requiredInterests.every((interest) =>
+        state.representedInterests.has(interest)
+      );
+      return kindsPass && lightsPass && interestsPass ? state.chosen : null;
     }
 
     const remainingSlots = SHOOTS_PER_DELIVERY - state.chosen.length;
@@ -306,6 +315,19 @@ function selectFromPool(
       }
     }
     if (totalLightGap > remainingSlots) return null;
+    if (requirements.some((requirement) => requirement.candidates.length < requirement.gap)) {
+      return null;
+    }
+
+    for (const interest of requiredInterests) {
+      if (state.representedInterests.has(interest)) continue;
+      requirements.push({
+        gap: 1,
+        candidates: eligible.filter((shoot) =>
+          matchedInterests(shoot, interests).includes(interest)
+        ),
+      });
+    }
     if (requirements.some((requirement) => requirement.candidates.length < requirement.gap)) {
       return null;
     }
@@ -422,7 +444,8 @@ export function planShootDelivery(
       pool,
       ordered,
       interests,
-      preserveConceptFreshSecondPurchase ? available : undefined
+      preserveConceptFreshSecondPurchase ? available : undefined,
+      previousShootIds.length === 0
     );
     if (chosen) break;
   }

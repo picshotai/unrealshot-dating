@@ -46,6 +46,20 @@ export type EnvironmentTopology = {
   supportSurface: string | null;
 };
 
+export type SceneMomentPlan = {
+  /** Stable creative direction, not another uniqueness dimension. */
+  profileId: string;
+  overallTone: string;
+  frames: {
+    close: string;
+    medium: string;
+    threeQuarter: string;
+    expression: string;
+  };
+  /** Full laughter is rejected unless the reserved scene explicitly earns it. */
+  allowsFullLaugh: boolean;
+};
+
 export type DatingSceneBrief = {
   plannerVersion: typeof RECIPE_PLANNER_VERSION;
   ideaKey: string;
@@ -76,6 +90,8 @@ export type DatingSceneBrief = {
   supportSurface: string | null;
   props: readonly string[];
   representedInterest: InterestId | null;
+  /** Scene-derived face and gaze direction for all four moments. */
+  momentPlan?: SceneMomentPlan;
   interests: readonly InterestId[];
   exclusions: readonly ExcludableTag[];
   geometryContract: readonly string[];

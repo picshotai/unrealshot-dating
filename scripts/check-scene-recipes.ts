@@ -92,6 +92,10 @@ function assertPortfolio(count: number, salt: number) {
     for (const interest of interests) {
       assert(represented.has(interest), `15+ shoots should represent selected interest ${interest}`);
     }
+    assert(
+      new Set(briefs.map((brief) => brief.momentPlan?.profileId)).size >= 4,
+      "a full portfolio must not reuse one emotional sequence"
+    );
   }
   assert(briefs.every((brief) => brief.props.length <= 2));
   assert(briefs.every((brief) => brief.environmentAnchors.length === 2));
@@ -104,6 +108,17 @@ function assertPortfolio(count: number, salt: number) {
     )
   ), "quarantined low-dating-value settings may not enter the recipe portfolio");
 }
+
+const gymPortfolio = planDatingSceneBriefs({
+  orderId: "selected-gym-regression",
+  count: 15,
+  interests: ["gym"],
+  dress: "sharp",
+  exclusions: [],
+});
+const gymBrief = gymPortfolio.find((brief) => brief.representedInterest === "gym");
+assert(gymBrief, "a selected gym chip must reserve a real gym-related shoot");
+assert.equal(gymBrief.momentPlan?.profileId, "focused-recovery");
 
 for (let count = 1; count <= 30; count += 1) {
   const saltsToCheck = count === 15 ? 10 : 1;

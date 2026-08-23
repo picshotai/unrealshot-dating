@@ -29,10 +29,9 @@ export function selectPromptLabReference(light: PromptLabLight): PromptLabRefere
 export function formatReference(reference: PromptLabReference): string {
   return [
     `Reference shoot: ${reference.shoot.title} (${reference.id})`,
-    "Copy its completeness, consistency and four-frame craft only. Do not copy its location, outfit, activity, title, props or concept.",
+    "Copy its completeness, consistency and four-frame craft only. Do not copy its location, outfit, activity, title, props, concept, poses, gaze pattern, expressions or emotional sequence.",
     ...reference.shoot.frames.map((frame) =>
       `\n[${frame.framing} ${frame.imageSize.width}x${frame.imageSize.height}]\n${frame.prompt}`
     ),
   ].join("\n");
 }
-

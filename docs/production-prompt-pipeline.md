@@ -1,9 +1,10 @@
 # Production dating prompt pipeline
 
 New orders can use the recipe-first production path without changing legacy
-authored orders. Fresh databases apply migrations `033_dynamic_dating_prompt_pipeline.sql`
-and `034_wide_dynamic_scene_anchor.sql` in order. Databases that already applied 033
-must leave it untouched and apply only the new 034 migration.
+authored orders. Fresh databases apply migrations `033_dynamic_dating_prompt_pipeline.sql`,
+`034_wide_dynamic_scene_anchor.sql` and `035_dynamic_prompt_v4_anchor.sql` in order.
+Applied migrations stay immutable; existing databases run only the later files they
+have not already recorded.
 
 ## Configuration
 
@@ -36,14 +37,18 @@ lock. Every recipe resolves its own scene register and wardrobe contract. Sport,
 home and outdoor requirements outrank the preference; only compatible social or
 evening scenes may use tailoring.
 
-Prompt system v3 renders the three-quarter frame first as the scene anchor. It
+Prompt systems v3 and v4 render the three-quarter frame first as the scene anchor. It
 shows the widest environment and full wardrobe. The close dating-app opener and
 the other two frames are then edited inside that established view.
 
+Prompt system v4 also reserves a scene-derived moment arc. Activity, reason and
+dating signal determine facial energy and gaze; the fourth frame is a character
+beat rather than an automatic laughing photo.
+
 ## Safe rollout
 
-1. On a fresh database, deploy migrations 033 and 034. If 033 was already applied,
-   deploy only 034. Keep pipeline mode `off` during the deployment.
+1. On a fresh database, deploy migrations 033, 034 and 035. On an existing database,
+   deploy only the unapplied later migrations. Keep pipeline mode `off` during deployment.
 2. Set mode to `owner` and test a full order in `mock` mode.
 3. Test complete anchored shoots in `sample` mode.
 4. Test one owner order with test mode `off`.
