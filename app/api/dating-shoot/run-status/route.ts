@@ -276,8 +276,8 @@ export async function GET(request: NextRequest) {
       : stage === "rendering_anchors" ? `Establishing your scenes — ${completedSceneAnchors}/${promptCounts.total || order.shoots_target}`
       : stage === "rendering_photos" ? `Completing your shoots — ${completedShoots}/${order.shoots_target}`
       : stage === "attention_required" && order.provider_blocked
-        ? "Prompt setup needs attention — automatic retries paused"
-      : stage === "attention_required" ? "Delayed, still retrying"
+        ? "Prompt generation stopped — setup error"
+      : stage === "attention_required" ? "Last attempt failed — waiting to retry"
       : stage === "ready" ? "Ready"
       : "Preparing your shoot",
   });

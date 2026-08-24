@@ -66,6 +66,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
   const isReady =
     status?.orderStatus === 'ready' || status?.orderStatus === 'partial_failed';
   const isProviderBlocked = Boolean(status?.providerBlocked);
+  const isPaused = Boolean(status?.needsAttention);
 
   const avatarUrl = currentModel?.samples?.[0]?.uri || '/placeholder-user.jpg';
 
@@ -96,7 +97,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
                 <div className="flex items-center gap-1.5">
                   {isReady ? (
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" strokeWidth={2.5} />
-                  ) : isProviderBlocked ? (
+                  ) : isProviderBlocked || isPaused ? (
                     <AlertCircle className="w-3.5 h-3.5 text-amber-500" />
                   ) : isDeveloping ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-500" />
@@ -180,14 +181,16 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
             disabled={isShootRunning}
             title={
               isShootRunning
-                ? 'Your shoot is still developing. You can start another when it finishes.'
+                ? isPaused
+                  ? 'This shoot is paused after a failed attempt. Retry it before starting another.'
+                  : 'Your shoot is still developing. You can start another when it finishes.'
                 : undefined
             }
             className="flex-1 sm:flex-none border-zinc-800 bg-transparent hover:bg-zinc-900 text-zinc-300 hover:text-white text-xs h-9 px-3 rounded-lg font-medium disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Plus className="w-3.5 h-3.5 sm:mr-1.5 text-zinc-400" />
             <span className="hidden sm:inline">
-              {isShootRunning ? 'Shoot running' : 'New Shoot'}
+              {isShootRunning ? isPaused ? 'Shoot paused' : 'Shoot running' : 'New Shoot'}
             </span>
           </Button>
         </div>

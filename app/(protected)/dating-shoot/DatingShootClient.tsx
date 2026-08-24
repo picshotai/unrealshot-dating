@@ -532,6 +532,7 @@ export function DatingShootClient({
               ? { realShoots: ownerDiagnostics.sampleShoots }
               : null}
             blocked={Boolean(status?.order.provider_blocked)}
+            paused={status?.order.pipeline_stage === 'attention_required'}
           />
         ) : null}
 

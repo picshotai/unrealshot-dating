@@ -195,6 +195,13 @@ const dashboardSource = readFileSync(
 assert.doesNotMatch(dashboardSource, /Array\.from\(\{\s*length:\s*10\s*\}\)/);
 assert.match(dashboardSource, /PortfolioProgressPanel/);
 
+const runStatusSource = readFileSync(
+  resolve(process.cwd(), "app/api/dating-shoot/run-status/route.ts"),
+  "utf8"
+);
+assert.doesNotMatch(runStatusSource, /Delayed, still retrying/);
+assert.match(runStatusSource, /Last attempt failed — waiting to retry/);
+
 const orchestratorSource = readFileSync(
   resolve(process.cwd(), "trigger/dating-shoot.ts"),
   "utf8"
