@@ -4,7 +4,7 @@ import { getDatingProductConfig } from "@/lib/dating/config";
 import {
   embedDatingSceneMeanings,
   generatePortfolioCandidate,
-  safeCreativeProviderError,
+  classifyCreativeProviderError,
 } from "@/lib/dating/creative-director";
 import { getServiceDb } from "@/lib/dating/db";
 import {
@@ -37,6 +37,7 @@ export const generateDatingPortfolio = task({
         passed: attempt.status === "passed",
         reservedCount: 0,
         apiError: attempt.status === "api_error",
+        retryable: attempt.error_retryable ?? true,
       };
     }
     const snapshot = attempt.request_snapshot;
@@ -72,10 +73,21 @@ export const generateDatingPortfolio = task({
       );
       embeddingBillableCharacters = embeddingResult.billableCharacters;
     } catch (error) {
-      const safeError = safeCreativeProviderError(error);
-      await failPortfolioAttempt({ db, attempt, safeError });
-      logger.error("Dating portfolio provider error", { ...payload, safeError });
-      return { ...payload, passed: false, reservedCount: 0, apiError: true };
+      const failure = classifyCreativeProviderError(error);
+      await failPortfolioAttempt({
+        db,
+        attempt,
+        safeError: failure.diagnostic,
+        retryable: failure.retryable,
+      });
+      logger.error("Dating portfolio provider error", { ...payload, ...failure });
+      return {
+        ...payload,
+        passed: false,
+        reservedCount: 0,
+        apiError: true,
+        retryable: failure.retryable,
+      };
     }
 
     // Database failures are task failures, not Gemini failures. Leave the
@@ -88,6 +100,6 @@ export const generateDatingPortfolio = task({
       embeddingBillableCharacters,
     });
     logger.info("Dating portfolio planning attempt completed", { ...payload, ...result });
-    return { ...payload, ...result, apiError: false };
+    return { ...payload, ...result, apiError: false, retryable: false };
   },
 });

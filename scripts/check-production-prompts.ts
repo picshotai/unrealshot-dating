@@ -6,6 +6,7 @@ import {
   ANCHOR_REFERENCE_SENTENCE,
   buildPortfolioRequest,
   buildShootWriterRequest,
+  classifyCreativeProviderError,
   customerCreativeInputSchema,
   embedDatingSceneMeanings,
   generatePortfolioCandidate,
@@ -30,6 +31,17 @@ const input = customerCreativeInputSchema.parse({
   exclusions: ["alcohol"],
 });
 assert.throws(() => customerCreativeInputSchema.parse({ ...input, dress: "sharp" }));
+
+const badRequest = Object.assign(new Error("400 INVALID_ARGUMENT: temperature is not supported"), {
+  status: 400,
+});
+const badRequestFailure = classifyCreativeProviderError(badRequest);
+assert.equal(badRequestFailure.retryable, false);
+assert.match(badRequestFailure.diagnostic, /temperature is not supported/);
+const outageFailure = classifyCreativeProviderError(
+  Object.assign(new Error("service unavailable"), { status: 503 })
+);
+assert.equal(outageFailure.retryable, true);
 
 const request = buildPortfolioRequest({
   input,
@@ -169,6 +181,19 @@ const productionStoreSource = readFileSync(
 );
 assert.match(productionStoreSource, /MAX_PORTFOLIO_CANDIDATES_PER_CALL = 8/);
 assert.match(productionStoreSource, /previousCandidateWarnings\(last\?\.raw_output\)/);
+
+const creativeModelSource = readFileSync(
+  resolve(process.cwd(), "lib/dating/creative-director/model.ts"),
+  "utf8"
+);
+assert.doesNotMatch(creativeModelSource, /temperature\s*:/);
+
+const dashboardSource = readFileSync(
+  resolve(process.cwd(), "app/(protected)/dating-shoot/DatingShootClient.tsx"),
+  "utf8"
+);
+assert.doesNotMatch(dashboardSource, /Array\.from\(\{\s*length:\s*10\s*\}\)/);
+assert.match(dashboardSource, /PortfolioProgressPanel/);
 
 const orchestratorSource = readFileSync(
   resolve(process.cwd(), "trigger/dating-shoot.ts"),

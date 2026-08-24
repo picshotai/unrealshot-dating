@@ -19,6 +19,7 @@ export const reconcileDatingShootOrders = schedules.task({
       .from("user_shoot_orders")
       .select("id, user_id, model_id")
       .eq("pipeline_mode", "dynamic")
+      .eq("provider_blocked", false)
       .in("status", ["queued", "developing"])
       .lt("updated_at", staleBefore)
       .limit(25);
@@ -72,4 +73,3 @@ export const reconcileDatingShootOrders = schedules.task({
     return { inspected: orders?.length ?? 0 };
   },
 });
-

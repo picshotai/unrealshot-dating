@@ -422,7 +422,7 @@ async function prepareDynamicOrder(args: {
   db: ReturnType<typeof getServiceDb>;
   order: PipelineOrder;
   userId: string;
-}) {
+}): Promise<boolean> {
   const raw = args.db as any;
   const creative = args.order.creative_input ?? {};
   const creativeInput = customerCreativeInputSchema.parse({
@@ -479,10 +479,13 @@ async function prepareDynamicOrder(args: {
       }]);
       const run = planningResult.runs[0] as any;
       if (!run?.ok || run.output?.apiError) {
+        const retryable = !run?.ok || run.output?.retryable !== false;
         await raw.from("user_shoot_orders").update({
           pipeline_stage: "attention_required",
+          provider_blocked: !retryable,
           updated_at: new Date().toISOString(),
         }).eq("id", args.order.id);
+        if (!retryable) return false;
         throw new Error(`Portfolio direction is temporarily delayed for order ${args.order.id}.`);
       }
       shoots = await loadProductionShoots(raw, args.order.id);
@@ -529,7 +532,7 @@ async function prepareDynamicOrder(args: {
         p_order_id: args.order.id,
       });
       if (error) throw new Error(`Failed to allocate dynamic photos: ${error.message}`);
-      return;
+      return true;
     }
 
     const runnable = shoots.filter(
@@ -563,10 +566,15 @@ async function prepareDynamicOrder(args: {
       (run: any) => run.ok && run.output?.apiError
     );
     if (taskFailed || providerFailed) {
+      const permanentlyRejected = results.runs.some(
+        (run: any) => run.ok && run.output?.apiError && run.output?.retryable === false
+      );
       await raw.from("user_shoot_orders").update({
         pipeline_stage: "attention_required",
+        provider_blocked: permanentlyRejected,
         updated_at: new Date().toISOString(),
       }).eq("id", args.order.id);
+      if (permanentlyRejected) return false;
       throw new Error(
         providerFailed
           ? `Gemini is temporarily unavailable for order ${args.order.id}.`
@@ -628,11 +636,14 @@ export const datingPhotoshootOrchestrator = task({
     }
 
     if (pipelineOrder.pipeline_mode === "dynamic") {
-      await prepareDynamicOrder({
+      const promptsReady = await prepareDynamicOrder({
         db,
         order: pipelineOrder as PipelineOrder,
         userId,
       });
+      if (!promptsReady) {
+        return { batchId, status: "attention_required", providerBlocked: true };
+      }
     }
 
     const photoRows = await loadPhotoRows(db, batchId);

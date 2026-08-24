@@ -71,6 +71,7 @@ export type ProductionAttemptRow = {
   raw_output: unknown;
   validation_errors: string[];
   api_error: string | null;
+  error_retryable: boolean | null;
   created_at: string;
 };
 
@@ -94,6 +95,7 @@ export type PortfolioAttemptRow = {
   raw_output: unknown;
   validation_errors: string[];
   api_error: string | null;
+  error_retryable: boolean | null;
   created_at: string;
 };
 
@@ -194,6 +196,7 @@ export async function startPortfolioAttempt(args: {
     await raw.from("dating_portfolio_attempts").update({
       status: "api_error",
       api_error: "Portfolio worker stopped before it persisted a result; retrying.",
+      error_retryable: true,
       updated_at: new Date().toISOString(),
     }).eq("id", running.id).eq("status", "running");
   }
@@ -309,6 +312,8 @@ export async function finishPortfolioAttempt(args: {
     updated_at: new Date().toISOString(),
   }).eq("id", args.attempt.id).eq("status", "running");
   if (error) throw new Error(`Failed to complete portfolio attempt: ${error.message}`);
+  await raw.from("user_shoot_orders").update({ provider_blocked: false })
+    .eq("id", args.attempt.order_id);
   return { passed: args.generation.validation.passed, reservedCount };
 }
 
@@ -316,9 +321,13 @@ export async function failPortfolioAttempt(args: {
   db: AdminDb;
   attempt: PortfolioAttemptRow;
   safeError: string;
+  retryable: boolean;
 }) {
   const { error } = await (args.db as any).from("dating_portfolio_attempts").update({
-    status: "api_error", api_error: args.safeError, updated_at: new Date().toISOString(),
+    status: "api_error",
+    api_error: args.safeError,
+    error_retryable: args.retryable,
+    updated_at: new Date().toISOString(),
   }).eq("id", args.attempt.id).eq("status", "running");
   if (error) throw new Error(`Failed to persist portfolio provider error: ${error.message}`);
 }
@@ -377,6 +386,7 @@ export async function ensureProductionAttempt(
       await failProductionAttempt({
         db, attempt: running,
         safeError: "Prompt worker stopped before it persisted a result; retrying.",
+        retryable: true,
       });
     }
   }
@@ -459,6 +469,7 @@ export async function failProductionAttempt(args: {
   db: AdminDb;
   attempt: ProductionAttemptRow;
   safeError: string;
+  retryable?: boolean;
 }) {
   const { error } = await (args.db as any).rpc("complete_dating_prompt_attempt", {
     p_attempt_id: args.attempt.id,
@@ -478,4 +489,8 @@ export async function failProductionAttempt(args: {
     p_title: null,
   });
   if (error) throw new Error(`Failed to persist prompt provider error: ${error.message}`);
+  const { error: retryError } = await (args.db as any).from("dating_prompt_attempts")
+    .update({ error_retryable: args.retryable ?? true })
+    .eq("id", args.attempt.id);
+  if (retryError) throw new Error(`Failed to classify prompt provider error: ${retryError.message}`);
 }

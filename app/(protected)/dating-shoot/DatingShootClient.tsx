@@ -6,7 +6,6 @@ import {
   Download,
   RefreshCw,
   Maximize2,
-  Image as ImageIcon,
 } from 'lucide-react';
 import {
   FRAMES_PER_SHOOT,
@@ -26,6 +25,7 @@ import {
   type PhotoItem,
 } from '@/components/dating/PhotoInspectorModal';
 import { PhotoTile } from '@/components/dating/PhotoTile';
+import { PortfolioProgressPanel } from '@/components/dating/PortfolioProgressPanel';
 import { StudioIntakeView } from '@/components/dating/StudioIntakeView';
 import {
   ImageGeneration,
@@ -49,7 +49,12 @@ type Order = {
 };
 
 type StatusResponse = {
-  order: Order & { photos_target: number; shoots_target?: number; pipeline_stage?: string };
+  order: Order & {
+    photos_target: number;
+    shoots_target?: number;
+    pipeline_stage?: string;
+    provider_blocked?: boolean;
+  };
   counts: {
     pending: number;
     in_progress: number;
@@ -436,6 +441,8 @@ export function DatingShootClient({
                   customCreditsRemaining: status.order.custom_credits_remaining,
                   failedCount: status.counts.failed,
                   stageLabel: status.stageLabel,
+                  providerBlocked: status.order.provider_blocked,
+                  needsAttention: status.order.pipeline_stage === 'attention_required',
                 }
               : null
           }
@@ -462,7 +469,7 @@ export function DatingShootClient({
         )}
 
         {/* 3. Photo Gallery Grid */}
-        {(activeTab === 'all' && shootSections.length > 0) || displayedPhotos.length > 0 ? (
+        {displayedPhotos.length > 0 ? (
           activeTab === 'all' ? (
             /* Grouped by shoot — this place, these clothes, this light, four ways */
             <div className="space-y-12 pt-4">
@@ -517,20 +524,15 @@ export function DatingShootClient({
             </div>
           )
         ) : isDeveloping ? (
-          /* Developing Empty Shimmer Grid */
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4 pt-4">
-            {Array.from({ length: 10 }).map((_, i) => (
-              <div
-                key={i}
-                className="aspect-[4/5] rounded-2xl bg-zinc-900/60 border border-zinc-800 animate-pulse flex flex-col items-center justify-center p-4 text-center"
-              >
-                <ImageIcon className="w-6 h-6 text-zinc-700 mb-2" strokeWidth={1.5} />
-                <span className="text-xs text-zinc-600 font-mono">
-                  Developing photo #{i + 1}...
-                </span>
-              </div>
-            ))}
-          </div>
+          <PortfolioProgressPanel
+            stageLabel={status?.stageLabel}
+            promptCounts={status?.promptCounts}
+            shootTarget={status?.order.shoots_target ?? deliveryConfig.shoots}
+            sample={ownerDiagnostics?.testMode === 'sample'
+              ? { realShoots: ownerDiagnostics.sampleShoots }
+              : null}
+            blocked={Boolean(status?.order.provider_blocked)}
+          />
         ) : null}
 
 

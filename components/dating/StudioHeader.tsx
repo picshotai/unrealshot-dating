@@ -30,6 +30,8 @@ interface StudioHeaderProps {
     customCreditsRemaining: number;
     failedCount: number;
     stageLabel?: string;
+    providerBlocked?: boolean;
+    needsAttention?: boolean;
   } | null;
   onOpenNewShoot: () => void;
   /**
@@ -63,6 +65,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
     status?.orderStatus === 'developing' || status?.orderStatus === 'queued';
   const isReady =
     status?.orderStatus === 'ready' || status?.orderStatus === 'partial_failed';
+  const isProviderBlocked = Boolean(status?.providerBlocked);
 
   const avatarUrl = currentModel?.samples?.[0]?.uri || '/placeholder-user.jpg';
 
@@ -93,6 +96,8 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
                 <div className="flex items-center gap-1.5">
                   {isReady ? (
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" strokeWidth={2.5} />
+                  ) : isProviderBlocked ? (
+                    <AlertCircle className="w-3.5 h-3.5 text-amber-500" />
                   ) : isDeveloping ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-500" />
                   ) : (
@@ -127,7 +132,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
         {/* Right Side: Action Controls (Aligned with rounded-lg) */}
         <div className="flex items-center gap-2 w-full sm:w-auto">
           {/* Failed Retry (if any failed) */}
-          {status && status.failedCount > 0 && (
+          {status && (status.failedCount > 0 || status.needsAttention) && (
             <Button
               variant="outline"
               size="sm"
@@ -140,7 +145,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
                   isRetryLoading ? 'animate-spin' : ''
                 }`}
               />
-              Retry {status.failedCount} Failed
+              {status.failedCount > 0 ? `Retry ${status.failedCount} Failed` : 'Retry setup'}
             </Button>
           )}
 

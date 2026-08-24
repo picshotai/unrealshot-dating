@@ -6,7 +6,7 @@ import {
   generateProductionPromptCandidate,
   mockProductionModelCall,
 } from "@/lib/dating/prompt-engine";
-import { safeCreativeProviderError } from "@/lib/dating/creative-director";
+import { classifyCreativeProviderError } from "@/lib/dating/creative-director";
 import {
   failProductionAttempt,
   finishProductionAttempt,
@@ -27,6 +27,7 @@ export type GenerateDatingPromptResult = {
   passed: boolean;
   replanning: boolean;
   apiError: boolean;
+  retryable: boolean;
 };
 
 /** Exactly one Gemini call for one persisted attempt. */
@@ -51,6 +52,7 @@ export const generateDatingShootPrompts = task({
         passed: attempt.status === "passed",
         replanning: false,
         apiError: attempt.status === "api_error",
+        retryable: attempt.error_retryable ?? true,
       };
     }
 
@@ -71,18 +73,24 @@ export const generateDatingShootPrompts = task({
           : undefined,
       });
     } catch (error) {
-      const safeError = safeCreativeProviderError(error);
-      await failProductionAttempt({ db, attempt, safeError });
+      const failure = classifyCreativeProviderError(error);
+      await failProductionAttempt({
+        db,
+        attempt,
+        safeError: failure.diagnostic,
+        retryable: failure.retryable,
+      });
       logger.error("Production dating prompt provider error", {
         orderShootId: payload.orderShootId,
         attemptNumber: payload.attemptNumber,
-        safeError,
+        ...failure,
       });
       return {
         ...payload,
         passed: false,
         replanning: false,
         apiError: true,
+        retryable: failure.retryable,
       };
     }
 
@@ -100,6 +108,6 @@ export const generateDatingShootPrompts = task({
       attemptNumber: payload.attemptNumber,
       ...result,
     });
-    return { ...payload, ...result, apiError: false };
+    return { ...payload, ...result, apiError: false, retryable: false };
   },
 });

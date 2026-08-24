@@ -51,26 +51,39 @@ export async function GET(request: NextRequest) {
   let { data: order, error: orderErr } = await supabase
     .from("user_shoot_orders")
     .select(
-      "id, status, model_id, custom_credits_remaining, photos_target, shoots_target, pipeline_mode, pipeline_stage, trigger_run_id, created_at, ready_at"
+      "id, status, model_id, custom_credits_remaining, photos_target, shoots_target, pipeline_mode, pipeline_stage, provider_blocked, trigger_run_id, created_at, ready_at"
     )
     .eq("id", orderId)
     .eq("user_id", user.id)
     .single();
 
-  // Migration 033 is deliberately deployed before the dynamic rollout flag.
-  // During that gap, legacy orders must remain viewable instead of turning a
-  // missing new column into a false 404 and polling it forever.
+  // Migration 038 can be deployed immediately before this route. Preserve the
+  // dynamic fields during that short compatibility window.
   if (isMissingPipelineColumn(orderErr)) {
-    const legacy = await supabase
+    const compatible = await supabase
       .from("user_shoot_orders")
       .select(
-        "id, status, model_id, custom_credits_remaining, photos_target, trigger_run_id, created_at, ready_at"
+        "id, status, model_id, custom_credits_remaining, photos_target, shoots_target, pipeline_mode, pipeline_stage, trigger_run_id, created_at, ready_at"
       )
       .eq("id", orderId)
       .eq("user_id", user.id)
       .single();
-    orderErr = legacy.error;
-    order = legacy.data
+    if (!compatible.error && compatible.data) {
+      orderErr = null;
+      order = { ...compatible.data, provider_blocked: false } as typeof order;
+    } else {
+      // Migration 033 is deliberately deployed before the dynamic rollout flag.
+      // Older databases and authored orders must remain viewable.
+      const legacy = await supabase
+        .from("user_shoot_orders")
+        .select(
+          "id, status, model_id, custom_credits_remaining, photos_target, trigger_run_id, created_at, ready_at"
+        )
+        .eq("id", orderId)
+        .eq("user_id", user.id)
+        .single();
+      orderErr = legacy.error;
+      order = legacy.data
       ? ({
           ...legacy.data,
           shoots_target: Math.max(
@@ -80,8 +93,10 @@ export async function GET(request: NextRequest) {
           pipeline_mode: "authored",
           pipeline_stage:
             legacy.data.status === "ready" ? "ready" : "rendering_photos",
+          provider_blocked: false,
         } as typeof order)
       : null;
+    }
   }
 
   if (orderErr || !order) {
@@ -260,6 +275,8 @@ export async function GET(request: NextRequest) {
       : stage === "writing_prompts" ? `Writing shoot prompts — ${promptCounts.passed}/${promptCounts.total}`
       : stage === "rendering_anchors" ? `Establishing your scenes — ${completedSceneAnchors}/${promptCounts.total || order.shoots_target}`
       : stage === "rendering_photos" ? `Completing your shoots — ${completedShoots}/${order.shoots_target}`
+      : stage === "attention_required" && order.provider_blocked
+        ? "Prompt setup needs attention — automatic retries paused"
       : stage === "attention_required" ? "Delayed, still retrying"
       : stage === "ready" ? "Ready"
       : "Preparing your shoot",

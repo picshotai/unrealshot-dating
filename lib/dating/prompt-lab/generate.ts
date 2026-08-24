@@ -51,7 +51,6 @@ async function callGemini(request: Parameters<PromptLabModelCall>[0]): Promise<M
     contents: request.contents,
     config: {
       systemInstruction: request.systemInstruction,
-      temperature: 0.9,
       maxOutputTokens: 8192,
       responseMimeType: "application/json",
       responseJsonSchema: request.responseJsonSchema,

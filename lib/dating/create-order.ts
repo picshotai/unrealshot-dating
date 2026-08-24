@@ -362,6 +362,7 @@ export async function resumeDatingShootOrder(orderId: string, userId: string) {
       trigger_run_id: handle.id,
       status: promptOnly ? "queued" : "developing",
       pipeline_stage: promptOnly ? "writing_prompts" : order.pipeline_stage,
+      provider_blocked: false,
       updated_at: new Date().toISOString(),
     })
     .eq("id", orderId);
