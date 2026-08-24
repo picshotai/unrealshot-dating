@@ -18,13 +18,12 @@ import { Button } from '@/components/ui/button';
 import {
   INTEREST_CHIPS,
   EXCLUSION_CHIPS,
-  DRESS_OPTIONS,
+  EXCLUSION_CONFLICTS,
   type InterestId,
 } from '@/lib/dating/interests';
 import {
   CUSTOM_CREDITS_DEFAULT,
   FRAMES_PER_SHOOT,
-  type StylePref,
   type ExcludableTag,
 } from '@/lib/dating/types';
 
@@ -42,7 +41,6 @@ interface StudioIntakeViewProps {
   onSubmit: (params: {
     modelId: number;
     interests: InterestId[];
-    dress: StylePref;
     excludeTags: ExcludableTag[];
   }) => void;
   onCancel: () => void;
@@ -53,31 +51,10 @@ interface StudioIntakeViewProps {
   shootsPerDelivery: number;
   totalPhotos: number;
   ownerDiagnostics?: {
-    pipelineMode: 'off' | 'owner' | 'all';
     testMode: 'mock' | 'sample' | 'off';
     sampleShoots: number;
   } | null;
 }
-
-/**
- * The picture for each wardrobe. Presentation only — the ids, labels and hints
- * come from DRESS_OPTIONS so this screen cannot drift from the library the
- * delivery is actually weighted against. Typed as a full Record, so adding a
- * StylePref fails the build here instead of rendering a broken image.
- */
-const WARDROBE_IMAGES: Record<StylePref, string> = {
-  casual:
-    'https://images.unsplash.com/photo-1516257984-b1b4d707412e?w=600&auto=format&fit=crop&q=80',
-  sharp:
-    'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&auto=format&fit=crop&q=80',
-  street:
-    'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=600&auto=format&fit=crop&q=80',
-};
-
-const WARDROBE_LOOKS = DRESS_OPTIONS.map((option) => ({
-  ...option,
-  imageUrl: WARDROBE_IMAGES[option.id],
-}));
 
 export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
   models,
@@ -94,7 +71,6 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
   ownerDiagnostics,
 }) => {
   const [step, setStep] = useState<'configure' | 'confirm'>('configure');
-  const [dress, setDress] = useState<StylePref>('casual');
   const [interests, setInterests] = useState<InterestId[]>([]);
   const [excludeTags, setExcludeTags] = useState<ExcludableTag[]>([]);
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
@@ -102,9 +78,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
 
   const currentModel =
     models.find((m) => m.id === selectedModelId) || models[0];
-
-  const selectedWardrobe =
-    WARDROBE_LOOKS.find((w) => w.id === dress) || WARDROBE_LOOKS[0];
+  const interestLimit = Math.min(6, shootsPerDelivery);
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -121,15 +95,33 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
   }, []);
 
   const toggleInterest = (id: InterestId) => {
-    setInterests((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
+    if (interests.includes(id)) {
+      setInterests((current) => current.filter((interest) => interest !== id));
+      return;
+    }
+    if (interests.length >= interestLimit) return;
+    const conflicting = (Object.entries(EXCLUSION_CONFLICTS) as Array<[
+      ExcludableTag,
+      InterestId | undefined
+    ]>).find(([, interest]) => interest === id)?.[0];
+    if (conflicting) {
+      setExcludeTags((current) => current.filter((tag) => tag !== conflicting));
+    }
+    setInterests((current) => [...current, id]);
   };
 
   const toggleExclusion = (id: ExcludableTag) => {
-    setExcludeTags((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
+    if (excludeTags.includes(id)) {
+      setExcludeTags((current) => current.filter((tag) => tag !== id));
+      return;
+    }
+    const conflictingInterest = EXCLUSION_CONFLICTS[id];
+    if (conflictingInterest) {
+      setInterests((current) =>
+        current.filter((interest) => interest !== conflictingInterest)
+      );
+    }
+    setExcludeTags((current) => [...current, id]);
   };
 
   const hasSelectedInterests = interests.length > 0;
@@ -141,7 +133,6 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
     onSubmit({
       modelId: selectedModelId,
       interests,
-      dress,
       excludeTags,
     });
   };
@@ -293,23 +284,14 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
         </div>
 
         {ownerDiagnostics && (
-          <div className={`rounded-lg border px-3.5 py-3 text-xs ${
-            ownerDiagnostics.pipelineMode === 'off'
-              ? 'border-amber-500/30 bg-amber-500/10 text-amber-200'
-              : 'border-emerald-500/25 bg-emerald-500/10 text-emerald-200'
-          }`}>
+          <div className="rounded-lg border border-emerald-500/25 bg-emerald-500/10 px-3.5 py-3 text-xs text-emerald-200">
             <p className="font-semibold font-oxanium">
-              Owner test: {ownerDiagnostics.pipelineMode === 'off'
-                ? 'legacy authored catalogue'
-                : 'recipe → Gemini prompts'}
+              Intelligent portfolio → Gemini prompts
             </p>
             <p className="mt-1 opacity-80 font-mono text-[10px] leading-relaxed">
-              Mode {ownerDiagnostics.pipelineMode} · test {ownerDiagnostics.testMode}
+              Test mode {ownerDiagnostics.testMode}
               {ownerDiagnostics.testMode === 'sample'
                 ? ` · ${ownerDiagnostics.sampleShoots} complete Fal sample shoots`
-                : ''}
-              {ownerDiagnostics.pipelineMode === 'off'
-                ? ' · dynamic scene planning and scene-specific expressions are disabled'
                 : ''}
             </p>
           </div>
@@ -319,63 +301,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
         {step === 'configure' ? (
           /* STEP 1: CONFIGURATION FORM */
           <div className="space-y-6 animate-in fade-in duration-300">
-            {/* Section 1: Wardrobe Tone */}
-            <div className="space-y-2">
-              <div>
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xs sm:text-sm font-medium text-zinc-200 font-oxanium">
-                    What do you usually wear?
-                  </h2>
-                  <span className="text-[11px] text-zinc-500 font-mono">
-                    All three included
-                  </span>
-                </div>
-                <p className="text-[11px] text-zinc-500 mt-0.5">
-                  This guides colour and fit only. Each location still gets the clothes it requires — sportswear on courts, relaxed clothes at home, and sharper clothes only where they make sense.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-3 gap-2.5 sm:gap-3.5">
-                {WARDROBE_LOOKS.map((opt) => {
-                  const isActive = dress === opt.id;
-                  return (
-                    <button
-                      key={opt.id}
-                      onClick={() => setDress(opt.id)}
-                      className={`relative rounded-lg border p-2 sm:p-3 text-left transition-all active:scale-[0.98] flex flex-col justify-between group ${
-                        isActive
-                          ? 'bg-zinc-900 border-white text-white shadow-md ring-1 ring-white/20'
-                          : 'bg-zinc-950/70 border-zinc-800/90 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
-                      }`}
-                    >
-                      {/* Visual Outfit Image */}
-                      <div className="w-full aspect-[4/3] rounded-md overflow-hidden bg-zinc-900 mb-2 border border-zinc-800/60">
-                        <img
-                          src={opt.imageUrl}
-                          alt={opt.label}
-                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        />
-                      </div>
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs sm:text-sm font-semibold text-white font-oxanium">
-                            {opt.label}
-                          </span>
-                          {isActive && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-white" />
-                          )}
-                        </div>
-                        <p className="text-[11px] text-zinc-500 truncate sm:whitespace-normal mt-0.5 leading-snug">
-                          {opt.hint}
-                        </p>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Section 2: Activities & Interests */}
+            {/* Activities & Interests */}
             <div className="space-y-2">
               <div>
                 <div className="flex items-center justify-between">
@@ -390,12 +316,12 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                     }`}
                   >
                     {interests.length > 0
-                      ? `${interests.length} selected`
+                      ? `${interests.length}/${interestLimit} selected`
                       : 'Select at least 1 activity'}
                   </span>
                 </div>
                 <p className="text-[11px] text-zinc-500 mt-0.5">
-                  Tap the activities that represent your genuine lifestyle. Every compatible selection is reserved into at least one shoot in the full delivery.
+                  Choose up to {interestLimit} real parts of your life. Every selection will be visibly represented in at least one shoot—not merely used as inspiration.
                 </p>
               </div>
 
@@ -406,9 +332,12 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                     <button
                       key={chip.id}
                       onClick={() => toggleInterest(chip.id)}
+                      disabled={!isActive && interests.length >= interestLimit}
                       className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all flex items-center gap-1.5 active:scale-95 ${
                         isActive
                           ? 'bg-white text-black border-white font-semibold shadow-sm'
+                          : interests.length >= interestLimit
+                            ? 'bg-zinc-950/60 text-zinc-700 border-zinc-900 cursor-not-allowed'
                           : 'bg-zinc-950/80 text-zinc-400 border-zinc-800 hover:border-zinc-700 hover:text-zinc-200'
                       }`}
                     >
@@ -430,7 +359,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                   </span>
                 </h2>
                 <p className="text-[11px] text-zinc-500 mt-0.5">
-                  Any shoot featuring these is dropped from your delivery.
+                  These are absolute: the planner cannot place them anywhere in your delivery. Selecting a direct conflict removes the matching activity.
                 </p>
               </div>
 
@@ -529,30 +458,26 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                 </div>
               </div>
 
-              {/* Grid: 2 Summary Cards */}
+              {/* Grid: summary cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Card A: Model & Wardrobe */}
                 <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80 space-y-3">
                   <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 font-oxanium">
-                    Model & Wardrobe Lead
+                    Model & context-aware wardrobe
                   </span>
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-lg overflow-hidden bg-zinc-800 border border-zinc-700 shrink-0">
-                      <img
-                        src={selectedWardrobe.imageUrl}
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
+                      {currentModel?.samples?.[0]?.uri ? (
+                        <img src={currentModel.samples[0].uri} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <ImageIcon className="w-4 h-4 m-4 text-zinc-500" />
+                      )}
                     </div>
                     <div>
                       <div className="text-sm font-semibold text-white font-oxanium">
-                        {selectedWardrobe.label} lead
-                      </div>
-                      <div className="text-xs text-zinc-400">
                         {currentModel?.name || 'Trained Model'}
                       </div>
-                      <div className="text-[11px] text-zinc-500 font-mono mt-0.5">
-                        {selectedWardrobe.hint}
+                      <div className="text-[11px] text-zinc-500 mt-0.5 leading-relaxed">
+                        Clothing is chosen separately for every real occasion, activity, weather and location.
                       </div>
                     </div>
                   </div>
@@ -600,16 +525,16 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
 
                 <p className="text-[11px] text-zinc-500 leading-relaxed">
                   Each shoot is one location, one outfit and one light, shot{' '}
-                  {FRAMES_PER_SHOOT} ways — so you get a close portrait, a
-                  half-body, a full-length and a candid from every one of them.
+                  {FRAMES_PER_SHOOT} times during one believable occasion. The
+                  moment decides each expression, body position and crop.
                 </p>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
                   {[
-                    { label: 'Close', hint: 'Your opener' },
-                    { label: 'Half body', hint: 'The follow-up' },
-                    { label: 'Full length', hint: 'Proof you are real' },
-                    { label: 'Candid', hint: 'The one they message about' },
+                    { label: 'One occasion', hint: 'A life moment' },
+                    { label: 'One place', hint: 'Stable world' },
+                    { label: 'One outfit', hint: 'Context correct' },
+                    { label: 'Four moments', hint: 'Scene led' },
                   ].map((frame) => (
                     <div
                       key={frame.label}

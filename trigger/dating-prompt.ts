@@ -6,14 +6,14 @@ import {
   generateProductionPromptCandidate,
   mockProductionModelCall,
 } from "@/lib/dating/prompt-engine";
-import { safePromptLabApiError } from "@/lib/dating/prompt-lab/generate";
+import { safeCreativeProviderError } from "@/lib/dating/creative-director";
 import {
   failProductionAttempt,
   finishProductionAttempt,
   loadProductionAttempt,
   previousAttemptContext,
-  recentProductionScenes,
 } from "@/lib/dating/production-prompts/store";
+import { datingGeminiQueue } from "@/trigger/queues";
 
 export type GenerateDatingPromptPayload = {
   userId: string;
@@ -33,9 +33,7 @@ export type GenerateDatingPromptResult = {
 export const generateDatingShootPrompts = task({
   id: "generate-dating-shoot-prompts",
   retry: { maxAttempts: 1 },
-  queue: {
-    concurrencyLimit: getDatingProductConfig().geminiConcurrency,
-  },
+  queue: datingGeminiQueue,
   maxDuration: 300,
   run: async (
     payload: GenerateDatingPromptPayload
@@ -56,23 +54,24 @@ export const generateDatingShootPrompts = task({
       };
     }
 
-    const [recentScenes, retry] = await Promise.all([
-      recentProductionScenes(db, payload.userId),
-      previousAttemptContext(db, attempt.shoot, payload.attemptNumber),
-    ]);
+    const retry = await previousAttemptContext(
+      db,
+      attempt.shoot,
+      payload.attemptNumber
+    );
     let generation;
     try {
       const config = getDatingProductConfig();
       generation = await generateProductionPromptCandidate({
         brief: attempt.shoot.brief,
-        recentScenes,
+        input: attempt.request_snapshot.input,
         retry,
         modelCall: config.testMode === "mock"
           ? mockProductionModelCall(attempt.shoot.brief)
           : undefined,
       });
     } catch (error) {
-      const safeError = safePromptLabApiError(error);
+      const safeError = safeCreativeProviderError(error);
       await failProductionAttempt({ db, attempt, safeError });
       logger.error("Production dating prompt provider error", {
         orderShootId: payload.orderShootId,

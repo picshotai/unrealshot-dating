@@ -1,5 +1,6 @@
 import { FRAMES_PER_SHOOT } from "./types";
 import { SHOOT_BY_ID, type ShootKind } from "./shoots";
+import { getDatingProductConfig } from "./config";
 
 export type DatingTestMode = "mock" | "sample" | "off";
 
@@ -14,10 +15,7 @@ export type DatingTestMode = "mock" | "sample" | "off";
  * and light together, and one frame of it cannot answer that.
  */
 export function getDatingTestMode(): DatingTestMode {
-  const mode = process.env.DATING_TEST_MODE?.toLowerCase().trim();
-  if (mode === "mock") return "mock";
-  if (mode === "sample" || mode === "sample_5" || mode === "test") return "sample";
-  return "off";
+  return getDatingProductConfig().testMode;
 }
 
 /**

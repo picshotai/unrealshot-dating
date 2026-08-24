@@ -24,14 +24,37 @@ import {
 import { SHOOT_BY_ID } from "@/lib/dating/shoots";
 import { selectSampleShootIds } from "@/lib/dating/sample-selection";
 import { generateDatingShootPrompts } from "@/trigger/dating-prompt";
+import { generateDatingPortfolio } from "@/trigger/dating-portfolio";
 import {
   ensureProductionAttempt,
   loadProductionShoots,
-  previousDynamicConcepts,
-  reserveProductionPortfolio,
-  replaceProductionBrief,
+  startPortfolioAttempt,
 } from "@/lib/dating/production-prompts/store";
-import type { InterestId, StylePref, ExcludableTag } from "@/lib/dating/types";
+import {
+  customerCreativeInputSchema,
+  datingShootIntentSchema,
+} from "@/lib/dating/creative-director";
+import {
+  INTEREST_IDS,
+  type InterestId,
+  type ExcludableTag,
+} from "@/lib/dating/types";
+
+function representedInterestsOfBrief(brief: unknown): InterestId[] {
+  if (!brief || typeof brief !== "object") return [];
+  const value = brief as {
+    representedInterests?: unknown;
+    representedInterest?: unknown;
+  };
+  const candidates = Array.isArray(value.representedInterests)
+    ? value.representedInterests
+    : value.representedInterest ? [value.representedInterest] : [];
+  return candidates.filter(
+    (interest): interest is InterestId =>
+      typeof interest === "string" &&
+      (INTEREST_IDS as readonly string[]).includes(interest)
+  );
+}
 
 function configureFal() {
   const key = process.env.FAL_KEY;
@@ -391,7 +414,6 @@ type PipelineOrder = {
   shoots_target: number;
   creative_input: {
     interests?: InterestId[];
-    dress?: StylePref;
     excludeTags?: ExcludableTag[];
   } | null;
 };
@@ -403,48 +425,104 @@ async function prepareDynamicOrder(args: {
 }) {
   const raw = args.db as any;
   const creative = args.order.creative_input ?? {};
-  const recipeInput = {
-    orderId: args.order.id,
-    count: args.order.shoots_target,
+  const creativeInput = customerCreativeInputSchema.parse({
     interests: creative.interests ?? [],
-    dress: creative.dress ?? ("casual" as const),
     exclusions: creative.excludeTags ?? [],
-    previousConceptFamilies: await previousDynamicConcepts(raw, args.userId),
-  };
-
-  await raw.from("user_shoot_orders").update({
-    pipeline_stage: "writing_prompts",
-    updated_at: new Date().toISOString(),
-  }).eq("id", args.order.id);
+  });
 
   // One parent run can normally resolve all validation revisions. A provider
   // outage exits early and lets Trigger/reconciliation supply the backoff.
-  for (let cycle = 0; cycle < 8; cycle += 1) {
+  for (let cycle = 0; cycle < 16; cycle += 1) {
     let shoots = await loadProductionShoots(raw, args.order.id);
-    if (shoots.length === 0) {
-      await reserveProductionPortfolio({
+    const unfinishedLegacyShoots = shoots.filter(
+      (shoot) => shoot.status !== "passed" &&
+        !datingShootIntentSchema.safeParse(shoot.brief).success
+    );
+    if (unfinishedLegacyShoots.length > 0) {
+      const legacyIds = unfinishedLegacyShoots.map((shoot) => shoot.id);
+      // A Trigger run created under the retired writer may still finish after
+      // this deployment. Closing its running attempt first makes the existing
+      // completion RPC idempotently ignore that late result.
+      await raw.from("dating_prompt_attempts").update({
+        status: "api_error",
+        api_error: "Unfinished historical prompt moved to the current writer.",
+        updated_at: new Date().toISOString(),
+      }).in("order_shoot_id", legacyIds).eq("status", "running");
+      await raw.from("dating_order_shoots").update({
+        status: "replanning",
+        updated_at: new Date().toISOString(),
+      }).in("id", legacyIds);
+      continue;
+    }
+    const retained = shoots.filter((shoot) => shoot.status !== "replanning");
+    if (retained.length < args.order.shoots_target || shoots.some((shoot) => shoot.status === "replanning")) {
+      const planningAttempt = await startPortfolioAttempt({
         db: raw,
         orderId: args.order.id,
         userId: args.userId,
-        input: {
-          count: recipeInput.count,
-          interests: recipeInput.interests,
-          dress: recipeInput.dress,
-          exclusions: recipeInput.exclusions,
-        },
+        targetCount: args.order.shoots_target,
+        input: creativeInput,
       });
+      if (!planningAttempt) continue;
+      const planningResult = await generateDatingPortfolio.batchTriggerAndWait([{
+        payload: {
+          orderId: args.order.id,
+          attemptNumber: planningAttempt.attempt_number,
+        },
+        options: {
+          idempotencyKey: await idempotencyKeys.create(
+            `dating-portfolio:${planningAttempt.id}`,
+            { scope: "global" }
+          ),
+          idempotencyKeyTTL: "30d" as const,
+        },
+      }]);
+      const run = planningResult.runs[0] as any;
+      if (!run?.ok || run.output?.apiError) {
+        await raw.from("user_shoot_orders").update({
+          pipeline_stage: "attention_required",
+          updated_at: new Date().toISOString(),
+        }).eq("id", args.order.id);
+        throw new Error(`Portfolio direction is temporarily delayed for order ${args.order.id}.`);
+      }
       shoots = await loadProductionShoots(raw, args.order.id);
     }
-    if (shoots.length !== args.order.shoots_target) {
-      throw new Error(
-        `Dynamic order ${args.order.id} has ${shoots.length}/${args.order.shoots_target} scene reservations.`
+    const represented = new Set(
+      shoots.flatMap((shoot) => representedInterestsOfBrief(shoot.brief))
+    );
+    const uncovered = creativeInput.interests.filter(
+      (interest) => !represented.has(interest)
+    );
+    if (shoots.length === args.order.shoots_target && uncovered.length > 0) {
+      const counts = new Map<string, number>();
+      for (const shoot of shoots) {
+        for (const interest of representedInterestsOfBrief(shoot.brief)) {
+          counts.set(interest, (counts.get(interest) ?? 0) + 1);
+        }
+      }
+      const replaceable = shoots.filter((shoot) =>
+        shoot.status === "reserved" &&
+        (representedInterestsOfBrief(shoot.brief).length === 0 ||
+          representedInterestsOfBrief(shoot.brief).every(
+            (interest) => (counts.get(interest) ?? 0) > 1
+          ))
       );
+      if (replaceable.length < uncovered.length) {
+        throw new Error(`Portfolio cannot preserve the selected activity promises for order ${args.order.id}.`);
+      }
+      await raw.from("dating_order_shoots").update({
+        status: "replanning", updated_at: new Date().toISOString(),
+      }).in("id", replaceable.slice(0, uncovered.length).map((shoot) => shoot.id));
+      continue;
+    }
+    if (shoots.length !== args.order.shoots_target) {
+      continue;
     }
 
-    for (const shoot of shoots.filter((item) => item.status === "replanning")) {
-      await replaceProductionBrief({ db: raw, shoot, recipeInput });
-    }
-    shoots = await loadProductionShoots(raw, args.order.id);
+    await raw.from("user_shoot_orders").update({
+      pipeline_stage: "writing_prompts",
+      updated_at: new Date().toISOString(),
+    }).eq("id", args.order.id);
 
     if (shoots.every((shoot) => shoot.status === "passed")) {
       const { error } = await raw.rpc("materialize_dynamic_order_photos", {
@@ -461,7 +539,7 @@ async function prepareDynamicOrder(args: {
       throw new Error(`Dynamic order ${args.order.id} has no runnable prompt slots.`);
     }
     const attempts = await Promise.all(
-      runnable.map((shoot) => ensureProductionAttempt(raw, shoot))
+      runnable.map((shoot) => ensureProductionAttempt(raw, shoot, creativeInput))
     );
     const items = await Promise.all(
       attempts.map(async (attempt) => ({
@@ -612,12 +690,13 @@ export const datingPhotoshootOrchestrator = task({
     if (testMode === "sample") {
       realShoots = selectSampleShootIds({
         candidates: shootIds.map((shootId) => {
-          const dynamicInterest = dynamicShootMetadata.get(shootId)?.brief
-            .representedInterest;
+          const dynamicInterests = representedInterestsOfBrief(
+            dynamicShootMetadata.get(shootId)?.brief
+          );
           return {
             shootId,
-            representedInterests: dynamicInterest
-              ? [dynamicInterest]
+            representedInterests: dynamicInterests.length > 0
+              ? dynamicInterests
               : SHOOT_BY_ID.get(shootId)?.interests ?? [],
           };
         }),
@@ -653,7 +732,7 @@ export const datingPhotoshootOrchestrator = task({
       imageWidth: row.image_width,
       imageHeight: row.image_height,
       shootTitle: dynamicShootMetadata.get(row.shoot_id)?.title ?? null,
-      shootKind: dynamicShootMetadata.get(row.shoot_id)?.kind ?? null,
+      shootKind: SHOOT_BY_ID.get(row.shoot_id)?.kind ?? null,
       useMock: isMocked(row),
     });
 
@@ -661,7 +740,7 @@ export const datingPhotoshootOrchestrator = task({
       row.deterministic_id ??
       makeDeterministicPhotoId(batchId, row.shoot_id, row.frame_index);
 
-    // ── WAVE 1: WIDE SCENE ANCHORS ────────────────────────
+    // ── WAVE 1: WRITER-SELECTED SCENE ANCHORS ─────────────
     const anchorsToRun = incomplete.filter((row) => row.is_anchor);
 
     if (anchorsToRun.length > 0) {

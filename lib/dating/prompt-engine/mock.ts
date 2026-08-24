@@ -1,118 +1,144 @@
-import { leadGarment, outfitOf } from "@/lib/dating/authoring/rules";
-import type { DatingSceneBrief } from "@/lib/dating/scene-recipes";
-import { SHOOTS } from "@/lib/dating/shoots";
-import type { PromptLabModelCall } from "@/lib/dating/prompt-lab/generate";
 import {
-  SCENE_ANCHOR_FRAMING,
-  SCENE_ANCHOR_PROMPT_SENTENCE,
-} from "@/lib/dating/prompt-lab/system-instruction";
-import { resolveSceneMomentPlan } from "@/lib/dating/scene-recipes/moments";
+  ANCHOR_REFERENCE_SENTENCE,
+  IDENTITY_SENTENCE,
+  type CreativeModelCall,
+  type CreativeEmbeddingCall,
+  type CustomerCreativeInput,
+  type DatingShootIntent,
+} from "@/lib/dating/creative-director";
 
-const IDENTITY = "All references show the same man. Preserve his face, skin tone, hair, beard pattern, age and natural asymmetry; this identity belongs to him alone.";
-const OUTFITS = [
-  "a muted teal brushed-cotton overshirt over a soft ecru crew neck, charcoal trousers, clean brown boots and a plain steel watch",
-  "a rust twill chore jacket over a stone crew neck, deep indigo trousers, clean suede boots and a plain steel watch",
-  "a forest green textured overshirt over a pale grey crew neck, dark trousers, clean leather boots and a plain steel watch",
-  "a tobacco canvas field shirt over an ivory crew neck, slate trousers, clean brown boots and a plain steel watch",
-] as const;
+const usage = { inputTokens: 0, outputTokens: 0, reasoningTokens: 0, totalTokens: 0 };
 
-function mockOutfit(brief: DatingSceneBrief): string {
-  if (brief.kind === "activity") {
-    if (brief.representedInterest === "tennis") {
-      return "a fitted muted-blue breathable tennis polo, tapered technical tennis trousers, clean white court trainers and a plain steel watch";
-    }
-    return "a fitted forest-green breathable performance top, tapered charcoal technical training trousers, clean low-profile trainers and a plain steel watch";
-  }
-  const used = new Set(
-    SHOOTS.flatMap((shoot) => shoot.frames)
-      .map((frame) => outfitOf(frame.prompt))
-      .filter((outfit): outfit is string => Boolean(outfit))
-      .map(leadGarment)
-  );
-  return OUTFITS.find((outfit) => !used.has(leadGarment(outfit))) ?? OUTFITS[0];
-}
+export const mockCreativeEmbeddingCall: CreativeEmbeddingCall = async (texts) => ({
+  vectors: texts.map((text, index) => {
+    const vector = Array.from({ length: 768 }, () => 0);
+    vector[(index * 31 + text.length) % vector.length] = 1;
+    return vector;
+  }),
+  billableCharacters: 0,
+});
 
-function lightSentence(brief: DatingSceneBrief): string {
-  if (brief.lightFamily === "flash") {
-    return "A single direct flash beside the camera lays crisp evening light across his face and clothes.";
-  }
-  if (brief.lightFamily === "overcast") {
-    return "Broad open-sky daylight fills the frame and lays soft even light across his face and clothes.";
-  }
-  if (brief.lightFamily === "open-door") {
-    return "Broad daylight from the open doorway at the frame-left edge lays soft directional light across him.";
-  }
-  return "Soft window light from the frame-right edge lays broad natural light across his face and clothes.";
-}
-
-/** A zero-provider fixture used only when the complete pipeline is in mock mode. */
-export function mockProductionModelCall(brief: DatingSceneBrief): PromptLabModelCall {
+export function mockProductionModelCall(brief: DatingShootIntent): CreativeModelCall {
   return async () => {
-    const outfit = mockOutfit(brief);
-    const wardrobeState = brief.kind === "activity"
-      ? "The top sleeves, trouser hems, fastenings and watch position stay fixed, and all fabric edges are clean, continuous and intact."
-      : "The overshirt sleeves stay rolled twice at mid-forearm, every fastening and hem stays fixed, and all fabric edges are clean, continuous and intact.";
-    const light = lightSentence(brief);
-    const moments = brief.momentPlan ?? resolveSceneMomentPlan(brief);
-    const environment = `The ${brief.environmentAnchors[0]} and the ${brief.environmentAnchors[1]} remain the two fixed background landmarks.`;
-    const propClause = brief.props.length > 0
-      ? ` The reserved scene includes ${brief.props.join(" and ")}.`
-      : "";
-    const shared = `${IDENTITY} He is photographed at ${brief.location}, wearing ${outfit}. ${wardrobeState} ${environment}${propClause} The background remains three metres behind him. ${light}`;
-    const anchored = (framing: string) =>
-      framing === SCENE_ANCHOR_FRAMING ? "" : ` ${SCENE_ANCHOR_PROMPT_SENTENCE}`;
-    const technical = "iPhone 15 Pro, 24mm lens, f/1.8, 1/200 second and ISO 100. Preserve visible cheek pores, natural jaw stubble, eye creases and the grain of every fabric.";
+    const facts = brief.sceneBible.immutableFacts;
+    const prop = brief.sceneBible.portableProps[0];
+    const shared = `${IDENTITY_SENTENCE} At ${brief.sceneBible.location}, remain inside ${brief.sceneBible.shootingZone}. He is wearing ${brief.sceneBible.outfit}. ${brief.sceneBible.wardrobeContinuity} ${brief.sceneBible.light}`;
     const frames = [
       {
-        framing: "close",
-        width: 1728,
-        height: 2304,
-        prompt: `${shared}${anchored("close")} His shoulders turn twenty degrees while one hand settles the edge of his own collar and the other arm falls beyond the crop. ${moments.frames.close} A 3:4 shoulders-up opener photographed at eye level on ${technical}`,
+        frameId: "arrival-context",
+        roleLabel: "The arrival",
+        moment: `He arrives naturally into ${brief.provenance.occasion} while the photographer notices the setting around him.`,
+        composition: "A relaxed environmental portrait with enough space to establish the occasion without diminishing him.",
+        isAnchor: true,
+        isProfileCandidate: true,
       },
       {
-        framing: "medium",
-        width: 1728,
-        height: 2304,
-        prompt: `${shared}${anchored("medium")} He takes one measured step through the clear zone, with the nearer hand brushing his own cuff and the far arm swinging naturally. ${moments.frames.medium} A 3:4 chest-up candid photographed slightly below eye level on ${technical}`,
+        frameId: "mid-occasion",
+        roleLabel: "In the moment",
+        moment: `He becomes absorbed in the real reason he came: ${brief.provenance.whyHeIsThere}`,
+        composition: "An observational portrait made from a naturally closer position as the occasion unfolds.",
+        isAnchor: false,
+        isProfileCandidate: false,
       },
       {
-        framing: "threeQuarter",
-        width: 1728,
-        height: 2304,
-        prompt: `${shared}${anchored("threeQuarter")} He pauses with his weight carried through one straight leg, the other knee relaxed, one hand loose near his thigh and the far hand resting at his own hip. ${moments.frames.threeQuarter} A 3:4 three-quarter portrait photographed at waist height on ${technical}`,
+        frameId: "friend-noticed",
+        roleLabel: "Caught by a friend",
+        moment: `He briefly notices ${brief.provenance.photographerRelationship} without stopping the activity for a formal pose.`,
+        composition: "A clear face-led portrait whose crop follows the spontaneous interaction rather than a preset distance.",
+        isAnchor: false,
+        isProfileCandidate: true,
       },
       {
-        framing: "expression",
+        frameId: "leaving-beat",
+        roleLabel: "Between moments",
+        moment: `A quieter transition occurs after ${brief.creativeDirection.desirableMoment}, still inside the same occasion.`,
+        composition: "An asymmetrical candid that preserves the established background while changing the human beat.",
+        isAnchor: false,
+        isProfileCandidate: false,
+      },
+    ].map((frame, index) => {
+      const visibleFacts = frame.isAnchor ? [...facts] : [facts[index % facts.length]];
+      const visibleProps = frame.isAnchor
+        ? [...brief.sceneBible.portableProps]
+        : prop && index === 1 ? [prop] : [];
+      const anchorClause = frame.isAnchor ? "" : ` ${ANCHOR_REFERENCE_SENTENCE}`;
+      const factsClause = visibleFacts.map((fact) => ` The visible fixed scene fact is: ${fact}.`).join("");
+      const propClause = visibleProps.map((item) => ` The visible portable object is ${item}.`).join("");
+      return {
+        ...frame,
         width: 1728,
         height: 2304,
-        prompt: `${shared}${anchored("expression")} He settles after ${brief.activity}, one hand loose beside his own thigh and the other fingertips touching his own cuff. ${moments.frames.expression} A 3:4 close character frame photographed just above eye level on ${technical}`,
-      },
-    ];
+        visibleSceneFacts: visibleFacts,
+        visiblePortableProps: visibleProps,
+        prompt: `${shared}${anchorClause}${factsClause}${propClause} ${frame.moment} ${frame.composition} Make this a 3:4 realistic dating-profile photograph with natural skin texture, unretouched fabric, credible anatomy and no commercial catalogue staging.`,
+      };
+    });
     return {
       text: JSON.stringify({
         scene: {
-          id: brief.sceneId,
-          title: `${brief.venue} — ${brief.datingSignal}`,
-          conceptFamily: brief.conceptFamily,
-          settingFamily: brief.settingFamily,
-          datingSignal: brief.datingSignal,
-          location: brief.location,
-          activity: brief.activity,
-          activityReason: brief.activityReason,
-          outfit,
-          wardrobeState,
-          light,
-          environment,
-          environmentAnchors: [...brief.environmentAnchors],
-          lightFamily: brief.lightFamily,
-          kind: brief.kind,
-          register: brief.register,
-          props: [...brief.props],
-          rationale: `This reserved scene presents ${brief.datingSignal} through a believable personal moment while keeping the man visually dominant.`,
+          title: brief.title,
+          location: brief.sceneBible.location,
+          occasion: brief.provenance.occasion,
+          photographerProvenance: `${brief.provenance.photographerRelationship} took these photographs because ${brief.provenance.whyThePhotoWasTaken}`,
+          outfit: brief.sceneBible.outfit,
+          light: brief.sceneBible.light,
+          rationale: brief.creativeDirection.datingValue,
         },
         frames,
       }),
-      usage: { inputTokens: 0, outputTokens: 0, reasoningTokens: 0, totalTokens: 0 },
+      usage,
     };
+  };
+}
+
+export function mockPortfolioModelCall(input: CustomerCreativeInput): CreativeModelCall {
+  return async (request) => {
+    const match = request.contents.match(/Create exactly (\d+) candidate/);
+    const count = Number(match?.[1] ?? 1);
+    const shoots = Array.from({ length: count }, (_, index) => {
+      const interest = input.interests[index % input.interests.length];
+      const number = index + 1;
+      return {
+        candidateId: `mock-life-moment-${number}`,
+        title: `Real life moment ${number}`,
+        representedInterests: index < input.interests.length ? [interest] : [],
+        canonicalSummary: `A distinct everyday occasion number ${number} showing ${interest} through a believable companion photograph in a unique neighborhood setting.`,
+        noveltyFingerprint: `occasion${number} neighborhood${number} zone${number} friend${number} lived${number} ${interest}${number} daylight${number} treatment${number}`,
+        provenance: {
+          occasion: `a relaxed personal outing number ${number}`,
+          whyHeIsThere: `he is genuinely spending time on ${interest} as part of his normal week`,
+          photographerRelationship: "a close friend sharing the outing",
+          whyThePhotoWasTaken: "the friend noticed a naturally attractive moment and wanted to remember it",
+          socialContext: "an unforced part of an ordinary but desirable social life",
+        },
+        sceneBible: {
+          location: `a contemporary neighborhood place number ${number}`,
+          shootingZone: `one compact open-air zone beside the main path number ${number}`,
+          immutableFacts: [`the pale stone edge number ${number}`, `the leafy background opening number ${number}`],
+          portableProps: [],
+          outfit: `a context-appropriate muted outfit selected specifically for the ${interest} occasion number ${number}, with clean practical footwear and no visible logos`,
+          wardrobeContinuity: "Every layer, sleeve position, fastening, hem, shoe and accessory remains unchanged, with intact continuous fabric and no tears.",
+          light: `soft natural daylight from open sky during outing number ${number}`,
+          cameraFreedom: "the friend can move a few steps within the same zone without changing or rebuilding the background",
+        },
+        creativeDirection: {
+          desirableMoment: `a believable lived ${interest} moment rather than a staged photoshoot`,
+          datingValue: "shows an appealing real life, approachability and context without status theatre",
+          visualMood: `natural contemporary warmth with variation number ${number}`,
+          fourFramePossibility: "arrival, participation and interpersonal reactions can each occur naturally without adding objects or changing the place",
+          profileUse: "includes at least one clear face-led dating photograph plus contextual evidence of a real life",
+          formatGuidance: "3:4 should remain the default because the subject and nearby context fit comfortably together",
+        },
+        qualityProof: {
+          provenanceTest: "A close friend is already sharing this outing and has a credible reason to notice and photograph him.",
+          datingDesirabilityTest: "The scene reveals an approachable active life and gives a match a specific subject for conversation.",
+          nonStagingTest: "His presence and action exist before the camera appears, so no prop or pose exists only for photography.",
+          wardrobeLogic: `The practical muted outfit is chosen from the real demands of ${interest}, the weather and the location.`,
+          continuityRiskAndPrevention: "Both fixed landmarks exist from the anchor onward, while later frames change only subject action and camera position.",
+          fourFrameDistinctness: "Arrival, absorbed participation, brief friend interaction and a transition beat provide four causally different moments.",
+        },
+      };
+    });
+    return { text: JSON.stringify({ portfolioRationale: "Mock portfolio for zero-provider pipeline verification.", shoots }), usage };
   };
 }

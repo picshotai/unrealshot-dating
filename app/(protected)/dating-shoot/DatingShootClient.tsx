@@ -11,7 +11,6 @@ import {
 import {
   FRAMES_PER_SHOOT,
   type ExcludableTag,
-  type StylePref,
 } from '@/lib/dating/types';
 import { type InterestId } from '@/lib/dating/interests';
 import {
@@ -89,10 +88,10 @@ type StatusResponse = {
       imageHeight: number | null;
       role: LineupRole;
       roleLabel: string;
+      roleHint: string;
     }[];
   }[];
   progressPercent: number;
-  pipelineMode?: 'authored' | 'dynamic';
 };
 
 export function DatingShootClient({
@@ -110,7 +109,6 @@ export function DatingShootClient({
   initialOrderId: string | null;
   deliveryConfig: { shoots: number; photos: number };
   ownerDiagnostics: {
-    pipelineMode: 'off' | 'owner' | 'all';
     testMode: 'mock' | 'sample' | 'off';
     sampleShoots: number;
   } | null;
@@ -179,7 +177,6 @@ export function DatingShootClient({
   const handleLaunchShoot = async (params: {
     modelId: number;
     interests: InterestId[];
-    dress: StylePref;
     excludeTags: ExcludableTag[];
   }) => {
     setLoading(true);
@@ -195,7 +192,6 @@ export function DatingShootClient({
           clientRequestId: launchRequestId.current,
           modelId: params.modelId,
           interests: params.interests,
-          dress: params.dress,
           excludeTags: params.excludeTags,
         }),
       });
@@ -282,7 +278,7 @@ export function DatingShootClient({
           ...photo,
           shootId: shoot.shootId,
           shootTitle: shoot.title,
-          roleHint: LINEUP_HINTS[photo.role],
+          roleHint: photo.roleHint || LINEUP_HINTS[photo.role],
         })
       ),
     }));
@@ -440,7 +436,6 @@ export function DatingShootClient({
                   customCreditsRemaining: status.order.custom_credits_remaining,
                   failedCount: status.counts.failed,
                   stageLabel: status.stageLabel,
-                  pipelineMode: status.pipelineMode,
                 }
               : null
           }

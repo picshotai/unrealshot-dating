@@ -28,19 +28,19 @@ export const LINEUP_ROLES = [
 export type LineupRole = (typeof LINEUP_ROLES)[number];
 
 export const LINEUP_LABELS: Record<LineupRole, string> = {
-  opener: "Your opener",
+  opener: "Profile-ready",
   fullBody: "Your full body",
   whatYouDo: "What you do",
   outThere: "Out in the world",
-  more: "The rest",
+  more: "Scene moments",
 };
 
 export const LINEUP_HINTS: Record<LineupRole, string> = {
-  opener: "Lead with one of these. Clear face, eye contact, nothing in the way.",
+  opener: "A clear, useful dating-profile photograph chosen from the logic of its real moment.",
   fullBody: "Profiles without a full body get read as hiding something.",
   whatYouDo: "The photo that gives someone a reason to message you.",
   outThere: "Shows a life happening outside your flat.",
-  more: "Every one different — a different place, outfit and light.",
+  more: "Distinct moments from the same believable occasion, with its world kept intact.",
 };
 
 export type RoleInput = {

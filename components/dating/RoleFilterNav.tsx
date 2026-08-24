@@ -86,7 +86,7 @@ export const RoleFilterNav: React.FC<RoleFilterNavProps> = ({
           </span>
         </button>
 
-        {LINEUP_ROLES.map((role) => {
+        {LINEUP_ROLES.filter((role) => (roleCounts[role] ?? 0) > 0).map((role) => {
           const Icon = LINEUP_ICONS[role];
           const isActive = activeTab === role;
           const count = roleCounts[role] || 0;

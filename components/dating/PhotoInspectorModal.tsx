@@ -126,8 +126,8 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
   const role =
     photo.role ||
     lineupRoleFor({ shootId: photo.shootId, frameIndex: photo.frameIndex });
-  const roleLabel = LINEUP_LABELS[role] || 'Dating Photo';
-  const roleHint = LINEUP_HINTS[role] || 'High-converting dating profile photo.';
+  const roleLabel = photo.roleLabel || LINEUP_LABELS[role] || 'Dating Photo';
+  const roleHint = photo.roleHint || LINEUP_HINTS[role] || 'A context-led dating profile photo.';
   const colorClass = ROLE_COLORS[role] || 'bg-zinc-800 text-zinc-300 border-zinc-700';
 
   const imageUrl = photo.imageUrl;

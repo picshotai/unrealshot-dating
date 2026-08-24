@@ -1,152 +1,203 @@
-import assert from "node:assert/strict";
-import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { strict as assert } from "node:assert";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
-import { dynamicPromptsEnabled, type DatingProductConfig } from "../lib/dating/config";
 import {
-  generateProductionPromptCandidate,
+  ANCHOR_REFERENCE_SENTENCE,
+  buildPortfolioRequest,
+  buildShootWriterRequest,
+  customerCreativeInputSchema,
+  embedDatingSceneMeanings,
+  generatePortfolioCandidate,
+  generateShootCandidate,
+  noveltyIdeaKey,
+  noveltySimilarity,
+  validatePortfolioCandidate,
+  validateShootOutput,
+  type DatingShootIntent,
+} from "../lib/dating/creative-director";
+import {
+  mockPortfolioModelCall,
   mockProductionModelCall,
+  mockCreativeEmbeddingCall,
 } from "../lib/dating/prompt-engine";
-import { buildPromptLabRequest } from "../lib/dating/prompt-lab/prompt";
-import { selectPromptLabReference } from "../lib/dating/prompt-lab/references";
-import { PROMPT_LAB_MODEL, PROMPT_LAB_THINKING_LEVEL } from "../lib/dating/prompt-lab/schemas";
-import { planDatingSceneBriefs } from "../lib/dating/scene-recipes";
-import { activityWardrobeProblems } from "../lib/dating/scene-recipes/wardrobe";
-import { resolveSceneMomentPlan } from "../lib/dating/scene-recipes/moments";
-import { selectSampleShootIds } from "../lib/dating/sample-selection";
+import { getDatingProductConfig } from "../lib/dating/config";
+import { portfolioPlanningBatch } from "../lib/dating/production-prompts/store";
 
-function filesUnder(root: string): string[] {
-  return readdirSync(root).flatMap((name) => {
-    const path = join(root, name);
-    return statSync(path).isDirectory() ? filesUnder(path) : [path];
-  });
+async function main() {
+const input = customerCreativeInputSchema.parse({
+  interests: ["gym", "tennis", "dining"],
+  exclusions: ["alcohol"],
+});
+assert.throws(() => customerCreativeInputSchema.parse({ ...input, dress: "sharp" }));
+
+const request = buildPortfolioRequest({
+  input,
+  targetCount: 15,
+  candidateCount: 20,
+  interestsStillNeeded: input.interests,
+  currentOrder: [],
+  customerHistory: [],
+  globalHistory: [],
+});
+assert.match(request, /Gym|gym/i);
+assert.match(request, /No alcohol/);
+assert.doesNotMatch(request, /customer style|dress preference|captureGrammar/i);
+
+const portfolio = await generatePortfolioCandidate({
+  input,
+  targetCount: 15,
+  candidateCount: 20,
+  interestsStillNeeded: input.interests,
+  currentOrder: [],
+  customerHistory: [],
+  globalHistory: [],
+  modelCall: mockPortfolioModelCall(input),
+});
+assert(portfolio.output);
+assert(portfolio.validation.passed, portfolio.validation.problems.join("\n"));
+assert.equal(portfolio.output.shoots.length, 20);
+const embedded = await embedDatingSceneMeanings(
+  portfolio.output.shoots.map((shoot) => shoot.noveltyFingerprint),
+  mockCreativeEmbeddingCall
+);
+assert.equal(embedded.vectors.length, 20);
+assert(embedded.vectors.every((vector) => vector.length === 768));
+const represented = new Set(portfolio.output.shoots.flatMap((shoot) => shoot.representedInterests));
+for (const interest of input.interests) assert(represented.has(interest));
+
+const first = portfolio.output.shoots[0] as DatingShootIntent;
+assert.equal(noveltyIdeaKey(first.noveltyFingerprint).length, 64);
+assert(noveltySimilarity(first.noveltyFingerprint, first.noveltyFingerprint) === 1);
+assert(noveltySimilarity(first.noveltyFingerprint, "underwater coral expedition") < 0.3);
+
+const duplicated = {
+  portfolioRationale: portfolio.output.portfolioRationale,
+  shoots: [portfolio.output.shoots[0], {
+    ...portfolio.output.shoots[1],
+    noveltyFingerprint: portfolio.output.shoots[0].noveltyFingerprint,
+  }],
+};
+const duplicateValidation = validatePortfolioCandidate({
+  output: duplicated,
+  input,
+  candidateCount: 2,
+  interestsStillNeeded: [],
+  history: [],
+});
+assert(!duplicateValidation.passed);
+assert(duplicateValidation.problems.some((problem) => /too similar/i.test(problem)));
+
+const writerRequest = buildShootWriterRequest({ brief: first, input });
+assert.match(writerRequest, /LOCKED SHOOT INTENT/);
+assert.match(writerRequest, /scene-anchor image/);
+assert.doesNotMatch(writerRequest, /close[\s\S]*medium[\s\S]*three.?quarter[\s\S]*expression/i);
+
+const shoot = await generateShootCandidate({
+  brief: first,
+  input,
+  modelCall: mockProductionModelCall(first),
+});
+assert(shoot.output);
+assert(shoot.validation.passed, shoot.validation.problems.join("\n"));
+assert.equal(shoot.output.frames.length, 4);
+assert.equal(shoot.output.frames.filter((frame) => frame.isAnchor).length, 1);
+assert(shoot.output.frames.some((frame) => frame.isProfileCandidate));
+for (const frame of shoot.output.frames) {
+  assert.equal(frame.width, 1728);
+  assert.equal(frame.height, 2304);
+  if (frame.isAnchor) assert(!frame.prompt.includes(ANCHOR_REFERENCE_SENTENCE));
+  else assert(frame.prompt.includes(ANCHOR_REFERENCE_SENTENCE));
+}
+const anchor = shoot.output.frames.find((frame) => frame.isAnchor)!;
+assert.equal(anchor.visibleSceneFacts.length, first.sceneBible.immutableFacts.length);
+assert.equal(anchor.visiblePortableProps.length, first.sceneBible.portableProps.length);
+
+const corrupted = structuredClone(shoot.output);
+corrupted.frames[1].visibleSceneFacts = ["a wall invented only for this pose"];
+const corruptedValidation = validateShootOutput({ output: corrupted, brief: first, input });
+assert(!corruptedValidation.passed);
+assert(corruptedValidation.problems.some((problem) => /undeclared scene fact/i.test(problem)));
+
+const incompleteAnchor = structuredClone(shoot.output);
+incompleteAnchor.frames.find((frame) => frame.isAnchor)!.visibleSceneFacts = [first.sceneBible.immutableFacts[0]];
+const incompleteAnchorValidation = validateShootOutput({ output: incompleteAnchor, brief: first, input });
+assert(!incompleteAnchorValidation.passed);
+assert(incompleteAnchorValidation.problems.some((problem) => /anchor does not establish scene fact/i.test(problem)));
+
+const config = getDatingProductConfig();
+assert(!("pipelineMode" in config));
+assert(!("pipelineUserIds" in config));
+for (let missing = 1; missing <= 30; missing += 1) {
+  const batch = portfolioPlanningBatch(missing);
+  assert(batch.requestedSlots <= 7);
+  assert(batch.candidateCount <= 8);
+  assert(batch.candidateCount > batch.requestedSlots);
 }
 
-const brief = planDatingSceneBriefs({
-  orderId: "d43b5192-b033-4cdc-b794-376d31a67e87",
-  count: 1,
-  interests: ["coffee", "reading"],
-  dress: "casual",
-  exclusions: ["alcohol"],
-})[0];
-const request = buildPromptLabRequest({
-  input: {
-    clientRequestId: "52ec6022-c51e-4cbb-a79a-783d619aa50a",
-    interests: ["coffee", "reading"],
-    dress: "casual",
-    exclusions: ["alcohol"],
-    kind: brief.kind,
-    light: brief.lightFamily,
-  },
-  plan: { kind: brief.kind, light: brief.lightFamily },
-  reference: selectPromptLabReference(brief.lightFamily),
-  recentScenes: [],
-  lockedBrief: brief,
-});
-assert.match(request, new RegExp(`scene\\.id \\(exact\\): ${brief.sceneId}`));
-assert(request.includes(`scene.conceptFamily (exact): ${brief.conceptFamily}`));
-assert(request.includes(`scene.settingFamily (exact): ${brief.settingFamily}`));
-assert(request.includes(brief.environmentAnchors[0]));
-assert(request.includes(brief.wardrobeContract));
-assert(request.includes("LOCKED SCENE MOMENT ARC"));
-assert(request.includes(brief.momentPlan!.profileId));
-assert.equal(PROMPT_LAB_MODEL, "gemini-3.7-flash");
-assert.equal(PROMPT_LAB_THINKING_LEVEL, "low");
-
-const sample = selectSampleShootIds({
-  candidates: [
-    { shootId: "unrelated-a", representedInterests: ["coffee"] },
-    { shootId: "selected-tennis", representedInterests: ["tennis"] },
-    { shootId: "unrelated-b", representedInterests: ["reading"] },
-  ],
-  selectedInterests: ["tennis"],
-  count: 1,
-  seed: "sample-regression",
-});
-assert.deepEqual([...sample], ["selected-tennis"]);
-assert(activityWardrobeProblems({
-  kind: "activity",
-  representedInterest: "tennis",
-  outfit: "a brown hoodie, black cargo trousers, leather boots and a steel watch",
-}).length >= 2);
-assert.deepEqual(activityWardrobeProblems({
-  kind: "activity",
-  representedInterest: "tennis",
-  outfit: "a fitted breathable tennis polo, tapered technical trousers, white court trainers and a steel watch",
-}), []);
-
-const baseConfig: DatingProductConfig = {
-  pipelineMode: "off",
-  pipelineUserIds: new Set(["allowlisted"]),
-  shootsPerDelivery: 15,
-  framesPerShoot: 4,
-  photosPerDelivery: 60,
-  testMode: "mock",
-  sampleShoots: 2,
-  geminiConcurrency: 4,
-  promptAttemptsPerIdea: 3,
-};
-assert(!dynamicPromptsEnabled({ userId: "owner", isOwner: true, config: baseConfig }));
-assert(dynamicPromptsEnabled({ userId: "owner", isOwner: true, config: { ...baseConfig, pipelineMode: "owner" } }));
-assert(dynamicPromptsEnabled({ userId: "allowlisted", isOwner: false, config: { ...baseConfig, pipelineMode: "owner" } }));
-assert(dynamicPromptsEnabled({ userId: "customer", isOwner: false, config: { ...baseConfig, pipelineMode: "all" } }));
-
-const isolatedRoots = [
-  join(process.cwd(), "lib", "dating", "scene-recipes"),
-  join(process.cwd(), "lib", "dating", "prompt-engine"),
-  join(process.cwd(), "lib", "dating", "production-prompts"),
-  join(process.cwd(), "trigger", "dating-prompt.ts"),
+const productionFiles = [
+  "lib/dating/create-order.ts",
+  "lib/dating/production-prompts/store.ts",
+  "lib/dating/prompt-engine/production.ts",
+  "trigger/dating-prompt.ts",
+  "trigger/dating-portfolio.ts",
 ];
-const productionPromptSource = isolatedRoots.flatMap((path) =>
-  statSync(path).isDirectory() ? filesUnder(path) : [path]
-).filter((path) => /\.tsx?$/.test(path)).map((path) => readFileSync(path, "utf8")).join("\n");
-assert(!/@fal-ai|generateSingleDatingImage|spendShootCredits|order_photos/.test(productionPromptSource),
-  "recipe and prompt generation modules must not import Fal, image workers, credits or photo allocation");
+for (const relative of productionFiles) {
+  const source = readFileSync(resolve(process.cwd(), relative), "utf8");
+  assert.doesNotMatch(source, /scene-recipes|planDatingSceneBriefs|selectPromptLabReference/);
+}
 
-const orchestrator = readFileSync(join(process.cwd(), "trigger", "dating-shoot.ts"), "utf8");
-assert(orchestrator.indexOf("prepareDynamicOrder") < orchestrator.indexOf("loadPhotoRows(db, batchId)"));
-assert(orchestrator.indexOf("anchorsToRun") < orchestrator.indexOf("dispatchable"));
-assert.match(orchestrator, /anchorImageUrl: anchorImageUrl \?\? null/);
+for (const relative of [
+  "lib/dating/creative-director/portfolio.ts",
+  "lib/dating/creative-director/writer.ts",
+  "lib/dating/prompt-engine/production.ts",
+]) {
+  const source = readFileSync(resolve(process.cwd(), relative), "utf8");
+  assert.doesNotMatch(source, /@fal-ai|trigger\/|credits-gate|order_photos/);
+}
 
-const baseMigration = readFileSync(
-  join(process.cwd(), "supabase", "migrations", "033_dynamic_dating_prompt_pipeline.sql"),
+const createOrderSource = readFileSync(
+  resolve(process.cwd(), "lib/dating/create-order.ts"),
   "utf8"
 );
-assert.match(baseMigration, /dating_order_shoots_active_idea_unique/);
-assert.match(baseMigration, /unique\(order_id, slot_index\)/);
-assert.match(baseMigration, /complete_dating_prompt_attempt/);
-assert.match(baseMigration, /v_allocated <> v_target \* 4/);
-const anchorMigration = readFileSync(
-  join(process.cwd(), "supabase", "migrations", "035_dynamic_prompt_v4_anchor.sql"),
+assert.match(createOrderSource, /pipeline_mode: "dynamic"/);
+assert.doesNotMatch(createOrderSource, /planUniqueOrderDelivery|dynamicPromptsEnabled|creative_input: \{[^}]*dress/);
+
+const productionStoreSource = readFileSync(
+  resolve(process.cwd(), "lib/dating/production-prompts/store.ts"),
   "utf8"
 );
-assert.match(anchorMigration, /dating-scene-v3', 'dating-scene-v4'[\s\S]*threeQuarter/);
-const compositionMigration = readFileSync(
-  join(process.cwd(), "supabase", "migrations", "036_dynamic_prompt_v5_composition.sql"),
+assert.match(productionStoreSource, /MAX_PORTFOLIO_CANDIDATES_PER_CALL = 8/);
+assert.match(productionStoreSource, /previousCandidateWarnings\(last\?\.raw_output\)/);
+
+const orchestratorSource = readFileSync(
+  resolve(process.cwd(), "trigger/dating-shoot.ts"),
   "utf8"
 );
-assert.match(
-  compositionMigration,
-  /dating-scene-v3', 'dating-scene-v4', 'dating-scene-v5'[\s\S]*threeQuarter/
+const anchorWave = orchestratorSource.indexOf("WRITER-SELECTED SCENE ANCHORS");
+const anchorReread = orchestratorSource.indexOf("ANCHOR STATE, RE-READ FROM THE DATABASE");
+const followerWave = orchestratorSource.indexOf("THE FRAMES THAT REFERENCE THEM");
+assert(anchorWave >= 0 && anchorWave < anchorReread && anchorReread < followerWave);
+assert.match(orchestratorSource, /toPayload\(row, anchor\?\.image_url \?\? null\)/);
+assert.match(orchestratorSource, /\[\.\.\.referenceImageUrls, anchorImageUrl as string\]/);
+
+const migration = readFileSync(
+  resolve(process.cwd(), "supabase/migrations/037_intelligent_dating_portfolio.sql"),
+  "utf8"
 );
+assert.match(migration, /novelty_embedding extensions\.vector\(768\)/);
+assert.match(migration, /pg_advisory_xact_lock/);
+assert.match(migration, /jsonb_array_length\(accepted_output->'frames'\) <> 4/);
+assert.match(migration, /frame\.value->>'isAnchor'/);
+assert.match(migration, /frame\.value \? 'isAnchor'/);
+assert.match(migration, /claimed\.order_id = p_order_id[\s\S]*>= 0\.82/);
+assert.match(migration, /owner_order\.user_id = v_user_id[\s\S]*>= 0\.86/);
+assert.match(migration, /nearest\.semantic_similarity >= 0\.90/);
 
-const gymMoments = resolveSceneMomentPlan({
-  ...brief,
-  representedInterest: "gym",
-  activity: "finishing a light mobility warm-up",
-});
-assert.equal(gymMoments.profileId, "focused-recovery");
-assert(!/laugh/i.test(gymMoments.frames.expression));
+console.log("Intelligent dating portfolio and context-led writer checks passed.");
+}
 
-generateProductionPromptCandidate({
-  brief,
-  recentScenes: [],
-  modelCall: mockProductionModelCall(brief),
-}).then((generation) => {
-  assert(generation.validation.passed, generation.validation.problems.join("\n"));
-  assert.equal(generation.usage.totalTokens, 0);
-  console.log("Production prompt checks passed: locked briefs, zero-provider mock, rollout modes, isolation, atomic acceptance, exact allocation and anchor-first ordering.");
-}).catch((error) => {
+main().catch((error) => {
   console.error(error);
-  process.exit(1);
+  process.exitCode = 1;
 });

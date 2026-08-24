@@ -65,7 +65,6 @@ export default async function DatingShootPage({
         photos: productConfig.photosPerDelivery,
       }}
       ownerDiagnostics={isAdminEmail(user.email) ? {
-        pipelineMode: productConfig.pipelineMode,
         testMode: productConfig.testMode,
         sampleShoots: productConfig.sampleShoots,
       } : null}

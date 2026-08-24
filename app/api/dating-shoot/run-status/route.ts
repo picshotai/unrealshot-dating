@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { SHOOT_BY_ID } from "@/lib/dating/shoots";
-import { lineupRoleFor, LINEUP_LABELS } from "@/lib/dating/roles";
-import { isAdminEmail } from "@/lib/auth/admin-access";
+import { lineupRoleFor, LINEUP_HINTS, LINEUP_LABELS } from "@/lib/dating/roles";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -102,7 +101,7 @@ export async function GET(request: NextRequest) {
   let { data: photos, error: photosError } = await supabase
     .from("order_photos")
     .select(
-      "id, order_shoot_id, shoot_id, frame_index, framing, is_anchor, status, image_url, image_width, image_height"
+      "id, order_shoot_id, shoot_id, frame_index, framing, is_anchor, role_label, moment_summary, is_profile_candidate, status, image_url, image_width, image_height"
     )
     .eq("order_id", orderId)
     .order("shoot_id")
@@ -121,6 +120,9 @@ export async function GET(request: NextRequest) {
     photos = (legacyPhotos.data ?? []).map((photo) => ({
       ...photo,
       order_shoot_id: null,
+      role_label: null,
+      moment_summary: null,
+      is_profile_candidate: photo.frame_index === 1,
       framing:
         photo.frame_index === 1 ? "close"
         : photo.frame_index === 2 ? "medium"
@@ -207,12 +209,14 @@ export async function GET(request: NextRequest) {
       // indistinguishable from a photo that never existed. The client needs the
       // in-flight rows to hold their place and show progress.
       photos: rows.map((p) => {
-        const role = lineupRoleFor({
-          shootId,
-          frameIndex: p.frame_index,
-          framing: p.framing as any,
-          kind: shootKind as any,
-        });
+        const role = dynamicShoot
+          ? p.is_profile_candidate ? "opener" : "more"
+          : lineupRoleFor({
+              shootId,
+              frameIndex: p.frame_index,
+              framing: p.framing as any,
+              kind: shootKind as any,
+            });
         return {
           id: p.id,
           frameIndex: p.frame_index,
@@ -222,7 +226,8 @@ export async function GET(request: NextRequest) {
           imageWidth: p.image_width,
           imageHeight: p.image_height,
           role,
-          roleLabel: LINEUP_LABELS[role],
+          roleLabel: p.role_label || LINEUP_LABELS[role],
+          roleHint: p.moment_summary || LINEUP_HINTS[role],
         };
       }),
     };
@@ -249,7 +254,6 @@ export async function GET(request: NextRequest) {
     promptCounts,
     shoots,
     progressPercent: order.status === "ready" ? 100 : Math.min(99, progressPercent),
-    pipelineMode: isAdminEmail(user.email) ? order.pipeline_mode : undefined,
     stage,
     stageLabel:
       stage === "planning" ? "Planning your shoots"

@@ -1,74 +1,52 @@
 # Production dating prompt pipeline
 
-New orders can use the recipe-first production path without changing legacy
-authored orders. Fresh databases apply migrations `033_dynamic_dating_prompt_pipeline.sql`,
-`034_wide_dynamic_scene_anchor.sql` and `035_dynamic_prompt_v4_anchor.sql` in order.
-Applied migrations stay immutable; existing databases run only the later files they
-have not already recorded.
+Every new order uses the same production path:
+
+1. Gemini directs a portfolio of free-form, real-life shoot intents.
+2. The server atomically rejects globally repeated semantic fingerprints and reserves only new intents.
+3. Gemini expands each accepted intent into four context-led prompts.
+4. Fal renders the writer-selected scene anchor first, then receives that image for the other three frames.
+
+There is no authored/dynamic rollout switch and no finite recipe catalogue for new orders. Historical orders retain their stored prompts so they remain resumable. Existing databases apply the new `037_intelligent_dating_portfolio.sql` migration after previously applied migrations; never edit or rerun an applied migration.
 
 ## Configuration
 
 ```dotenv
-DATING_PROMPT_PIPELINE_MODE=off
-DATING_PROMPT_PIPELINE_USER_IDS=
+GEMINI_API_KEY=...
 DATING_SHOOTS_PER_DELIVERY=15
-DATING_TEST_MODE=mock
+DATING_TEST_MODE=off
 DATING_SAMPLE_SHOOTS=2
 DATING_GEMINI_CONCURRENCY=4
 DATING_PROMPT_ATTEMPTS_PER_IDEA=3
+GEMINI_37_FLASH_INPUT_USD_PER_MILLION=0.75
+GEMINI_37_FLASH_OUTPUT_USD_PER_MILLION=3.75
 ```
 
-- `off`: new orders keep using authored prompts.
-- `owner`: only `ADMIN_EMAILS` owners and explicitly listed user IDs use dynamic prompts.
-- `all`: every new order uses dynamic prompts.
-- `mock`: local prompt fixtures and image placeholders; no Gemini or Fal calls.
-- `sample`: Gemini writes every shoot, Fal renders only the configured number of complete shoots.
-- `off` test mode: real Gemini and real Fal behavior.
+`GEMINI_API_KEY` and the existing Fal/R2 credentials must be present in the Trigger.dev environment. The delivery/test configuration belongs in both the web deployment and Trigger.dev so order snapshots, progress and workers agree.
 
-The shoot count is copied onto each order. Later environment changes do not
-change an active order's target, dashboard progress, or ready notification.
+- `mock`: local structured fixtures and image placeholders; no Gemini or Fal calls.
+- `sample`: Gemini directs and writes the complete portfolio; Fal renders only the configured number of whole shoots.
+- `off`: real Gemini and real Fal behavior.
 
-Sample selection maximises coverage of the customer's selected interests before
-filling spare real-render slots. Because the default sample is two shoots, it can
-prove at most two distinct selected interests in one paid test.
+The shoot count is snapshotted onto an order, so later environment changes cannot shrink an active delivery.
 
-The clothing answer is a customer-style preference, not an order-wide outfit
-lock. Every recipe resolves its own scene register and wardrobe contract. Sport,
-home and outdoor requirements outrank the preference; only compatible social or
-evening scenes may use tailoring.
+## Creative contract
 
-Prompt systems v3 and v4 render the three-quarter frame first as the scene anchor. It
-shows the widest environment and full wardrobe. The close dating-app opener and
-the other two frames are then edited inside that established view.
+The portfolio director is governed by one literal provenance test: “This looks like a desirable moment from his real life, captured by someone who naturally belonged there.” It receives the exact customer interest meanings, exclusions, current portfolio, customer history and recent global scene memory. It invents concepts in free-form text and must prove provenance, dating desirability, non-staging, wardrobe logic, continuity and four-frame distinctness for every candidate. Rich intents are planned in bounded batches of no more than eight candidates so structured responses stay inside the model's 8192-token output budget; every later batch sees the intents already accepted for the order. After each creative call, `gemini-embedding-001` converts only the normalized novelty fingerprints into 768-dimensional vectors; PostgreSQL atomically checks both vector meaning and lexical similarity across the complete registry before reserving a scene.
 
-Prompt system v4 also reserves a scene-derived moment arc. Activity, reason and
-dating signal determine facial energy and gaze; the fourth frame is a character
-beat rather than an automatic laughing photo.
+Clothing is not a customer input. The director chooses it separately from each occasion, activity, weather, location and social context. Selected interests are delivery promises: every selected interest must be visibly represented before prompt writing can complete. Exclusions are absolute and conflicting activity/exclusion combinations are rejected by both the UI and API.
 
-## Safe rollout
-
-1. On a fresh database, deploy migrations 033, 034 and 035. On an existing database,
-   deploy only the unapplied later migrations. Keep pipeline mode `off` during deployment.
-2. Set mode to `owner` and test a full order in `mock` mode.
-3. Test complete anchored shoots in `sample` mode.
-4. Test one owner order with test mode `off`.
-5. Review prompt validation/replan counts, Gemini costs, Fal failures, and scene continuity.
-6. Set pipeline mode to `all`.
-
-Switching pipeline mode back to `off` affects new orders only. Persisted dynamic
-orders continue from their stored recipe, prompts, attempts, and photo rows.
+The writer receives one locked intent containing the occasion, human reason, photographer relationship, small shooting zone, outfit, light, immutable scene facts and portable props. It chooses four moments, compositions and the single anchor without a pose, expression, lens or framing menu. Only the anchor can render without a scene image; all followers receive its persisted Fal image.
 
 ## Local verification
 
 ```text
-npm run check:recipes
-npm run check:prompt-lab
 npm run check:production-prompts
 npm run check:production-types
+npm run check:prompt-lab
 npm run check:shoots
 npm run check:variety
 npm run build
 ```
 
-All automated checks use fixtures or static contracts. They make no Gemini or
-Fal request.
+Automated checks use fixtures and make no Gemini or Fal request.

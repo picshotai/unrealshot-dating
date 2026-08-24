@@ -1,16 +1,11 @@
 import { createAdminClient } from "@/utils/supabase/admin";
-import { makeDeterministicPhotoId } from "./deterministic-id";
-import { planUniqueOrderDelivery } from "./plan-order-delivery";
-import {
-  loadPreviousShootIds,
-  loadRecentGlobalConceptUsage,
-} from "./selection-history";
 import {
   verifiedDatingReferenceUrls,
   type StoredDatingReference,
 } from "./reference-image";
 import type { DeliveryBias } from "./interests";
 import {
+  conflictingExclusion,
   deriveBias,
   dominantStyle,
   dominantVibe,
@@ -22,15 +17,13 @@ import {
   CUSTOM_CREDITS_DEFAULT,
   type ExcludableTag,
   SHOOT_CREDIT_COST,
-  type StylePref,
-  type Vibe,
 } from "./types";
 import { datingPhotoshootOrchestrator } from "@/trigger/dating-shoot";
-import { dynamicPromptsEnabled, getDatingProductConfig } from "./config";
-import { isAdminEmail } from "@/lib/auth/admin-access";
-import { reserveProductionPortfolio } from "./production-prompts/store";
-import { RECIPE_PLANNER_VERSION } from "./scene-recipes";
-import { PROMPT_SYSTEM_VERSION } from "./prompt-lab/schemas";
+import { getDatingProductConfig } from "./config";
+import {
+  PORTFOLIO_SYSTEM_VERSION,
+  SHOOT_WRITER_SYSTEM_VERSION,
+} from "./creative-director";
 
 /** Refusals the API can translate into a status code, as distinct from faults. */
 export class DatingOrderError extends Error {
@@ -39,7 +32,8 @@ export class DatingOrderError extends Error {
     readonly code:
       | "order_in_progress"
       | "insufficient_credits"
-      | "references_need_reupload",
+      | "references_need_reupload"
+      | "invalid_input",
     readonly detail: Record<string, unknown> = {}
   ) {
     super(message);
@@ -49,39 +43,24 @@ export class DatingOrderError extends Error {
 
 export type CreateOrderInput = {
   userId: string;
-  userEmail?: string | null;
   clientRequestId: string;
   modelId: number;
-  /** What he actually does. Drives the vibe weighting and the hobby prompts. */
+  /** What he actually does. Each selection is a visible delivery promise. */
   interests?: InterestId[];
-  /** How he dresses, answered with pictures rather than the word "style". */
-  dress?: StylePref;
   /** Content he asked us to leave out: dog, alcohol, bicycle, team sport. */
   excludeTags?: ExcludableTag[];
-  /** Legacy callers may still send a locked vibe/style; both become a lean. */
-  vibe?: Vibe;
-  style?: StylePref;
 };
 
 /**
- * Create batch (order), pre-allocate 60 order_photos with deterministic IDs,
- * kick off parent orchestrator (exactly one parent task).
+ * Create the immutable order snapshot and kick off exactly one parent task.
+ * Photo rows are allocated only after all free-form shoot prompts pass.
  */
 export async function createDatingShootOrder(input: CreateOrderInput) {
   const db = createAdminClient();
-  const {
-    userId,
-    modelId,
-    interests = [],
-    dress,
-    excludeTags = [],
-  } = input;
+  const { userId, modelId } = input;
+  const interests = [...new Set(input.interests ?? [])];
+  const excludeTags = [...new Set(input.excludeTags ?? [])];
   const productConfig = getDatingProductConfig();
-  const useDynamicPrompts = dynamicPromptsEnabled({
-    userId,
-    isOwner: isAdminEmail(input.userEmail),
-    config: productConfig,
-  });
 
   // Browser retries and double-clicks return the original order before any
   // model lookup, credit spend, planning or Trigger dispatch.
@@ -101,18 +80,24 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
     };
   }
 
-  // A locked vibe/style from an older client is honoured as a strong lean so
-  // in-flight sessions keep working, but nothing locks the delivery any more.
-  const bias: DeliveryBias = input.vibe
-    ? {
-        ...deriveBias(interests, dress ?? input.style ?? "casual"),
-        vibe: {
-          urban: input.vibe === "urban" ? 0.5 : 0.25,
-          outdoorsy: input.vibe === "outdoorsy" ? 0.5 : 0.25,
-          homebody: input.vibe === "homebody" ? 0.5 : 0.25,
-        },
-      }
-    : deriveBias(interests, dress ?? input.style ?? "casual");
+  const interestLimit = Math.min(6, productConfig.shootsPerDelivery);
+  if (interests.length < 1 || interests.length > interestLimit) {
+    throw new DatingOrderError(
+      `Choose between 1 and ${interestLimit} interests`,
+      "invalid_input"
+    );
+  }
+  const conflict = excludeTags.find((tag) => conflictingExclusion(interests, tag));
+  if (conflict) {
+    throw new DatingOrderError(
+      `Your selected activities conflict with the ${conflict} exclusion.`,
+      "invalid_input"
+    );
+  }
+
+  // These two columns are historical NOT NULL preference fields. They are kept
+  // for schema compatibility only; neither value enters the new creative plan.
+  const bias: DeliveryBias = deriveBias(interests, "casual");
 
   const vibe = dominantVibe(bias);
   const style = dominantStyle(bias);
@@ -158,13 +143,6 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
   // History is loaded before charging. A second purchase uses unseen semantic
   // concepts first, then unseen exact shoots, then least-recently-used shoots.
   // Failing to read history must never quietly degrade into a repeat-heavy pack.
-  const [previousShootIds, globalConceptUsage] = useDynamicPrompts
-    ? [[], {}]
-    : await Promise.all([
-        loadPreviousShootIds(db, userId),
-        loadRecentGlobalConceptUsage(db),
-      ]);
-
   // Charge before any GPU work is dispatched. Charging afterwards means a crash
   // between allocation and dispatch gives away a shoot. Every failure path from
   // here on refunds.
@@ -216,11 +194,11 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
         photos_target: productConfig.photosPerDelivery,
         shoots_target: productConfig.shootsPerDelivery,
         client_request_id: input.clientRequestId,
-        creative_input: { interests, dress: dress ?? input.style ?? "casual", excludeTags },
-        pipeline_mode: useDynamicPrompts ? "dynamic" : "authored",
-        pipeline_stage: useDynamicPrompts ? "planning" : "rendering_photos",
-        planner_version: useDynamicPrompts ? RECIPE_PLANNER_VERSION : null,
-        prompt_system_version: useDynamicPrompts ? PROMPT_SYSTEM_VERSION : null,
+        creative_input: { interests, excludeTags },
+        pipeline_mode: "dynamic",
+        pipeline_stage: "planning",
+        planner_version: PORTFOLIO_SYSTEM_VERSION,
+        prompt_system_version: SHOOT_WRITER_SYSTEM_VERSION,
       })
       .select()
       .single();
@@ -260,59 +238,6 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
     const batchId = order.id as string;
     createdOrderId = batchId;
 
-    const finalRows = useDynamicPrompts ? [] : (await planUniqueOrderDelivery(db, batchId, {
-      interests,
-      excludeTags,
-      dress: dress ?? input.style ?? "casual",
-      previousShootIds,
-      globalConceptUsage,
-    })).map((frame) => ({
-      order_id: batchId,
-      shoot_id: frame.shootId,
-      frame_index: frame.frameIndex,
-      is_anchor: frame.isAnchor,
-      // The authored string, stored verbatim. There is nothing left to compile,
-      // and snapshotting it means a later library edit cannot change a retry.
-      prompt_template: frame.prompt,
-      image_width: frame.imageSize.width,
-      image_height: frame.imageSize.height,
-      status: "pending" as const,
-      deterministic_id: makeDeterministicPhotoId(
-        batchId,
-        frame.shootId,
-        frame.frameIndex
-      ),
-    }));
-
-    if (useDynamicPrompts) {
-      await reserveProductionPortfolio({
-        db,
-        orderId: batchId,
-        userId,
-        input: {
-          count: productConfig.shootsPerDelivery,
-          interests,
-          dress: dress ?? input.style ?? "casual",
-          exclusions: excludeTags,
-        },
-      });
-    }
-
-    if (!useDynamicPrompts && finalRows.length !== productConfig.photosPerDelivery) {
-      await db.from("user_shoot_orders").delete().eq("id", batchId);
-      throw new Error(
-        `Expected ${productConfig.photosPerDelivery} rows, got ${finalRows.length}`
-      );
-    }
-
-    if (!useDynamicPrompts) {
-      const { error: photosErr } = await db.from("order_photos").insert(finalRows);
-      if (photosErr) {
-        await db.from("user_shoot_orders").delete().eq("id", batchId);
-        throw new Error(`Failed to allocate photos: ${photosErr.message}`);
-      }
-    }
-
     // Kick off PARENT orchestrator only (children spawned inside)
     // After this point a network failure is ambiguous: Trigger.dev may have
     // accepted the run even if the client did not receive the handle. Keep the
@@ -329,7 +254,7 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
       .from("user_shoot_orders")
       .update({
         trigger_run_id: handle.id,
-        status: useDynamicPrompts ? "queued" : "developing",
+        status: "queued",
         updated_at: new Date().toISOString(),
       })
       .eq("id", batchId);
@@ -338,7 +263,7 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
       orderId: batchId,
       batchId,
       triggerRunId: handle.id,
-      photosAllocated: finalRows.length,
+      photosAllocated: productConfig.photosPerDelivery,
       reused: false,
     };
   } catch (error) {
@@ -351,7 +276,7 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
         console.error("Failed to clean up an undispatched dating order:", cleanupError);
       }
     }
-    if (useDynamicPrompts && createdOrderId && dispatchAttempted) {
+    if (createdOrderId && dispatchAttempted) {
       await (db as any)
         .from("user_shoot_orders")
         .update({
