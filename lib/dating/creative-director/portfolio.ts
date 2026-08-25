@@ -50,7 +50,7 @@ export type PortfolioHistoryItem = {
 export type PortfolioGeneration = {
   output: PortfolioCandidate | null;
   rawOutput: unknown;
-  validation: { passed: boolean; problems: string[] };
+  validation: { passed: boolean; problems: string[]; warnings: string[] };
   usage: { inputTokens: number; outputTokens: number; reasoningTokens: number; totalTokens: number };
   estimatedCostUsd: number;
   pricingSnapshot: unknown;
@@ -131,6 +131,7 @@ export function validatePortfolioCandidate(args: {
   history: readonly PortfolioHistoryItem[];
 }) {
   const problems: string[] = [];
+  const warnings: string[] = [];
   if (args.output.shoots.length !== args.candidateCount) {
     problems.push(`Expected exactly ${args.candidateCount} candidates, received ${args.output.shoots.length}.`);
   }
@@ -155,14 +156,16 @@ export function validatePortfolioCandidate(args: {
     }
     for (const other of args.output.shoots) {
       if (shoot === other) continue;
-      if (noveltySimilarity(shoot.noveltyFingerprint, other.noveltyFingerprint) >= 0.72) {
+      if (noveltySimilarity(shoot.noveltyFingerprint, other.noveltyFingerprint) >= 0.92) {
         problems.push(`${shoot.title} is too similar to ${other.title}.`);
       }
     }
     const historical = args.history.find(
       (item) => noveltySimilarity(shoot.noveltyFingerprint, item.noveltyFingerprint) >= 0.72
     );
-    if (historical) problems.push(`${shoot.title} repeats ${historical.title}.`);
+    if (historical) {
+      warnings.push(`${shoot.title} is semantically close to ${historical.title}; broaden later candidates.`);
+    }
   }
   const represented = new Set(args.output.shoots.flatMap((shoot) => shoot.representedInterests));
   if (args.candidateCount >= args.interestsStillNeeded.length) {
@@ -170,7 +173,11 @@ export function validatePortfolioCandidate(args: {
       if (!represented.has(interest)) problems.push(`Selected interest ${interest} has no candidate.`);
     }
   }
-  return { passed: problems.length === 0, problems: [...new Set(problems)] };
+  return {
+    passed: problems.length === 0,
+    problems: [...new Set(problems)],
+    warnings: [...new Set(warnings)],
+  };
 }
 
 function normalizeProof(value: string) {
@@ -210,6 +217,7 @@ export async function generatePortfolioCandidate(args: {
     : {
         passed: false,
         problems: parsed.error.issues.map((issue) => `${issue.path.join(".") || "response"}: ${issue.message}`),
+        warnings: [],
       };
   const cost = creativeCost(response.usage);
   return {

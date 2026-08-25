@@ -29,39 +29,16 @@ import {
 } from "@/lib/dating/types";
 import { SHOOT_BY_ID } from "@/lib/dating/shoots";
 import { selectSampleShootIds } from "@/lib/dating/sample-selection";
-import { generateDatingShootPrompts } from "@/trigger/dating-prompt";
 import {
-  ensureProductionAttempt,
   loadProductionShoots,
-  startPortfolioAttempt,
+  representedInterestsOfBrief,
 } from "@/lib/dating/production-prompts/store";
-import { executePortfolioAttempt } from "@/lib/dating/production-prompts/portfolio-service";
 import { releaseDatingOrderCredit } from "@/lib/dating/credits-gate";
 import {
-  customerCreativeInputSchema,
-  datingShootIntentSchema,
-} from "@/lib/dating/creative-director";
-import {
-  INTEREST_IDS,
-  type InterestId,
-  type ExcludableTag,
-} from "@/lib/dating/types";
-
-function representedInterestsOfBrief(brief: unknown): InterestId[] {
-  if (!brief || typeof brief !== "object") return [];
-  const value = brief as {
-    representedInterests?: unknown;
-    representedInterest?: unknown;
-  };
-  const candidates = Array.isArray(value.representedInterests)
-    ? value.representedInterests
-    : value.representedInterest ? [value.representedInterest] : [];
-  return candidates.filter(
-    (interest): interest is InterestId =>
-      typeof interest === "string" &&
-      (INTEREST_IDS as readonly string[]).includes(interest)
-  );
-}
+  DynamicPromptPipelineFailure,
+  prepareDynamicOrder,
+  type DynamicPipelineOrder,
+} from "@/trigger/dating-prompt-orchestration";
 
 function configureFal() {
   const key = process.env.FAL_KEY;
@@ -414,206 +391,7 @@ type PhotoRow = {
   attempt_count: number | null;
 };
 
-type PipelineOrder = {
-  id: string;
-  pipeline_mode: "authored" | "dynamic";
-  pipeline_stage: string;
-  shoots_target: number;
-  creative_input: {
-    interests?: InterestId[];
-    excludeTags?: ExcludableTag[];
-  } | null;
-};
-
-class PromptProviderFailure extends Error {
-  constructor(
-    readonly phase: string,
-    readonly retryable: boolean,
-    readonly safeMessage: string
-  ) {
-    super(safeMessage);
-    this.name = "PromptProviderFailure";
-  }
-}
-
 const PROVIDER_RETRY_DELAYS_MINUTES = [1, 5, 15] as const;
-
-async function prepareDynamicOrder(args: {
-  db: ReturnType<typeof getServiceDb>;
-  order: PipelineOrder;
-  userId: string;
-}): Promise<boolean> {
-  const raw = args.db as any;
-  const creative = args.order.creative_input ?? {};
-  const creativeInput = customerCreativeInputSchema.parse({
-    interests: creative.interests ?? [],
-    exclusions: creative.excludeTags ?? [],
-  });
-
-  // One parent run can normally resolve all validation revisions. A provider
-  // outage exits early and lets this parent run supply checkpointed backoff.
-  for (let cycle = 0; cycle < 16; cycle += 1) {
-    let shoots = await loadProductionShoots(raw, args.order.id);
-    const unfinishedLegacyShoots = shoots.filter(
-      (shoot) => shoot.status !== "passed" &&
-        !datingShootIntentSchema.safeParse(shoot.brief).success
-    );
-    if (unfinishedLegacyShoots.length > 0) {
-      const legacyIds = unfinishedLegacyShoots.map((shoot) => shoot.id);
-      // A Trigger run created under the retired writer may still finish after
-      // this deployment. Closing its running attempt first makes the existing
-      // completion RPC idempotently ignore that late result.
-      await raw.from("dating_prompt_attempts").update({
-        status: "api_error",
-        api_error: "Unfinished historical prompt moved to the current writer.",
-        updated_at: new Date().toISOString(),
-      }).in("order_shoot_id", legacyIds).eq("status", "running");
-      await raw.from("dating_order_shoots").update({
-        status: "replanning",
-        updated_at: new Date().toISOString(),
-      }).in("id", legacyIds);
-      continue;
-    }
-    const retained = shoots.filter((shoot) => shoot.status !== "replanning");
-    if (retained.length < args.order.shoots_target || shoots.some((shoot) => shoot.status === "replanning")) {
-      const planningAttempt = await startPortfolioAttempt({
-        db: raw,
-        orderId: args.order.id,
-        userId: args.userId,
-        targetCount: args.order.shoots_target,
-        input: creativeInput,
-      });
-      if (!planningAttempt) continue;
-      const planningResult = await executePortfolioAttempt({
-        db: raw,
-        orderId: args.order.id,
-        attemptNumber: planningAttempt.attempt_number,
-      });
-      if (planningResult.apiError) {
-        throw new PromptProviderFailure(
-          planningResult.phase,
-          planningResult.retryable,
-          planningResult.safeMessage ?? "Gemini portfolio planning failed."
-        );
-      }
-      shoots = await loadProductionShoots(raw, args.order.id);
-    }
-    const represented = new Set(
-      shoots.flatMap((shoot) => representedInterestsOfBrief(shoot.brief))
-    );
-    const uncovered = creativeInput.interests.filter(
-      (interest) => !represented.has(interest)
-    );
-    if (shoots.length === args.order.shoots_target && uncovered.length > 0) {
-      const counts = new Map<string, number>();
-      for (const shoot of shoots) {
-        for (const interest of representedInterestsOfBrief(shoot.brief)) {
-          counts.set(interest, (counts.get(interest) ?? 0) + 1);
-        }
-      }
-      const replaceable = shoots.filter((shoot) =>
-        shoot.status === "reserved" &&
-        (representedInterestsOfBrief(shoot.brief).length === 0 ||
-          representedInterestsOfBrief(shoot.brief).every(
-            (interest) => (counts.get(interest) ?? 0) > 1
-          ))
-      );
-      if (replaceable.length < uncovered.length) {
-        throw new PromptProviderFailure(
-          "portfolio_validation",
-          false,
-          "The planner could not preserve every selected activity in a valid portfolio."
-        );
-      }
-      await raw.from("dating_order_shoots").update({
-        status: "replanning", updated_at: new Date().toISOString(),
-      }).in("id", replaceable.slice(0, uncovered.length).map((shoot) => shoot.id));
-      continue;
-    }
-    if (shoots.length !== args.order.shoots_target) {
-      continue;
-    }
-
-    await raw.from("user_shoot_orders").update({
-      pipeline_stage: "writing_prompts",
-      updated_at: new Date().toISOString(),
-    }).eq("id", args.order.id);
-
-    if (shoots.every((shoot) => shoot.status === "passed")) {
-      const { error } = await raw.rpc("materialize_dynamic_order_photos", {
-        p_order_id: args.order.id,
-      });
-      if (error) throw new Error(`Failed to allocate dynamic photos: ${error.message}`);
-      return true;
-    }
-
-    const runnable = shoots.filter(
-      (shoot) => shoot.status === "reserved" || shoot.status === "generating"
-    );
-    if (runnable.length === 0) {
-      throw new PromptProviderFailure(
-        "prompt_validation",
-        false,
-        "The saved shoot ideas could not be completed into valid prompts."
-      );
-    }
-    const attempts = await Promise.all(
-      runnable.map((shoot) => ensureProductionAttempt(raw, shoot, creativeInput))
-    );
-    const items = await Promise.all(
-      attempts.map(async (attempt) => ({
-        payload: {
-          userId: args.userId,
-          orderShootId: attempt.order_shoot_id,
-          attemptNumber: attempt.attempt_number,
-        },
-        options: {
-          idempotencyKey: await idempotencyKeys.create(
-            `dating-prompt:${attempt.id}`,
-            { scope: "global" }
-          ),
-          idempotencyKeyTTL: "30d" as const,
-        },
-      }))
-    );
-    const results = await generateDatingShootPrompts.batchTriggerAndWait(items);
-    const failedAttemptIds = results.runs.flatMap((run: any, index) =>
-      run.ok ? [] : [attempts[index].id]
-    );
-    if (failedAttemptIds.length > 0) {
-      const { data: failedRows, error: failedRowsError } = await raw
-        .from("dating_prompt_attempts")
-        .select("id, status, api_error, error_retryable, provider_phase")
-        .in("id", failedAttemptIds);
-      if (failedRowsError) {
-        throw new Error(`Prompt failure audit failed: ${failedRowsError.message}`);
-      }
-      const providerRows = (failedRows ?? []).filter((row: any) => row.status === "api_error");
-      if (providerRows.length !== failedAttemptIds.length) {
-        throw new Error(`Prompt persistence failed for order ${args.order.id}.`);
-      }
-      const permanent = providerRows.find((row: any) => row.error_retryable === false);
-      const representative = permanent ?? providerRows[0];
-      logger.error("Dating prompt provider phase failed", {
-        orderId: args.order.id,
-        phase: representative?.provider_phase,
-        diagnostic: representative?.api_error,
-        retryable: !permanent,
-      });
-      throw new PromptProviderFailure(
-        representative?.provider_phase ?? "shoot_generation",
-        !permanent,
-        "Gemini could not complete shoot prompt generation."
-      );
-    }
-  }
-
-  throw new PromptProviderFailure(
-    "prompt_validation",
-    false,
-    "Prompt validation could not produce a complete delivery."
-  );
-}
 
 /**
  * Central state controller for one delivery.
@@ -680,7 +458,7 @@ export const datingPhotoshootOrchestrator = task({
         try {
           promptsReady = await prepareDynamicOrder({
             db,
-            order: pipelineOrder as PipelineOrder,
+            order: pipelineOrder as DynamicPipelineOrder,
             userId,
           });
           await (db as any).from("user_shoot_orders").update({
@@ -691,18 +469,23 @@ export const datingPhotoshootOrchestrator = task({
           }).eq("id", batchId);
           break;
         } catch (error) {
-          if (!(error instanceof PromptProviderFailure)) throw error;
+          if (!(error instanceof DynamicPromptPipelineFailure)) throw error;
           const exhausted = providerAttempt >= PROVIDER_RETRY_DELAYS_MINUTES.length;
           if (!error.retryable || exhausted) {
+            const failureCode = error.kind === "internal"
+              ? error.failureCode ?? "internal_prompt_pipeline"
+              : error.retryable ? "provider_retry_exhausted" : "provider_request_rejected";
             await releaseDatingOrderCredit({
               orderId: batchId,
-              failureCode: error.retryable ? "provider_retry_exhausted" : "provider_request_rejected",
+              failureCode,
               failurePhase: error.phase,
               failureMessage: `${error.safeMessage} The reserved pack was returned.`,
             });
             logger.error("Dating prompt pipeline stopped", {
               orderId: batchId,
               phase: error.phase,
+              kind: error.kind,
+              failureCode,
               retryable: error.retryable,
               exhausted,
             });

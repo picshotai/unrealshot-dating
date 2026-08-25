@@ -24,6 +24,7 @@ type AdminDb = any;
 export type PortfolioServiceResult = {
   passed: boolean;
   reservedCount: number;
+  reservationReport?: import("./store").PortfolioReservationReport;
   apiError: boolean;
   retryable: boolean;
   phase: "portfolio_generation" | "portfolio_embedding" | "portfolio_complete";
@@ -51,6 +52,7 @@ function restoreGeneration(attempt: Awaited<ReturnType<typeof loadPortfolioAttem
         problems: parsed.error.issues.map(
           (issue) => `${issue.path.join(".") || "response"}: ${issue.message}`
         ),
+        warnings: [],
       };
   return {
     output: parsed.success ? parsed.data : null,

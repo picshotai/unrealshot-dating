@@ -323,11 +323,6 @@ export async function resumeDatingShootOrder(orderId: string, userId: string) {
     .eq("order_id", orderId)
     .eq("status", "in_progress");
 
-  const { count: allocatedPhotos } = await db
-    .from("order_photos")
-    .select("id", { count: "exact", head: true })
-    .eq("order_id", orderId);
-
   const retryKey = await idempotencyKeys.create(
     `dating-resume:${order.id}:${order.updated_at}`,
     { scope: "global" }
@@ -359,13 +354,16 @@ export async function resumeDatingShootOrder(orderId: string, userId: string) {
     throw lastDispatchError ?? new Error("Retry dispatch failed.");
   }
 
-  const promptOnly = order.pipeline_mode === "dynamic" && (allocatedPhotos ?? 0) === 0;
+  const resumeStage = reservation.stage ?? (
+    order.pipeline_mode === "dynamic" ? "planning" : "rendering_photos"
+  );
+  const isRendering = resumeStage === "rendering_photos";
   await (db as any)
     .from("user_shoot_orders")
     .update({
       trigger_run_id: handle.id,
-      status: promptOnly ? "queued" : "developing",
-      pipeline_stage: promptOnly ? "writing_prompts" : "rendering_photos",
+      status: isRendering ? "developing" : "queued",
+      pipeline_stage: resumeStage,
       provider_blocked: false,
       updated_at: new Date().toISOString(),
     })

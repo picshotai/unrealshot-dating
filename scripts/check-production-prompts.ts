@@ -29,6 +29,11 @@ import {
 } from "../lib/dating/prompt-engine";
 import { getDatingProductConfig } from "../lib/dating/config";
 import { portfolioPlanningBatch } from "../lib/dating/production-prompts/store";
+import {
+  nextNoProgressCount,
+  plannerCallBudget,
+  planningHasStalled,
+} from "../lib/dating/production-prompts/planning-policy";
 
 async function main() {
 const input = customerCreativeInputSchema.parse({
@@ -122,6 +127,9 @@ assert.equal(portfolio.output.shoots.length, 20);
 const roundTrip = parsePortfolioTransport(portfolioCandidateToTransport(portfolio.output));
 assert(roundTrip.success);
 assert.deepEqual(roundTrip.data, portfolio.output);
+const longRationale = portfolioCandidateToTransport(portfolio.output);
+longRationale.portfolioRationale = "A specific portfolio explanation. ".repeat(50);
+assert(parsePortfolioTransport(longRationale).success);
 const embedded = await embedDatingSceneMeanings(
   portfolio.output.shoots.map((shoot) => shoot.noveltyFingerprint),
   mockCreativeEmbeddingCall
@@ -152,6 +160,23 @@ const duplicateValidation = validatePortfolioCandidate({
 });
 assert(!duplicateValidation.passed);
 assert(duplicateValidation.problems.some((problem) => /too similar/i.test(problem)));
+
+const historicalSimilarity = validatePortfolioCandidate({
+  output: {
+    portfolioRationale: portfolio.output.portfolioRationale,
+    shoots: [portfolio.output.shoots[0]],
+  },
+  input,
+  candidateCount: 1,
+  interestsStillNeeded: [],
+  history: [{
+    title: "Previously delivered scene",
+    canonicalSummary: portfolio.output.shoots[0].canonicalSummary,
+    noveltyFingerprint: portfolio.output.shoots[0].noveltyFingerprint,
+  }],
+});
+assert(historicalSimilarity.passed);
+assert(historicalSimilarity.warnings.some((warning) => /semantically close/i.test(warning)));
 
 const writerRequest = buildShootWriterRequest({ brief: first, input });
 assert.match(writerRequest, /LOCKED SHOOT INTENT/);
@@ -200,6 +225,14 @@ for (let missing = 1; missing <= 30; missing += 1) {
   assert(batch.candidateCount <= 8);
   assert(batch.candidateCount > batch.requestedSlots);
 }
+assert.equal(plannerCallBudget(5), 3);
+assert.equal(plannerCallBudget(15), 5);
+assert.equal(plannerCallBudget(30), 7);
+assert.equal(nextNoProgressCount(1, 0), 2);
+assert.equal(nextNoProgressCount(1, 3), 0);
+assert(planningHasStalled(3, 2));
+assert(planningHasStalled(0, 0));
+assert(!planningHasStalled(1, 1));
 
 const productionFiles = [
   "lib/dating/create-order.ts",
@@ -228,6 +261,8 @@ const createOrderSource = readFileSync(
 );
 assert.match(createOrderSource, /createReservedDatingOrder/);
 assert.match(createOrderSource, /idempotencyKeys\.create\(`dating-order:/);
+assert.match(createOrderSource, /const resumeStage = reservation\.stage/);
+assert.doesNotMatch(createOrderSource, /const promptOnly =/);
 assert.doesNotMatch(createOrderSource, /planUniqueOrderDelivery|dynamicPromptsEnabled|creative_input: \{[^}]*dress/);
 
 const productionStoreSource = readFileSync(
@@ -235,7 +270,9 @@ const productionStoreSource = readFileSync(
   "utf8"
 );
 assert.match(productionStoreSource, /MAX_PORTFOLIO_CANDIDATES_PER_CALL = 8/);
-assert.match(productionStoreSource, /previousCandidateWarnings\(last\?\.raw_output\)/);
+assert.match(productionStoreSource, /reservationFeedback\(last\?\.reservation_report/);
+assert.match(productionStoreSource, /reserve_intelligent_dating_shoots_v2/);
+assert.doesNotMatch(productionStoreSource, /previousCandidateWarnings/);
 assert.match(productionStoreSource, /provider_phase === "portfolio_embedding" && running\.raw_output/);
 assert.match(productionStoreSource, /Failed to resume portfolio embedding/);
 
@@ -272,6 +309,20 @@ assert(anchorWave >= 0 && anchorWave < anchorReread && anchorReread < followerWa
 assert.match(orchestratorSource, /toPayload\(row, anchor\?\.image_url \?\? null\)/);
 assert.match(orchestratorSource, /\[\.\.\.referenceImageUrls, anchorImageUrl as string\]/);
 assert.doesNotMatch(orchestratorSource, /datingPortfolioTask\.batchTriggerAndWait/);
+assert.match(orchestratorSource, /error\.kind === "internal"/);
+
+const promptOrchestrationSource = readFileSync(
+  resolve(process.cwd(), "trigger/dating-prompt-orchestration.ts"),
+  "utf8"
+);
+assert.match(promptOrchestrationSource, /plannerCallBudget/);
+assert.match(promptOrchestrationSource, /planningHasStalled/);
+assert.match(promptOrchestrationSource, /internal_planning_stalled/);
+assert.doesNotMatch(promptOrchestrationSource, /cycle < 16/);
+assert(
+  promptOrchestrationSource.indexOf("reserveCompletePortfolio") <
+    promptOrchestrationSource.indexOf("writeReservedPortfolio")
+);
 
 for (const removedTask of ["trigger/dating-portfolio.ts", "trigger/dating-reconcile.ts"]) {
   assert.throws(() => readFileSync(resolve(process.cwd(), removedTask), "utf8"));
@@ -303,6 +354,22 @@ assert.match(migration, /frame\.value \? 'isAnchor'/);
 assert.match(migration, /claimed\.order_id = p_order_id[\s\S]*>= 0\.82/);
 assert.match(migration, /owner_order\.user_id = v_user_id[\s\S]*>= 0\.86/);
 assert.match(migration, /nearest\.semantic_similarity >= 0\.90/);
+
+const simplifiedReservationMigration = readFileSync(
+  resolve(process.cwd(), "supabase/migrations/040_simplified_dating_idea_reservation.sql"),
+  "utf8"
+);
+assert.match(simplifiedReservationMigration, /reserve_intelligent_dating_shoots_v2/);
+assert.match(simplifiedReservationMigration, /reservation_report jsonb/);
+assert.match(simplifiedReservationMigration, /exact_complete_idea/);
+assert.match(simplifiedReservationMigration, /within_order_near_duplicate/);
+assert.match(simplifiedReservationMigration, /p_within_order_threshold real default 0\.92/);
+assert.match(simplifiedReservationMigration, /Embedding similarity is diagnostic feedback only/);
+assert.match(simplifiedReservationMigration, /'stage', v_stage/);
+assert.match(
+  simplifiedReservationMigration,
+  /count\(\*\)[\s\S]*status <> 'abandoned'\)[\s\S]*< v_order\.shoots_target[\s\S]*then 'planning'/
+);
 
 console.log("Intelligent dating portfolio and context-led writer checks passed.");
 }

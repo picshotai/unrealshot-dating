@@ -1,4 +1,5 @@
 import type { createAdminClient } from "@/utils/supabase/admin";
+import { INTEREST_IDS, type InterestId } from "@/lib/dating/types";
 
 import {
   DATING_CREATIVE_MODEL,
@@ -105,6 +106,7 @@ export type PortfolioAttemptRow = {
   };
   raw_output: unknown;
   validation_errors: string[];
+  reservation_report: PortfolioReservationReport | null;
   api_error: string | null;
   error_retryable: boolean | null;
   provider_phase: string | null;
@@ -120,6 +122,52 @@ export type PortfolioAttemptRow = {
   created_at: string;
 };
 
+export type PortfolioReservationRejection = {
+  candidateId: string;
+  fingerprint: string | null;
+  reason: "exact_complete_idea" | "within_order_near_duplicate" | "invalid_candidate";
+  conflictingShootId: string | null;
+  similarity?: number;
+};
+
+export type PortfolioSemanticWarning = {
+  candidateId: string;
+  scope: "same_order" | "repeat_customer" | "global";
+  nearestShootId: string;
+  similarity: number;
+};
+
+export type PortfolioReservationReport = {
+  acceptedCount: number;
+  acceptedCandidateIds: string[];
+  rejected: PortfolioReservationRejection[];
+  semanticWarnings: PortfolioSemanticWarning[];
+  plannerWarnings?: string[];
+};
+
+const EMPTY_RESERVATION_REPORT: PortfolioReservationReport = {
+  acceptedCount: 0,
+  acceptedCandidateIds: [],
+  rejected: [],
+  semanticWarnings: [],
+};
+
+export function representedInterestsOfBrief(brief: unknown): InterestId[] {
+  if (!brief || typeof brief !== "object") return [];
+  const value = brief as {
+    representedInterests?: unknown;
+    representedInterest?: unknown;
+  };
+  const candidates = Array.isArray(value.representedInterests)
+    ? value.representedInterests
+    : value.representedInterest ? [value.representedInterest] : [];
+  return candidates.filter(
+    (interest): interest is InterestId =>
+      typeof interest === "string" &&
+      (INTEREST_IDS as readonly string[]).includes(interest)
+  );
+}
+
 function historyItem(row: any): PortfolioHistoryItem | null {
   const fingerprint = String(row.novelty_fingerprint ?? "").trim();
   if (!fingerprint) return null;
@@ -130,22 +178,16 @@ function historyItem(row: any): PortfolioHistoryItem | null {
   };
 }
 
-function previousCandidateWarnings(rawOutput: unknown): string[] {
-  if (!rawOutput || typeof rawOutput !== "object") return [];
-  const shoots = (rawOutput as { shoots?: unknown }).shoots;
-  if (!Array.isArray(shoots)) return [];
-  const fingerprints = shoots.flatMap((shoot) => {
-    if (!shoot || typeof shoot !== "object") return [];
-    const fingerprint = String(
-      (shoot as { noveltyFingerprint?: unknown }).noveltyFingerprint ?? ""
-    ).trim();
-    return fingerprint ? [fingerprint] : [];
-  });
-  if (fingerprints.length === 0) return [];
-  return [
-    "The global uniqueness registry could not fill every slot from the previous candidate set. Do not resubmit any of these fingerprints; invent semantically different life moments:",
-    ...fingerprints.map((fingerprint) => `- ${fingerprint}`),
-  ];
+function reservationFeedback(report: PortfolioReservationReport | null | undefined): string[] {
+  if (!report) return [];
+  const rejected = report.rejected.map((item) =>
+    `Rejected ${item.candidateId} (${item.reason}): ${item.fingerprint ?? "missing fingerprint"}`
+  );
+  const warnings = report.semanticWarnings.map((item) =>
+    `Advisory only: ${item.candidateId} was semantically close to a ${item.scope} scene ` +
+    `(score ${item.similarity.toFixed(3)}). Broaden the remaining candidates without repeating accepted work.`
+  );
+  return [...rejected, ...warnings, ...(report.plannerWarnings ?? [])];
 }
 
 export async function loadProductionShoots(db: AdminDb, orderId: string) {
@@ -263,7 +305,7 @@ export async function startPortfolioAttempt(args: {
     globalHistory: histories.globalHistory,
     retryProblems: [
       ...((last?.validation_errors ?? []) as string[]),
-      ...previousCandidateWarnings(last?.raw_output),
+      ...reservationFeedback(last?.reservation_report as PortfolioReservationReport | null),
     ],
   };
   const { data, error } = await raw.from("dating_portfolio_attempts").insert({
@@ -306,7 +348,7 @@ export async function finishPortfolioAttempt(args: {
   generation: {
     output: PortfolioCandidate | null;
     rawOutput: unknown;
-    validation: { passed: boolean; problems: string[] };
+    validation: { passed: boolean; problems: string[]; warnings: string[] };
     usage: { inputTokens: number; outputTokens: number; reasoningTokens: number; totalTokens: number };
     estimatedCostUsd: number;
     pricingSnapshot: unknown;
@@ -317,6 +359,10 @@ export async function finishPortfolioAttempt(args: {
 }) {
   const raw = args.db as any;
   let reservedCount = 0;
+  let reservationReport: PortfolioReservationReport = {
+    ...EMPTY_RESERVATION_REPORT,
+    plannerWarnings: args.generation.validation.warnings,
+  };
   if (args.generation.validation.passed && args.generation.output) {
     const needed = new Set(args.attempt.request_snapshot.interestsStillNeeded);
     const orderedShoots = [...args.generation.output.shoots].sort((left, right) =>
@@ -337,20 +383,33 @@ export async function finishPortfolioAttempt(args: {
         brief,
       };
     });
-    const { data, error } = await raw.rpc("reserve_intelligent_dating_shoots", {
+    const { data, error } = await raw.rpc("reserve_intelligent_dating_shoots_v2", {
       p_order_id: args.attempt.order_id,
       p_planner_attempt_id: args.attempt.id,
       p_candidates: candidates,
-      p_similarity_threshold: 0.68,
+      p_within_order_threshold: 0.92,
     });
     if (error) throw new Error(`Failed to reserve intelligent scenes: ${error.message}`);
-    reservedCount = Number(data ?? 0);
+    const report = data && typeof data === "object"
+      ? data as PortfolioReservationReport
+      : EMPTY_RESERVATION_REPORT;
+    reservationReport = {
+      acceptedCount: Number(report.acceptedCount ?? 0),
+      acceptedCandidateIds: Array.isArray(report.acceptedCandidateIds)
+        ? report.acceptedCandidateIds
+        : [],
+      rejected: Array.isArray(report.rejected) ? report.rejected : [],
+      semanticWarnings: Array.isArray(report.semanticWarnings) ? report.semanticWarnings : [],
+      plannerWarnings: args.generation.validation.warnings,
+    };
+    reservedCount = reservationReport.acceptedCount;
   }
   const status = args.generation.validation.passed ? "passed" : "failed_validation";
   const { error } = await raw.from("dating_portfolio_attempts").update({
     status,
     raw_output: args.generation.rawOutput,
     validation_errors: args.generation.validation.problems,
+    reservation_report: reservationReport,
     reserved_count: reservedCount,
     input_tokens: args.generation.usage.inputTokens,
     output_tokens: args.generation.usage.outputTokens,
@@ -372,7 +431,11 @@ export async function finishPortfolioAttempt(args: {
   if (error) throw new Error(`Failed to complete portfolio attempt: ${error.message}`);
   await raw.from("user_shoot_orders").update({ provider_blocked: false })
     .eq("id", args.attempt.order_id);
-  return { passed: args.generation.validation.passed, reservedCount };
+  return {
+    passed: args.generation.validation.passed,
+    reservedCount,
+    reservationReport,
+  };
 }
 
 export async function failPortfolioAttempt(args: {

@@ -4,11 +4,12 @@ import { EXCLUDABLE_TAGS, INTEREST_IDS } from "@/lib/dating/types";
 
 export const DATING_CREATIVE_MODEL = "gemini-3.7-flash" as const;
 export const DATING_CREATIVE_THINKING_LEVEL = "low" as const;
-export const PORTFOLIO_SYSTEM_VERSION = "dating-portfolio-director-v1" as const;
+export const PORTFOLIO_SYSTEM_VERSION = "dating-portfolio-director-v2" as const;
 export const SHOOT_WRITER_SYSTEM_VERSION = "dating-shoot-writer-v6" as const;
 
 const conciseText = (minimum: number, maximum: number) =>
   z.string().trim().min(minimum).max(maximum);
+const diagnosticText = (minimum: number) => z.string().trim().min(minimum);
 
 export const customerCreativeInputSchema = z.object({
   interests: z.array(z.enum(INTEREST_IDS)).min(1).max(6),
@@ -51,17 +52,17 @@ export const datingShootIntentSchema = z.object({
     formatGuidance: conciseText(12, 240),
   }).strict(),
   qualityProof: z.object({
-    provenanceTest: conciseText(20, 400),
-    datingDesirabilityTest: conciseText(20, 400),
-    nonStagingTest: conciseText(20, 400),
-    wardrobeLogic: conciseText(20, 400),
-    continuityRiskAndPrevention: conciseText(25, 500),
-    fourFrameDistinctness: conciseText(25, 500),
+    provenanceTest: diagnosticText(20),
+    datingDesirabilityTest: diagnosticText(20),
+    nonStagingTest: diagnosticText(20),
+    wardrobeLogic: diagnosticText(20),
+    continuityRiskAndPrevention: diagnosticText(25),
+    fourFrameDistinctness: diagnosticText(25),
   }).strict(),
 }).strict();
 
 export const portfolioCandidateSchema = z.object({
-  portfolioRationale: conciseText(20, 700),
+  portfolioRationale: diagnosticText(20),
   shoots: z.array(datingShootIntentSchema).min(1).max(40),
 }).strict();
 
