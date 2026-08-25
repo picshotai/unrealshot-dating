@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { SHOOT_BY_ID } from "@/lib/dating/shoots";
 import { lineupRoleFor, LINEUP_HINTS, LINEUP_LABELS } from "@/lib/dating/roles";
+import { releaseDatingOrderCredit } from "@/lib/dating/credits-gate";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+
+const RETRY_WAKE_GRACE_MS = 5 * 60 * 1000;
 
 function isMissingPipelineColumn(error: { code?: string; message?: string } | null) {
   return error?.code === "42703" ||
@@ -42,6 +45,24 @@ function customerSafeFailureMessage(message: string | null | undefined, creditRe
     return fallback;
   }
   return message;
+}
+
+function hasExpiredRetryLease(order: {
+  status?: string | null;
+  pipeline_mode?: string | null;
+  pipeline_stage?: string | null;
+  credit_state?: string | null;
+  next_retry_at?: string | null;
+}) {
+  if (
+    order.status !== "queued" ||
+    order.pipeline_mode !== "dynamic" ||
+    order.pipeline_stage !== "attention_required" ||
+    order.credit_state !== "reserved" ||
+    !order.next_retry_at
+  ) return false;
+  const retryAt = Date.parse(order.next_retry_at);
+  return Number.isFinite(retryAt) && Date.now() > retryAt + RETRY_WAKE_GRACE_MS;
 }
 
 export async function GET(request: NextRequest) {
@@ -139,6 +160,37 @@ export async function GET(request: NextRequest) {
       { error: orderErr?.code === "PGRST116" ? "Order not found" : "Failed to load order" },
       { status: orderErr?.code === "PGRST116" ? 404 : 500 }
     );
+  }
+
+  // A retry timestamp is a short lease, not proof that a Trigger run still
+  // exists. If the worker never clears it after its wake deadline, fail the
+  // orphaned order and release the pack instead of animating forever.
+  if (hasExpiredRetryLease(order)) {
+    try {
+      const released = await releaseDatingOrderCredit({
+        orderId,
+        failureCode: "orphaned_provider_retry",
+        failurePhase: "prompt_generation",
+        failureMessage: "We couldn't start this shoot. Your reserved pack was returned.",
+      });
+      order = {
+        ...order,
+        status: "failed",
+        pipeline_stage: "failed",
+        provider_blocked: true,
+        credit_state: released.creditState,
+        failure_code: "orphaned_provider_retry",
+        failure_phase: "prompt_generation",
+        failure_message: "We couldn't start this shoot. Your reserved pack was returned.",
+        failed_at: new Date().toISOString(),
+        next_retry_at: null,
+      };
+    } catch (releaseError) {
+      console.error("dating run status: stale retry cleanup failed", {
+        orderId,
+        message: releaseError instanceof Error ? releaseError.message : String(releaseError),
+      });
+    }
   }
 
   let { data: photos, error: photosError } = await supabase

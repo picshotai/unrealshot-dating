@@ -315,6 +315,8 @@ assert.match(runStatusSource, /retrying automatically/);
 assert.match(runStatusSource, /Shoot stopped — your pack was returned/);
 assert.match(runStatusSource, /customerSafeFailureMessage/);
 assert.match(runStatusSource, /gemini\|provider\|api/);
+assert.match(runStatusSource, /hasExpiredRetryLease/);
+assert.match(runStatusSource, /orphaned_provider_retry/);
 
 const orchestratorSource = readFileSync(
   resolve(process.cwd(), "trigger/dating-shoot.ts"),
