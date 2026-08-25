@@ -1,5 +1,3 @@
-import { GoogleGenAI, ThinkingLevel } from "@google/genai";
-
 import { estimatePromptLabCost, getPromptLabPricing, type PromptLabUsage } from "./cost";
 import { buildPromptLabRequest, type RetryContext } from "./prompt";
 import type { PromptLabPlan } from "./planner";
@@ -15,6 +13,10 @@ import {
 import { DATING_SCENE_SYSTEM_INSTRUCTION } from "./system-instruction";
 import { validatePromptLabOutput, type PromptLabValidation } from "./validate";
 import type { DatingSceneBrief } from "@/lib/dating/scene-recipes/types";
+import {
+  callDatingCreativeModel,
+  SHOOT_MAX_OUTPUT_TOKENS,
+} from "@/lib/dating/creative-director/model";
 
 export type ModelResponse = {
   text: string;
@@ -42,30 +44,16 @@ function emptyUsage(): PromptLabUsage {
 }
 
 async function callGemini(request: Parameters<PromptLabModelCall>[0]): Promise<ModelResponse> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) throw new Error("GEMINI_API_KEY is not configured.");
-
-  const client = new GoogleGenAI({ apiKey });
-  const response = await client.models.generateContent({
+  const response = await callDatingCreativeModel({
     model: request.model,
     contents: request.contents,
-    config: {
-      systemInstruction: request.systemInstruction,
-      maxOutputTokens: 8192,
-      responseMimeType: "application/json",
-      responseJsonSchema: request.responseJsonSchema,
-      thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
-    },
+    systemInstruction: request.systemInstruction,
+    responseJsonSchema: request.responseJsonSchema,
+    maxOutputTokens: SHOOT_MAX_OUTPUT_TOKENS,
   });
-  const usage = response.usageMetadata;
   return {
-    text: response.text || "",
-    usage: {
-      inputTokens: usage?.promptTokenCount ?? 0,
-      outputTokens: usage?.candidatesTokenCount ?? 0,
-      reasoningTokens: usage?.thoughtsTokenCount ?? 0,
-      totalTokens: usage?.totalTokenCount ?? 0,
-    },
+    text: response.text,
+    usage: response.usage,
   };
 }
 

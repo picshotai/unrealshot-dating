@@ -1,4 +1,10 @@
-import { idempotencyKeys, logger, task } from "@trigger.dev/sdk";
+import {
+  AbortTaskRunError,
+  idempotencyKeys,
+  logger,
+  task,
+  wait,
+} from "@trigger.dev/sdk";
 import { fal } from "@fal-ai/client";
 import { putR2Object } from "@/lib/r2";
 import {
@@ -24,12 +30,13 @@ import {
 import { SHOOT_BY_ID } from "@/lib/dating/shoots";
 import { selectSampleShootIds } from "@/lib/dating/sample-selection";
 import { generateDatingShootPrompts } from "@/trigger/dating-prompt";
-import { generateDatingPortfolio } from "@/trigger/dating-portfolio";
 import {
   ensureProductionAttempt,
   loadProductionShoots,
   startPortfolioAttempt,
 } from "@/lib/dating/production-prompts/store";
+import { executePortfolioAttempt } from "@/lib/dating/production-prompts/portfolio-service";
+import { releaseDatingOrderCredit } from "@/lib/dating/credits-gate";
 import {
   customerCreativeInputSchema,
   datingShootIntentSchema,
@@ -418,6 +425,19 @@ type PipelineOrder = {
   } | null;
 };
 
+class PromptProviderFailure extends Error {
+  constructor(
+    readonly phase: string,
+    readonly retryable: boolean,
+    readonly safeMessage: string
+  ) {
+    super(safeMessage);
+    this.name = "PromptProviderFailure";
+  }
+}
+
+const PROVIDER_RETRY_DELAYS_MINUTES = [1, 5, 15] as const;
+
 async function prepareDynamicOrder(args: {
   db: ReturnType<typeof getServiceDb>;
   order: PipelineOrder;
@@ -431,7 +451,7 @@ async function prepareDynamicOrder(args: {
   });
 
   // One parent run can normally resolve all validation revisions. A provider
-  // outage exits early and lets Trigger/reconciliation supply the backoff.
+  // outage exits early and lets this parent run supply checkpointed backoff.
   for (let cycle = 0; cycle < 16; cycle += 1) {
     let shoots = await loadProductionShoots(raw, args.order.id);
     const unfinishedLegacyShoots = shoots.filter(
@@ -464,29 +484,17 @@ async function prepareDynamicOrder(args: {
         input: creativeInput,
       });
       if (!planningAttempt) continue;
-      const planningResult = await generateDatingPortfolio.batchTriggerAndWait([{
-        payload: {
-          orderId: args.order.id,
-          attemptNumber: planningAttempt.attempt_number,
-        },
-        options: {
-          idempotencyKey: await idempotencyKeys.create(
-            `dating-portfolio:${planningAttempt.id}`,
-            { scope: "global" }
-          ),
-          idempotencyKeyTTL: "30d" as const,
-        },
-      }]);
-      const run = planningResult.runs[0] as any;
-      if (!run?.ok || run.output?.apiError) {
-        const retryable = !run?.ok || run.output?.retryable !== false;
-        await raw.from("user_shoot_orders").update({
-          pipeline_stage: "attention_required",
-          provider_blocked: !retryable,
-          updated_at: new Date().toISOString(),
-        }).eq("id", args.order.id);
-        if (!retryable) return false;
-        throw new Error(`Portfolio direction is temporarily delayed for order ${args.order.id}.`);
+      const planningResult = await executePortfolioAttempt({
+        db: raw,
+        orderId: args.order.id,
+        attemptNumber: planningAttempt.attempt_number,
+      });
+      if (planningResult.apiError) {
+        throw new PromptProviderFailure(
+          planningResult.phase,
+          planningResult.retryable,
+          planningResult.safeMessage ?? "Gemini portfolio planning failed."
+        );
       }
       shoots = await loadProductionShoots(raw, args.order.id);
     }
@@ -511,7 +519,11 @@ async function prepareDynamicOrder(args: {
           ))
       );
       if (replaceable.length < uncovered.length) {
-        throw new Error(`Portfolio cannot preserve the selected activity promises for order ${args.order.id}.`);
+        throw new PromptProviderFailure(
+          "portfolio_validation",
+          false,
+          "The planner could not preserve every selected activity in a valid portfolio."
+        );
       }
       await raw.from("dating_order_shoots").update({
         status: "replanning", updated_at: new Date().toISOString(),
@@ -539,7 +551,11 @@ async function prepareDynamicOrder(args: {
       (shoot) => shoot.status === "reserved" || shoot.status === "generating"
     );
     if (runnable.length === 0) {
-      throw new Error(`Dynamic order ${args.order.id} has no runnable prompt slots.`);
+      throw new PromptProviderFailure(
+        "prompt_validation",
+        false,
+        "The saved shoot ideas could not be completed into valid prompts."
+      );
     }
     const attempts = await Promise.all(
       runnable.map((shoot) => ensureProductionAttempt(raw, shoot, creativeInput))
@@ -561,33 +577,42 @@ async function prepareDynamicOrder(args: {
       }))
     );
     const results = await generateDatingShootPrompts.batchTriggerAndWait(items);
-    const taskFailed = results.runs.some((run: any) => !run.ok);
-    const providerFailed = results.runs.some(
-      (run: any) => run.ok && run.output?.apiError
+    const failedAttemptIds = results.runs.flatMap((run: any, index) =>
+      run.ok ? [] : [attempts[index].id]
     );
-    if (taskFailed || providerFailed) {
-      const permanentlyRejected = results.runs.some(
-        (run: any) => run.ok && run.output?.apiError && run.output?.retryable === false
-      );
-      await raw.from("user_shoot_orders").update({
-        pipeline_stage: "attention_required",
-        provider_blocked: permanentlyRejected,
-        updated_at: new Date().toISOString(),
-      }).eq("id", args.order.id);
-      if (permanentlyRejected) return false;
-      throw new Error(
-        providerFailed
-          ? `Gemini is temporarily unavailable for order ${args.order.id}.`
-          : `Prompt persistence needs reconciliation for order ${args.order.id}.`
+    if (failedAttemptIds.length > 0) {
+      const { data: failedRows, error: failedRowsError } = await raw
+        .from("dating_prompt_attempts")
+        .select("id, status, api_error, error_retryable, provider_phase")
+        .in("id", failedAttemptIds);
+      if (failedRowsError) {
+        throw new Error(`Prompt failure audit failed: ${failedRowsError.message}`);
+      }
+      const providerRows = (failedRows ?? []).filter((row: any) => row.status === "api_error");
+      if (providerRows.length !== failedAttemptIds.length) {
+        throw new Error(`Prompt persistence failed for order ${args.order.id}.`);
+      }
+      const permanent = providerRows.find((row: any) => row.error_retryable === false);
+      const representative = permanent ?? providerRows[0];
+      logger.error("Dating prompt provider phase failed", {
+        orderId: args.order.id,
+        phase: representative?.provider_phase,
+        diagnostic: representative?.api_error,
+        retryable: !permanent,
+      });
+      throw new PromptProviderFailure(
+        representative?.provider_phase ?? "shoot_generation",
+        !permanent,
+        "Gemini could not complete shoot prompt generation."
       );
     }
   }
 
-  await raw.from("user_shoot_orders").update({
-    pipeline_stage: "attention_required",
-    updated_at: new Date().toISOString(),
-  }).eq("id", args.order.id);
-  throw new Error(`Prompt preparation needs another pass for order ${args.order.id}.`);
+  throw new PromptProviderFailure(
+    "prompt_validation",
+    false,
+    "Prompt validation could not produce a complete delivery."
+  );
 }
 
 /**
@@ -606,7 +631,9 @@ async function prepareDynamicOrder(args: {
 export const datingPhotoshootOrchestrator = task({
   id: "dating-photoshoot-orchestrator",
   retry: {
-    maxAttempts: 5,
+    // Provider backoff is checkpointed below. Task retries are only for
+    // infrastructure/persistence crashes that never reached that boundary.
+    maxAttempts: 3,
     factor: 2,
     minTimeoutInMs: 5_000,
     maxTimeoutInMs: 60_000,
@@ -623,27 +650,82 @@ export const datingPhotoshootOrchestrator = task({
 
     const { data: pipelineOrder, error: pipelineOrderError } = await (db as any)
       .from("user_shoot_orders")
-      .select("id, pipeline_mode, pipeline_stage, shoots_target, creative_input")
+      .select("id, status, pipeline_mode, pipeline_stage, shoots_target, creative_input, credit_state")
       .eq("id", batchId)
       .single();
     if (pipelineOrderError || !pipelineOrder) {
       throw new Error(`Order ${batchId} is unavailable: ${pipelineOrderError?.message}`);
     }
+    if (pipelineOrder.status === "failed" || pipelineOrder.credit_state === "released") {
+      throw new AbortTaskRunError(`Order ${batchId} is terminal and cannot continue.`);
+    }
 
     if (!referenceImageUrls?.length) {
+      if (pipelineOrder.pipeline_mode === "dynamic") {
+        await releaseDatingOrderCredit({
+          orderId: batchId,
+          failureCode: "missing_references",
+          failurePhase: "identity_references",
+          failureMessage: "The identity references are unavailable. The reserved pack was returned.",
+        });
+        throw new AbortTaskRunError("No usable identity references.");
+      }
       await markOrder(db, batchId, "failed");
-      throw new Error("No reference images");
+      throw new AbortTaskRunError("No reference images");
     }
 
     if (pipelineOrder.pipeline_mode === "dynamic") {
-      const promptsReady = await prepareDynamicOrder({
-        db,
-        order: pipelineOrder as PipelineOrder,
-        userId,
-      });
-      if (!promptsReady) {
-        return { batchId, status: "attention_required", providerBlocked: true };
+      let promptsReady = false;
+      for (let providerAttempt = 0; providerAttempt <= PROVIDER_RETRY_DELAYS_MINUTES.length; providerAttempt += 1) {
+        try {
+          promptsReady = await prepareDynamicOrder({
+            db,
+            order: pipelineOrder as PipelineOrder,
+            userId,
+          });
+          await (db as any).from("user_shoot_orders").update({
+            provider_blocked: false,
+            provider_retry_count: 0,
+            next_retry_at: null,
+            updated_at: new Date().toISOString(),
+          }).eq("id", batchId);
+          break;
+        } catch (error) {
+          if (!(error instanceof PromptProviderFailure)) throw error;
+          const exhausted = providerAttempt >= PROVIDER_RETRY_DELAYS_MINUTES.length;
+          if (!error.retryable || exhausted) {
+            await releaseDatingOrderCredit({
+              orderId: batchId,
+              failureCode: error.retryable ? "provider_retry_exhausted" : "provider_request_rejected",
+              failurePhase: error.phase,
+              failureMessage: `${error.safeMessage} The reserved pack was returned.`,
+            });
+            logger.error("Dating prompt pipeline stopped", {
+              orderId: batchId,
+              phase: error.phase,
+              retryable: error.retryable,
+              exhausted,
+            });
+            throw new AbortTaskRunError(error.safeMessage);
+          }
+
+          const minutes = PROVIDER_RETRY_DELAYS_MINUTES[providerAttempt];
+          const nextRetryAt = new Date(Date.now() + minutes * 60_000).toISOString();
+          await (db as any).from("user_shoot_orders").update({
+            pipeline_stage: "attention_required",
+            provider_blocked: false,
+            provider_retry_count: providerAttempt + 1,
+            next_retry_at: nextRetryAt,
+            updated_at: new Date().toISOString(),
+          }).eq("id", batchId);
+          await wait.for({
+            minutes,
+            idempotencyKey: `dating-provider-wait:${batchId}:${providerAttempt + 1}`,
+            idempotencyKeyTTL: "30d",
+          });
+        }
       }
+      if (!promptsReady) throw new Error(`Prompt preparation did not complete for ${batchId}.`);
     }
 
     const photoRows = await loadPhotoRows(db, batchId);
@@ -981,16 +1063,14 @@ async function finalizeBatch(
   });
 
   if (pipelineMode === "dynamic" && undelivered > 0) {
-    await (db as any)
-      .from("user_shoot_orders")
-      .update({
-        status: "developing",
-        pipeline_stage: "attention_required",
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", batchId);
-    throw new Error(
-      `Dynamic batch ${batchId} is incomplete (${completed}/${rows.length}); it remains retryable.`
+    await releaseDatingOrderCredit({
+      orderId: batchId,
+      failureCode: "image_delivery_incomplete",
+      failurePhase: "fal_rendering",
+      failureMessage: "The complete shoot could not be delivered. The reserved pack was returned.",
+    });
+    throw new AbortTaskRunError(
+      `Dynamic batch ${batchId} is incomplete (${completed}/${rows.length}).`
     );
   }
 
@@ -1052,15 +1132,18 @@ async function finalizeBatch(
   }
 
   // All children OK
-  await db
-    .from("user_shoot_orders")
-    .update({
-      status: "ready",
-      ...(pipelineMode === "dynamic" ? { pipeline_stage: "ready" } : {}),
-      ready_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", batchId);
+  if (pipelineMode === "dynamic") {
+    await (db as any).rpc("capture_dating_order_credit", { p_order_id: batchId });
+  } else {
+    await db
+      .from("user_shoot_orders")
+      .update({
+        status: "ready",
+        ready_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", batchId);
+  }
 
   logger.info("Batch complete — ready for delivery", { batchId, completed });
 

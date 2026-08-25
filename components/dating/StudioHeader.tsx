@@ -32,6 +32,9 @@ interface StudioHeaderProps {
     stageLabel?: string;
     providerBlocked?: boolean;
     needsAttention?: boolean;
+    failed?: boolean;
+    creditState?: 'legacy' | 'reserved' | 'captured' | 'released';
+    retryAvailable?: boolean;
   } | null;
   onOpenNewShoot: () => void;
   /**
@@ -67,6 +70,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
     status?.orderStatus === 'ready' || status?.orderStatus === 'partial_failed';
   const isProviderBlocked = Boolean(status?.providerBlocked);
   const isPaused = Boolean(status?.needsAttention);
+  const isFailed = Boolean(status?.failed);
 
   const avatarUrl = currentModel?.samples?.[0]?.uri || '/placeholder-user.jpg';
 
@@ -97,7 +101,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
                 <div className="flex items-center gap-1.5">
                   {isReady ? (
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" strokeWidth={2.5} />
-                  ) : isProviderBlocked || isPaused ? (
+                  ) : isFailed || isProviderBlocked || isPaused ? (
                     <AlertCircle className="w-3.5 h-3.5 text-amber-500" />
                   ) : isDeveloping ? (
                     <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-500" />
@@ -107,6 +111,8 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
                   <span className="text-xs font-medium text-zinc-400">
                     {isReady
                       ? 'Ready'
+                      : isFailed
+                      ? status.stageLabel || 'Shoot stopped'
                       : isDeveloping
                       ? status.stageLabel || `${status.progressPercent}%`
                       : status.orderStatus}
@@ -120,7 +126,11 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
                 <>
                   {status.completed} / {status.total} photos ·{' '}
                   <span className="text-accent">
-                    {status.customCreditsRemaining} reshoots left
+                    {status.creditState === 'reserved'
+                      ? '1 pack reserved for this shoot'
+                      : status.creditState === 'released'
+                        ? 'pack returned'
+                        : `${status.customCreditsRemaining} reshoots left`}
                   </span>
                 </>
               ) : (
@@ -133,7 +143,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
         {/* Right Side: Action Controls (Aligned with rounded-lg) */}
         <div className="flex items-center gap-2 w-full sm:w-auto">
           {/* Failed Retry (if any failed) */}
-          {status && (status.failedCount > 0 || status.needsAttention) && (
+          {status && (status.retryAvailable || status.failedCount > 0 || status.needsAttention) && (
             <Button
               variant="outline"
               size="sm"
@@ -146,7 +156,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
                   isRetryLoading ? 'animate-spin' : ''
                 }`}
               />
-              {status.failedCount > 0 ? `Retry ${status.failedCount} Failed` : 'Retry setup'}
+              {status.failed ? 'Retry shoot' : status.failedCount > 0 ? `Retry ${status.failedCount} Failed` : 'Retry setup'}
             </Button>
           )}
 

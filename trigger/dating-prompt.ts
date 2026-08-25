@@ -1,4 +1,4 @@
-import { logger, task } from "@trigger.dev/sdk";
+import { AbortTaskRunError, logger, task } from "@trigger.dev/sdk";
 
 import { getServiceDb } from "@/lib/dating/db";
 import { getDatingProductConfig } from "@/lib/dating/config";
@@ -46,12 +46,17 @@ export const generateDatingShootPrompts = task({
       payload.attemptNumber
     );
     if (attempt.status !== "running") {
+      if (attempt.status === "api_error") {
+        const message = attempt.api_error ?? "Gemini prompt generation failed.";
+        if (attempt.error_retryable === false) throw new AbortTaskRunError(message);
+        throw new Error(message);
+      }
       return {
         orderShootId: payload.orderShootId,
         attemptNumber: payload.attemptNumber,
         passed: attempt.status === "passed",
         replanning: false,
-        apiError: attempt.status === "api_error",
+        apiError: false,
         retryable: attempt.error_retryable ?? true,
       };
     }
@@ -79,19 +84,16 @@ export const generateDatingShootPrompts = task({
         attempt,
         safeError: failure.diagnostic,
         retryable: failure.retryable,
+        phase: "shoot_generation",
+        httpStatus: failure.status,
       });
       logger.error("Production dating prompt provider error", {
         orderShootId: payload.orderShootId,
         attemptNumber: payload.attemptNumber,
         ...failure,
       });
-      return {
-        ...payload,
-        passed: false,
-        replanning: false,
-        apiError: true,
-        retryable: failure.retryable,
-      };
+      if (!failure.retryable) throw new AbortTaskRunError(failure.safeMessage);
+      throw new Error(failure.safeMessage);
     }
 
     // Persistence failures are task failures, not provider failures. Keeping

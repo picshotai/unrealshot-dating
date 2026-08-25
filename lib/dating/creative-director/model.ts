@@ -1,4 +1,4 @@
-import { GoogleGenAI, ThinkingLevel } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 
 import {
   estimateDatingPromptCost,
@@ -10,6 +10,7 @@ import { DATING_CREATIVE_MODEL } from "./schemas";
 export type CreativeModelResponse = {
   text: string;
   usage: PromptUsage;
+  interactionId: string | null;
 };
 
 export type CreativeModelCall = (request: {
@@ -17,10 +18,57 @@ export type CreativeModelCall = (request: {
   contents: string;
   systemInstruction: string;
   responseJsonSchema: unknown;
+  maxOutputTokens?: number;
 }) => Promise<CreativeModelResponse>;
+
+export const DATING_PROVIDER_REQUEST_VERSION = "gemini-interactions-v1" as const;
+export const PORTFOLIO_MAX_OUTPUT_TOKENS = 32_768 as const;
+export const SHOOT_MAX_OUTPUT_TOKENS = 16_384 as const;
 
 export const DATING_EMBEDDING_MODEL = "gemini-embedding-001" as const;
 export const DATING_EMBEDDING_DIMENSIONS = 768 as const;
+
+export function buildDatingInteractionRequest(
+  request: Parameters<CreativeModelCall>[0]
+) {
+  return {
+    model: request.model,
+    input: request.contents,
+    system_instruction: request.systemInstruction,
+    store: false,
+    generation_config: {
+      thinking_level: "low" as const,
+      max_output_tokens: request.maxOutputTokens ?? SHOOT_MAX_OUTPUT_TOKENS,
+    },
+    response_format: {
+      type: "text" as const,
+      mime_type: "application/json",
+      schema: request.responseJsonSchema,
+    },
+  };
+}
+
+export function extractDatingInteractionResponse(response: {
+  id?: string | null;
+  output_text?: string | null;
+  usage?: {
+    total_input_tokens?: number | null;
+    total_output_tokens?: number | null;
+    total_thought_tokens?: number | null;
+    total_tokens?: number | null;
+  } | null;
+}): CreativeModelResponse {
+  return {
+    text: response.output_text || "",
+    usage: {
+      inputTokens: response.usage?.total_input_tokens ?? 0,
+      outputTokens: response.usage?.total_output_tokens ?? 0,
+      reasoningTokens: response.usage?.total_thought_tokens ?? 0,
+      totalTokens: response.usage?.total_tokens ?? 0,
+    },
+    interactionId: response.id ?? null,
+  };
+}
 
 export type CreativeEmbeddingResponse = {
   vectors: number[][];
@@ -38,27 +86,10 @@ export async function callDatingCreativeModel(
   if (!apiKey) throw new Error("GEMINI_API_KEY is not configured.");
 
   const client = new GoogleGenAI({ apiKey });
-  const response = await client.models.generateContent({
-    model: request.model,
-    contents: request.contents,
-    config: {
-      systemInstruction: request.systemInstruction,
-      maxOutputTokens: 8192,
-      responseMimeType: "application/json",
-      responseJsonSchema: request.responseJsonSchema,
-      thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
-    },
-  });
-  const usage = response.usageMetadata;
-  return {
-    text: response.text || "",
-    usage: {
-      inputTokens: usage?.promptTokenCount ?? 0,
-      outputTokens: usage?.candidatesTokenCount ?? 0,
-      reasoningTokens: usage?.thoughtsTokenCount ?? 0,
-      totalTokens: usage?.totalTokenCount ?? 0,
-    },
-  };
+  const response = await client.interactions.create(
+    buildDatingInteractionRequest(request)
+  );
+  return extractDatingInteractionResponse(response);
 }
 
 function unitNormalize(values: readonly number[]): number[] {

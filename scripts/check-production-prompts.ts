@@ -6,6 +6,7 @@ import {
   ANCHOR_REFERENCE_SENTENCE,
   buildPortfolioRequest,
   buildShootWriterRequest,
+  buildDatingInteractionRequest,
   classifyCreativeProviderError,
   customerCreativeInputSchema,
   embedDatingSceneMeanings,
@@ -13,6 +14,10 @@ import {
   generateShootCandidate,
   noveltyIdeaKey,
   noveltySimilarity,
+  extractDatingInteractionResponse,
+  portfolioCandidateToTransport,
+  portfolioJsonSchema,
+  parsePortfolioTransport,
   validatePortfolioCandidate,
   validateShootOutput,
   type DatingShootIntent,
@@ -43,6 +48,46 @@ const outageFailure = classifyCreativeProviderError(
 );
 assert.equal(outageFailure.retryable, true);
 
+const providerSchema = portfolioJsonSchema(7);
+assert.equal(providerSchema.properties.shoots.minItems, 7);
+assert.equal(providerSchema.properties.shoots.maxItems, 7);
+const interactionRequest = buildDatingInteractionRequest({
+  model: "gemini-3.7-flash",
+  contents: "customer input",
+  systemInstruction: "system instruction",
+  responseJsonSchema: providerSchema,
+  maxOutputTokens: 32_768,
+});
+assert.deepEqual(interactionRequest, {
+  model: "gemini-3.7-flash",
+  input: "customer input",
+  system_instruction: "system instruction",
+  store: false,
+  generation_config: { thinking_level: "low", max_output_tokens: 32_768 },
+  response_format: { type: "text", mime_type: "application/json", schema: providerSchema },
+});
+const serializedInteractionRequest = JSON.stringify(interactionRequest);
+for (const forbidden of ["temperature", "top_p", "topP", "response_mime_type", "models/"]) {
+  assert(!serializedInteractionRequest.includes(forbidden), `forbidden provider field: ${forbidden}`);
+}
+assert.deepEqual(
+  extractDatingInteractionResponse({
+    id: "interaction-1",
+    output_text: '{"ok":true}',
+    usage: {
+      total_input_tokens: 11,
+      total_output_tokens: 7,
+      total_thought_tokens: 3,
+      total_tokens: 21,
+    },
+  }),
+  {
+    interactionId: "interaction-1",
+    text: '{"ok":true}',
+    usage: { inputTokens: 11, outputTokens: 7, reasoningTokens: 3, totalTokens: 21 },
+  }
+);
+
 const request = buildPortfolioRequest({
   input,
   targetCount: 15,
@@ -69,6 +114,9 @@ const portfolio = await generatePortfolioCandidate({
 assert(portfolio.output);
 assert(portfolio.validation.passed, portfolio.validation.problems.join("\n"));
 assert.equal(portfolio.output.shoots.length, 20);
+const roundTrip = parsePortfolioTransport(portfolioCandidateToTransport(portfolio.output));
+assert(roundTrip.success);
+assert.deepEqual(roundTrip.data, portfolio.output);
 const embedded = await embedDatingSceneMeanings(
   portfolio.output.shoots.map((shoot) => shoot.noveltyFingerprint),
   mockCreativeEmbeddingCall
@@ -152,7 +200,7 @@ const productionFiles = [
   "lib/dating/production-prompts/store.ts",
   "lib/dating/prompt-engine/production.ts",
   "trigger/dating-prompt.ts",
-  "trigger/dating-portfolio.ts",
+  "lib/dating/production-prompts/portfolio-service.ts",
 ];
 for (const relative of productionFiles) {
   const source = readFileSync(resolve(process.cwd(), relative), "utf8");
@@ -172,7 +220,8 @@ const createOrderSource = readFileSync(
   resolve(process.cwd(), "lib/dating/create-order.ts"),
   "utf8"
 );
-assert.match(createOrderSource, /pipeline_mode: "dynamic"/);
+assert.match(createOrderSource, /createReservedDatingOrder/);
+assert.match(createOrderSource, /idempotencyKeys\.create\(`dating-order:/);
 assert.doesNotMatch(createOrderSource, /planUniqueOrderDelivery|dynamicPromptsEnabled|creative_input: \{[^}]*dress/);
 
 const productionStoreSource = readFileSync(
@@ -181,6 +230,8 @@ const productionStoreSource = readFileSync(
 );
 assert.match(productionStoreSource, /MAX_PORTFOLIO_CANDIDATES_PER_CALL = 8/);
 assert.match(productionStoreSource, /previousCandidateWarnings\(last\?\.raw_output\)/);
+assert.match(productionStoreSource, /provider_phase === "portfolio_embedding" && running\.raw_output/);
+assert.match(productionStoreSource, /Failed to resume portfolio embedding/);
 
 const creativeModelSource = readFileSync(
   resolve(process.cwd(), "lib/dating/creative-director/model.ts"),
@@ -194,13 +245,15 @@ const dashboardSource = readFileSync(
 );
 assert.doesNotMatch(dashboardSource, /Array\.from\(\{\s*length:\s*10\s*\}\)/);
 assert.match(dashboardSource, /PortfolioProgressPanel/);
+assert.match(dashboardSource, /status\?\.order\.status === 'failed'/);
+assert.match(dashboardSource, /if \(terminal && !regenLoadingId\) return/);
 
 const runStatusSource = readFileSync(
   resolve(process.cwd(), "app/api/dating-shoot/run-status/route.ts"),
   "utf8"
 );
 assert.doesNotMatch(runStatusSource, /Delayed, still retrying/);
-assert.match(runStatusSource, /Last attempt failed — waiting to retry/);
+assert.match(runStatusSource, /Shoot stopped — your pack was returned/);
 
 const orchestratorSource = readFileSync(
   resolve(process.cwd(), "trigger/dating-shoot.ts"),
@@ -212,6 +265,25 @@ const followerWave = orchestratorSource.indexOf("THE FRAMES THAT REFERENCE THEM"
 assert(anchorWave >= 0 && anchorWave < anchorReread && anchorReread < followerWave);
 assert.match(orchestratorSource, /toPayload\(row, anchor\?\.image_url \?\? null\)/);
 assert.match(orchestratorSource, /\[\.\.\.referenceImageUrls, anchorImageUrl as string\]/);
+assert.doesNotMatch(orchestratorSource, /datingPortfolioTask\.batchTriggerAndWait/);
+
+for (const removedTask of ["trigger/dating-portfolio.ts", "trigger/dating-reconcile.ts"]) {
+  assert.throws(() => readFileSync(resolve(process.cwd(), removedTask), "utf8"));
+}
+
+const creditMigration = readFileSync(
+  resolve(process.cwd(), "supabase/migrations/039_dating_order_credit_reservations.sql"),
+  "utf8"
+);
+assert.match(creditMigration, /create_reserved_dating_order/);
+assert.match(creditMigration, /release_dating_order_credit/);
+assert.match(creditMigration, /reserve_dating_order_retry/);
+assert.match(creditMigration, /capture_dating_order_credit/);
+assert.match(creditMigration, /Captured\/Ready is terminal/);
+assert.match(creditMigration, /dynamic dating order is not a complete delivery/);
+
+const packageJson = JSON.parse(readFileSync(resolve(process.cwd(), "package.json"), "utf8"));
+assert.equal(packageJson.dependencies["@google/genai"], "2.18.0");
 
 const migration = readFileSync(
   resolve(process.cwd(), "supabase/migrations/037_intelligent_dating_portfolio.sql"),

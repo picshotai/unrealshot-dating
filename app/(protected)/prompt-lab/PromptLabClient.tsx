@@ -11,6 +11,7 @@ import type { PromptLabFeedback, PromptLabInput } from "@/lib/dating/prompt-lab/
 import { PromptLabForm } from "./PromptLabForm";
 import { PromptLabHistory } from "./PromptLabHistory";
 import { PromptLabResult } from "./PromptLabResult";
+import { ProductionProviderProbe } from "./ProductionProviderProbe";
 
 export function PromptLabClient() {
   const [runs, setRuns] = useState<PromptLabRun[]>([]);
@@ -97,6 +98,7 @@ export function PromptLabClient() {
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
         <div className="space-y-6">
+          <ProductionProviderProbe />
           <PromptLabForm busy={busy} onGenerate={generate} />
           {selected && <PromptLabResult run={selected} busy={busy} onSaveFeedback={saveFeedback} onRetry={generate} />}
         </div>
@@ -105,4 +107,3 @@ export function PromptLabClient() {
     </main>
   );
 }
-

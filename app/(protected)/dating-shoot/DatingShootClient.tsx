@@ -54,6 +54,10 @@ type StatusResponse = {
     shoots_target?: number;
     pipeline_stage?: string;
     provider_blocked?: boolean;
+    credit_state?: 'legacy' | 'reserved' | 'captured' | 'released';
+    failure_code?: string | null;
+    failure_phase?: string | null;
+    failure_message?: string | null;
   };
   counts: {
     pending: number;
@@ -71,6 +75,9 @@ type StatusResponse = {
   };
   stage?: string;
   stageLabel?: string;
+  creditState?: 'legacy' | 'reserved' | 'captured' | 'released';
+  retryAvailable?: boolean;
+  failure?: { code: string; phase: string; message: string } | null;
   /**
    * The delivery, grouped the way it was shot. The response used to be keyed by
    * bucket — internal architecture the client had to know about — and those
@@ -172,11 +179,15 @@ export function DatingShootClient({
   useEffect(() => {
     if (!activeOrderId) return;
     fetchStatus(activeOrderId);
+    const terminal = status?.order.status === 'ready' ||
+      status?.order.status === 'failed' ||
+      status?.order.status === 'partial_failed';
+    if (terminal && !regenLoadingId) return;
     const interval = setInterval(() => {
       fetchStatus(activeOrderId);
     }, 5000);
     return () => clearInterval(interval);
-  }, [activeOrderId, fetchStatus]);
+  }, [activeOrderId, fetchStatus, regenLoadingId, status?.order.status]);
 
   // Launch New Shoot
   const handleLaunchShoot = async (params: {
@@ -233,13 +244,25 @@ export function DatingShootClient({
   const handleRetryFailed = async () => {
     if (!activeOrderId) return;
     setLoading(true);
+    setError('');
+    setCreditError('');
     try {
-      await fetch('/api/dating-shoot/retry', {
+      const response = await fetch('/api/dating-shoot/retry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ orderId: activeOrderId }),
       });
+      const result = await response.json();
+      if (!response.ok) {
+        if (response.status === 402 || result.code === 'insufficient_credits') {
+          setCreditError(result.error || 'You need one pack to retry this shoot.');
+          return;
+        }
+        throw new Error(result.error || 'Could not retry this shoot.');
+      }
       await fetchStatus(activeOrderId);
+    } catch (retryError) {
+      setError(retryError instanceof Error ? retryError.message : 'Could not retry this shoot.');
     } finally {
       setLoading(false);
     }
@@ -443,6 +466,9 @@ export function DatingShootClient({
                   stageLabel: status.stageLabel,
                   providerBlocked: status.order.provider_blocked,
                   needsAttention: status.order.pipeline_stage === 'attention_required',
+                  failed: status.order.status === 'failed' || status.order.pipeline_stage === 'failed',
+                  creditState: status.creditState || status.order.credit_state,
+                  retryAvailable: status.retryAvailable,
                 }
               : null
           }
@@ -456,7 +482,7 @@ export function DatingShootClient({
         />
 
         {/* 2. Lineup Role Filter Tabs */}
-        {status && (
+        {status && status.order.status !== 'failed' && (
           <RoleFilterNav
             activeTab={activeTab}
             onTabChange={setActiveTab}
@@ -523,7 +549,7 @@ export function DatingShootClient({
               ))}
             </div>
           )
-        ) : isDeveloping ? (
+        ) : isDeveloping || status?.order.status === 'failed' ? (
           <PortfolioProgressPanel
             stageLabel={status?.stageLabel}
             promptCounts={status?.promptCounts}
@@ -533,8 +559,22 @@ export function DatingShootClient({
               : null}
             blocked={Boolean(status?.order.provider_blocked)}
             paused={status?.order.pipeline_stage === 'attention_required'}
+            failed={status?.order.status === 'failed'}
+            creditReturned={(status?.creditState || status?.order.credit_state) === 'released'}
+            failureMessage={status?.failure?.message}
           />
         ) : null}
+
+        {creditError && !isIntakeOpen && (
+          <p className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+            {creditError}
+          </p>
+        )}
+        {error && !isIntakeOpen && (
+          <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+            {error}
+          </p>
+        )}
 
 
       </div>

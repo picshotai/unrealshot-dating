@@ -11,7 +11,11 @@ import {
   dominantVibe,
   type InterestId,
 } from "./interests";
-import { refundShootCredits, spendShootCredits } from "./credits-gate";
+import {
+  createReservedDatingOrder,
+  releaseDatingOrderCredit,
+  reserveDatingOrderRetry,
+} from "./credits-gate";
 import {
   ACTIVE_ORDER_STATUSES,
   CUSTOM_CREDITS_DEFAULT,
@@ -24,6 +28,7 @@ import {
   PORTFOLIO_SYSTEM_VERSION,
   SHOOT_WRITER_SYSTEM_VERSION,
 } from "./creative-director";
+import { idempotencyKeys } from "@trigger.dev/sdk";
 
 /** Refusals the API can translate into a status code, as distinct from faults. */
 export class DatingOrderError extends Error {
@@ -140,27 +145,11 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
     );
   }
 
-  // History is loaded before charging. A second purchase uses unseen semantic
-  // concepts first, then unseen exact shoots, then least-recently-used shoots.
-  // Failing to read history must never quietly degrade into a repeat-heavy pack.
-  // Charge before any GPU work is dispatched. Charging afterwards means a crash
-  // between allocation and dispatch gives away a shoot. Every failure path from
-  // here on refunds.
-  const spend = await spendShootCredits(userId, SHOOT_CREDIT_COST);
-  if (!spend.ok) {
-    // Phrased in packs, not credits — the buyer never sees the wallet figure,
-    // so quoting it here would be the only place a raw number appears.
-    throw new DatingOrderError(
-      "You don't have a pack yet — grab one to start your shoot.",
-      "insufficient_credits",
-      { required: SHOOT_CREDIT_COST, balance: spend.balance }
-    );
-  }
-
-  // Everything past the charge runs inside a refund boundary. If allocation or
-  // dispatch fails the user must not be left paying for a shoot that never ran.
+  // Preference storage is outside the reservation transaction because it does
+  // not spend money. The RPC below atomically reserves the pack and creates the
+  // immutable order, so neither operation can survive without the other.
   let createdOrderId: string | null = null;
-  let dispatchAttempted = false;
+  let reservationCreated = false;
   try {
     const { data: prefs, error: prefsErr } = await db
       .from("user_preferences")
@@ -182,73 +171,68 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
       throw new Error(`Failed to save preferences: ${prefsErr.message}`);
     }
 
-    // Create batch / order
-    const { data: order, error: orderErr } = await (db as any)
-      .from("user_shoot_orders")
-      .insert({
-        user_id: userId,
-        model_id: modelId,
-        preferences_id: prefs?.id ?? null,
-        status: "queued",
-        custom_credits_remaining: CUSTOM_CREDITS_DEFAULT,
-        photos_target: productConfig.photosPerDelivery,
-        shoots_target: productConfig.shootsPerDelivery,
-        client_request_id: input.clientRequestId,
-        creative_input: { interests, excludeTags },
-        pipeline_mode: "dynamic",
-        pipeline_stage: "planning",
-        planner_version: PORTFOLIO_SYSTEM_VERSION,
-        prompt_system_version: SHOOT_WRITER_SYSTEM_VERSION,
-      })
-      .select()
-      .single();
-
-    if (orderErr || !order) {
-      // 23505 is the partial unique index from migration 029, which allows one
-      // order per user in 'queued' or 'developing'. Reaching it means a second
-      // request slipped past the check above — two taps landing together, or a
-      // retry — and it is a refusal rather than a fault. Throwing the typed
-      // error hands the client the same 409 it already knows how to render,
-      // and the surrounding catch refunds the credits this request just spent.
-      if ((orderErr as { code?: string } | null)?.code === "23505") {
-        const { data: duplicate } = await (db as any)
-          .from("user_shoot_orders")
-          .select("id, trigger_run_id, photos_target")
-          .eq("user_id", userId)
-          .eq("client_request_id", input.clientRequestId)
-          .maybeSingle();
-        if (duplicate) {
-          await refundShootCredits(userId, SHOOT_CREDIT_COST);
-          return {
-            orderId: duplicate.id as string,
-            batchId: duplicate.id as string,
-            triggerRunId: duplicate.trigger_run_id as string | null,
-            photosAllocated: Number(duplicate.photos_target ?? 0),
-            reused: true,
-          };
-        }
-        throw new DatingOrderError(
-          "A shoot is already running. Wait for it to finish before starting another.",
-          "order_in_progress"
-        );
-      }
-      throw new Error(`Failed to create order: ${orderErr?.message}`);
+    const reservation = await createReservedDatingOrder({
+      userId,
+      clientRequestId: input.clientRequestId,
+      creditAmount: SHOOT_CREDIT_COST,
+      order: {
+        modelId,
+        preferencesId: prefs?.id ?? null,
+        customCreditsRemaining: CUSTOM_CREDITS_DEFAULT,
+        photosTarget: productConfig.photosPerDelivery,
+        shootsTarget: productConfig.shootsPerDelivery,
+        creativeInput: { interests, excludeTags },
+        plannerVersion: PORTFOLIO_SYSTEM_VERSION,
+        promptSystemVersion: SHOOT_WRITER_SYSTEM_VERSION,
+      },
+    });
+    if (reservation.result === "insufficient") {
+      throw new DatingOrderError(
+        "You don't have a pack yet — grab one to start your shoot.",
+        "insufficient_credits",
+        { required: SHOOT_CREDIT_COST, balance: reservation.balance ?? 0 }
+      );
+    }
+    if (reservation.result === "order_in_progress") {
+      throw new DatingOrderError(
+        "A shoot is already running. Wait for it to finish before starting another.",
+        "order_in_progress",
+        { orderId: reservation.orderId }
+      );
+    }
+    if (!reservation.orderId) throw new Error("Dating order reservation returned no order.");
+    if (reservation.result === "existing") {
+      const { data: existing } = await (db as any).from("user_shoot_orders")
+        .select("id, trigger_run_id, photos_target").eq("id", reservation.orderId).single();
+      return {
+        orderId: reservation.orderId,
+        batchId: reservation.orderId,
+        triggerRunId: existing?.trigger_run_id ?? null,
+        photosAllocated: Number(existing?.photos_target ?? productConfig.photosPerDelivery),
+        reused: true,
+      };
     }
 
-    const batchId = order.id as string;
+    const batchId = reservation.orderId;
     createdOrderId = batchId;
+    reservationCreated = true;
 
-    // Kick off PARENT orchestrator only (children spawned inside)
-    // After this point a network failure is ambiguous: Trigger.dev may have
-    // accepted the run even if the client did not receive the handle. Keep the
-    // snapshotted order for audit/recovery instead of deleting work in flight.
-    dispatchAttempted = true;
-    const handle = await datingPhotoshootOrchestrator.trigger({
-      userId,
-      batchId,
-      modelId,
-      referenceImageUrls,
+    const dispatchKey = await idempotencyKeys.create(`dating-order:${batchId}`, {
+      scope: "global",
     });
+    let handle: Awaited<ReturnType<typeof datingPhotoshootOrchestrator.trigger>> | null = null;
+    let lastDispatchError: unknown;
+    for (let attempt = 0; attempt < 3 && !handle; attempt += 1) {
+      try {
+        handle = await datingPhotoshootOrchestrator.trigger(
+          { userId, batchId, modelId, referenceImageUrls },
+          { idempotencyKey: dispatchKey, idempotencyKeyTTL: "30d" }
+        );
+      } catch (error) {
+        lastDispatchError = error;
+      }
+    }
+    if (!handle) throw lastDispatchError ?? new Error("Trigger dispatch failed.");
 
     await (db as any)
       .from("user_shoot_orders")
@@ -267,30 +251,14 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
       reused: false,
     };
   } catch (error) {
-    if (createdOrderId && !dispatchAttempted) {
-      const { error: cleanupError } = await db
-        .from("user_shoot_orders")
-        .delete()
-        .eq("id", createdOrderId);
-      if (cleanupError) {
-        console.error("Failed to clean up an undispatched dating order:", cleanupError);
-      }
+    if (createdOrderId && reservationCreated) {
+      await releaseDatingOrderCredit({
+        orderId: createdOrderId,
+        failureCode: "dispatch_failed",
+        failurePhase: "orchestration_dispatch",
+        failureMessage: "The shoot could not be queued. Its reserved pack was returned.",
+      });
     }
-    if (createdOrderId && dispatchAttempted) {
-      await (db as any)
-        .from("user_shoot_orders")
-        .update({
-          status: "queued",
-          pipeline_stage: "attention_required",
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", createdOrderId);
-      // Trigger acceptance is ambiguous after dispatch begins. The persisted
-      // dynamic order will be reconciled and delivered, so refunding here would
-      // both fulfill the order and return its payment.
-      throw error;
-    }
-    await refundShootCredits(userId, SHOOT_CREDIT_COST);
     throw error;
   }
 }
@@ -305,7 +273,7 @@ export async function resumeDatingShootOrder(orderId: string, userId: string) {
 
   const { data: order } = await (db as any)
     .from("user_shoot_orders")
-    .select("id, user_id, model_id, status, pipeline_mode, pipeline_stage")
+    .select("id, user_id, model_id, status, pipeline_mode, pipeline_stage, updated_at")
     .eq("id", orderId)
     .eq("user_id", userId)
     .single();
@@ -321,6 +289,18 @@ export async function resumeDatingShootOrder(orderId: string, userId: string) {
   const referenceImageUrls = verifiedDatingReferenceUrls(
     ((model as any)?.samples || []) as StoredDatingReference[]
   );
+
+  const reservation = await reserveDatingOrderRetry(orderId, userId);
+  if (reservation.result === "insufficient") {
+    throw new DatingOrderError(
+      "You need an available pack before retrying this shoot.",
+      "insufficient_credits",
+      { required: SHOOT_CREDIT_COST, balance: reservation.balance ?? 0 }
+    );
+  }
+  if (reservation.result === "not_retryable") {
+    throw new DatingOrderError("This completed shoot cannot be retried.", "invalid_input");
+  }
 
   // Reset failed → pending so parent will pick them up
   await db
@@ -348,12 +328,36 @@ export async function resumeDatingShootOrder(orderId: string, userId: string) {
     .select("id", { count: "exact", head: true })
     .eq("order_id", orderId);
 
-  const handle = await datingPhotoshootOrchestrator.trigger({
-    userId: order.user_id,
-    batchId: order.id,
-    modelId: order.model_id,
-    referenceImageUrls,
-  });
+  const retryKey = await idempotencyKeys.create(
+    `dating-resume:${order.id}:${order.updated_at}`,
+    { scope: "global" }
+  );
+  let handle: Awaited<ReturnType<typeof datingPhotoshootOrchestrator.trigger>> | null = null;
+  let lastDispatchError: unknown;
+  for (let attempt = 0; attempt < 3 && !handle; attempt += 1) {
+    try {
+      handle = await datingPhotoshootOrchestrator.trigger(
+        {
+          userId: order.user_id,
+          batchId: order.id,
+          modelId: order.model_id,
+          referenceImageUrls,
+        },
+        { idempotencyKey: retryKey, idempotencyKeyTTL: "30d" }
+      );
+    } catch (error) {
+      lastDispatchError = error;
+    }
+  }
+  if (!handle) {
+    await releaseDatingOrderCredit({
+      orderId,
+      failureCode: "retry_dispatch_failed",
+      failurePhase: "orchestration_dispatch",
+      failureMessage: "The retry could not be queued. Its reserved pack was returned.",
+    });
+    throw lastDispatchError ?? new Error("Retry dispatch failed.");
+  }
 
   const promptOnly = order.pipeline_mode === "dynamic" && (allocatedPhotos ?? 0) === 0;
   await (db as any)
@@ -361,7 +365,7 @@ export async function resumeDatingShootOrder(orderId: string, userId: string) {
     .update({
       trigger_run_id: handle.id,
       status: promptOnly ? "queued" : "developing",
-      pipeline_stage: promptOnly ? "writing_prompts" : order.pipeline_stage,
+      pipeline_stage: promptOnly ? "writing_prompts" : "rendering_photos",
       provider_blocked: false,
       updated_at: new Date().toISOString(),
     })

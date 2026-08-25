@@ -1,11 +1,16 @@
 import { interestMeaning } from "@/lib/dating/interests";
 import type { InterestId } from "@/lib/dating/types";
-import { creativeCost, callDatingCreativeModel, type CreativeModelCall } from "./model";
+import {
+  creativeCost,
+  callDatingCreativeModel,
+  PORTFOLIO_MAX_OUTPUT_TOKENS,
+  type CreativeModelCall,
+} from "./model";
 import { noveltySimilarity } from "./novelty";
 import {
   DATING_CREATIVE_MODEL,
-  PORTFOLIO_JSON_SCHEMA,
-  portfolioCandidateSchema,
+  parsePortfolioTransport,
+  portfolioJsonSchema,
   type CustomerCreativeInput,
   type PortfolioCandidate,
 } from "./schemas";
@@ -49,6 +54,7 @@ export type PortfolioGeneration = {
   usage: { inputTokens: number; outputTokens: number; reasoningTokens: number; totalTokens: number };
   estimatedCostUsd: number;
   pricingSnapshot: unknown;
+  interactionId: string | null;
 };
 
 function exclusionText(exclusions: CustomerCreativeInput["exclusions"]) {
@@ -179,11 +185,12 @@ export async function generatePortfolioCandidate(args: {
     model: DATING_CREATIVE_MODEL,
     systemInstruction: PORTFOLIO_DIRECTOR_SYSTEM_INSTRUCTION,
     contents: buildPortfolioRequest(args),
-    responseJsonSchema: PORTFOLIO_JSON_SCHEMA,
+    responseJsonSchema: portfolioJsonSchema(args.candidateCount),
+    maxOutputTokens: PORTFOLIO_MAX_OUTPUT_TOKENS,
   });
   let rawOutput: unknown = response.text;
   try { rawOutput = JSON.parse(response.text); } catch { /* persist exact invalid output */ }
-  const parsed = portfolioCandidateSchema.safeParse(rawOutput);
+  const parsed = parsePortfolioTransport(rawOutput);
   const history = [...args.currentOrder, ...args.customerHistory, ...args.globalHistory];
   const validation = parsed.success
     ? validatePortfolioCandidate({
@@ -198,5 +205,12 @@ export async function generatePortfolioCandidate(args: {
         problems: parsed.error.issues.map((issue) => `${issue.path.join(".") || "response"}: ${issue.message}`),
       };
   const cost = creativeCost(response.usage);
-  return { output: parsed.success ? parsed.data : null, rawOutput, validation, usage: response.usage, ...cost };
+  return {
+    output: parsed.success ? parsed.data : null,
+    rawOutput,
+    validation,
+    usage: response.usage,
+    interactionId: response.interactionId,
+    ...cost,
+  };
 }

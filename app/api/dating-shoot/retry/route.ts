@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
-import { resumeDatingShootOrder } from "@/lib/dating/create-order";
+import {
+  DatingOrderError,
+  resumeDatingShootOrder,
+} from "@/lib/dating/create-order";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -30,6 +33,12 @@ export async function POST(request: NextRequest) {
     const result = await resumeDatingShootOrder(orderId, user.id);
     return NextResponse.json({ success: true, ...result });
   } catch (error) {
+    if (error instanceof DatingOrderError) {
+      return NextResponse.json(
+        { error: error.message, code: error.code, ...error.detail },
+        { status: error.code === "insufficient_credits" ? 402 : 400 }
+      );
+    }
     console.error("retry failed:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Retry failed" },

@@ -5,6 +5,7 @@ import {
   type CreativeEmbeddingCall,
   type CustomerCreativeInput,
   type DatingShootIntent,
+  portfolioCandidateToTransport,
 } from "@/lib/dating/creative-director";
 
 const usage = { inputTokens: 0, outputTokens: 0, reasoningTokens: 0, totalTokens: 0 };
@@ -87,6 +88,7 @@ export function mockProductionModelCall(brief: DatingShootIntent): CreativeModel
         frames,
       }),
       usage,
+      interactionId: null,
     };
   };
 }
@@ -139,6 +141,13 @@ export function mockPortfolioModelCall(input: CustomerCreativeInput): CreativeMo
         },
       };
     });
-    return { text: JSON.stringify({ portfolioRationale: "Mock portfolio for zero-provider pipeline verification.", shoots }), usage };
+    return {
+      text: JSON.stringify(portfolioCandidateToTransport({
+        portfolioRationale: "Mock portfolio for zero-provider pipeline verification.",
+        shoots,
+      })),
+      usage,
+      interactionId: null,
+    };
   };
 }

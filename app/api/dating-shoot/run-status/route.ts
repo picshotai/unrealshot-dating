@@ -51,26 +51,35 @@ export async function GET(request: NextRequest) {
   let { data: order, error: orderErr } = await supabase
     .from("user_shoot_orders")
     .select(
-      "id, status, model_id, custom_credits_remaining, photos_target, shoots_target, pipeline_mode, pipeline_stage, provider_blocked, trigger_run_id, created_at, ready_at"
+      "id, status, model_id, custom_credits_remaining, photos_target, shoots_target, pipeline_mode, pipeline_stage, provider_blocked, credit_state, credit_amount, failure_code, failure_phase, failure_message, failed_at, next_retry_at, trigger_run_id, created_at, ready_at"
     )
     .eq("id", orderId)
     .eq("user_id", user.id)
     .single();
 
-  // Migration 038 can be deployed immediately before this route. Preserve the
-  // dynamic fields during that short compatibility window.
+  // Migration 039 can be deployed independently from the application. Keep
+  // authored and already-running orders viewable during that rollout window.
   if (isMissingPipelineColumn(orderErr)) {
     const compatible = await supabase
       .from("user_shoot_orders")
       .select(
-        "id, status, model_id, custom_credits_remaining, photos_target, shoots_target, pipeline_mode, pipeline_stage, trigger_run_id, created_at, ready_at"
+        "id, status, model_id, custom_credits_remaining, photos_target, shoots_target, pipeline_mode, pipeline_stage, provider_blocked, trigger_run_id, created_at, ready_at"
       )
       .eq("id", orderId)
       .eq("user_id", user.id)
       .single();
     if (!compatible.error && compatible.data) {
       orderErr = null;
-      order = { ...compatible.data, provider_blocked: false } as typeof order;
+      order = {
+        ...compatible.data,
+        credit_state: "legacy",
+        credit_amount: 0,
+        failure_code: null,
+        failure_phase: null,
+        failure_message: null,
+        failed_at: null,
+        next_retry_at: null,
+      } as typeof order;
     } else {
       // Migration 033 is deliberately deployed before the dynamic rollout flag.
       // Older databases and authored orders must remain viewable.
@@ -94,6 +103,13 @@ export async function GET(request: NextRequest) {
           pipeline_stage:
             legacy.data.status === "ready" ? "ready" : "rendering_photos",
           provider_blocked: false,
+          credit_state: "legacy",
+          credit_amount: 0,
+          failure_code: null,
+          failure_phase: null,
+          failure_message: null,
+          failed_at: null,
+          next_retry_at: null,
         } as typeof order)
       : null;
     }
@@ -154,7 +170,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Failed to load photos" }, { status: 500 });
   }
 
-  const all = photos || [];
+  const isTerminalFailure = order.status === "failed" || order.pipeline_stage === "failed";
+  // Failed dynamic-order rows are operational diagnostics, not a partial paid
+  // delivery. Do not expose them as a gallery after the reservation is released.
+  const all = isTerminalFailure && order.pipeline_mode === "dynamic" ? [] : photos || [];
   const { data: dynamicShoots } = order.pipeline_mode === "dynamic"
     ? await supabase
         .from("dating_order_shoots" as any)
@@ -201,7 +220,9 @@ export async function GET(request: NextRequest) {
   }
 
   const dynamicById = new Map(promptRows.map((row) => [row.id, row]));
-  const orderedShootIds = order.pipeline_mode === "dynamic"
+  const orderedShootIds = isTerminalFailure
+    ? []
+    : order.pipeline_mode === "dynamic"
     ? promptRows.filter((row) => row.status === "passed").map((row) => row.id)
     : [...byShoot.keys()];
   const shoots = orderedShootIds.map((shootId) => {
@@ -270,8 +291,22 @@ export async function GET(request: NextRequest) {
     shoots,
     progressPercent: order.status === "ready" ? 100 : Math.min(99, progressPercent),
     stage,
+    creditState: order.credit_state ?? "legacy",
+    retryAvailable:
+      isTerminalFailure &&
+      (order.credit_state === "released" || order.credit_state === "legacy"),
+    failure: isTerminalFailure
+      ? {
+          code: order.failure_code ?? "shoot_failed",
+          phase: order.failure_phase ?? "unknown",
+          message: order.failure_message ?? "The shoot could not be completed.",
+        }
+      : null,
     stageLabel:
-      stage === "planning" ? "Planning your shoots"
+      stage === "failed" && order.credit_state === "released"
+        ? "Shoot stopped — your pack was returned"
+      : stage === "failed" ? "Shoot stopped"
+      : stage === "planning" ? "Planning your shoots"
       : stage === "writing_prompts" ? `Writing shoot prompts — ${promptCounts.passed}/${promptCounts.total}`
       : stage === "rendering_anchors" ? `Establishing your scenes — ${completedSceneAnchors}/${promptCounts.total || order.shoots_target}`
       : stage === "rendering_photos" ? `Completing your shoots — ${completedShoots}/${order.shoots_target}`

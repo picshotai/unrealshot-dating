@@ -92,108 +92,189 @@ export const datingShootOutputSchema = z.object({
   frames: z.array(shootFrameSchema).length(4),
 }).strict();
 
-export const PORTFOLIO_JSON_SCHEMA = {
-  type: "object",
-  additionalProperties: false,
-  required: ["portfolioRationale", "shoots"],
-  properties: {
-    portfolioRationale: { type: "string" },
-    shoots: {
-      type: "array",
-      minItems: 1,
-      maxItems: 40,
-      items: {
-        type: "object",
-        additionalProperties: false,
-        required: [
-          "candidateId", "title", "representedInterests", "canonicalSummary",
-          "noveltyFingerprint", "provenance", "sceneBible", "creativeDirection",
-          "qualityProof",
-        ],
-        properties: {
-          candidateId: { type: "string" },
-          title: { type: "string" },
-          representedInterests: {
-            type: "array",
-            maxItems: 3,
-            items: { type: "string", enum: INTEREST_IDS },
-          },
-          canonicalSummary: { type: "string" },
-          noveltyFingerprint: { type: "string" },
-          provenance: {
-            type: "object",
-            additionalProperties: false,
-            required: [
-              "occasion", "whyHeIsThere", "photographerRelationship",
-              "whyThePhotoWasTaken", "socialContext",
-            ],
-            properties: {
-              occasion: { type: "string" },
-              whyHeIsThere: { type: "string" },
-              photographerRelationship: { type: "string" },
-              whyThePhotoWasTaken: { type: "string" },
-              socialContext: { type: "string" },
+const portfolioTransportShootSchema = z.object({
+  candidateId: z.string(),
+  title: z.string(),
+  representedInterests: z.array(z.enum(INTEREST_IDS)).max(3),
+  canonicalSummary: z.string(),
+  noveltyFingerprint: z.string(),
+  provenanceOccasion: z.string(),
+  provenanceWhyHeIsThere: z.string(),
+  provenancePhotographerRelationship: z.string(),
+  provenanceWhyThePhotoWasTaken: z.string(),
+  provenanceSocialContext: z.string(),
+  sceneLocation: z.string(),
+  sceneShootingZone: z.string(),
+  sceneImmutableFacts: z.array(z.string()).min(2).max(6),
+  scenePortableProps: z.array(z.string()).max(2),
+  sceneOutfit: z.string(),
+  sceneWardrobeContinuity: z.string(),
+  sceneLight: z.string(),
+  sceneCameraFreedom: z.string(),
+  creativeDesirableMoment: z.string(),
+  creativeDatingValue: z.string(),
+  creativeVisualMood: z.string(),
+  creativeFourFramePossibility: z.string(),
+  creativeProfileUse: z.string(),
+  creativeFormatGuidance: z.string(),
+  proofProvenance: z.string(),
+  proofDatingDesirability: z.string(),
+  proofNonStaging: z.string(),
+  proofWardrobeLogic: z.string(),
+  proofContinuityRiskAndPrevention: z.string(),
+  proofFourFrameDistinctness: z.string(),
+}).strict();
+
+const portfolioTransportSchema = z.object({
+  portfolioRationale: z.string(),
+  shoots: z.array(portfolioTransportShootSchema).min(1).max(40),
+}).strict();
+
+const PORTFOLIO_STRING_FIELDS = [
+  "candidateId", "title", "canonicalSummary", "noveltyFingerprint",
+  "provenanceOccasion", "provenanceWhyHeIsThere",
+  "provenancePhotographerRelationship", "provenanceWhyThePhotoWasTaken",
+  "provenanceSocialContext", "sceneLocation", "sceneShootingZone",
+  "sceneOutfit", "sceneWardrobeContinuity", "sceneLight", "sceneCameraFreedom",
+  "creativeDesirableMoment", "creativeDatingValue", "creativeVisualMood",
+  "creativeFourFramePossibility", "creativeProfileUse", "creativeFormatGuidance",
+  "proofProvenance", "proofDatingDesirability", "proofNonStaging",
+  "proofWardrobeLogic", "proofContinuityRiskAndPrevention",
+  "proofFourFrameDistinctness",
+] as const;
+
+const PORTFOLIO_REQUIRED_FIELDS = [
+  ...PORTFOLIO_STRING_FIELDS,
+  "representedInterests", "sceneImmutableFacts", "scenePortableProps",
+] as const;
+
+/** A shallow provider contract avoids Gemini's deep-schema rejection limit. */
+export function portfolioJsonSchema(candidateCount: number) {
+  if (!Number.isInteger(candidateCount) || candidateCount < 1 || candidateCount > 40) {
+    throw new Error("candidateCount must be an integer from 1 to 40.");
+  }
+  const stringProperties = Object.fromEntries(
+    PORTFOLIO_STRING_FIELDS.map((field) => [field, { type: "string" }])
+  );
+  return {
+    type: "object",
+    additionalProperties: false,
+    required: ["portfolioRationale", "shoots"],
+    properties: {
+      portfolioRationale: { type: "string" },
+      shoots: {
+        type: "array",
+        minItems: candidateCount,
+        maxItems: candidateCount,
+        items: {
+          type: "object",
+          additionalProperties: false,
+          required: PORTFOLIO_REQUIRED_FIELDS,
+          properties: {
+            ...stringProperties,
+            representedInterests: {
+              type: "array", maxItems: 3,
+              items: { type: "string", enum: INTEREST_IDS },
             },
-          },
-          sceneBible: {
-            type: "object",
-            additionalProperties: false,
-            required: [
-              "location", "shootingZone", "immutableFacts", "portableProps",
-              "outfit", "wardrobeContinuity", "light", "cameraFreedom",
-            ],
-            properties: {
-              location: { type: "string" },
-              shootingZone: { type: "string" },
-              immutableFacts: {
-                type: "array", minItems: 2, maxItems: 6, items: { type: "string" },
-              },
-              portableProps: {
-                type: "array", maxItems: 2, items: { type: "string" },
-              },
-              outfit: { type: "string" },
-              wardrobeContinuity: { type: "string" },
-              light: { type: "string" },
-              cameraFreedom: { type: "string" },
+            sceneImmutableFacts: {
+              type: "array", minItems: 2, maxItems: 6, items: { type: "string" },
             },
-          },
-          creativeDirection: {
-            type: "object",
-            additionalProperties: false,
-            required: [
-              "desirableMoment", "datingValue", "visualMood", "fourFramePossibility",
-              "profileUse", "formatGuidance",
-            ],
-            properties: {
-              desirableMoment: { type: "string" },
-              datingValue: { type: "string" },
-              visualMood: { type: "string" },
-              fourFramePossibility: { type: "string" },
-              profileUse: { type: "string" },
-              formatGuidance: { type: "string" },
-            },
-          },
-          qualityProof: {
-            type: "object",
-            additionalProperties: false,
-            required: [
-              "provenanceTest", "datingDesirabilityTest", "nonStagingTest",
-              "wardrobeLogic", "continuityRiskAndPrevention", "fourFrameDistinctness",
-            ],
-            properties: {
-              provenanceTest: { type: "string" },
-              datingDesirabilityTest: { type: "string" },
-              nonStagingTest: { type: "string" },
-              wardrobeLogic: { type: "string" },
-              continuityRiskAndPrevention: { type: "string" },
-              fourFrameDistinctness: { type: "string" },
+            scenePortableProps: {
+              type: "array", maxItems: 2, items: { type: "string" },
             },
           },
         },
       },
     },
-  },
-} as const;
+  } as const;
+}
+
+/** Rehydrate the rich internal domain object without weakening its Zod rules. */
+export function parsePortfolioTransport(value: unknown) {
+  const parsed = portfolioTransportSchema.safeParse(value);
+  if (!parsed.success) return parsed;
+  return portfolioCandidateSchema.safeParse({
+    portfolioRationale: parsed.data.portfolioRationale,
+    shoots: parsed.data.shoots.map((shoot) => ({
+      candidateId: shoot.candidateId,
+      title: shoot.title,
+      representedInterests: shoot.representedInterests,
+      canonicalSummary: shoot.canonicalSummary,
+      noveltyFingerprint: shoot.noveltyFingerprint,
+      provenance: {
+        occasion: shoot.provenanceOccasion,
+        whyHeIsThere: shoot.provenanceWhyHeIsThere,
+        photographerRelationship: shoot.provenancePhotographerRelationship,
+        whyThePhotoWasTaken: shoot.provenanceWhyThePhotoWasTaken,
+        socialContext: shoot.provenanceSocialContext,
+      },
+      sceneBible: {
+        location: shoot.sceneLocation,
+        shootingZone: shoot.sceneShootingZone,
+        immutableFacts: shoot.sceneImmutableFacts,
+        portableProps: shoot.scenePortableProps,
+        outfit: shoot.sceneOutfit,
+        wardrobeContinuity: shoot.sceneWardrobeContinuity,
+        light: shoot.sceneLight,
+        cameraFreedom: shoot.sceneCameraFreedom,
+      },
+      creativeDirection: {
+        desirableMoment: shoot.creativeDesirableMoment,
+        datingValue: shoot.creativeDatingValue,
+        visualMood: shoot.creativeVisualMood,
+        fourFramePossibility: shoot.creativeFourFramePossibility,
+        profileUse: shoot.creativeProfileUse,
+        formatGuidance: shoot.creativeFormatGuidance,
+      },
+      qualityProof: {
+        provenanceTest: shoot.proofProvenance,
+        datingDesirabilityTest: shoot.proofDatingDesirability,
+        nonStagingTest: shoot.proofNonStaging,
+        wardrobeLogic: shoot.proofWardrobeLogic,
+        continuityRiskAndPrevention: shoot.proofContinuityRiskAndPrevention,
+        fourFrameDistinctness: shoot.proofFourFrameDistinctness,
+      },
+    })),
+  });
+}
+
+export function portfolioCandidateToTransport(output: PortfolioCandidate) {
+  return {
+    portfolioRationale: output.portfolioRationale,
+    shoots: output.shoots.map((shoot) => ({
+      candidateId: shoot.candidateId,
+      title: shoot.title,
+      representedInterests: shoot.representedInterests,
+      canonicalSummary: shoot.canonicalSummary,
+      noveltyFingerprint: shoot.noveltyFingerprint,
+      provenanceOccasion: shoot.provenance.occasion,
+      provenanceWhyHeIsThere: shoot.provenance.whyHeIsThere,
+      provenancePhotographerRelationship: shoot.provenance.photographerRelationship,
+      provenanceWhyThePhotoWasTaken: shoot.provenance.whyThePhotoWasTaken,
+      provenanceSocialContext: shoot.provenance.socialContext,
+      sceneLocation: shoot.sceneBible.location,
+      sceneShootingZone: shoot.sceneBible.shootingZone,
+      sceneImmutableFacts: shoot.sceneBible.immutableFacts,
+      scenePortableProps: shoot.sceneBible.portableProps,
+      sceneOutfit: shoot.sceneBible.outfit,
+      sceneWardrobeContinuity: shoot.sceneBible.wardrobeContinuity,
+      sceneLight: shoot.sceneBible.light,
+      sceneCameraFreedom: shoot.sceneBible.cameraFreedom,
+      creativeDesirableMoment: shoot.creativeDirection.desirableMoment,
+      creativeDatingValue: shoot.creativeDirection.datingValue,
+      creativeVisualMood: shoot.creativeDirection.visualMood,
+      creativeFourFramePossibility: shoot.creativeDirection.fourFramePossibility,
+      creativeProfileUse: shoot.creativeDirection.profileUse,
+      creativeFormatGuidance: shoot.creativeDirection.formatGuidance,
+      proofProvenance: shoot.qualityProof.provenanceTest,
+      proofDatingDesirability: shoot.qualityProof.datingDesirabilityTest,
+      proofNonStaging: shoot.qualityProof.nonStagingTest,
+      proofWardrobeLogic: shoot.qualityProof.wardrobeLogic,
+      proofContinuityRiskAndPrevention: shoot.qualityProof.continuityRiskAndPrevention,
+      proofFourFrameDistinctness: shoot.qualityProof.fourFrameDistinctness,
+    })),
+  };
+}
 
 export const SHOOT_OUTPUT_JSON_SCHEMA = {
   type: "object",

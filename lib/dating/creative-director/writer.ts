@@ -1,4 +1,9 @@
-import { creativeCost, callDatingCreativeModel, type CreativeModelCall } from "./model";
+import {
+  creativeCost,
+  callDatingCreativeModel,
+  SHOOT_MAX_OUTPUT_TOKENS,
+  type CreativeModelCall,
+} from "./model";
 import { noveltySimilarity, normalizeNoveltyText } from "./novelty";
 import {
   DATING_CREATIVE_MODEL,
@@ -43,6 +48,7 @@ export type ShootGeneration = {
   usage: { inputTokens: number; outputTokens: number; reasoningTokens: number; totalTokens: number };
   estimatedCostUsd: number;
   pricingSnapshot: unknown;
+  interactionId: string | null;
 };
 
 export function buildShootWriterRequest(args: {
@@ -196,6 +202,7 @@ export async function generateShootCandidate(args: {
     systemInstruction: SHOOT_WRITER_SYSTEM_INSTRUCTION,
     contents: buildShootWriterRequest(args),
     responseJsonSchema: SHOOT_OUTPUT_JSON_SCHEMA,
+    maxOutputTokens: SHOOT_MAX_OUTPUT_TOKENS,
   });
   let rawOutput: unknown = response.text;
   try { rawOutput = JSON.parse(response.text); } catch { /* persist exact invalid output */ }
@@ -208,5 +215,12 @@ export async function generateShootCandidate(args: {
         sceneDensity: [],
       };
   const cost = creativeCost(response.usage);
-  return { output: parsed.success ? parsed.data : null, rawOutput, validation, usage: response.usage, ...cost };
+  return {
+    output: parsed.success ? parsed.data : null,
+    rawOutput,
+    validation,
+    usage: response.usage,
+    interactionId: response.interactionId,
+    ...cost,
+  };
 }
