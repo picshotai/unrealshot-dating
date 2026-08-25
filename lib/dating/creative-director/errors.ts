@@ -54,7 +54,9 @@ export function classifyCreativeProviderError(error: unknown): CreativeProviderF
     isCreativeProviderBillingDepleted(message)
   ) {
     return {
-      safeMessage: "Gemini billing balance is depleted.",
+      // Customer-facing. Billing and provider identity stay in the diagnostic
+      // and failure code for operators; neither belongs in the product UI.
+      safeMessage: "The shoot service is temporarily unavailable.",
       diagnostic: `Gemini billing depleted (429): ${message}`,
       retryable: false,
       status,

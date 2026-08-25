@@ -64,7 +64,9 @@ const depletedBillingFailure = classifyCreativeProviderError(
 );
 assert.equal(depletedBillingFailure.retryable, false);
 assert.equal(depletedBillingFailure.failureCode, "provider_billing_depleted");
-assert.match(depletedBillingFailure.safeMessage, /billing balance is depleted/i);
+assert.equal(depletedBillingFailure.safeMessage, "The shoot service is temporarily unavailable.");
+assert.doesNotMatch(depletedBillingFailure.safeMessage, /gemini|billing|credit|balance/i);
+assert.match(depletedBillingFailure.diagnostic, /Gemini billing depleted/);
 
 const providerSchema = portfolioJsonSchema(7);
 assert.equal(providerSchema.properties.shoots.minItems, 7);
@@ -311,6 +313,8 @@ const runStatusSource = readFileSync(
 assert.match(runStatusSource, /retryScheduled/);
 assert.match(runStatusSource, /retrying automatically/);
 assert.match(runStatusSource, /Shoot stopped — your pack was returned/);
+assert.match(runStatusSource, /customerSafeFailureMessage/);
+assert.match(runStatusSource, /gemini\|provider\|api/);
 
 const orchestratorSource = readFileSync(
   resolve(process.cwd(), "trigger/dating-shoot.ts"),

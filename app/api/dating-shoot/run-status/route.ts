@@ -32,6 +32,18 @@ function toGenerationStatus(status: string | null) {
   }
 }
 
+/** Never expose provider identity, credentials, quota, or our billing state. */
+function customerSafeFailureMessage(message: string | null | undefined, creditReturned: boolean) {
+  const fallback = creditReturned
+    ? "We couldn't start this shoot. Your reserved pack was returned."
+    : "We couldn't complete this shoot. Please try again later.";
+  if (!message) return fallback;
+  if (/gemini|provider|api(?:\s+key)?|billing|prepay|quota|rate.?limit|credit balance|invalid.?argument|configuration/i.test(message)) {
+    return fallback;
+  }
+  return message;
+}
+
 export async function GET(request: NextRequest) {
   const supabase = await createClient();
   const {
@@ -304,7 +316,10 @@ export async function GET(request: NextRequest) {
       ? {
           code: order.failure_code ?? "shoot_failed",
           phase: order.failure_phase ?? "unknown",
-          message: order.failure_message ?? "The shoot could not be completed.",
+          message: customerSafeFailureMessage(
+            order.failure_message,
+            order.credit_state === "released"
+          ),
         }
       : null,
     stageLabel:

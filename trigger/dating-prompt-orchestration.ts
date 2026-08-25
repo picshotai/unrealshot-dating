@@ -264,7 +264,7 @@ async function writeReservedPortfolio(args: {
       representative?.provider_phase ?? "shoot_generation",
       !(billingDepleted || permanent),
       billingDepleted
-        ? "Gemini billing balance is depleted."
+        ? "The shoot service is temporarily unavailable."
         : "Gemini could not complete shoot prompt generation.",
       "provider",
       billingDepleted ? "provider_billing_depleted" : undefined
