@@ -270,6 +270,10 @@ export async function GET(request: NextRequest) {
   });
 
   const stage = String(order.pipeline_stage ?? "rendering_photos");
+  const retryScheduled =
+    stage === "attention_required" &&
+    order.status !== "failed" &&
+    Boolean(order.next_retry_at);
   const completedShoots = shoots.filter((shoot) => shoot.completed >= 4).length;
   const completedSceneAnchors = all.filter(
     (row) => row.is_anchor && row.status === "completed"
@@ -292,6 +296,7 @@ export async function GET(request: NextRequest) {
     progressPercent: order.status === "ready" ? 100 : Math.min(99, progressPercent),
     stage,
     creditState: order.credit_state ?? "legacy",
+    retryScheduled,
     retryAvailable:
       isTerminalFailure &&
       (order.credit_state === "released" || order.credit_state === "legacy"),
@@ -312,7 +317,8 @@ export async function GET(request: NextRequest) {
       : stage === "rendering_photos" ? `Completing your shoots — ${completedShoots}/${order.shoots_target}`
       : stage === "attention_required" && order.provider_blocked
         ? "Prompt generation stopped — setup error"
-      : stage === "attention_required" ? "Last attempt failed — waiting to retry"
+      : retryScheduled ? "Temporary prompt-provider issue — retrying automatically"
+      : stage === "attention_required" ? "Last attempt ended — retry required"
       : stage === "ready" ? "Ready"
       : "Preparing your shoot",
   });

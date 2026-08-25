@@ -15,6 +15,7 @@ export function PortfolioProgressPanel({
   sample,
   blocked,
   paused,
+  retrying,
   failed,
   creditReturned,
   failureMessage,
@@ -25,6 +26,7 @@ export function PortfolioProgressPanel({
   sample: { realShoots: number } | null;
   blocked: boolean;
   paused: boolean;
+  retrying?: boolean;
   failed?: boolean;
   creditReturned?: boolean;
   failureMessage?: string;
@@ -53,12 +55,14 @@ export function PortfolioProgressPanel({
           <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-500">
             {failed
               ? creditReturned
-                ? "This order stopped before delivery, so its reserved pack was returned. You can retry the same shoot when you are ready."
+                ? failureMessage || "This order stopped before delivery, so its reserved pack was returned. You can retry the same shoot when you are ready."
                 : failureMessage || "This order stopped before delivery. You can retry the same saved order."
               : blocked
               ? "The provider rejected its request configuration. No generation is active and automatic retries are paused. Deploy the fix, then use Retry setup."
               : paused
                 ? "The previous attempt has ended. No generation is active right now. Retry setup can resume the saved order."
+                : retrying
+                  ? "The prompt provider returned a temporary error. Automatic retry is active; you do not need to click Retry setup or start another shoot."
                 : "Shoot ideas and their four connected prompts are completed before image slots appear. This keeps every four-photo shoot together as one believable moment."}
           </p>
 

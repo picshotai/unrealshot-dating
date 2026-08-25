@@ -474,7 +474,9 @@ export const datingPhotoshootOrchestrator = task({
           if (!error.retryable || exhausted) {
             const failureCode = error.kind === "internal"
               ? error.failureCode ?? "internal_prompt_pipeline"
-              : error.retryable ? "provider_retry_exhausted" : "provider_request_rejected";
+              : error.retryable
+                ? "provider_retry_exhausted"
+                : error.failureCode ?? "provider_request_rejected";
             await releaseDatingOrderCredit({
               orderId: batchId,
               failureCode,

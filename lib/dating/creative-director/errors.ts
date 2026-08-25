@@ -3,6 +3,7 @@ export type CreativeProviderFailure = {
   diagnostic: string;
   retryable: boolean;
   status: number | null;
+  failureCode?: "provider_billing_depleted";
 };
 
 function errorRecord(error: unknown): Record<string, unknown> {
@@ -18,6 +19,10 @@ function sanitizeProviderMessage(message: string) {
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 800);
+}
+
+export function isCreativeProviderBillingDepleted(message: string) {
+  return /prepayment credits? (?:are|is) depleted|prepaid (?:credits?|balance).*(?:depleted|exhausted)|billing balance.*(?:depleted|exhausted)/i.test(message);
 }
 
 /** Classifies provider failures so malformed requests do not become retry storms. */
@@ -39,6 +44,23 @@ export function classifyCreativeProviderError(error: unknown): CreativeProviderF
   const retryable = status === 408 || status === 409 || status === 429 ||
     (status !== null && status >= 500) ||
     /quota|rate.?limit|timeout|timed out|unavailable|connection|network|fetch failed/i.test(message);
+
+  // A 429 normally means short-lived rate limiting, but Gemini also uses it
+  // when a prepaid project has no money left. Waiting cannot repair billing,
+  // so treating this as transient creates four identical paid task attempts
+  // and leaves the customer watching a retry that can never succeed.
+  if (
+    status === 429 &&
+    isCreativeProviderBillingDepleted(message)
+  ) {
+    return {
+      safeMessage: "Gemini billing balance is depleted.",
+      diagnostic: `Gemini billing depleted (429): ${message}`,
+      retryable: false,
+      status,
+      failureCode: "provider_billing_depleted",
+    };
+  }
 
   if (status === 401 || status === 403 || /credential|unauthori[sz]ed|permission denied/i.test(message)) {
     return {

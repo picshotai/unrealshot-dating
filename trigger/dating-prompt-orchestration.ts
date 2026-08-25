@@ -4,6 +4,7 @@ import { getDatingProductConfig } from "@/lib/dating/config";
 import {
   customerCreativeInputSchema,
   datingShootIntentSchema,
+  isCreativeProviderBillingDepleted,
   type CustomerCreativeInput,
 } from "@/lib/dating/creative-director";
 import { executePortfolioAttempt } from "@/lib/dating/production-prompts/portfolio-service";
@@ -172,7 +173,8 @@ async function reserveCompletePortfolio(args: {
         result.phase,
         result.retryable,
         result.safeMessage ?? "Gemini portfolio planning failed.",
-        "provider"
+        "provider",
+        result.failureCode
       );
     }
     args.budget.consecutiveNoProgress = nextNoProgressCount(
@@ -247,8 +249,11 @@ async function writeReservedPortfolio(args: {
     if (providerRows.length !== failedAttemptIds.length) {
       throw new Error(`Prompt persistence failed for order ${args.order.id}.`);
     }
+    const billingDepleted = providerRows.find((row: any) =>
+      isCreativeProviderBillingDepleted(String(row.api_error ?? ""))
+    );
     const permanent = providerRows.find((row: any) => row.error_retryable === false);
-    const representative = permanent ?? providerRows[0];
+    const representative = billingDepleted ?? permanent ?? providerRows[0];
     logger.error("Dating prompt provider phase failed", {
       orderId: args.order.id,
       phase: representative?.provider_phase,
@@ -257,9 +262,12 @@ async function writeReservedPortfolio(args: {
     });
     throw new DynamicPromptPipelineFailure(
       representative?.provider_phase ?? "shoot_generation",
-      !permanent,
-      "Gemini could not complete shoot prompt generation.",
-      "provider"
+      !(billingDepleted || permanent),
+      billingDepleted
+        ? "Gemini billing balance is depleted."
+        : "Gemini could not complete shoot prompt generation.",
+      "provider",
+      billingDepleted ? "provider_billing_depleted" : undefined
     );
   }
 

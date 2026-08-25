@@ -29,6 +29,7 @@ export type PortfolioServiceResult = {
   retryable: boolean;
   phase: "portfolio_generation" | "portfolio_embedding" | "portfolio_complete";
   safeMessage?: string;
+  failureCode?: "provider_billing_depleted";
 };
 
 function restoreGeneration(attempt: Awaited<ReturnType<typeof loadPortfolioAttempt>>): PortfolioGeneration {
@@ -128,6 +129,7 @@ export async function executePortfolioAttempt(args: {
         retryable: failure.retryable,
         phase: "portfolio_generation",
         safeMessage: failure.safeMessage,
+        failureCode: failure.failureCode,
       };
     }
   }
@@ -188,6 +190,7 @@ export async function executePortfolioAttempt(args: {
       retryable: failure.retryable,
       phase: "portfolio_embedding",
       safeMessage: failure.safeMessage,
+      failureCode: failure.failureCode,
     };
   }
 }

@@ -52,6 +52,19 @@ const outageFailure = classifyCreativeProviderError(
   Object.assign(new Error("service unavailable"), { status: 503 })
 );
 assert.equal(outageFailure.retryable, true);
+const rateLimitFailure = classifyCreativeProviderError(
+  Object.assign(new Error("Too many requests; retry after 30 seconds"), { status: 429 })
+);
+assert.equal(rateLimitFailure.retryable, true);
+const depletedBillingFailure = classifyCreativeProviderError(
+  Object.assign(
+    new Error("Your prepayment credits are depleted. Please go to AI Studio to manage billing."),
+    { status: 429 }
+  )
+);
+assert.equal(depletedBillingFailure.retryable, false);
+assert.equal(depletedBillingFailure.failureCode, "provider_billing_depleted");
+assert.match(depletedBillingFailure.safeMessage, /billing balance is depleted/i);
 
 const providerSchema = portfolioJsonSchema(7);
 assert.equal(providerSchema.properties.shoots.minItems, 7);
@@ -295,7 +308,8 @@ const runStatusSource = readFileSync(
   resolve(process.cwd(), "app/api/dating-shoot/run-status/route.ts"),
   "utf8"
 );
-assert.doesNotMatch(runStatusSource, /Delayed, still retrying/);
+assert.match(runStatusSource, /retryScheduled/);
+assert.match(runStatusSource, /retrying automatically/);
 assert.match(runStatusSource, /Shoot stopped — your pack was returned/);
 
 const orchestratorSource = readFileSync(
@@ -318,6 +332,7 @@ const promptOrchestrationSource = readFileSync(
 assert.match(promptOrchestrationSource, /plannerCallBudget/);
 assert.match(promptOrchestrationSource, /planningHasStalled/);
 assert.match(promptOrchestrationSource, /internal_planning_stalled/);
+assert.match(promptOrchestrationSource, /provider_billing_depleted/);
 assert.doesNotMatch(promptOrchestrationSource, /cycle < 16/);
 assert(
   promptOrchestrationSource.indexOf("reserveCompletePortfolio") <

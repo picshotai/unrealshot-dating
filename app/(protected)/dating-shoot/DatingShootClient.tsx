@@ -76,6 +76,7 @@ type StatusResponse = {
   stage?: string;
   stageLabel?: string;
   creditState?: 'legacy' | 'reserved' | 'captured' | 'released';
+  retryScheduled?: boolean;
   retryAvailable?: boolean;
   failure?: { code: string; phase: string; message: string } | null;
   /**
@@ -448,7 +449,7 @@ export function DatingShootClient({
   // Otherwise, render the main Studio dashboard
   return (
     <div className="min-h-screen bg-background text-foreground pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-6 space-y-6">
         {/* 1. Studio Header & Controls */}
         <StudioHeader
           models={models}
@@ -465,7 +466,10 @@ export function DatingShootClient({
                   failedCount: status.counts.failed,
                   stageLabel: status.stageLabel,
                   providerBlocked: status.order.provider_blocked,
-                  needsAttention: status.order.pipeline_stage === 'attention_required',
+                  needsAttention:
+                    status.order.pipeline_stage === 'attention_required' &&
+                    !status.retryScheduled,
+                  retryScheduled: status.retryScheduled,
                   failed: status.order.status === 'failed' || status.order.pipeline_stage === 'failed',
                   creditState: status.creditState || status.order.credit_state,
                   retryAvailable: status.retryAvailable,
@@ -558,7 +562,11 @@ export function DatingShootClient({
               ? { realShoots: ownerDiagnostics.sampleShoots }
               : null}
             blocked={Boolean(status?.order.provider_blocked)}
-            paused={status?.order.pipeline_stage === 'attention_required'}
+            paused={
+              status?.order.pipeline_stage === 'attention_required' &&
+              !status?.retryScheduled
+            }
+            retrying={status?.retryScheduled}
             failed={status?.order.status === 'failed'}
             creditReturned={(status?.creditState || status?.order.credit_state) === 'released'}
             failureMessage={status?.failure?.message}

@@ -32,6 +32,7 @@ interface StudioHeaderProps {
     stageLabel?: string;
     providerBlocked?: boolean;
     needsAttention?: boolean;
+    retryScheduled?: boolean;
     failed?: boolean;
     creditState?: 'legacy' | 'reserved' | 'captured' | 'released';
     retryAvailable?: boolean;
@@ -70,6 +71,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
     status?.orderStatus === 'ready' || status?.orderStatus === 'partial_failed';
   const isProviderBlocked = Boolean(status?.providerBlocked);
   const isPaused = Boolean(status?.needsAttention);
+  const isRetrying = Boolean(status?.retryScheduled);
   const isFailed = Boolean(status?.failed);
 
   const avatarUrl = currentModel?.samples?.[0]?.uri || '/placeholder-user.jpg';
@@ -143,7 +145,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
         {/* Right Side: Action Controls (Aligned with rounded-lg) */}
         <div className="flex items-center gap-2 w-full sm:w-auto">
           {/* Failed Retry (if any failed) */}
-          {status && (status.retryAvailable || status.failedCount > 0 || status.needsAttention) && (
+          {status && !isRetrying && (status.retryAvailable || status.failedCount > 0 || status.needsAttention) && (
             <Button
               variant="outline"
               size="sm"
