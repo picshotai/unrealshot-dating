@@ -581,7 +581,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                   className="w-full sm:w-auto border-zinc-700 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium text-xs sm:text-sm h-11 px-5 rounded-lg font-oxanium flex items-center justify-center gap-2"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
-                  ← Edit Parameters
+                Edit Parameters
                 </Button>
 
                 <Button

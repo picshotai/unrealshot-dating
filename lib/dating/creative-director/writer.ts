@@ -72,6 +72,7 @@ export function buildShootWriterRequest(args: {
     "APPROVED DIMENSIONS",
     "3:4 = 1728x2304; 4:3 = 2304x1728; 9:16 = 1512x2688.",
     "Use 3:4 unless the locked format guidance and the exact composition genuinely justify an exception.",
+    "Every frameId must contain only lowercase letters, numbers and hyphens, for example arrival-context; never use underscores.",
     "",
     "REVISION CONTEXT",
     args.retry

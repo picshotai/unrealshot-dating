@@ -98,31 +98,20 @@ const portfolioTransportShootSchema = z.object({
   representedInterests: z.array(z.enum(INTEREST_IDS)).max(3),
   canonicalSummary: z.string(),
   noveltyFingerprint: z.string(),
-  provenanceOccasion: z.string(),
-  provenanceWhyHeIsThere: z.string(),
-  provenancePhotographerRelationship: z.string(),
-  provenanceWhyThePhotoWasTaken: z.string(),
-  provenanceSocialContext: z.string(),
-  sceneLocation: z.string(),
-  sceneShootingZone: z.string(),
-  sceneImmutableFacts: z.array(z.string()).min(2).max(6),
-  scenePortableProps: z.array(z.string()).max(2),
-  sceneOutfit: z.string(),
-  sceneWardrobeContinuity: z.string(),
-  sceneLight: z.string(),
-  sceneCameraFreedom: z.string(),
-  creativeDesirableMoment: z.string(),
-  creativeDatingValue: z.string(),
-  creativeVisualMood: z.string(),
-  creativeFourFramePossibility: z.string(),
-  creativeProfileUse: z.string(),
-  creativeFormatGuidance: z.string(),
-  proofProvenance: z.string(),
-  proofDatingDesirability: z.string(),
-  proofNonStaging: z.string(),
-  proofWardrobeLogic: z.string(),
-  proofContinuityRiskAndPrevention: z.string(),
-  proofFourFrameDistinctness: z.string(),
+  provenance: z.tuple([
+    z.string(), z.string(), z.string(), z.string(), z.string(),
+  ]),
+  scene: z.tuple([
+    z.string(), z.string(), z.string(), z.string(), z.string(), z.string(),
+  ]),
+  immutableFacts: z.array(z.string()).min(2).max(6),
+  portableProps: z.array(z.string()).max(2),
+  creativeDirection: z.tuple([
+    z.string(), z.string(), z.string(), z.string(), z.string(), z.string(),
+  ]),
+  qualityProof: z.tuple([
+    z.string(), z.string(), z.string(), z.string(), z.string(), z.string(),
+  ]),
 }).strict();
 
 const portfolioTransportSchema = z.object({
@@ -130,32 +119,27 @@ const portfolioTransportSchema = z.object({
   shoots: z.array(portfolioTransportShootSchema).min(1).max(40),
 }).strict();
 
-const PORTFOLIO_STRING_FIELDS = [
-  "candidateId", "title", "canonicalSummary", "noveltyFingerprint",
-  "provenanceOccasion", "provenanceWhyHeIsThere",
-  "provenancePhotographerRelationship", "provenanceWhyThePhotoWasTaken",
-  "provenanceSocialContext", "sceneLocation", "sceneShootingZone",
-  "sceneOutfit", "sceneWardrobeContinuity", "sceneLight", "sceneCameraFreedom",
-  "creativeDesirableMoment", "creativeDatingValue", "creativeVisualMood",
-  "creativeFourFramePossibility", "creativeProfileUse", "creativeFormatGuidance",
-  "proofProvenance", "proofDatingDesirability", "proofNonStaging",
-  "proofWardrobeLogic", "proofContinuityRiskAndPrevention",
-  "proofFourFrameDistinctness",
+const PORTFOLIO_REQUIRED_FIELDS = [
+  "candidateId", "title", "representedInterests", "canonicalSummary",
+  "noveltyFingerprint", "provenance", "scene", "immutableFacts",
+  "portableProps", "creativeDirection", "qualityProof",
 ] as const;
 
-const PORTFOLIO_REQUIRED_FIELDS = [
-  ...PORTFOLIO_STRING_FIELDS,
-  "representedInterests", "sceneImmutableFacts", "scenePortableProps",
-] as const;
+function orderedTextArray(length: number, description: string) {
+  return {
+    type: "array",
+    minItems: length,
+    maxItems: length,
+    items: { type: "string" },
+    description,
+  } as const;
+}
 
 /** A shallow provider contract avoids Gemini's deep-schema rejection limit. */
 export function portfolioJsonSchema(candidateCount: number) {
   if (!Number.isInteger(candidateCount) || candidateCount < 1 || candidateCount > 40) {
     throw new Error("candidateCount must be an integer from 1 to 40.");
   }
-  const stringProperties = Object.fromEntries(
-    PORTFOLIO_STRING_FIELDS.map((field) => [field, { type: "string" }])
-  );
   return {
     type: "object",
     additionalProperties: false,
@@ -171,17 +155,39 @@ export function portfolioJsonSchema(candidateCount: number) {
           additionalProperties: false,
           required: PORTFOLIO_REQUIRED_FIELDS,
           properties: {
-            ...stringProperties,
+            candidateId: { type: "string" },
+            title: { type: "string" },
             representedInterests: {
               type: "array", maxItems: 3,
-              items: { type: "string", enum: INTEREST_IDS },
+              // Keep the provider schema below Gemini's undocumented
+              // complexity threshold. The transport Zod schema still enforces
+              // the complete INTEREST_IDS enum before any candidate is used.
+              items: { type: "string" },
             },
-            sceneImmutableFacts: {
+            canonicalSummary: { type: "string" },
+            noveltyFingerprint: { type: "string" },
+            provenance: orderedTextArray(
+              5,
+              "Exact order: occasion; why he is there; photographer relationship; why the photo was taken; social context."
+            ),
+            scene: orderedTextArray(
+              6,
+              "Exact order: location; shooting zone; outfit; wardrobe continuity; light; camera freedom."
+            ),
+            immutableFacts: {
               type: "array", minItems: 2, maxItems: 6, items: { type: "string" },
             },
-            scenePortableProps: {
+            portableProps: {
               type: "array", maxItems: 2, items: { type: "string" },
             },
+            creativeDirection: orderedTextArray(
+              6,
+              "Exact order: desirable moment; dating value; visual mood; four-frame possibility; profile use; format guidance."
+            ),
+            qualityProof: orderedTextArray(
+              6,
+              "Exact order: provenance test; dating desirability test; non-staging test; wardrobe logic; continuity risk and prevention; four-frame distinctness."
+            ),
           },
         },
       },
@@ -202,37 +208,37 @@ export function parsePortfolioTransport(value: unknown) {
       canonicalSummary: shoot.canonicalSummary,
       noveltyFingerprint: shoot.noveltyFingerprint,
       provenance: {
-        occasion: shoot.provenanceOccasion,
-        whyHeIsThere: shoot.provenanceWhyHeIsThere,
-        photographerRelationship: shoot.provenancePhotographerRelationship,
-        whyThePhotoWasTaken: shoot.provenanceWhyThePhotoWasTaken,
-        socialContext: shoot.provenanceSocialContext,
+        occasion: shoot.provenance[0],
+        whyHeIsThere: shoot.provenance[1],
+        photographerRelationship: shoot.provenance[2],
+        whyThePhotoWasTaken: shoot.provenance[3],
+        socialContext: shoot.provenance[4],
       },
       sceneBible: {
-        location: shoot.sceneLocation,
-        shootingZone: shoot.sceneShootingZone,
-        immutableFacts: shoot.sceneImmutableFacts,
-        portableProps: shoot.scenePortableProps,
-        outfit: shoot.sceneOutfit,
-        wardrobeContinuity: shoot.sceneWardrobeContinuity,
-        light: shoot.sceneLight,
-        cameraFreedom: shoot.sceneCameraFreedom,
+        location: shoot.scene[0],
+        shootingZone: shoot.scene[1],
+        immutableFacts: shoot.immutableFacts,
+        portableProps: shoot.portableProps,
+        outfit: shoot.scene[2],
+        wardrobeContinuity: shoot.scene[3],
+        light: shoot.scene[4],
+        cameraFreedom: shoot.scene[5],
       },
       creativeDirection: {
-        desirableMoment: shoot.creativeDesirableMoment,
-        datingValue: shoot.creativeDatingValue,
-        visualMood: shoot.creativeVisualMood,
-        fourFramePossibility: shoot.creativeFourFramePossibility,
-        profileUse: shoot.creativeProfileUse,
-        formatGuidance: shoot.creativeFormatGuidance,
+        desirableMoment: shoot.creativeDirection[0],
+        datingValue: shoot.creativeDirection[1],
+        visualMood: shoot.creativeDirection[2],
+        fourFramePossibility: shoot.creativeDirection[3],
+        profileUse: shoot.creativeDirection[4],
+        formatGuidance: shoot.creativeDirection[5],
       },
       qualityProof: {
-        provenanceTest: shoot.proofProvenance,
-        datingDesirabilityTest: shoot.proofDatingDesirability,
-        nonStagingTest: shoot.proofNonStaging,
-        wardrobeLogic: shoot.proofWardrobeLogic,
-        continuityRiskAndPrevention: shoot.proofContinuityRiskAndPrevention,
-        fourFrameDistinctness: shoot.proofFourFrameDistinctness,
+        provenanceTest: shoot.qualityProof[0],
+        datingDesirabilityTest: shoot.qualityProof[1],
+        nonStagingTest: shoot.qualityProof[2],
+        wardrobeLogic: shoot.qualityProof[3],
+        continuityRiskAndPrevention: shoot.qualityProof[4],
+        fourFrameDistinctness: shoot.qualityProof[5],
       },
     })),
   });
@@ -247,31 +253,39 @@ export function portfolioCandidateToTransport(output: PortfolioCandidate) {
       representedInterests: shoot.representedInterests,
       canonicalSummary: shoot.canonicalSummary,
       noveltyFingerprint: shoot.noveltyFingerprint,
-      provenanceOccasion: shoot.provenance.occasion,
-      provenanceWhyHeIsThere: shoot.provenance.whyHeIsThere,
-      provenancePhotographerRelationship: shoot.provenance.photographerRelationship,
-      provenanceWhyThePhotoWasTaken: shoot.provenance.whyThePhotoWasTaken,
-      provenanceSocialContext: shoot.provenance.socialContext,
-      sceneLocation: shoot.sceneBible.location,
-      sceneShootingZone: shoot.sceneBible.shootingZone,
-      sceneImmutableFacts: shoot.sceneBible.immutableFacts,
-      scenePortableProps: shoot.sceneBible.portableProps,
-      sceneOutfit: shoot.sceneBible.outfit,
-      sceneWardrobeContinuity: shoot.sceneBible.wardrobeContinuity,
-      sceneLight: shoot.sceneBible.light,
-      sceneCameraFreedom: shoot.sceneBible.cameraFreedom,
-      creativeDesirableMoment: shoot.creativeDirection.desirableMoment,
-      creativeDatingValue: shoot.creativeDirection.datingValue,
-      creativeVisualMood: shoot.creativeDirection.visualMood,
-      creativeFourFramePossibility: shoot.creativeDirection.fourFramePossibility,
-      creativeProfileUse: shoot.creativeDirection.profileUse,
-      creativeFormatGuidance: shoot.creativeDirection.formatGuidance,
-      proofProvenance: shoot.qualityProof.provenanceTest,
-      proofDatingDesirability: shoot.qualityProof.datingDesirabilityTest,
-      proofNonStaging: shoot.qualityProof.nonStagingTest,
-      proofWardrobeLogic: shoot.qualityProof.wardrobeLogic,
-      proofContinuityRiskAndPrevention: shoot.qualityProof.continuityRiskAndPrevention,
-      proofFourFrameDistinctness: shoot.qualityProof.fourFrameDistinctness,
+      provenance: [
+        shoot.provenance.occasion,
+        shoot.provenance.whyHeIsThere,
+        shoot.provenance.photographerRelationship,
+        shoot.provenance.whyThePhotoWasTaken,
+        shoot.provenance.socialContext,
+      ],
+      scene: [
+        shoot.sceneBible.location,
+        shoot.sceneBible.shootingZone,
+        shoot.sceneBible.outfit,
+        shoot.sceneBible.wardrobeContinuity,
+        shoot.sceneBible.light,
+        shoot.sceneBible.cameraFreedom,
+      ],
+      immutableFacts: shoot.sceneBible.immutableFacts,
+      portableProps: shoot.sceneBible.portableProps,
+      creativeDirection: [
+        shoot.creativeDirection.desirableMoment,
+        shoot.creativeDirection.datingValue,
+        shoot.creativeDirection.visualMood,
+        shoot.creativeDirection.fourFramePossibility,
+        shoot.creativeDirection.profileUse,
+        shoot.creativeDirection.formatGuidance,
+      ],
+      qualityProof: [
+        shoot.qualityProof.provenanceTest,
+        shoot.qualityProof.datingDesirabilityTest,
+        shoot.qualityProof.nonStagingTest,
+        shoot.qualityProof.wardrobeLogic,
+        shoot.qualityProof.continuityRiskAndPrevention,
+        shoot.qualityProof.fourFrameDistinctness,
+      ],
     })),
   };
 }

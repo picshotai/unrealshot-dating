@@ -105,6 +105,13 @@ export function buildPortfolioRequest(args: {
     "PREVIOUS ATTEMPT PROBLEMS",
     args.retryProblems?.join("\n") || "None; this is a fresh portfolio planning attempt.",
     "",
+    "ORDERED TRANSPORT ARRAYS",
+    "candidateId must contain only lowercase letters, numbers and hyphens, for example morning-gym-reset; never use underscores.",
+    "provenance: [occasion, why he is there, photographer relationship, why the photo was taken, social context]",
+    "scene: [location, shooting zone, outfit, wardrobe continuity, light, camera freedom]",
+    "creativeDirection: [desirable moment, dating value, visual mood, four-frame possibility, profile use, format guidance]",
+    "qualityProof: [provenance test, dating desirability test, non-staging test, wardrobe logic, continuity risk and prevention, four-frame distinctness]",
+    "",
     "Return the required JSON only.",
   ].join("\n");
 }

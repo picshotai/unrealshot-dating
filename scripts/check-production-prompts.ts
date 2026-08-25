@@ -51,6 +51,10 @@ assert.equal(outageFailure.retryable, true);
 const providerSchema = portfolioJsonSchema(7);
 assert.equal(providerSchema.properties.shoots.minItems, 7);
 assert.equal(providerSchema.properties.shoots.maxItems, 7);
+assert(JSON.stringify(providerSchema).length < 2_000);
+assert(!("enum" in providerSchema.properties.shoots.items.properties.representedInterests.items));
+assert.equal(providerSchema.properties.shoots.items.properties.provenance.minItems, 5);
+assert.equal(providerSchema.properties.shoots.items.properties.qualityProof.maxItems, 6);
 const interactionRequest = buildDatingInteractionRequest({
   model: "gemini-3.7-flash",
   contents: "customer input",
@@ -99,6 +103,7 @@ const request = buildPortfolioRequest({
 });
 assert.match(request, /Gym|gym/i);
 assert.match(request, /No alcohol/);
+assert.match(request, /candidateId must contain only lowercase letters, numbers and hyphens/);
 assert.doesNotMatch(request, /customer style|dress preference|captureGrammar/i);
 
 const portfolio = await generatePortfolioCandidate({
@@ -151,6 +156,7 @@ assert(duplicateValidation.problems.some((problem) => /too similar/i.test(proble
 const writerRequest = buildShootWriterRequest({ brief: first, input });
 assert.match(writerRequest, /LOCKED SHOOT INTENT/);
 assert.match(writerRequest, /scene-anchor image/);
+assert.match(writerRequest, /frameId must contain only lowercase letters, numbers and hyphens/);
 assert.doesNotMatch(writerRequest, /close[\s\S]*medium[\s\S]*three.?quarter[\s\S]*expression/i);
 
 const shoot = await generateShootCandidate({
