@@ -4,11 +4,11 @@ import { INTEREST_IDS, type InterestId } from "@/lib/dating/types";
 import {
   DATING_CREATIVE_MODEL,
   DATING_CREATIVE_THINKING_LEVEL,
-  DATING_EMBEDDING_DIMENSIONS,
-  DATING_EMBEDDING_MODEL,
   DATING_PROVIDER_REQUEST_VERSION,
   PORTFOLIO_SYSTEM_VERSION,
   SHOOT_WRITER_SYSTEM_VERSION,
+  canonicalShootSummary,
+  selectCraftReferences,
   customerCreativeInputSchema,
   datingShootOutputSchema,
   noveltyIdeaKey,
@@ -23,23 +23,16 @@ import { getDatingPromptPricing } from "@/lib/dating/prompt-cost";
 
 type AdminDb = ReturnType<typeof createAdminClient>;
 
-// A fully reasoned scene intent is deliberately rich. Keeping one structured
-// planner response to at most eight candidates keeps each structured response
-// compact even though the Interactions request permits a larger output budget.
-const MAX_PORTFOLIO_SLOTS_PER_CALL = 7;
-const MAX_PORTFOLIO_CANDIDATES_PER_CALL = 8;
+const MAX_PORTFOLIO_CANDIDATES_PER_CALL = 30;
 
 export function portfolioPlanningBatch(missingSlots: number) {
   if (!Number.isInteger(missingSlots) || missingSlots < 1 || missingSlots > 30) {
     throw new Error("missingSlots must be an integer from 1 to 30.");
   }
-  const requestedSlots = Math.min(missingSlots, MAX_PORTFOLIO_SLOTS_PER_CALL);
+  const requestedSlots = Math.min(missingSlots, MAX_PORTFOLIO_CANDIDATES_PER_CALL);
   return {
     requestedSlots,
-    candidateCount: Math.min(
-      MAX_PORTFOLIO_CANDIDATES_PER_CALL,
-      requestedSlots + 1
-    ),
+    candidateCount: requestedSlots,
   };
 }
 
@@ -61,6 +54,9 @@ export type ProductionShootRow = {
   represented_interests: string[];
   novelty_fingerprint: string | null;
   canonical_summary: string | null;
+  render_mode?: "real" | "mock";
+  prompt_source?: "gemini" | "local_mock";
+  contract_version?: string | null;
   status: "reserved" | "generating" | "passed" | "replanning" | "abandoned";
 };
 
@@ -69,7 +65,11 @@ export type ProductionAttemptRow = {
   order_shoot_id: string;
   attempt_number: number;
   status: "running" | "passed" | "failed_validation" | "api_error";
-  request_snapshot: { brief: DatingShootIntent; input: CustomerCreativeInput };
+  request_snapshot: {
+    brief: DatingShootIntent;
+    input: CustomerCreativeInput;
+    testMode?: "off" | "sample" | "mock";
+  };
   raw_output: unknown;
   validation_errors: string[];
   api_error: string | null;
@@ -103,6 +103,7 @@ export type PortfolioAttemptRow = {
     customerHistory: PortfolioHistoryItem[];
     globalHistory: PortfolioHistoryItem[];
     retryProblems?: string[];
+    testMode?: "off" | "sample" | "mock";
   };
   raw_output: unknown;
   validation_errors: string[];
@@ -125,7 +126,7 @@ export type PortfolioAttemptRow = {
 export type PortfolioReservationRejection = {
   candidateId: string;
   fingerprint: string | null;
-  reason: "exact_complete_idea" | "within_order_near_duplicate" | "invalid_candidate";
+  reason: "exact_complete_idea" | "invalid_candidate";
   conflictingShootId: string | null;
   similarity?: number;
 };
@@ -183,11 +184,7 @@ function reservationFeedback(report: PortfolioReservationReport | null | undefin
   const rejected = report.rejected.map((item) =>
     `Rejected ${item.candidateId} (${item.reason}): ${item.fingerprint ?? "missing fingerprint"}`
   );
-  const warnings = report.semanticWarnings.map((item) =>
-    `Advisory only: ${item.candidateId} was semantically close to a ${item.scope} scene ` +
-    `(score ${item.similarity.toFixed(3)}). Broaden the remaining candidates without repeating accepted work.`
-  );
-  return [...rejected, ...warnings, ...(report.plannerWarnings ?? [])];
+  return [...rejected, ...(report.plannerWarnings ?? [])];
 }
 
 export async function loadProductionShoots(db: AdminDb, orderId: string) {
@@ -239,6 +236,7 @@ export async function startPortfolioAttempt(args: {
   userId: string;
   targetCount: number;
   input: CustomerCreativeInput;
+  testMode?: "off" | "sample" | "mock";
 }): Promise<PortfolioAttemptRow | null> {
   const raw = args.db as any;
   const histories = await portfolioHistories(args);
@@ -254,11 +252,6 @@ export async function startPortfolioAttempt(args: {
     .select("*").eq("order_id", args.orderId).eq("status", "running")
     .order("attempt_number", { ascending: false }).limit(1).maybeSingle();
   if (running) {
-    // Generation is already durable. An embedding outage can legitimately span
-    // all checkpointed waits, so its age must never trigger a second planner call.
-    if (running.provider_phase === "portfolio_embedding" && running.raw_output) {
-      return running as PortfolioAttemptRow;
-    }
     const isFresh = Date.parse(running.created_at) >= Date.now() - 10 * 60_000;
     if (isFresh) return running as PortfolioAttemptRow;
     await raw.from("dating_portfolio_attempts").update({
@@ -271,29 +264,6 @@ export async function startPortfolioAttempt(args: {
   const { data: last } = await raw.from("dating_portfolio_attempts")
     .select("*").eq("order_id", args.orderId)
     .order("attempt_number", { ascending: false }).limit(1).maybeSingle();
-  // A manual retry after a permanent embedding/configuration error resumes the
-  // checkpointed candidate. It does not pay for or invent a second portfolio.
-  if (last?.status === "api_error" &&
-      last.provider_phase === "portfolio_embedding" &&
-      last.raw_output) {
-    const { data: resumed, error: resumeError } = await raw
-      .from("dating_portfolio_attempts")
-      .update({
-        status: "running",
-        api_error: null,
-        error_retryable: null,
-        provider_http_status: null,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", last.id)
-      .eq("status", "api_error")
-      .select("*")
-      .single();
-    if (resumeError || !resumed) {
-      throw new Error(`Failed to resume portfolio embedding: ${resumeError?.message}`);
-    }
-    return resumed as PortfolioAttemptRow;
-  }
   const attemptNumber = Number(last?.attempt_number ?? 0) + 1;
   const requestSnapshot = {
     input: args.input,
@@ -307,6 +277,7 @@ export async function startPortfolioAttempt(args: {
       ...((last?.validation_errors ?? []) as string[]),
       ...reservationFeedback(last?.reservation_report as PortfolioReservationReport | null),
     ],
+    testMode: args.testMode,
   };
   const { data, error } = await raw.from("dating_portfolio_attempts").insert({
     order_id: args.orderId,
@@ -354,8 +325,6 @@ export async function finishPortfolioAttempt(args: {
     pricingSnapshot: unknown;
     interactionId: string | null;
   };
-  embeddings: Readonly<Record<string, number[] | undefined>>;
-  embeddingBillableCharacters: number;
 }) {
   const raw = args.db as any;
   let reservedCount = 0;
@@ -369,25 +338,17 @@ export async function finishPortfolioAttempt(args: {
       Number(right.representedInterests.some((interest) => needed.has(interest))) -
       Number(left.representedInterests.some((interest) => needed.has(interest)))
     );
-    const candidates = orderedShoots.map((brief) => {
-      const embedding = args.embeddings[brief.candidateId];
-      if (!embedding || embedding.length !== DATING_EMBEDDING_DIMENSIONS) {
-        throw new Error(`Missing semantic embedding for ${brief.candidateId}.`);
-      }
-      return {
+    const candidates = orderedShoots.map((brief) => ({
         ideaKey: noveltyIdeaKey(brief.noveltyFingerprint),
         plannerVersion: PORTFOLIO_SYSTEM_VERSION,
-        canonicalSummary: brief.canonicalSummary,
+        canonicalSummary: canonicalShootSummary(brief),
         noveltyFingerprint: brief.noveltyFingerprint,
-        embedding,
         brief,
-      };
-    });
-    const { data, error } = await raw.rpc("reserve_intelligent_dating_shoots_v2", {
+      }));
+    const { data, error } = await raw.rpc("reserve_intelligent_dating_shoots_v3", {
       p_order_id: args.attempt.order_id,
       p_planner_attempt_id: args.attempt.id,
       p_candidates: candidates,
-      p_within_order_threshold: 0.92,
     });
     if (error) throw new Error(`Failed to reserve intelligent scenes: ${error.message}`);
     const report = data && typeof data === "object"
@@ -423,9 +384,9 @@ export async function finishPortfolioAttempt(args: {
     provider_request_version: DATING_PROVIDER_REQUEST_VERSION,
     api_error: null,
     error_retryable: false,
-    embedding_model: DATING_EMBEDDING_MODEL,
-    embedding_dimensions: DATING_EMBEDDING_DIMENSIONS,
-    embedding_billable_characters: args.embeddingBillableCharacters,
+    embedding_model: null,
+    embedding_dimensions: null,
+    embedding_billable_characters: 0,
     updated_at: new Date().toISOString(),
   }).eq("id", args.attempt.id).eq("status", "running");
   if (error) throw new Error(`Failed to complete portfolio attempt: ${error.message}`);
@@ -443,7 +404,7 @@ export async function failPortfolioAttempt(args: {
   attempt: PortfolioAttemptRow;
   safeError: string;
   retryable: boolean;
-  phase: "portfolio_generation" | "portfolio_embedding";
+  phase: "portfolio_generation";
   httpStatus?: number | null;
   interactionId?: string | null;
 }) {
@@ -460,61 +421,11 @@ export async function failPortfolioAttempt(args: {
   if (error) throw new Error(`Failed to persist portfolio provider error: ${error.message}`);
 }
 
-export async function savePortfolioGeneration(args: {
-  db: AdminDb;
-  attempt: PortfolioAttemptRow;
-  generation: {
-    rawOutput: unknown;
-    validation: { problems: string[] };
-    usage: { inputTokens: number; outputTokens: number; reasoningTokens: number; totalTokens: number };
-    estimatedCostUsd: number;
-    pricingSnapshot: unknown;
-    interactionId: string | null;
-  };
-}) {
-  const { error } = await (args.db as any).from("dating_portfolio_attempts").update({
-    raw_output: args.generation.rawOutput,
-    validation_errors: args.generation.validation.problems,
-    input_tokens: args.generation.usage.inputTokens,
-    output_tokens: args.generation.usage.outputTokens,
-    reasoning_tokens: args.generation.usage.reasoningTokens,
-    total_tokens: args.generation.usage.totalTokens,
-    estimated_cost_usd: args.generation.estimatedCostUsd,
-    pricing_snapshot: args.generation.pricingSnapshot,
-    provider_phase: "portfolio_embedding",
-    provider_interaction_id: args.generation.interactionId,
-    provider_request_version: DATING_PROVIDER_REQUEST_VERSION,
-    provider_http_status: null,
-    api_error: null,
-    error_retryable: null,
-    updated_at: new Date().toISOString(),
-  }).eq("id", args.attempt.id).eq("status", "running");
-  if (error) throw new Error(`Failed to checkpoint portfolio generation: ${error.message}`);
-}
-
-export async function recordPortfolioEmbeddingFailure(args: {
-  db: AdminDb;
-  attempt: PortfolioAttemptRow;
-  safeError: string;
-  retryable: boolean;
-  httpStatus?: number | null;
-}) {
-  const { error } = await (args.db as any).from("dating_portfolio_attempts").update({
-    status: args.retryable ? "running" : "api_error",
-    api_error: args.safeError,
-    error_retryable: args.retryable,
-    provider_phase: "portfolio_embedding",
-    provider_http_status: args.httpStatus ?? null,
-    provider_request_version: DATING_PROVIDER_REQUEST_VERSION,
-    updated_at: new Date().toISOString(),
-  }).eq("id", args.attempt.id).eq("status", "running");
-  if (error) throw new Error(`Failed to persist portfolio embedding error: ${error.message}`);
-}
-
 export async function startProductionAttempt(
   db: AdminDb,
   shoot: ProductionShootRow,
-  input?: CustomerCreativeInput
+  input?: CustomerCreativeInput,
+  testMode?: "off" | "sample" | "mock"
 ): Promise<ProductionAttemptRow> {
   const raw = db as any;
   const { data: order } = input ? { data: null } : await raw.from("user_shoot_orders")
@@ -527,6 +438,9 @@ export async function startProductionAttempt(
     .select("attempt_number").eq("order_shoot_id", shoot.id)
     .order("attempt_number", { ascending: false }).limit(1).maybeSingle();
   const attemptNumber = Number(last?.attempt_number ?? 0) + 1;
+  const referenceIds = selectCraftReferences(shoot.brief)
+    .map((reference) => `${reference.shootId}:${reference.framing}`)
+    .join(",");
   const { data, error } = await raw.from("dating_prompt_attempts").insert({
     order_shoot_id: shoot.id,
     attempt_number: attemptNumber,
@@ -534,8 +448,8 @@ export async function startProductionAttempt(
     model: DATING_CREATIVE_MODEL,
     thinking_level: DATING_CREATIVE_THINKING_LEVEL,
     prompt_system_version: SHOOT_WRITER_SYSTEM_VERSION,
-    reference_shoot_id: null,
-    request_snapshot: { brief: shoot.brief, input: creativeInput },
+    reference_shoot_id: referenceIds,
+    request_snapshot: { brief: shoot.brief, input: creativeInput, testMode },
     pricing_snapshot: getDatingPromptPricing(),
     provider_phase: "shoot_generation",
     provider_request_version: DATING_PROVIDER_REQUEST_VERSION,
@@ -555,7 +469,8 @@ export async function startProductionAttempt(
 export async function ensureProductionAttempt(
   db: AdminDb,
   shoot: ProductionShootRow,
-  input?: CustomerCreativeInput
+  input?: CustomerCreativeInput,
+  testMode?: "off" | "sample" | "mock"
 ) {
   if (shoot.status === "generating") {
     const { data } = await (db as any).from("dating_prompt_attempts").select("*")
@@ -571,7 +486,7 @@ export async function ensureProductionAttempt(
       });
     }
   }
-  return startProductionAttempt(db, shoot, input);
+  return startProductionAttempt(db, shoot, input, testMode);
 }
 
 export async function loadProductionAttempt(
@@ -607,28 +522,15 @@ export async function finishProductionAttempt(args: {
   db: AdminDb;
   attempt: ProductionAttemptRow;
   generation: ShootGeneration;
-  maxInvalidAttempts: number;
 }): Promise<{ passed: boolean; replanning: boolean }> {
   const raw = args.db as any;
   const parsed = args.generation.validation.passed
     ? datingShootOutputSchema.parse(args.generation.output)
     : null;
-  let replanning = false;
-  if (!parsed) {
-    const fingerprint = args.attempt.request_snapshot.brief.noveltyFingerprint;
-    const { data: attempts, error } = await raw.from("dating_prompt_attempts")
-      .select("request_snapshot").eq("order_shoot_id", args.attempt.order_shoot_id)
-      .eq("status", "failed_validation");
-    if (error) throw new Error(`Failed to audit invalid prompt attempts: ${error.message}`);
-    const previous = (attempts ?? []).filter((item: any) =>
-      item.request_snapshot?.brief?.noveltyFingerprint === fingerprint
-    ).length;
-    replanning = previous + 1 >= args.maxInvalidAttempts;
-  }
   const { error } = await raw.rpc("complete_dating_prompt_attempt", {
     p_attempt_id: args.attempt.id,
     p_attempt_status: parsed ? "passed" : "failed_validation",
-    p_shoot_status: parsed ? "passed" : replanning ? "replanning" : "reserved",
+    p_shoot_status: parsed ? "passed" : "reserved",
     p_raw_output: args.generation.rawOutput,
     p_validation_errors: args.generation.validation.problems,
     p_scene_density: args.generation.validation.sceneDensity,
@@ -640,7 +542,7 @@ export async function finishProductionAttempt(args: {
     p_pricing_snapshot: args.generation.pricingSnapshot,
     p_api_error: null,
     p_accepted_output: parsed,
-    p_title: parsed?.scene.title ?? null,
+    p_title: parsed?.title ?? null,
   });
   if (error) throw new Error(`Failed to commit prompt attempt: ${error.message}`);
   await raw.from("dating_prompt_attempts").update({
@@ -650,7 +552,7 @@ export async function finishProductionAttempt(args: {
     provider_request_version: DATING_PROVIDER_REQUEST_VERSION,
     error_retryable: false,
   }).eq("id", args.attempt.id);
-  return { passed: Boolean(parsed), replanning };
+  return { passed: Boolean(parsed), replanning: false };
 }
 
 export async function failProductionAttempt(args: {

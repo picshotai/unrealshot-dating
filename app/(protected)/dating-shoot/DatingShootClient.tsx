@@ -58,6 +58,9 @@ type StatusResponse = {
     failure_code?: string | null;
     failure_phase?: string | null;
     failure_message?: string | null;
+    prompt_system_version?: string | null;
+    test_mode_snapshot?: 'mock' | 'sample' | 'off';
+    real_shoots_target?: number;
   };
   counts: {
     pending: number;
@@ -67,11 +70,14 @@ type StatusResponse = {
     total: number;
   };
   promptCounts?: {
+    planned?: number;
     reserved: number;
     generating: number;
     passed: number;
     replanning: number;
     total: number;
+    realTarget?: number;
+    mock?: number;
   };
   stage?: string;
   stageLabel?: string;
@@ -558,8 +564,8 @@ export function DatingShootClient({
             stageLabel={status?.stageLabel}
             promptCounts={status?.promptCounts}
             shootTarget={status?.order.shoots_target ?? deliveryConfig.shoots}
-            sample={ownerDiagnostics?.testMode === 'sample'
-              ? { realShoots: ownerDiagnostics.sampleShoots }
+            sample={(status?.promptCounts?.mock ?? 0) > 0
+              ? { realShoots: status?.promptCounts?.realTarget ?? 0 }
               : null}
             blocked={Boolean(status?.order.provider_blocked)}
             paused={

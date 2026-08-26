@@ -21,9 +21,9 @@ export type CreativeModelCall = (request: {
   maxOutputTokens?: number;
 }) => Promise<CreativeModelResponse>;
 
-export const DATING_PROVIDER_REQUEST_VERSION = "gemini-interactions-v1" as const;
-export const PORTFOLIO_MAX_OUTPUT_TOKENS = 32_768 as const;
-export const SHOOT_MAX_OUTPUT_TOKENS = 16_384 as const;
+export const DATING_PROVIDER_REQUEST_VERSION = "gemini-interactions-v3" as const;
+export const PORTFOLIO_MAX_OUTPUT_TOKENS = 16_384 as const;
+export const SHOOT_MAX_OUTPUT_TOKENS = 8_192 as const;
 
 export const DATING_EMBEDDING_MODEL = "gemini-embedding-001" as const;
 export const DATING_EMBEDDING_DIMENSIONS = 768 as const;

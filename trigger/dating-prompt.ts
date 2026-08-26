@@ -69,11 +69,12 @@ export const generateDatingShootPrompts = task({
     let generation;
     try {
       const config = getDatingProductConfig();
+      const testMode = attempt.request_snapshot.testMode ?? config.testMode;
       generation = await generateProductionPromptCandidate({
         brief: attempt.shoot.brief,
         input: attempt.request_snapshot.input,
         retry,
-        modelCall: config.testMode === "mock"
+        modelCall: testMode === "mock"
           ? mockProductionModelCall(attempt.shoot.brief)
           : undefined,
       });
@@ -103,7 +104,6 @@ export const generateDatingShootPrompts = task({
       db,
       attempt,
       generation,
-      maxInvalidAttempts: getDatingProductConfig().promptAttemptsPerIdea,
     });
     logger.info("Production dating prompt attempt completed", {
       orderShootId: payload.orderShootId,

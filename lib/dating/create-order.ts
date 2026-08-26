@@ -38,6 +38,7 @@ export class DatingOrderError extends Error {
       | "order_in_progress"
       | "insufficient_credits"
       | "references_need_reupload"
+      | "legacy_order"
       | "invalid_input",
     readonly detail: Record<string, unknown> = {}
   ) {
@@ -184,6 +185,12 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
         creativeInput: { interests, excludeTags },
         plannerVersion: PORTFOLIO_SYSTEM_VERSION,
         promptSystemVersion: SHOOT_WRITER_SYSTEM_VERSION,
+        testMode: productConfig.testMode,
+        realShootsTarget: productConfig.testMode === "mock"
+          ? 0
+          : productConfig.testMode === "sample"
+            ? productConfig.sampleShoots
+            : productConfig.shootsPerDelivery,
       },
     });
     if (reservation.result === "insufficient") {
@@ -273,7 +280,7 @@ export async function resumeDatingShootOrder(orderId: string, userId: string) {
 
   const { data: order } = await (db as any)
     .from("user_shoot_orders")
-    .select("id, user_id, model_id, status, pipeline_mode, pipeline_stage, updated_at")
+    .select("id, user_id, model_id, status, pipeline_mode, pipeline_stage, prompt_system_version, trigger_run_id, updated_at")
     .eq("id", orderId)
     .eq("user_id", userId)
     .single();
@@ -300,6 +307,19 @@ export async function resumeDatingShootOrder(orderId: string, userId: string) {
   }
   if (reservation.result === "not_retryable") {
     throw new DatingOrderError("This completed shoot cannot be retried.", "invalid_input");
+  }
+  if (reservation.result === "legacy_incompatible") {
+    throw new DatingOrderError(
+      "This shoot used the retired prompt system. Its pack remains returned; start a fresh shoot with the rebuilt system.",
+      "legacy_order"
+    );
+  }
+  if (reservation.result === "already_running") {
+    return {
+      orderId,
+      triggerRunId: reservation.triggerRunId ?? order.trigger_run_id ?? null,
+      reused: true,
+    };
   }
 
   // Reset failed → pending so parent will pick them up

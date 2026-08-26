@@ -1,11 +1,14 @@
 import { AlertTriangle, Loader2, Sparkles } from "lucide-react";
 
 type PromptCounts = {
+  planned?: number;
   reserved: number;
   generating: number;
   passed: number;
   replanning: number;
   total: number;
+  realTarget?: number;
+  mock?: number;
 };
 
 export function PortfolioProgressPanel({
@@ -32,7 +35,8 @@ export function PortfolioProgressPanel({
   failureMessage?: string;
 }) {
   const ready = promptCounts?.passed ?? 0;
-  const percent = Math.round(100 * ready / Math.max(1, shootTarget));
+  const realTarget = promptCounts?.realTarget ?? promptCounts?.total ?? shootTarget;
+  const percent = Math.round(100 * ready / Math.max(1, realTarget));
   const mockShoots = sample ? Math.max(0, shootTarget - sample.realShoots) : 0;
 
   return (
@@ -73,7 +77,9 @@ export function PortfolioProgressPanel({
             />
           </div>}
           {!failed && <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-500">
-            <span>{ready} of {shootTarget} shoot prompts ready</span>
+            <span>
+              {promptCounts?.planned ?? 0} of {shootTarget} concepts planned · {ready} of {realTarget} real shoot prompts ready
+            </span>
             {sample && (
               <span className="font-mono text-zinc-600">
                 sample: {sample.realShoots} Fal shoots + {mockShoots} mock shoots

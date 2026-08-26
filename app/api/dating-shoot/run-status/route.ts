@@ -9,6 +9,32 @@ export const runtime = "nodejs";
 
 const RETRY_WAKE_GRACE_MS = 5 * 60 * 1000;
 
+type DatingOrderStatusRow = {
+  id: string;
+  status: string;
+  model_id: number;
+  custom_credits_remaining: number;
+  photos_target: number;
+  shoots_target: number;
+  pipeline_mode: string;
+  pipeline_stage: string;
+  provider_blocked: boolean;
+  credit_state: string;
+  credit_amount: number;
+  failure_code: string | null;
+  failure_phase: string | null;
+  failure_message: string | null;
+  failed_at: string | null;
+  next_retry_at: string | null;
+  trigger_run_id: string | null;
+  created_at: string;
+  ready_at: string | null;
+  planner_version: string | null;
+  prompt_system_version: string | null;
+  test_mode_snapshot: "off" | "sample" | "mock";
+  real_shoots_target: number;
+};
+
 function isMissingPipelineColumn(error: { code?: string; message?: string } | null) {
   return error?.code === "42703" ||
     error?.code === "PGRST204" ||
@@ -81,14 +107,17 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "orderId required" }, { status: 400 });
   }
 
-  let { data: order, error: orderErr } = await supabase
+  const primaryOrderResult = await supabase
     .from("user_shoot_orders")
     .select(
       "id, status, model_id, custom_credits_remaining, photos_target, shoots_target, pipeline_mode, pipeline_stage, provider_blocked, credit_state, credit_amount, failure_code, failure_phase, failure_message, failed_at, next_retry_at, trigger_run_id, created_at, ready_at"
+        + ", planner_version, prompt_system_version, test_mode_snapshot, real_shoots_target"
     )
     .eq("id", orderId)
     .eq("user_id", user.id)
     .single();
+  let order = primaryOrderResult.data as unknown as DatingOrderStatusRow | null;
+  let orderErr = primaryOrderResult.error;
 
   // Migration 039 can be deployed independently from the application. Keep
   // authored and already-running orders viewable during that rollout window.
@@ -112,7 +141,11 @@ export async function GET(request: NextRequest) {
         failure_message: null,
         failed_at: null,
         next_retry_at: null,
-      } as typeof order;
+        planner_version: null,
+        prompt_system_version: null,
+        test_mode_snapshot: "off",
+        real_shoots_target: compatible.data.shoots_target,
+      } as unknown as DatingOrderStatusRow;
     } else {
       // Migration 033 is deliberately deployed before the dynamic rollout flag.
       // Older databases and authored orders must remain viewable.
@@ -143,7 +176,11 @@ export async function GET(request: NextRequest) {
           failure_message: null,
           failed_at: null,
           next_retry_at: null,
-        } as typeof order)
+          planner_version: null,
+          prompt_system_version: null,
+          test_mode_snapshot: "off",
+          real_shoots_target: Math.max(1, Math.ceil(Number(legacy.data.photos_target ?? 0) / 4)),
+        } as unknown as DatingOrderStatusRow)
       : null;
     }
   }
@@ -241,7 +278,7 @@ export async function GET(request: NextRequest) {
   const { data: dynamicShoots } = order.pipeline_mode === "dynamic"
     ? await supabase
         .from("dating_order_shoots" as any)
-        .select("id, slot_index, title, kind, status")
+        .select("id, slot_index, title, kind, status, render_mode, prompt_source, contract_version")
         .eq("order_id", orderId)
         .neq("status", "abandoned")
         .order("slot_index")
@@ -252,6 +289,9 @@ export async function GET(request: NextRequest) {
     title: string | null;
     kind: string;
     status: string;
+    render_mode?: "real" | "mock";
+    prompt_source?: "gemini" | "local_mock";
+    contract_version?: string | null;
   }>;
   const photosTarget = Number(order.photos_target ?? all.length);
   const counts = {
@@ -265,11 +305,14 @@ export async function GET(request: NextRequest) {
     total: photosTarget,
   };
   const promptCounts = {
-    reserved: promptRows.filter((row) => row.status === "reserved").length,
-    generating: promptRows.filter((row) => row.status === "generating").length,
-    passed: promptRows.filter((row) => row.status === "passed").length,
-    replanning: promptRows.filter((row) => row.status === "replanning").length,
-    total: Number(order.shoots_target ?? 0),
+    planned: promptRows.length,
+    reserved: promptRows.filter((row) => row.render_mode === "real" && row.status === "reserved").length,
+    generating: promptRows.filter((row) => row.render_mode === "real" && row.status === "generating").length,
+    passed: promptRows.filter((row) => row.render_mode === "real" && row.status === "passed").length,
+    replanning: 0,
+    mock: promptRows.filter((row) => row.render_mode === "mock").length,
+    realTarget: Number(order.real_shoots_target ?? order.shoots_target ?? 0),
+    total: Number(order.real_shoots_target ?? order.shoots_target ?? 0),
   };
 
   // Grouped by shoot, because that is what the delivery *is*: this place, these
@@ -347,7 +390,7 @@ export async function GET(request: NextRequest) {
     : stage === "planning"
       ? 2
       : stage === "writing_prompts" || (stage === "attention_required" && all.length === 0)
-        ? 5 + Math.round(20 * promptCounts.passed / Math.max(1, promptCounts.total))
+        ? 5 + Math.round(20 * promptCounts.passed / Math.max(1, promptCounts.realTarget))
         : stage === "rendering_anchors"
           ? 25 + Math.round(20 * all.filter((row) => row.is_anchor && row.status === "completed").length / Math.max(1, Number(order.shoots_target)))
           : 45 + Math.round(55 * counts.completed / Math.max(1, counts.total));
@@ -363,6 +406,7 @@ export async function GET(request: NextRequest) {
     retryScheduled,
     retryAvailable:
       isTerminalFailure &&
+      order.prompt_system_version === "dating-shoot-writer-v7" &&
       (order.credit_state === "released" || order.credit_state === "legacy"),
     failure: isTerminalFailure
       ? {

@@ -1,6 +1,8 @@
 export function plannerCallBudget(missingShootsAtStart: number): number {
   if (!Number.isInteger(missingShootsAtStart) || missingShootsAtStart < 1) return 0;
-  return Math.ceil(missingShootsAtStart / 7) + 2;
+  // One normal portfolio call and, only if exact reservation or mechanics left
+  // slots open, one missing-slot repair call.
+  return 2;
 }
 
 export function nextNoProgressCount(current: number, reservedCount: number): number {

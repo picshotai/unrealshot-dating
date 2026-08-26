@@ -36,6 +36,11 @@ export function getDatingProductConfig(): DatingProductConfig {
     ),
     sampleShoots: SAMPLE_SHOOTS,
     geminiConcurrency: integerEnv("DATING_GEMINI_CONCURRENCY", 4, 1, 20),
-    promptAttemptsPerIdea: integerEnv("DATING_PROMPT_ATTEMPTS_PER_IDEA", 3, 1, 10),
+    // One initial writer call plus one mechanical correction. Creative taste
+    // warnings never buy another provider call.
+    promptAttemptsPerIdea: Math.min(
+      2,
+      integerEnv("DATING_PROMPT_ATTEMPTS_PER_IDEA", 2, 1, 10)
+    ),
   };
 }

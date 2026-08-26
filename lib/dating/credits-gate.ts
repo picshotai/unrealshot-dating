@@ -51,9 +51,10 @@ export async function reserveDatingOrderRetry(orderId: string, userId: string) {
   });
   if (error) throw new Error(`Dating order retry reservation failed: ${error.message}`);
   return data as {
-    result: "reserved" | "insufficient" | "not_retryable";
+    result: "reserved" | "already_running" | "insufficient" | "not_retryable" | "legacy_incompatible";
     balance: number | null;
     stage?: "planning" | "writing_prompts" | "rendering_photos";
+    triggerRunId?: string | null;
   };
 }
 

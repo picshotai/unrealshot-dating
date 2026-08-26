@@ -12,6 +12,12 @@ type ProbeResult = {
   candidateTitle: string | null;
   estimatedCostUsd: number;
   problems: string[];
+  warnings: string[];
+  brief: Record<string, unknown> | null;
+  references: { id: string; prompt: string }[];
+  captureOutput: { frames?: Array<{ frameId: string; capturePrompt: string }> } | null;
+  compiledOutput: { frames?: Array<{ frameId: string; prompt: string }> } | null;
+  usage: { inputTokens: number; outputTokens: number; reasoningTokens: number; totalTokens: number };
 };
 
 export function ProductionProviderProbe() {
@@ -39,7 +45,7 @@ export function ProductionProviderProbe() {
     <Card className="border-border/70 bg-card/70">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-base"><Activity className="h-4 w-4" /> Production provider contract</CardTitle>
-        <CardDescription>Owner-only. One click makes exactly one real portfolio-planner call. It creates no order, image, credit spend or retry.</CardDescription>
+        <CardDescription>Owner-only. One planner call plus one four-frame writer call. It creates no order, Fal image, pack charge or retry.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         <Button variant="outline" disabled={busy} onClick={runProbe}>
@@ -56,6 +62,33 @@ export function ProductionProviderProbe() {
             </div>
           </div>
         )}
+        {result?.brief && (
+          <details className="rounded-lg border border-border/70 p-3 text-xs">
+            <summary className="cursor-pointer font-medium">Lean planner brief</summary>
+            <pre className="mt-3 max-h-80 overflow-auto whitespace-pre-wrap text-muted-foreground">{JSON.stringify(result.brief, null, 2)}</pre>
+          </details>
+        )}
+        {result && result.references.length > 0 && (
+          <details className="rounded-lg border border-border/70 p-3 text-xs">
+            <summary className="cursor-pointer font-medium">Selected authored craft fragments ({result.references.length})</summary>
+            <div className="mt-3 space-y-3 text-muted-foreground">
+              {result.references.map((reference) => <div key={reference.id}><p className="font-mono text-foreground">{reference.id}</p><p className="mt-1 whitespace-pre-wrap">{reference.prompt}</p></div>)}
+            </div>
+          </details>
+        )}
+        {result?.compiledOutput?.frames && (
+          <div className="grid gap-3 md:grid-cols-2">
+            {result.compiledOutput.frames.map((frame, index) => {
+              const capture = result.captureOutput?.frames?.[index]?.capturePrompt ?? "";
+              return <div key={frame.frameId} className="rounded-lg border border-border/70 p-3 text-xs">
+                <p className="font-medium">{frame.frameId} · {capture.length} creative chars · {frame.prompt.length} compiled chars</p>
+                <p className="mt-2 whitespace-pre-wrap text-muted-foreground"><strong className="text-foreground">Gemini:</strong> {capture}</p>
+                <p className="mt-2 whitespace-pre-wrap text-muted-foreground"><strong className="text-foreground">Fal:</strong> {frame.prompt}</p>
+              </div>;
+            })}
+          </div>
+        )}
+        {result && result.warnings.length > 0 && <p className="text-xs text-amber-300">Warning only: {result.warnings.join(" · ")}</p>}
         {error && <p className="text-sm text-red-400">{error}</p>}
       </CardContent>
     </Card>

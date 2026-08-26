@@ -25,13 +25,11 @@ import { sendDatingShootReadyNotification } from "@/lib/dating/notifications";
 import {
   FRAMES_PER_SHOOT,
   MIN_COMPLETE_SHOOTS,
-  SAMPLE_SHOOTS,
 } from "@/lib/dating/types";
 import { SHOOT_BY_ID } from "@/lib/dating/shoots";
-import { selectSampleShootIds } from "@/lib/dating/sample-selection";
 import {
   loadProductionShoots,
-  representedInterestsOfBrief,
+  type ProductionShootRow,
 } from "@/lib/dating/production-prompts/store";
 import { releaseDatingOrderCredit } from "@/lib/dating/credits-gate";
 import {
@@ -389,6 +387,7 @@ type PhotoRow = {
   image_url: string | null;
   deterministic_id: string | null;
   attempt_count: number | null;
+  render_mode: "real" | "mock";
 };
 
 const PROVIDER_RETRY_DELAYS_MINUTES = [1, 5, 15] as const;
@@ -428,7 +427,7 @@ export const datingPhotoshootOrchestrator = task({
 
     const { data: pipelineOrder, error: pipelineOrderError } = await (db as any)
       .from("user_shoot_orders")
-      .select("id, status, pipeline_mode, pipeline_stage, shoots_target, creative_input, credit_state")
+      .select("id, status, pipeline_mode, pipeline_stage, shoots_target, creative_input, credit_state, prompt_system_version, test_mode_snapshot, real_shoots_target")
       .eq("id", batchId)
       .single();
     if (pipelineOrderError || !pipelineOrder) {
@@ -513,10 +512,14 @@ export const datingPhotoshootOrchestrator = task({
       if (!promptsReady) throw new Error(`Prompt preparation did not complete for ${batchId}.`);
     }
 
-    const photoRows = await loadPhotoRows(db, batchId);
+    let photoRows = await loadPhotoRows(db, batchId);
     const dynamicShootMetadata = pipelineOrder.pipeline_mode === "dynamic"
       ? new Map((await loadProductionShoots(db as any, batchId)).map((shoot) => [shoot.id, shoot]))
       : new Map();
+    if (pipelineOrder.pipeline_mode === "dynamic") {
+      await completeLocalMockPhotos(db, photoRows, dynamicShootMetadata);
+      photoRows = await loadPhotoRows(db, batchId);
+    }
     await markOrder(db, batchId, "developing");
 
     // ── RESUME AUDIT ──────────────────────────────────────
@@ -556,44 +559,7 @@ export const datingPhotoshootOrchestrator = task({
         .eq("id", row.id);
     }
 
-    // ── SAMPLE MODE: WHOLE SHOOTS, NEVER LOOSE FRAMES ─────
-    // A shoot's only real question is whether its four frames hold together.
-    // Sampling scattered frames cannot answer it, and the old sampler answered a
-    // different question badly — it took the lowest slot in each bucket, so
-    // every sample run rendered the same corner of the library.
-    const testMode = getDatingTestMode();
-    const shootIds = [...new Set(photoRows.map((row) => row.shoot_id))];
-    let realShoots = new Set<string>();
-
-    if (testMode === "sample") {
-      realShoots = selectSampleShootIds({
-        candidates: shootIds.map((shootId) => {
-          const dynamicInterests = representedInterestsOfBrief(
-            dynamicShootMetadata.get(shootId)?.brief
-          );
-          return {
-            shootId,
-            representedInterests: dynamicInterests.length > 0
-              ? dynamicInterests
-              : SHOOT_BY_ID.get(shootId)?.interests ?? [],
-          };
-        }),
-        selectedInterests: pipelineOrder.creative_input?.interests ?? [],
-        count: SAMPLE_SHOOTS,
-        seed: `${batchId}:sample`,
-      });
-      logger.info("Sample mode", {
-        realShoots: [...realShoots],
-        selectedInterests: pipelineOrder.creative_input?.interests ?? [],
-        frames: realShoots.size * FRAMES_PER_SHOOT,
-      });
-    }
-
-    const isMocked = (row: PhotoRow) => {
-      if (testMode === "mock") return true;
-      if (testMode === "sample") return !realShoots.has(row.shoot_id);
-      return false;
-    };
+    const isMocked = (row: PhotoRow) => row.render_mode === "mock";
 
     const toPayload = (
       row: PhotoRow,
@@ -774,6 +740,36 @@ function isDelivered(row: PhotoRow): boolean {
   );
 }
 
+async function completeLocalMockPhotos(
+  db: ReturnType<typeof getServiceDb>,
+  rows: PhotoRow[],
+  metadata: Map<string, ProductionShootRow>
+) {
+  const mocks = rows.filter((row) => row.render_mode === "mock" && !isDelivered(row));
+  if (mocks.length === 0) return;
+  await Promise.all(mocks.map(async (row) => {
+    const ratio = resolveDatingAspectRatio(row.prompt_template);
+    const shoot = metadata.get(row.shoot_id);
+    const imageUrl = getMockPlaceholderImageUrl(row.shoot_id, row.frame_index, ratio, {
+      title: shoot?.title ?? shoot?.brief.title ?? null,
+      kind: null,
+    });
+    const { error } = await db.from("order_photos").update({
+      status: "completed",
+      image_url: imageUrl,
+      fal_request_id: `mock_${row.deterministic_id ?? row.id}`,
+      aesthetic_score: null,
+      failed_reason: null,
+      updated_at: new Date().toISOString(),
+    }).eq("id", row.id).eq("render_mode", "mock");
+    if (error) throw new Error(`Local mock completion failed: ${error.message}`);
+  }));
+  logger.info("Local sample previews completed without child tasks", {
+    count: mocks.length,
+    shoots: new Set(mocks.map((row) => row.shoot_id)).size,
+  });
+}
+
 async function loadPhotoRows(
   db: ReturnType<typeof getServiceDb>,
   batchId: string
@@ -782,6 +778,7 @@ async function loadPhotoRows(
     .from("order_photos")
     .select(
       "id, shoot_id, frame_index, is_anchor, prompt_template, image_width, image_height, status, image_url, deterministic_id, attempt_count"
+        + ", render_mode"
     )
     .eq("order_id", batchId)
     .order("shoot_id", { ascending: true })

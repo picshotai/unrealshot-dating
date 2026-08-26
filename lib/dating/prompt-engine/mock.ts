@@ -1,8 +1,6 @@
 import {
-  ANCHOR_REFERENCE_SENTENCE,
-  IDENTITY_SENTENCE,
-  type CreativeModelCall,
   type CreativeEmbeddingCall,
+  type CreativeModelCall,
   type CustomerCreativeInput,
   type DatingShootIntent,
   portfolioCandidateToTransport,
@@ -10,6 +8,7 @@ import {
 
 const usage = { inputTokens: 0, outputTokens: 0, reasoningTokens: 0, totalTokens: 0 };
 
+/** Retained only for legacy tests; the v3 production pipeline never calls it. */
 export const mockCreativeEmbeddingCall: CreativeEmbeddingCall = async (texts) => ({
   vectors: texts.map((text, index) => {
     const vector = Array.from({ length: 768 }, () => 0);
@@ -20,83 +19,82 @@ export const mockCreativeEmbeddingCall: CreativeEmbeddingCall = async (texts) =>
 });
 
 export function mockProductionModelCall(brief: DatingShootIntent): CreativeModelCall {
-  return async () => {
-    const facts = brief.sceneBible.immutableFacts;
-    const prop = brief.sceneBible.portableProps[0];
-    const shared = `${IDENTITY_SENTENCE} At ${brief.sceneBible.location}, remain inside ${brief.sceneBible.shootingZone}. He is wearing ${brief.sceneBible.outfit}. ${brief.sceneBible.wardrobeContinuity} ${brief.sceneBible.light}`;
-    const frames = [
-      {
-        frameId: "arrival-context",
-        roleLabel: "The arrival",
-        moment: `He arrives naturally into ${brief.provenance.occasion} while the photographer notices the setting around him.`,
-        composition: "A relaxed environmental portrait with enough space to establish the occasion without diminishing him.",
-        isAnchor: true,
-        isProfileCandidate: true,
-      },
-      {
-        frameId: "mid-occasion",
-        roleLabel: "In the moment",
-        moment: `He becomes absorbed in the real reason he came: ${brief.provenance.whyHeIsThere}`,
-        composition: "An observational portrait made from a naturally closer position as the occasion unfolds.",
-        isAnchor: false,
-        isProfileCandidate: false,
-      },
-      {
-        frameId: "friend-noticed",
-        roleLabel: "Caught by a friend",
-        moment: `He briefly notices ${brief.provenance.photographerRelationship} without stopping the activity for a formal pose.`,
-        composition: "A clear face-led portrait whose crop follows the spontaneous interaction rather than a preset distance.",
-        isAnchor: false,
-        isProfileCandidate: true,
-      },
-      {
-        frameId: "leaving-beat",
-        roleLabel: "Between moments",
-        moment: `A quieter transition occurs after ${brief.creativeDirection.desirableMoment}, still inside the same occasion.`,
-        composition: "An asymmetrical candid that preserves the established background while changing the human beat.",
-        isAnchor: false,
-        isProfileCandidate: false,
-      },
-    ].map((frame, index) => {
-      const visibleFacts = frame.isAnchor ? [...facts] : [facts[index % facts.length]];
-      const visibleProps = frame.isAnchor
-        ? [...brief.sceneBible.portableProps]
-        : prop && index === 1 ? [prop] : [];
-      const anchorClause = frame.isAnchor ? "" : ` ${ANCHOR_REFERENCE_SENTENCE}`;
-      const factsClause = visibleFacts.map((fact) => ` The visible fixed scene fact is: ${fact}.`).join("");
-      const propClause = visibleProps.map((item) => ` The visible portable object is ${item}.`).join("");
-      return {
-        ...frame,
-        width: 1728,
-        height: 2304,
-        visibleSceneFacts: visibleFacts,
-        visiblePortableProps: visibleProps,
-        prompt: `${shared}${anchorClause}${factsClause}${propClause} ${frame.moment} ${frame.composition} Make this a 3:4 realistic dating-profile photograph with natural skin texture, unretouched fabric, credible anatomy and no commercial catalogue staging.`,
-      };
-    });
-    return {
-      text: JSON.stringify({
-        scene: {
-          title: brief.title,
-          location: brief.sceneBible.location,
-          occasion: brief.provenance.occasion,
-          photographerProvenance: `${brief.provenance.photographerRelationship} took these photographs because ${brief.provenance.whyThePhotoWasTaken}`,
-          outfit: brief.sceneBible.outfit,
-          light: brief.sceneBible.light,
-          rationale: brief.creativeDirection.datingValue,
+  return async () => ({
+    text: JSON.stringify({
+      title: brief.title,
+      frames: [
+        {
+          frameId: "friend-notices-him",
+          roleLabel: "Caught by a friend",
+          moment: `His companion notices him during ${brief.centralMoment}.`,
+          cameraDistance: "chest-up",
+          width: 1728,
+          height: 2304,
+          isAnchor: true,
+          isProfileCandidate: true,
+          capturePrompt: `During ${brief.occasion}, his companion catches a chest-up photograph just after ${brief.centralMoment}; the turn of his shoulders follows the interruption instead of a pose, his mouth is relaxed and his face is clear. ${brief.light} falls naturally across real skin texture while ${brief.location} remains softly legible nearby. A 3:4 candid dating photograph with credible anatomy and unretouched fabric.`,
         },
-        frames,
-      }),
-      usage,
-      interactionId: null,
-    };
-  };
+        {
+          frameId: "absorbed-in-the-moment",
+          roleLabel: "In the moment",
+          moment: `He returns his attention to ${brief.whyHeIsThere}.`,
+          cameraDistance: "waist-up",
+          width: 1728,
+          height: 2304,
+          isAnchor: false,
+          isProfileCandidate: false,
+          capturePrompt: `He has returned to ${brief.whyHeIsThere}, so his weight and gaze follow the real action rather than the camera. The companion photographs from a few steps to the side at waist-up distance; the changed angle is caused by moving around him, not rebuilding the scene. Preserve natural skin, fabric tension and ${brief.light}. A 3:4 observational photograph.`,
+        },
+        {
+          frameId: "quiet-transition",
+          roleLabel: "Between moments",
+          moment: "A quiet transition opens a second point of view.",
+          cameraDistance: "three-quarter",
+          width: 1728,
+          height: 2304,
+          isAnchor: false,
+          isProfileCandidate: false,
+          capturePrompt: `In a quiet transition inside ${brief.shootingZone}, he shifts naturally before the next part of the occasion and the photographer steps back to include more of his body. His posture follows that movement and his expression stays neutral, with no clothing adjustment or performance for the lens. Keep the existing light and grounded textures. A 3:4 three-quarter candid photograph.`,
+        },
+        {
+          frameId: "brief-reconnection",
+          roleLabel: "Back to the companion",
+          moment: "He reconnects briefly with the person taking the photograph.",
+          cameraDistance: "close",
+          width: 1728,
+          height: 2304,
+          isAnchor: false,
+          isProfileCandidate: true,
+          capturePrompt: `A comment from ${brief.photographerRelationship} brings his attention back for a brief close photograph, giving a different human beat without forcing laughter. His eyes respond first while his shoulders remain connected to what he was doing. Let ${brief.light} retain pores, fine hair and the real weave of ${brief.outfit}. A 3:4 close dating photograph.`,
+        },
+      ],
+    }),
+    usage,
+    interactionId: null,
+  });
 }
 
 export function mockPortfolioModelCall(input: CustomerCreativeInput): CreativeModelCall {
   return async (request) => {
-    const match = request.contents.match(/Create exactly (\d+) candidate/);
+    const match = request.contents.match(/Create exactly (\d+) original shoot concepts/);
     const count = Number(match?.[1] ?? 1);
+    const mockSceneSignatures = [
+      "corner cafe window morning newspaper pause",
+      "apartment kitchen rain evening recipe tasting",
+      "riverside footbridge overcast friend conversation",
+      "neighborhood bookshop aisle afternoon discovery",
+      "courtyard bench sunbreaks waiting for friends",
+      "late tram platform city lights shared journey",
+      "community tennis fence golden hour water break",
+      "museum stair landing skylight quiet observation",
+      "market flower stall weekend choosing a bunch",
+      "record shop listening station tungsten browsing",
+      "coastal overlook windbreak travel companion pause",
+      "small dinner terrace dusk arriving before friends",
+      "home sofa lamplight answering a familiar message",
+      "park dog path morning stopping at the gate",
+      "hotel arcade direct flash leaving a social night",
+    ];
     const shoots = Array.from({ length: count }, (_, index) => {
       const interest = input.interests[index % input.interests.length];
       const number = index + 1;
@@ -104,48 +102,26 @@ export function mockPortfolioModelCall(input: CustomerCreativeInput): CreativeMo
         candidateId: `mock-life-moment-${number}`,
         title: `Real life moment ${number}`,
         representedInterests: index < input.interests.length ? [interest] : [],
-        canonicalSummary: `A distinct everyday occasion number ${number} showing ${interest} through a believable companion photograph in a unique neighborhood setting.`,
-        noveltyFingerprint: `occasion${number} neighborhood${number} zone${number} friend${number} lived${number} ${interest}${number} daylight${number} treatment${number}`,
-        provenance: {
-          occasion: `a relaxed personal outing number ${number}`,
-          whyHeIsThere: `he is genuinely spending time on ${interest} as part of his normal week`,
-          photographerRelationship: "a close friend sharing the outing",
-          whyThePhotoWasTaken: "the friend noticed a naturally attractive moment and wanted to remember it",
-          socialContext: "an unforced part of an ordinary but desirable social life",
-        },
-        sceneBible: {
-          location: `a contemporary neighborhood place number ${number}`,
-          shootingZone: `one compact open-air zone beside the main path number ${number}`,
-          immutableFacts: [`the pale stone edge number ${number}`, `the leafy background opening number ${number}`],
-          portableProps: [],
-          outfit: `a context-appropriate muted outfit selected specifically for the ${interest} occasion number ${number}, with clean practical footwear and no visible logos`,
-          wardrobeContinuity: "Every layer, sleeve position, fastening, hem, shoe and accessory remains unchanged, with intact continuous fabric and no tears.",
-          light: `soft natural daylight from open sky during outing number ${number}`,
-          cameraFreedom: "the friend can move a few steps within the same zone without changing or rebuilding the background",
-        },
-        creativeDirection: {
-          desirableMoment: `a believable lived ${interest} moment rather than a staged photoshoot`,
-          datingValue: "shows an appealing real life, approachability and context without status theatre",
-          visualMood: `natural contemporary warmth with variation number ${number}`,
-          fourFramePossibility: "arrival, participation and interpersonal reactions can each occur naturally without adding objects or changing the place",
-          profileUse: "includes at least one clear face-led dating photograph plus contextual evidence of a real life",
-          formatGuidance: "3:4 should remain the default because the subject and nearby context fit comfortably together",
-        },
-        qualityProof: {
-          provenanceTest: "A close friend is already sharing this outing and has a credible reason to notice and photograph him.",
-          datingDesirabilityTest: "The scene reveals an approachable active life and gives a match a specific subject for conversation.",
-          nonStagingTest: "His presence and action exist before the camera appears, so no prop or pose exists only for photography.",
-          wardrobeLogic: `The practical muted outfit is chosen from the real demands of ${interest}, the weather and the location.`,
-          continuityRiskAndPrevention: "Both fixed landmarks exist from the anchor onward, while later frames change only subject action and camera position.",
-          fourFrameDistinctness: "Arrival, absorbed participation, brief friend interaction and a transition beat provide four causally different moments.",
-        },
+        noveltyFingerprint: `${mockSceneSignatures[index % mockSceneSignatures.length]} ${interest} observational companion photograph`,
+        occasion: `a relaxed personal outing number ${number}`,
+        whyHeIsThere: `he is genuinely spending time on ${interest} as part of his normal week`,
+        photographerRelationship: "a close friend sharing the occasion",
+        whyPhotoTaken: "the friend noticed an attractive unforced moment worth remembering",
+        centralMoment: `a believable lived ${interest} moment number ${number}`,
+        location: `a contemporary neighborhood place number ${number}`,
+        shootingZone: `one compact zone beside the main path number ${number}`,
+        outfit: `a muted context-appropriate outfit chosen for ${interest}, with practical footwear and no visible logos`,
+        light: `soft natural daylight specific to outing number ${number}`,
+        continuityEssentials: [
+          "the same complete outfit and fastening state",
+          "the same nearby background geometry",
+        ],
+        datingValue: "shows an approachable real life and a specific conversation opening",
+        fourFrameOpportunity: "the companion can photograph participation, a transition and two interpersonal reactions without changing the occasion",
       };
     });
     return {
-      text: JSON.stringify(portfolioCandidateToTransport({
-        portfolioRationale: "Mock portfolio for zero-provider pipeline verification.",
-        shoots,
-      })),
+      text: JSON.stringify(portfolioCandidateToTransport({ shoots })),
       usage,
       interactionId: null,
     };

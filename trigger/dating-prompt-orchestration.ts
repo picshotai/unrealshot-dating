@@ -3,7 +3,6 @@ import { idempotencyKeys, logger } from "@trigger.dev/sdk";
 import { getDatingProductConfig } from "@/lib/dating/config";
 import {
   customerCreativeInputSchema,
-  datingShootIntentSchema,
   isCreativeProviderBillingDepleted,
   type CustomerCreativeInput,
 } from "@/lib/dating/creative-director";
@@ -22,6 +21,8 @@ import {
   type ProductionShootRow,
 } from "@/lib/dating/production-prompts/store";
 import type { ExcludableTag, InterestId } from "@/lib/dating/types";
+import { createLocalMockShoot } from "@/lib/dating/production-prompts/mock-manifest";
+import { planDatingRenderModes } from "@/lib/dating/production-prompts/render-plan";
 import { generateDatingShootPrompts } from "@/trigger/dating-prompt";
 
 type AdminDb = any;
@@ -35,6 +36,9 @@ export type DynamicPipelineOrder = {
     interests?: InterestId[];
     excludeTags?: ExcludableTag[];
   } | null;
+  prompt_system_version: string | null;
+  test_mode_snapshot: "off" | "sample" | "mock";
+  real_shoots_target: number;
 };
 
 export class DynamicPromptPipelineFailure extends Error {
@@ -58,24 +62,6 @@ function missingShootCount(shoots: readonly ProductionShootRow[], target: number
   return Math.max(0, target - retainedShoots(shoots).length);
 }
 
-async function moveHistoricalBriefsToReplanning(db: AdminDb, shoots: ProductionShootRow[]) {
-  const unfinished = shoots.filter(
-    (shoot) => shoot.status !== "passed" && !datingShootIntentSchema.safeParse(shoot.brief).success
-  );
-  if (unfinished.length === 0) return false;
-  const ids = unfinished.map((shoot) => shoot.id);
-  await db.from("dating_prompt_attempts").update({
-    status: "api_error",
-    api_error: "Unfinished historical prompt moved to the current writer.",
-    updated_at: new Date().toISOString(),
-  }).in("order_shoot_id", ids).eq("status", "running");
-  await db.from("dating_order_shoots").update({
-    status: "replanning",
-    updated_at: new Date().toISOString(),
-  }).in("id", ids);
-  return true;
-}
-
 async function preserveInterestCoverage(args: {
   db: AdminDb;
   shoots: ProductionShootRow[];
@@ -87,33 +73,13 @@ async function preserveInterestCoverage(args: {
   const uncovered = args.input.interests.filter((interest) => !represented.has(interest));
   if (uncovered.length === 0) return false;
 
-  const counts = new Map<string, number>();
-  for (const shoot of args.shoots) {
-    for (const interest of representedInterestsOfBrief(shoot.brief)) {
-      counts.set(interest, (counts.get(interest) ?? 0) + 1);
-    }
-  }
-  const replaceable = args.shoots.filter((shoot) =>
-    shoot.status === "reserved" &&
-    (representedInterestsOfBrief(shoot.brief).length === 0 ||
-      representedInterestsOfBrief(shoot.brief).every(
-        (interest) => (counts.get(interest) ?? 0) > 1
-      ))
+  throw new DynamicPromptPipelineFailure(
+    "idea_reservation",
+    false,
+    "The shoot plan did not cover every selected part of your life.",
+    "internal",
+    "internal_planning_stalled"
   );
-  if (replaceable.length < uncovered.length) {
-    throw new DynamicPromptPipelineFailure(
-      "idea_reservation",
-      false,
-      "The shoot plan could not preserve the selected parts of your life.",
-      "internal",
-      "internal_planning_stalled"
-    );
-  }
-  await args.db.from("dating_order_shoots").update({
-    status: "replanning",
-    updated_at: new Date().toISOString(),
-  }).in("id", replaceable.slice(0, uncovered.length).map((shoot) => shoot.id));
-  return true;
 }
 
 function reportSummary(report: PortfolioReservationReport | undefined) {
@@ -135,13 +101,10 @@ async function reserveCompletePortfolio(args: {
   budget: { remaining: number; consecutiveNoProgress: number };
 }) {
   while (true) {
-    let shoots = await loadProductionShoots(args.db, args.order.id);
-    if (await moveHistoricalBriefsToReplanning(args.db, shoots)) {
-      shoots = await loadProductionShoots(args.db, args.order.id);
-    }
+    const shoots = await loadProductionShoots(args.db, args.order.id);
 
     if (missingShootCount(shoots, args.order.shoots_target) === 0) {
-      if (await preserveInterestCoverage({ db: args.db, shoots, input: args.input })) continue;
+      await preserveInterestCoverage({ db: args.db, shoots, input: args.input });
       return shoots;
     }
     if (planningHasStalled(args.budget.remaining, args.budget.consecutiveNoProgress)) {
@@ -160,6 +123,7 @@ async function reserveCompletePortfolio(args: {
       userId: args.userId,
       targetCount: args.order.shoots_target,
       input: args.input,
+      testMode: args.order.test_mode_snapshot,
     });
     if (!planningAttempt) continue;
     args.budget.remaining -= 1;
@@ -191,6 +155,54 @@ async function reserveCompletePortfolio(args: {
   }
 }
 
+async function configureShootModes(args: {
+  db: AdminDb;
+  order: DynamicPipelineOrder;
+  shoots: ProductionShootRow[];
+  input: CustomerCreativeInput;
+}) {
+  const { realIds, mockIds: mockIdSet } = planDatingRenderModes({
+    candidates: args.shoots.map((shoot) => ({
+      shootId: shoot.id,
+      representedInterests: representedInterestsOfBrief(shoot.brief),
+    })),
+    selectedInterests: args.input.interests,
+    testMode: args.order.test_mode_snapshot,
+    realShootsTarget: args.order.real_shoots_target,
+    seed: `${args.order.id}:sample-v3`,
+  });
+  const mockIds = [...mockIdSet];
+  if (realIds.size > 0) {
+    const { error } = await args.db.from("dating_order_shoots").update({
+      render_mode: "real", prompt_source: "gemini", contract_version: "dating-capture-v3",
+      updated_at: new Date().toISOString(),
+    }).in("id", [...realIds]);
+    if (error) throw new Error(`Failed to persist real sample shoots: ${error.message}`);
+  }
+  if (mockIds.length > 0) {
+    const { error } = await args.db.from("dating_order_shoots").update({
+      render_mode: "mock", prompt_source: "local_mock", contract_version: "dating-capture-v3",
+      updated_at: new Date().toISOString(),
+    }).in("id", mockIds);
+    if (error) throw new Error(`Failed to persist mock sample shoots: ${error.message}`);
+  }
+  return { realIds, mockIds };
+}
+
+async function completeLocalMockShoots(db: AdminDb, shoots: ProductionShootRow[]) {
+  for (const shoot of shoots.filter((item) => item.render_mode === "mock" && item.status !== "passed")) {
+    const acceptedOutput = createLocalMockShoot(shoot.brief);
+    const { error } = await db.from("dating_order_shoots").update({
+      status: "passed",
+      title: shoot.brief.title,
+      accepted_output: acceptedOutput,
+      prompt_source: "local_mock",
+      updated_at: new Date().toISOString(),
+    }).eq("id", shoot.id).in("status", ["reserved", "generating"]);
+    if (error) throw new Error(`Failed to complete local sample manifest: ${error.message}`);
+  }
+}
+
 async function writeReservedPortfolio(args: {
   db: AdminDb;
   order: DynamicPipelineOrder;
@@ -204,7 +216,8 @@ async function writeReservedPortfolio(args: {
     if (shoots.every((shoot) => shoot.status === "passed")) return true;
 
     const runnable = shoots.filter(
-      (shoot) => shoot.status === "reserved" || shoot.status === "generating"
+      (shoot) => shoot.render_mode === "real" &&
+        (shoot.status === "reserved" || shoot.status === "generating")
     );
     if (runnable.length === 0) {
       throw new DynamicPromptPipelineFailure(
@@ -216,7 +229,12 @@ async function writeReservedPortfolio(args: {
       );
     }
     const attempts = await Promise.all(
-      runnable.map((shoot) => ensureProductionAttempt(args.db, shoot, args.input))
+      runnable.map((shoot) => ensureProductionAttempt(
+        args.db,
+        shoot,
+        args.input,
+        args.order.test_mode_snapshot
+      ))
     );
     const items = await Promise.all(
       attempts.map(async (attempt) => ({
@@ -288,15 +306,21 @@ export async function prepareDynamicOrder(args: {
   order: DynamicPipelineOrder;
   userId: string;
 }): Promise<boolean> {
+  if (args.order.prompt_system_version !== "dating-shoot-writer-v7") {
+    throw new DynamicPromptPipelineFailure(
+      "legacy_contract",
+      false,
+      "This earlier shoot cannot resume after the prompt-system upgrade.",
+      "internal",
+      "legacy_prompt_contract"
+    );
+  }
   const creative = args.order.creative_input ?? {};
   const input = customerCreativeInputSchema.parse({
     interests: creative.interests ?? [],
     exclusions: creative.excludeTags ?? [],
   });
   let shoots = await loadProductionShoots(args.db, args.order.id);
-  if (await moveHistoricalBriefsToReplanning(args.db, shoots)) {
-    shoots = await loadProductionShoots(args.db, args.order.id);
-  }
   const missingAtStart = missingShootCount(shoots, args.order.shoots_target);
   const budget = {
     remaining: plannerCallBudget(Math.max(1, missingAtStart)),
@@ -304,13 +328,16 @@ export async function prepareDynamicOrder(args: {
   };
 
   while (true) {
-    await reserveCompletePortfolio({ ...args, input, budget });
+    shoots = await reserveCompletePortfolio({ ...args, input, budget });
+    await configureShootModes({ db: args.db, order: args.order, shoots, input });
+    shoots = await loadProductionShoots(args.db, args.order.id);
+    await completeLocalMockShoots(args.db, shoots);
     await args.db.from("user_shoot_orders").update({
       pipeline_stage: "writing_prompts",
       updated_at: new Date().toISOString(),
     }).eq("id", args.order.id);
     if (await writeReservedPortfolio({ ...args, input })) {
-      const { error } = await args.db.rpc("materialize_dynamic_order_photos", {
+      const { error } = await args.db.rpc("materialize_dynamic_order_photos_v3", {
         p_order_id: args.order.id,
       });
       if (error) throw new Error(`Failed to allocate dynamic photos: ${error.message}`);
