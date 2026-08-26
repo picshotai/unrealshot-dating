@@ -81,6 +81,8 @@ export function buildPortfolioRequest(args: {
     "candidateId uses lowercase letters, numbers and hyphens only.",
     "continuityEssentials contains one to three short facts, never a room inventory.",
     "Do not write frame prompts, camera menus, validation proofs or a portfolio rationale.",
+    "For each shoot, core uses this exact order:",
+    "candidateId; title; noveltyFingerprint; occasion; whyHeIsThere; photographerRelationship; whyPhotoTaken; centralMoment; location; shootingZone; outfit; light; datingValue; fourFrameOpportunity.",
     "",
     "SELECTED INTERESTS",
     ...args.input.interests.map((id) => `- ${id}: ${interestMeaning(id)}`),

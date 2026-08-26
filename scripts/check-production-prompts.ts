@@ -46,6 +46,11 @@ async function main() {
   const providerSchema = portfolioJsonSchema(15);
   assert.equal(providerSchema.properties.shoots.minItems, 15);
   assert.equal(providerSchema.properties.shoots.maxItems, 15);
+  assert.deepEqual(providerSchema.properties.shoots.items.required, [
+    "core", "representedInterests", "continuityEssentials",
+  ]);
+  assert.equal(providerSchema.properties.shoots.items.properties.core.minItems, 14);
+  assert.equal(providerSchema.properties.shoots.items.properties.core.maxItems, 14);
   const schemaText = JSON.stringify(providerSchema);
   for (const removed of ["qualityProof", "sceneBible", "immutableFacts", "portableProps", "portfolioRationale"]) {
     assert(!schemaText.includes(removed), `removed planner field leaked: ${removed}`);
@@ -61,6 +66,11 @@ async function main() {
   });
   assert.deepEqual(interaction.generation_config, {
     thinking_level: "low", max_output_tokens: 16_384,
+  });
+  assert.deepEqual(interaction.response_format, {
+    type: "text",
+    mime_type: "application/json",
+    schema: providerSchema,
   });
   for (const forbidden of ["temperature", "top_p", "topP", "response_mime_type", "models/"]) {
     assert(!JSON.stringify(interaction).includes(forbidden));

@@ -34,8 +34,8 @@ async function checkPlanner() {
   };
   const generation = await generatePortfolioCandidate({
     input,
-    targetCount: 7,
-    candidateCount: 8,
+    targetCount: 15,
+    candidateCount: 15,
     interestsStillNeeded: input.interests,
     currentOrder: [],
     customerHistory: [],
@@ -84,7 +84,7 @@ async function checkWriter() {
     mechanicallyValid: generation.validation.passed,
     interactionId: generation.interactionId,
     usage: generation.usage,
-    title: generation.output?.scene.title ?? null,
+    title: generation.output?.title ?? null,
     frameCount: generation.output?.frames.length ?? 0,
     problems: generation.validation.problems,
   });

@@ -39,6 +39,27 @@ export const portfolioCandidateSchema = z.object({
   shoots: z.array(datingShootIntentSchema).min(1).max(30),
 }).strict();
 
+/**
+ * Gemini sees a deliberately shallow transport. Fifteen objects with every
+ * domain field advertised separately crosses its structured-output complexity
+ * limit, even though the same schema works for eight candidates. The ordered
+ * core keeps one-call planning while Zod remains the rich authority after the
+ * response is rehydrated.
+ */
+const portfolioTransportShootSchema = z.object({
+  core: z.tuple([
+    z.string(), z.string(), z.string(), z.string(), z.string(), z.string(),
+    z.string(), z.string(), z.string(), z.string(), z.string(), z.string(),
+    z.string(), z.string(),
+  ]),
+  representedInterests: z.array(z.enum(INTEREST_IDS)).max(3),
+  continuityEssentials: z.array(z.string()).min(1).max(3),
+}).strict();
+
+const portfolioTransportSchema = z.object({
+  shoots: z.array(portfolioTransportShootSchema).min(1).max(30),
+}).strict();
+
 export const cameraDistanceSchema = z.enum([
   "close", "chest-up", "waist-up", "three-quarter", "full-body", "environmental",
 ]);
@@ -69,13 +90,6 @@ export const datingShootOutputSchema = z.object({
   }).strict()).length(4),
 }).strict();
 
-const PORTFOLIO_FIELDS = [
-  "candidateId", "title", "representedInterests", "noveltyFingerprint",
-  "occasion", "whyHeIsThere", "photographerRelationship", "whyPhotoTaken",
-  "centralMoment", "location", "shootingZone", "outfit", "light",
-  "continuityEssentials", "datingValue", "fourFrameOpportunity",
-] as const;
-
 export function portfolioJsonSchema(candidateCount: number) {
   if (!Number.isInteger(candidateCount) || candidateCount < 1 || candidateCount > 30) {
     throw new Error("candidateCount must be an integer from 1 to 30.");
@@ -88,26 +102,18 @@ export function portfolioJsonSchema(candidateCount: number) {
       shoots: {
         type: "array", minItems: candidateCount, maxItems: candidateCount,
         items: {
-          type: "object", additionalProperties: false, required: PORTFOLIO_FIELDS,
+          type: "object",
+          additionalProperties: false,
+          required: ["core", "representedInterests", "continuityEssentials"],
           properties: {
-            candidateId: { type: "string" },
-            title: { type: "string" },
+            core: {
+              type: "array", minItems: 14, maxItems: 14,
+              items: { type: "string" },
+            },
             representedInterests: { type: "array", maxItems: 3, items: { type: "string" } },
-            noveltyFingerprint: { type: "string" },
-            occasion: { type: "string" },
-            whyHeIsThere: { type: "string" },
-            photographerRelationship: { type: "string" },
-            whyPhotoTaken: { type: "string" },
-            centralMoment: { type: "string" },
-            location: { type: "string" },
-            shootingZone: { type: "string" },
-            outfit: { type: "string" },
-            light: { type: "string" },
             continuityEssentials: {
               type: "array", minItems: 1, maxItems: 3, items: { type: "string" },
             },
-            datingValue: { type: "string" },
-            fourFrameOpportunity: { type: "string" },
           },
         },
       },
@@ -116,11 +122,53 @@ export function portfolioJsonSchema(candidateCount: number) {
 }
 
 export function parsePortfolioTransport(value: unknown) {
-  return portfolioCandidateSchema.safeParse(value);
+  const parsed = portfolioTransportSchema.safeParse(value);
+  if (!parsed.success) return parsed;
+  return portfolioCandidateSchema.safeParse({
+    shoots: parsed.data.shoots.map((shoot) => ({
+      candidateId: shoot.core[0],
+      title: shoot.core[1],
+      noveltyFingerprint: shoot.core[2],
+      occasion: shoot.core[3],
+      whyHeIsThere: shoot.core[4],
+      photographerRelationship: shoot.core[5],
+      whyPhotoTaken: shoot.core[6],
+      centralMoment: shoot.core[7],
+      location: shoot.core[8],
+      shootingZone: shoot.core[9],
+      outfit: shoot.core[10],
+      light: shoot.core[11],
+      datingValue: shoot.core[12],
+      fourFrameOpportunity: shoot.core[13],
+      representedInterests: shoot.representedInterests,
+      continuityEssentials: shoot.continuityEssentials,
+    })),
+  });
 }
 
 export function portfolioCandidateToTransport(output: PortfolioCandidate) {
-  return output;
+  return {
+    shoots: output.shoots.map((shoot) => ({
+      core: [
+        shoot.candidateId,
+        shoot.title,
+        shoot.noveltyFingerprint,
+        shoot.occasion,
+        shoot.whyHeIsThere,
+        shoot.photographerRelationship,
+        shoot.whyPhotoTaken,
+        shoot.centralMoment,
+        shoot.location,
+        shoot.shootingZone,
+        shoot.outfit,
+        shoot.light,
+        shoot.datingValue,
+        shoot.fourFrameOpportunity,
+      ],
+      representedInterests: shoot.representedInterests,
+      continuityEssentials: shoot.continuityEssentials,
+    })),
+  };
 }
 
 export const SHOOT_OUTPUT_JSON_SCHEMA = {
