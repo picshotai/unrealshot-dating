@@ -57,7 +57,7 @@ export const RoleFilterNav: React.FC<RoleFilterNavProps> = ({
 }) => {
   const currentHint =
     activeTab === 'all'
-      ? `${shootCount || expectedShootCount} shoots, four frames each — every shoot a different place, outfit and light.`
+      ? `${shootCount || expectedShootCount} shoots, four frames each — every shoot is a different place, outfit and light.`
       : LINEUP_HINTS[activeTab];
 
   const pill = (isActive: boolean) =>

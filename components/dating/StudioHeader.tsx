@@ -127,7 +127,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
               {status ? (
                 <>
                   {status.completed} / {status.total} photos ·{' '}
-                  <span className="text-accent">
+                  <span className="text-white/60">
                     {status.creditState === 'reserved'
                       ? '1 pack reserved for this shoot'
                       : status.creditState === 'released'

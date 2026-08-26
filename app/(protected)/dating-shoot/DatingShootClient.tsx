@@ -238,6 +238,7 @@ export function DatingShootClient({
     modelId: number;
     interests: InterestId[];
     excludeTags: ExcludableTag[];
+    includeSimpleCandids: boolean;
   }) => {
     setLoading(true);
     setError('');
@@ -253,6 +254,7 @@ export function DatingShootClient({
           modelId: params.modelId,
           interests: params.interests,
           excludeTags: params.excludeTags,
+          includeSimpleCandids: params.includeSimpleCandids,
         }),
       });
 
@@ -572,7 +574,7 @@ export function DatingShootClient({
                 <div key={shoot.shootId} className="space-y-4">
                   <div className="flex items-baseline justify-between border-b border-zinc-800/80 pb-3">
                     <div className="flex items-center gap-2.5">
-                      <span className="text-[10px] font-mono text-zinc-600 tabular-nums">
+                      <span className="text-[10px] font-mono text-zinc-200 tabular-nums p-1.5 bg-zinc-700 rounded-md">
                         {String(index + 1).padStart(2, '0')}
                       </span>
                       <h3 className="text-xl font-semibold text-white tracking-tight">

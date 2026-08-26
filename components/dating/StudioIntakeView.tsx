@@ -42,6 +42,7 @@ interface StudioIntakeViewProps {
     modelId: number;
     interests: InterestId[];
     excludeTags: ExcludableTag[];
+    includeSimpleCandids: boolean;
   }) => void;
   onCancel: () => void;
   isLoading: boolean;
@@ -73,6 +74,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
   const [step, setStep] = useState<'configure' | 'confirm'>('configure');
   const [interests, setInterests] = useState<InterestId[]>([]);
   const [excludeTags, setExcludeTags] = useState<ExcludableTag[]>([]);
+  const [includeSimpleCandids, setIncludeSimpleCandids] = useState(true);
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -134,11 +136,12 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
       modelId: selectedModelId,
       interests,
       excludeTags,
+      includeSimpleCandids,
     });
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground py-6 sm:py-10 px-4 sm:px-6 select-none font-sans">
+    <div className="min-h-screen bg-background text-foreground py-6 sm:py-10 select-none font-sans">
       <div className="max-w-2xl sm:max-w-3xl w-full mx-auto space-y-6">
         {/* 1. Header Bar with Integrated Face Model Selector */}
         <div className="flex items-center justify-between pb-4 border-b border-zinc-800/80">
@@ -349,6 +352,39 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
               </div>
             </div>
 
+            {/* This is a portfolio-mix preference, not one of the six activities. */}
+            <div className="space-y-2">
+              <div>
+                <h2 className="text-xs sm:text-sm font-medium text-zinc-200 font-oxanium">
+                  What kind of moments should be in the mix?
+                </h2>
+                <p className="text-[11px] text-zinc-500 mt-0.5">
+                  This does not use one of your activity selections.
+                </p>
+              </div>
+              <button
+                type="button"
+                aria-pressed={includeSimpleCandids}
+                onClick={() => setIncludeSimpleCandids((current) => !current)}
+                className={`w-full rounded-xl border p-3 text-left transition-all active:scale-[0.995] ${
+                  includeSimpleCandids
+                    ? 'border-white/30 bg-white/10 text-white'
+                    : 'border-zinc-800 bg-zinc-950/80 text-zinc-400 hover:border-zinc-700'
+                }`}
+              >
+                <span className="flex items-center gap-2 text-xs font-semibold font-oxanium">
+                  <Sparkles className="h-3.5 w-3.5 text-accent" />
+                  Simple candids
+                  <span className="ml-auto text-[10px] font-mono font-normal text-zinc-500">
+                    {includeSimpleCandids ? 'Included' : 'Off'}
+                  </span>
+                </span>
+                <span className="mt-1 block text-[11px] leading-relaxed text-zinc-500">
+                  Include at least two shoots where you—not an activity or prop—carry the photograph.
+                </span>
+              </button>
+            </div>
+
             {/* Section 3: Exclusions */}
             <div className="space-y-2">
               <div>
@@ -501,6 +537,11 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                           </span>
                         );
                       })}
+                      {includeSimpleCandids && (
+                        <span className="px-2 py-0.5 rounded bg-white/10 text-zinc-200 text-[11px]">
+                          ✨ Simple candids · at least 2 shoots
+                        </span>
+                      )}
                     </div>
                     {excludeTags.length > 0 && (
                       <div className="text-[11px] text-red-400 font-mono pt-1">

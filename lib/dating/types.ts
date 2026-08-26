@@ -17,6 +17,7 @@ export {
   FRAMES_PER_SHOOT,
   SAMPLE_SHOOTS,
   SHOOTS_PER_DELIVERY,
+  SUBJECT_LED_SHOOTS_PER_DELIVERY,
   TOTAL_PHOTOS,
 } from "./product-settings";
 import {

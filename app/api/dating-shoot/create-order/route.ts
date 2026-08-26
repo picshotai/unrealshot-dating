@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { modelId, interests, excludeTags, clientRequestId } = body;
+    const { modelId, interests, excludeTags, clientRequestId, includeSimpleCandids } = body;
 
     if (!Number.isInteger(modelId) || modelId <= 0) {
       return NextResponse.json({ error: "modelId is required" }, { status: 400 });
@@ -41,6 +41,12 @@ export async function POST(request: NextRequest) {
       !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(clientRequestId)
     ) {
       return NextResponse.json({ error: "clientRequestId must be a UUID" }, { status: 400 });
+    }
+    if (includeSimpleCandids !== undefined && typeof includeSimpleCandids !== "boolean") {
+      return NextResponse.json(
+        { error: "includeSimpleCandids must be a boolean" },
+        { status: 400 }
+      );
     }
 
     // Interests are literal delivery promises. Wardrobe is deliberately absent:
@@ -83,6 +89,7 @@ export async function POST(request: NextRequest) {
       modelId,
       interests: cleanInterests,
       excludeTags: cleanExclusions,
+      includeSimpleCandids: includeSimpleCandids !== false,
     });
 
     return NextResponse.json({ success: true, ...result }, { status: 201 });

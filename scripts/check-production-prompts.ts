@@ -38,6 +38,7 @@ async function main() {
   const input = customerCreativeInputSchema.parse({
     interests: ["gym", "tennis", "dining"],
     exclusions: ["alcohol"],
+    includeSimpleCandids: true,
   });
   assert.throws(() => customerCreativeInputSchema.parse({ ...input, dress: "sharp" }));
 
@@ -87,21 +88,26 @@ async function main() {
   const request = buildPortfolioRequest({
     input, targetCount: 15, candidateCount: 15,
     interestsStillNeeded: input.interests,
+    subjectLedStillNeeded: 2,
     currentOrder: [], customerHistory: [], globalHistory: [],
   });
   assert.match(request, /simple|candid|broaden/i);
   assert.match(request, /No alcohol/);
+  assert.match(request, /SUBJECT-LED ALLOCATION/);
+  assert.match(request, /at least 2 concepts with subjectLed=true/);
   assert.doesNotMatch(request, /qualityProof|sceneBible|captureGrammar|four.?beat template as/i);
 
   const portfolio = await generatePortfolioCandidate({
     input, targetCount: 15, candidateCount: 15,
     interestsStillNeeded: input.interests,
+    subjectLedStillNeeded: 2,
     currentOrder: [], customerHistory: [], globalHistory: [],
     modelCall: mockPortfolioModelCall(input),
   });
   assert(portfolio.output);
   assert(portfolio.validation.passed, portfolio.validation.problems.join("\n"));
   assert.equal(portfolio.output.shoots.length, 15);
+  assert.equal(portfolio.output.shoots.filter((brief) => brief.subjectLed).length, 2);
   assert(parsePortfolioTransport(portfolioCandidateToTransport(portfolio.output)).success);
   const first = portfolio.output.shoots[0] as DatingShootIntent;
   assert.equal(noveltyIdeaKey(first.noveltyFingerprint).length, 64);
@@ -124,6 +130,12 @@ async function main() {
   assert.match(writerRequest, /AUTHORED PHOTOGRAPHIC-CRAFT FRAGMENTS/);
   assert.match(writerRequest, /Learn only their causal camera\/body\/light writing/);
   assert.doesNotMatch(writerRequest, /Every frame prompt must contain|visibleSceneFacts|portableProps/);
+  assert.doesNotMatch(writerRequest, /SUBJECT-LED CAPTURE EMPHASIS/);
+  assert.doesNotMatch(SHOOT_WRITER_SYSTEM_INSTRUCTION, /SUBJECT-LED CAPTURE EMPHASIS/);
+  const subjectLedBrief = portfolio.output.shoots.find((brief) => brief.subjectLed)!;
+  const subjectLedWriterRequest = buildShootWriterRequest({ brief: subjectLedBrief, input });
+  assert.match(subjectLedWriterRequest, /SUBJECT-LED CAPTURE EMPHASIS/);
+  assert.match(subjectLedWriterRequest, /Do not introduce a held or operated prop/);
   assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /only visible person/i);
   assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /account for both hands/i);
   assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /do not force hands/i);
@@ -201,16 +213,31 @@ async function main() {
   const renderCandidates = portfolio.output.shoots.map((brief, index) => ({
     shootId: `shoot-${index + 1}`,
     representedInterests: brief.representedInterests,
+    subjectLed: brief.subjectLed === true,
   }));
   const sampleRenderPlan = planDatingRenderModes({
     candidates: renderCandidates,
     selectedInterests: input.interests,
+    includeSimpleCandids: input.includeSimpleCandids,
     testMode: "sample",
     realShootsTarget: 2,
     seed: "sample-contract-test",
   });
   assert.equal(sampleRenderPlan.realIds.size, 2);
   assert.equal(sampleRenderPlan.mockIds.size, 13);
+  assert.equal(
+    renderCandidates.filter((candidate) =>
+      candidate.subjectLed && sampleRenderPlan.realIds.has(candidate.shootId)
+    ).length,
+    1
+  );
+  assert(
+    renderCandidates.some((candidate) =>
+      !candidate.subjectLed &&
+      candidate.representedInterests.length > 0 &&
+      sampleRenderPlan.realIds.has(candidate.shootId)
+    )
+  );
   assert.equal([...sampleRenderPlan.realIds].filter((id) => sampleRenderPlan.mockIds.has(id)).length, 0);
   assert.equal(
     portfolio.output.shoots.slice(2).flatMap((brief) => createLocalMockShoot(brief).frames).length,
@@ -223,6 +250,20 @@ async function main() {
     realShootsTarget: 15,
     seed: "full-contract-test",
   }).realIds.size, 15);
+  const threeShootSample = planDatingRenderModes({
+    candidates: renderCandidates,
+    selectedInterests: input.interests,
+    includeSimpleCandids: true,
+    testMode: "sample",
+    realShootsTarget: 3,
+    seed: "three-shoot-subject-led-test",
+  });
+  assert.equal(
+    renderCandidates.filter((candidate) =>
+      candidate.subjectLed && threeShootSample.realIds.has(candidate.shootId)
+    ).length,
+    2
+  );
 
   const storeSource = readFileSync(resolve(process.cwd(), "lib/dating/production-prompts/store.ts"), "utf8");
   assert.match(storeSource, /reserve_intelligent_dating_shoots_v3/);

@@ -1,5 +1,9 @@
 import type { createAdminClient } from "@/utils/supabase/admin";
-import { INTEREST_IDS, type InterestId } from "@/lib/dating/types";
+import {
+  INTEREST_IDS,
+  SUBJECT_LED_SHOOTS_PER_DELIVERY,
+  type InterestId,
+} from "@/lib/dating/types";
 
 import {
   DATING_CREATIVE_MODEL,
@@ -99,6 +103,7 @@ export type PortfolioAttemptRow = {
     targetCount: number;
     candidateCount: number;
     interestsStillNeeded: CustomerCreativeInput["interests"];
+    subjectLedStillNeeded: number;
     currentOrder: PortfolioHistoryItem[];
     customerHistory: PortfolioHistoryItem[];
     globalHistory: PortfolioHistoryItem[];
@@ -246,6 +251,10 @@ export async function startPortfolioAttempt(args: {
   const { requestedSlots, candidateCount } = portfolioPlanningBatch(missingSlots);
   const covered = new Set(retained.flatMap((row) => row.represented_interests ?? []));
   const interestsStillNeeded = args.input.interests.filter((interest) => !covered.has(interest));
+  const retainedSubjectLed = retained.filter((row) => row.brief?.subjectLed === true).length;
+  const subjectLedStillNeeded = args.input.includeSimpleCandids
+    ? Math.max(0, SUBJECT_LED_SHOOTS_PER_DELIVERY - retainedSubjectLed)
+    : 0;
   // A small candidate surplus lets the atomic novelty gate skip a collision
   // while the request-specific schema stays comfortably bounded.
   const { data: running } = await raw.from("dating_portfolio_attempts")
@@ -270,6 +279,7 @@ export async function startPortfolioAttempt(args: {
     targetCount: requestedSlots,
     candidateCount,
     interestsStillNeeded,
+    subjectLedStillNeeded,
     currentOrder: histories.currentOrder,
     customerHistory: histories.customerHistory,
     globalHistory: histories.globalHistory,
@@ -433,6 +443,7 @@ export async function startProductionAttempt(
   const creativeInput = input ?? customerCreativeInputSchema.parse({
     interests: order?.creative_input?.interests ?? [],
     exclusions: order?.creative_input?.excludeTags ?? [],
+    includeSimpleCandids: order?.creative_input?.includeSimpleCandids ?? false,
   });
   const { data: last } = await raw.from("dating_prompt_attempts")
     .select("attempt_number").eq("order_shoot_id", shoot.id)

@@ -98,16 +98,23 @@ export function mockPortfolioModelCall(input: CustomerCreativeInput): CreativeMo
     const shoots = Array.from({ length: count }, (_, index) => {
       const interest = input.interests[index % input.interests.length];
       const number = index + 1;
+      const subjectLed = input.includeSimpleCandids && index >= Math.max(0, count - 2);
       return {
         candidateId: `mock-life-moment-${number}`,
         title: `Real life moment ${number}`,
-        representedInterests: index < input.interests.length ? [interest] : [],
+        representedInterests: !subjectLed && index < input.interests.length ? [interest] : [],
         noveltyFingerprint: `${mockSceneSignatures[index % mockSceneSignatures.length]} ${interest} observational companion photograph`,
-        occasion: `a relaxed personal outing number ${number}`,
-        whyHeIsThere: `he is genuinely spending time on ${interest} as part of his normal week`,
+        occasion: subjectLed
+          ? `a quiet pause during an ordinary day number ${number}`
+          : `a relaxed personal outing number ${number}`,
+        whyHeIsThere: subjectLed
+          ? "he naturally belongs in this familiar place and has paused between plans"
+          : `he is genuinely spending time on ${interest} as part of his normal week`,
         photographerRelationship: "a close friend sharing the occasion",
         whyPhotoTaken: "the friend noticed an attractive unforced moment worth remembering",
-        centralMoment: `a believable lived ${interest} moment number ${number}`,
+        centralMoment: subjectLed
+          ? `his relaxed stance and attention shift toward the off-camera friend number ${number}`
+          : `a believable lived ${interest} moment number ${number}`,
         location: `a contemporary neighborhood place number ${number}`,
         shootingZone: `one compact zone beside the main path number ${number}`,
         outfit: `a muted context-appropriate outfit chosen for ${interest}, with practical footwear and no visible logos`,
@@ -118,6 +125,7 @@ export function mockPortfolioModelCall(input: CustomerCreativeInput): CreativeMo
         ],
         datingValue: "shows an approachable real life and a specific conversation opening",
         fourFrameOpportunity: "the companion can photograph participation, a transition and two interpersonal reactions without changing the occasion",
+        ...(subjectLed ? { subjectLed: true as const } : {}),
       };
     });
     return {

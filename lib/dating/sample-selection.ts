@@ -13,6 +13,7 @@ export type SampleShootCandidate = {
   shootId: string;
   /** Only interests this exact scene genuinely depicts. */
   representedInterests: readonly InterestId[];
+  subjectLed?: boolean;
 };
 
 /**
@@ -25,6 +26,7 @@ export type SampleShootCandidate = {
 export function selectSampleShootIds(args: {
   candidates: readonly SampleShootCandidate[];
   selectedInterests: readonly InterestId[];
+  includeSimpleCandids?: boolean;
   count: number;
   seed: string;
 }): Set<string> {
@@ -38,6 +40,24 @@ export function selectSampleShootIds(args: {
         stableNumber(`${args.seed}:${right.shootId}`) ||
       left.shootId.localeCompare(right.shootId)
   );
+
+  // A two-shoot sample shows one requested candid and one activity-led shoot.
+  // Larger samples may show both candid allocations while retaining room for
+  // selected-interest QA. This affects sample choice only, never prompt craft.
+  const subjectSampleTarget = args.includeSimpleCandids && limit > 0
+    ? Math.min(2, Math.max(1, limit - 1))
+    : 0;
+  const subjectCandidates = ordered
+    .filter((candidate) => candidate.subjectLed)
+    .sort((left, right) => {
+      const leftCoverage = left.representedInterests.filter((interest) => uncovered.has(interest)).length;
+      const rightCoverage = right.representedInterests.filter((interest) => uncovered.has(interest)).length;
+      return rightCoverage - leftCoverage;
+    });
+  for (const candidate of subjectCandidates.slice(0, subjectSampleTarget)) {
+    chosen.add(candidate.shootId);
+    for (const interest of candidate.representedInterests) uncovered.delete(interest);
+  }
 
   while (chosen.size < limit && uncovered.size > 0) {
     const best = ordered

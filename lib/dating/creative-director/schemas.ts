@@ -13,6 +13,7 @@ const text = (minimum: number, maximum: number) =>
 export const customerCreativeInputSchema = z.object({
   interests: z.array(z.enum(INTEREST_IDS)).min(1).max(6),
   exclusions: z.array(z.enum(EXCLUDABLE_TAGS)).max(EXCLUDABLE_TAGS.length),
+  includeSimpleCandids: z.boolean().default(false),
 }).strict();
 
 /** A brief explains why a real photographic occasion exists, not four poses. */
@@ -33,6 +34,8 @@ export const datingShootIntentSchema = z.object({
   continuityEssentials: z.array(text(3, 160)).min(1).max(3),
   datingValue: text(10, 300),
   fourFrameOpportunity: text(15, 420),
+  /** True-only allocation marker. Ordinary activity briefs omit this field. */
+  subjectLed: z.literal(true).optional(),
 }).strict();
 
 export const portfolioCandidateSchema = z.object({
@@ -54,6 +57,7 @@ const portfolioTransportShootSchema = z.object({
   ]),
   representedInterests: z.array(z.enum(INTEREST_IDS)).max(3),
   continuityEssentials: z.array(z.string()).min(1).max(3),
+  subjectLed: z.boolean().optional(),
 }).strict();
 
 const portfolioTransportSchema = z.object({
@@ -114,6 +118,7 @@ export function portfolioJsonSchema(candidateCount: number) {
             continuityEssentials: {
               type: "array", minItems: 1, maxItems: 3, items: { type: "string" },
             },
+            subjectLed: { type: "boolean" },
           },
         },
       },
@@ -142,6 +147,7 @@ export function parsePortfolioTransport(value: unknown) {
       fourFrameOpportunity: shoot.core[13],
       representedInterests: shoot.representedInterests,
       continuityEssentials: shoot.continuityEssentials,
+      ...(shoot.subjectLed === true ? { subjectLed: true } : {}),
     })),
   });
 }
@@ -167,6 +173,7 @@ export function portfolioCandidateToTransport(output: PortfolioCandidate) {
       ],
       representedInterests: shoot.representedInterests,
       continuityEssentials: shoot.continuityEssentials,
+      ...(shoot.subjectLed === true ? { subjectLed: true } : {}),
     })),
   };
 }
@@ -203,7 +210,8 @@ export function canonicalShootSummary(shoot: DatingShootIntent) {
   return [shoot.occasion, shoot.location, shoot.centralMoment, shoot.photographerRelationship].join(" | ");
 }
 
-export type CustomerCreativeInput = z.infer<typeof customerCreativeInputSchema>;
+/** Callers may omit the new preference; parsing materializes the legacy-safe false default. */
+export type CustomerCreativeInput = z.input<typeof customerCreativeInputSchema>;
 export type DatingShootIntent = z.infer<typeof datingShootIntentSchema>;
 export type PortfolioCandidate = z.infer<typeof portfolioCandidateSchema>;
 export type ShootWriterOutput = z.infer<typeof shootWriterOutputSchema>;

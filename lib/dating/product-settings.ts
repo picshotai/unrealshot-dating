@@ -20,10 +20,11 @@ export const SHOOTS_PER_DELIVERY = configuredInteger(
   30
 );
 export const TOTAL_PHOTOS = SHOOTS_PER_DELIVERY * FRAMES_PER_SHOOT;
+/** Optional portfolio allocation; this never replaces an activity selection. */
+export const SUBJECT_LED_SHOOTS_PER_DELIVERY = Math.min(2, SHOOTS_PER_DELIVERY);
 export const SAMPLE_SHOOTS = configuredInteger(
   "DATING_SAMPLE_SHOOTS",
   Math.min(2, SHOOTS_PER_DELIVERY),
   0,
   SHOOTS_PER_DELIVERY
 );
-

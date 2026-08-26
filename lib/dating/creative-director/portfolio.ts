@@ -69,6 +69,7 @@ export function buildPortfolioRequest(args: {
   targetCount: number;
   candidateCount: number;
   interestsStillNeeded: readonly InterestId[];
+  subjectLedStillNeeded?: number;
   currentOrder: readonly PortfolioHistoryItem[];
   customerHistory: readonly PortfolioHistoryItem[];
   globalHistory: readonly PortfolioHistoryItem[];
@@ -85,6 +86,15 @@ export function buildPortfolioRequest(args: {
     "Do not write frame prompts, camera menus, validation proofs or a portfolio rationale.",
     "For each shoot, core uses this exact order:",
     "candidateId; title; noveltyFingerprint; occasion; whyHeIsThere; photographerRelationship; whyPhotoTaken; centralMoment; location; shootingZone; outfit; light; datingValue; fourFrameOpportunity.",
+    ...((args.subjectLedStillNeeded ?? 0) > 0 ? [
+      "",
+      "SUBJECT-LED ALLOCATION",
+      `Mark at least ${args.subjectLedStillNeeded} concepts with subjectLed=true. Omit subjectLed from every other concept.`,
+      "In a marked concept, the man, his face, body language, clothing, light and location carry the photograph; no held or operated prop and no performed activity is needed to justify it.",
+      "Natural background context is welcome. Do not turn this into a blank studio portrait, pose catalogue or product scene.",
+      "Make the central moment about his stance, attention or response to the off-camera photographer. Keep the reason for being there and the capture provenance believable.",
+      "Marked concepts must differ from one another in location, outfit and light.",
+    ] : []),
     "",
     "SELECTED INTERESTS",
     ...args.input.interests.map((id) => `- ${id}: ${interestMeaning(id)}`),
@@ -125,6 +135,7 @@ export function validatePortfolioCandidate(args: {
   input: CustomerCreativeInput;
   candidateCount: number;
   interestsStillNeeded: readonly InterestId[];
+  subjectLedStillNeeded?: number;
   history: readonly PortfolioHistoryItem[];
 }) {
   const problems: string[] = [];
@@ -164,6 +175,12 @@ export function validatePortfolioCandidate(args: {
       if (!represented.has(interest)) problems.push(`Selected interest ${interest} has no candidate.`);
     }
   }
+  const subjectLedCount = args.output.shoots.filter((shoot) => shoot.subjectLed === true).length;
+  if (subjectLedCount < (args.subjectLedStillNeeded ?? 0)) {
+    problems.push(
+      `Expected at least ${args.subjectLedStillNeeded} subject-led candidates, received ${subjectLedCount}.`
+    );
+  }
   return {
     passed: problems.length === 0,
     problems: [...new Set(problems)],
@@ -176,6 +193,7 @@ export async function generatePortfolioCandidate(args: {
   targetCount: number;
   candidateCount: number;
   interestsStillNeeded: readonly InterestId[];
+  subjectLedStillNeeded?: number;
   currentOrder: readonly PortfolioHistoryItem[];
   customerHistory: readonly PortfolioHistoryItem[];
   globalHistory: readonly PortfolioHistoryItem[];
@@ -199,6 +217,7 @@ export async function generatePortfolioCandidate(args: {
         input: args.input,
         candidateCount: args.candidateCount,
         interestsStillNeeded: args.interestsStillNeeded,
+        subjectLedStillNeeded: args.subjectLedStillNeeded,
         history,
       })
     : {

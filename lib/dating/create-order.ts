@@ -55,6 +55,8 @@ export type CreateOrderInput = {
   interests?: InterestId[];
   /** Content he asked us to leave out: dog, alcohol, bicycle, team sport. */
   excludeTags?: ExcludableTag[];
+  /** Adds two subject-led candid concepts without consuming an activity slot. */
+  includeSimpleCandids?: boolean;
 };
 
 /**
@@ -182,7 +184,11 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
         customCreditsRemaining: CUSTOM_CREDITS_DEFAULT,
         photosTarget: productConfig.photosPerDelivery,
         shootsTarget: productConfig.shootsPerDelivery,
-        creativeInput: { interests, excludeTags },
+        creativeInput: {
+          interests,
+          excludeTags,
+          includeSimpleCandids: input.includeSimpleCandids ?? true,
+        },
         plannerVersion: PORTFOLIO_SYSTEM_VERSION,
         promptSystemVersion: SHOOT_WRITER_SYSTEM_VERSION,
         testMode: productConfig.testMode,

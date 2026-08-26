@@ -98,6 +98,13 @@ export function buildShootWriterRequest(args: {
     "APPROVED DIMENSIONS",
     "3:4 = 1728x2304; 4:3 = 2304x1728; 9:16 = 1512x2688.",
     "frameId uses lowercase letters, numbers and hyphens only.",
+    ...(args.brief.subjectLed === true ? [
+      "",
+      "SUBJECT-LED CAPTURE EMPHASIS",
+      "The man, his face, complete clothing, body language, light and location carry these four images.",
+      "Do not introduce a held or operated prop, or an activity, merely to justify a photograph. Background context may exist but must not drive his pose.",
+      "Let different camera positions, small body shifts and changes of attention occur naturally during the same occasion; do not create a formal pose sequence.",
+    ] : []),
     "",
     "MECHANICAL CORRECTION",
     args.retry

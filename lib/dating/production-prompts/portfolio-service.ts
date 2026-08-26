@@ -52,6 +52,7 @@ export async function executePortfolioAttempt(args: {
       targetCount: snapshot.targetCount,
       candidateCount: snapshot.candidateCount,
       interestsStillNeeded: snapshot.interestsStillNeeded,
+      subjectLedStillNeeded: snapshot.subjectLedStillNeeded ?? 0,
       currentOrder: snapshot.currentOrder,
       customerHistory: snapshot.customerHistory,
       globalHistory: snapshot.globalHistory,

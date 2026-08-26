@@ -20,7 +20,11 @@ import {
   type PortfolioReservationReport,
   type ProductionShootRow,
 } from "@/lib/dating/production-prompts/store";
-import type { ExcludableTag, InterestId } from "@/lib/dating/types";
+import {
+  SUBJECT_LED_SHOOTS_PER_DELIVERY,
+  type ExcludableTag,
+  type InterestId,
+} from "@/lib/dating/types";
 import { createLocalMockShoot } from "@/lib/dating/production-prompts/mock-manifest";
 import { planDatingRenderModes } from "@/lib/dating/production-prompts/render-plan";
 import { generateDatingShootPrompts } from "@/trigger/dating-prompt";
@@ -35,6 +39,7 @@ export type DynamicPipelineOrder = {
   creative_input: {
     interests?: InterestId[];
     excludeTags?: ExcludableTag[];
+    includeSimpleCandids?: boolean;
   } | null;
   prompt_system_version: string | null;
   test_mode_snapshot: "off" | "sample" | "mock";
@@ -71,15 +76,29 @@ async function preserveInterestCoverage(args: {
     args.shoots.flatMap((shoot) => representedInterestsOfBrief(shoot.brief))
   );
   const uncovered = args.input.interests.filter((interest) => !represented.has(interest));
-  if (uncovered.length === 0) return false;
-
-  throw new DynamicPromptPipelineFailure(
-    "idea_reservation",
-    false,
-    "The shoot plan did not cover every selected part of your life.",
-    "internal",
-    "internal_planning_stalled"
-  );
+  if (uncovered.length > 0) {
+    throw new DynamicPromptPipelineFailure(
+      "idea_reservation",
+      false,
+      "The shoot plan did not cover every selected part of your life.",
+      "internal",
+      "internal_planning_stalled"
+    );
+  }
+  const subjectLedCount = args.shoots.filter((shoot) => shoot.brief.subjectLed === true).length;
+  if (
+    args.input.includeSimpleCandids &&
+    subjectLedCount < SUBJECT_LED_SHOOTS_PER_DELIVERY
+  ) {
+    throw new DynamicPromptPipelineFailure(
+      "idea_reservation",
+      false,
+      "The shoot plan did not complete the requested simple candid allocation.",
+      "internal",
+      "internal_planning_stalled"
+    );
+  }
+  return false;
 }
 
 function reportSummary(report: PortfolioReservationReport | undefined) {
@@ -165,8 +184,10 @@ async function configureShootModes(args: {
     candidates: args.shoots.map((shoot) => ({
       shootId: shoot.id,
       representedInterests: representedInterestsOfBrief(shoot.brief),
+      subjectLed: shoot.brief.subjectLed === true,
     })),
     selectedInterests: args.input.interests,
+    includeSimpleCandids: args.input.includeSimpleCandids,
     testMode: args.order.test_mode_snapshot,
     realShootsTarget: args.order.real_shoots_target,
     seed: `${args.order.id}:sample-v3`,
@@ -319,6 +340,7 @@ export async function prepareDynamicOrder(args: {
   const input = customerCreativeInputSchema.parse({
     interests: creative.interests ?? [],
     exclusions: creative.excludeTags ?? [],
+    includeSimpleCandids: creative.includeSimpleCandids ?? false,
   });
   let shoots = await loadProductionShoots(args.db, args.order.id);
   const missingAtStart = missingShootCount(shoots, args.order.shoots_target);

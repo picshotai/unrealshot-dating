@@ -4,6 +4,7 @@ import type { InterestId } from "@/lib/dating/types";
 export type DatingRenderPlanCandidate = {
   shootId: string;
   representedInterests: InterestId[];
+  subjectLed?: boolean;
 };
 
 /**
@@ -14,6 +15,7 @@ export type DatingRenderPlanCandidate = {
 export function planDatingRenderModes(args: {
   candidates: DatingRenderPlanCandidate[];
   selectedInterests: InterestId[];
+  includeSimpleCandids?: boolean;
   testMode: "off" | "sample" | "mock";
   realShootsTarget: number;
   seed: string;
@@ -30,6 +32,7 @@ export function planDatingRenderModes(args: {
       : selectSampleShootIds({
           candidates: args.candidates,
           selectedInterests: args.selectedInterests,
+          includeSimpleCandids: args.includeSimpleCandids,
           count: requestedRealCount,
           seed: args.seed,
         });
