@@ -6,6 +6,10 @@ import {
   ANCHOR_REFERENCE_SENTENCE,
   CRAFT_REFERENCE_MANIFEST,
   IDENTITY_SENTENCE,
+  OUTFIT_SENTENCE_PREFIX,
+  PHYSICAL_COHERENCE_SENTENCE,
+  SHOOT_WRITER_SYSTEM_INSTRUCTION,
+  SINGLE_VISIBLE_IDENTITY_SENTENCE,
   buildDatingInteractionRequest,
   buildPortfolioRequest,
   buildShootWriterRequest,
@@ -120,6 +124,11 @@ async function main() {
   assert.match(writerRequest, /AUTHORED PHOTOGRAPHIC-CRAFT FRAGMENTS/);
   assert.match(writerRequest, /Learn only their causal camera\/body\/light writing/);
   assert.doesNotMatch(writerRequest, /Every frame prompt must contain|visibleSceneFacts|portableProps/);
+  assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /only visible person/i);
+  assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /account for both hands/i);
+  assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /do not force hands/i);
+  assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /receiving glass.*stable surface/i);
+  assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /complete locked outfit verbatim/i);
 
   const shoot = await generateShootCandidate({
     brief: first,
@@ -133,9 +142,15 @@ async function main() {
   assert(anchor.isProfileCandidate);
   assert(["close", "chest-up", "waist-up"].includes(anchor.cameraDistance));
   assert(anchor.prompt.startsWith(IDENTITY_SENTENCE));
+  assert(anchor.prompt.includes(SINGLE_VISIBLE_IDENTITY_SENTENCE));
+  assert(anchor.prompt.includes(`${OUTFIT_SENTENCE_PREFIX} ${first.outfit}`));
+  assert(anchor.prompt.includes(PHYSICAL_COHERENCE_SENTENCE));
   assert(!anchor.prompt.includes(ANCHOR_REFERENCE_SENTENCE));
   for (const follower of shoot.output.frames.filter((frame) => !frame.isAnchor)) {
     assert(follower.prompt.startsWith(IDENTITY_SENTENCE));
+    assert(follower.prompt.includes(SINGLE_VISIBLE_IDENTITY_SENTENCE));
+    assert(follower.prompt.includes(`${OUTFIT_SENTENCE_PREFIX} ${first.outfit}`));
+    assert(follower.prompt.includes(PHYSICAL_COHERENCE_SENTENCE));
     assert(follower.prompt.includes(ANCHOR_REFERENCE_SENTENCE));
   }
   assert(shoot.output.frames.every((frame) => frame.prompt.length < 1_200));
@@ -146,6 +161,36 @@ async function main() {
   const anchorValidation = validateShootOutput({ output: invalidAnchor, brief: first, input });
   assert(!anchorValidation.passed);
   assert(anchorValidation.problems.some((problem) => /anchor must be a profile candidate/i.test(problem)));
+
+  const secondaryIdentity = structuredClone(shoot.output);
+  secondaryIdentity.frames[0].capturePrompt += " His friend reaches into frame.";
+  const secondaryValidation = validateShootOutput({
+    output: secondaryIdentity,
+    brief: first,
+    input,
+  });
+  assert(!secondaryValidation.passed);
+  assert(secondaryValidation.problems.some((problem) => /secondary person/i.test(problem)));
+
+  const floatingGlass = structuredClone(shoot.output);
+  floatingGlass.frames[0].capturePrompt =
+    "He leans one hand on the counter and pours a bottle into a glass. A 3:4 candid photograph.";
+  const floatingValidation = validateShootOutput({
+    output: floatingGlass,
+    brief: first,
+    input,
+  });
+  assert(!floatingValidation.passed);
+  assert(floatingValidation.problems.some((problem) => /supported receiving vessel/i.test(problem)));
+
+  floatingGlass.frames[0].capturePrompt =
+    "He pours a bottle into a glass resting on the counter. A 3:4 candid photograph.";
+  const supportedValidation = validateShootOutput({
+    output: floatingGlass,
+    brief: first,
+    input,
+  });
+  assert(!supportedValidation.problems.some((problem) => /supported receiving vessel/i.test(problem)));
 
   const config = getDatingProductConfig();
   assert(config.promptAttemptsPerIdea <= 2);
@@ -199,6 +244,15 @@ async function main() {
   assert.match(createOrder, /testMode: productConfig\.testMode/);
   assert.match(createOrder, /realShootsTarget/);
   assert.match(createOrder, /legacy_incompatible/);
+
+  const datingClient = readFileSync(
+    resolve(process.cwd(), "app/(protected)/dating-shoot/DatingShootClient.tsx"),
+    "utf8"
+  );
+  assert.match(datingClient, /fetchPhotoBlob\(photo\.id/);
+  assert.doesNotMatch(datingClient, /fetch\(imageUrl\)/);
+  assert.match(datingClient, /regenerationAttempt\.current/);
+  assert.match(datingClient, /photo\.imageUrl !== attempt\.previousImageUrl/);
 
   const migration = readFileSync(resolve(process.cwd(), "supabase/migrations/041_dating_capture_pipeline_v3.sql"), "utf8");
   assert.match(migration, /test_mode_snapshot/);

@@ -27,6 +27,7 @@ import {
 import { PhotoTile } from '@/components/dating/PhotoTile';
 import { PortfolioProgressPanel } from '@/components/dating/PortfolioProgressPanel';
 import { StudioIntakeView } from '@/components/dating/StudioIntakeView';
+import { fetchPhotoBlob } from '@/lib/dating/download';
 import {
   ImageGeneration,
   type ImageGenerationStatus,
@@ -133,6 +134,11 @@ export function DatingShootClient({
   } | null;
 }) {
   const launchRequestId = useRef<string | null>(null);
+  const regenerationAttempt = useRef<{
+    photoId: string;
+    previousImageUrl: string | null;
+    accepted: boolean;
+  } | null>(null);
   const [modelId, setModelId] = useState<number | null>(
     initialModelId || models[0]?.id || null
   );
@@ -165,18 +171,49 @@ export function DatingShootClient({
       const data = (await res.json()) as StatusResponse;
       setStatus(data);
 
+      // The inspector stores the selected object, not just its id. Keep that
+      // object synchronized so a completed reshoot appears without closing or
+      // refreshing the modal.
+      setSelectedPhoto((current) => {
+        if (!current) return current;
+        const shoot = (data.shoots ?? []).find((item) =>
+          item.photos.some((photo) => photo.id === current.id)
+        );
+        const photo = shoot?.photos.find((item) => item.id === current.id);
+        if (!shoot || !photo) return current;
+        return {
+          ...current,
+          ...photo,
+          shootId: shoot.shootId,
+          shootTitle: shoot.title,
+          roleHint: photo.roleHint || LINEUP_HINTS[photo.role],
+        };
+      });
+
       // The reshoot is finished when the row says so, not when the POST
       // returned. Release the spinner here so the tile animates from the
       // dither field straight into the new photo.
       setRegenLoadingId((current) => {
         if (!current) return current;
+        const attempt = regenerationAttempt.current;
+        // Polling starts immediately, while the POST may still be in flight.
+        // An old completed row is not proof that the new reshoot completed.
+        if (!attempt || attempt.photoId !== current || !attempt.accepted) {
+          return current;
+        }
         const photo = (data.shoots ?? [])
           .flatMap((shoot) => shoot.photos)
           .find((p) => p.id === current);
         if (!photo) return current;
-        return photo.status === 'complete' || photo.status === 'error'
-          ? null
-          : current;
+        const finishedWithNewImage =
+          photo.status === 'complete' &&
+          Boolean(photo.imageUrl) &&
+          photo.imageUrl !== attempt.previousImageUrl;
+        if (finishedWithNewImage || photo.status === 'error') {
+          regenerationAttempt.current = null;
+          return null;
+        }
+        return current;
       });
     } catch (e) {
       console.warn('Failed to poll status:', e);
@@ -283,6 +320,14 @@ export function DatingShootClient({
   // happen. The loading state now ends when polling reports the row finished.
   const handleRegenerate = async (photoId: string) => {
     if (!activeOrderId) return;
+    const previousImageUrl = status?.shoots
+      .flatMap((shoot) => shoot.photos)
+      .find((photo) => photo.id === photoId)?.imageUrl ?? null;
+    regenerationAttempt.current = {
+      photoId,
+      previousImageUrl,
+      accepted: false,
+    };
     setRegenLoadingId(photoId);
     try {
       const res = await fetch('/api/dating-shoot/regenerate', {
@@ -292,9 +337,13 @@ export function DatingShootClient({
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Regenerate failed');
-      setTimeout(() => fetchStatus(activeOrderId), 2500);
+      if (regenerationAttempt.current?.photoId === photoId) {
+        regenerationAttempt.current.accepted = true;
+      }
+      await fetchStatus(activeOrderId);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Regenerate failed');
+      regenerationAttempt.current = null;
       setRegenLoadingId(null);
     }
   };
@@ -368,6 +417,7 @@ export function DatingShootClient({
       const zip = new JSZip();
       let count = 0;
       const totalToDownload = status.counts.completed;
+      const failedRealPhotos: string[] = [];
 
       // One folder per shoot, frames numbered inside it. The folder *is* the
       // shoot: same place, same clothes, same light, four ways.
@@ -398,16 +448,23 @@ export function DatingShootClient({
                 folder?.file(`${base}.png`, base64Data, { base64: true });
               }
             } else {
-              const res = await fetch(imageUrl);
-              if (res.ok) {
-                const blob = await res.blob();
-                folder?.file(`${base}.png`, blob);
-              }
+              // Use the authenticated same-origin download path. Direct R2
+              // browser requests can fail CORS and were silently skipped,
+              // leaving sample ZIPs containing only their local SVG previews.
+              const blob = await fetchPhotoBlob(photo.id, `${base}.png`);
+              folder?.file(`${base}.png`, blob);
             }
           } catch (err) {
             console.warn(`Failed to add photo ${photo.id} to zip`, err);
+            if (!imageUrl.startsWith('data:')) failedRealPhotos.push(photo.id);
           }
         }
+      }
+
+      if (failedRealPhotos.length > 0) {
+        throw new Error(
+          `Could not securely download ${failedRealPhotos.length} generated photo${failedRealPhotos.length === 1 ? '' : 's'}. Please try again.`
+        );
       }
 
       setZipProgress('Compressing zip file...');
@@ -422,7 +479,9 @@ export function DatingShootClient({
       URL.revokeObjectURL(downloadUrl);
     } catch (err) {
       console.error('ZIP generation failed:', err);
-      setError('Failed to create ZIP download');
+      setError(
+        err instanceof Error ? err.message : 'Failed to create ZIP download'
+      );
     } finally {
       setZipLoading(false);
       setZipProgress('');

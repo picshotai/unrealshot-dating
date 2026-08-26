@@ -8,6 +8,9 @@ import { formatCraftReferences, selectCraftReferences } from "./craft-references
 import {
   ANCHOR_REFERENCE_SENTENCE,
   IDENTITY_SENTENCE,
+  OUTFIT_SENTENCE_PREFIX,
+  PHYSICAL_COHERENCE_SENTENCE,
+  SINGLE_VISIBLE_IDENTITY_SENTENCE,
   compileShootOutput,
 } from "./prompt-compiler";
 import {
@@ -20,7 +23,13 @@ import {
   type DatingShootOutput,
 } from "./schemas";
 
-export { ANCHOR_REFERENCE_SENTENCE, IDENTITY_SENTENCE } from "./prompt-compiler";
+export {
+  ANCHOR_REFERENCE_SENTENCE,
+  IDENTITY_SENTENCE,
+  OUTFIT_SENTENCE_PREFIX,
+  PHYSICAL_COHERENCE_SENTENCE,
+  SINGLE_VISIBLE_IDENTITY_SENTENCE,
+} from "./prompt-compiler";
 
 export const SHOOT_WRITER_SYSTEM_INSTRUCTION = `
 You write four photographic capture events for one approved men's dating-profile shoot.
@@ -30,6 +39,12 @@ The four images must feel like they were naturally taken during the same real oc
 There is no required close/medium/full/expression order, pose menu, gaze sequence, smile sequence, lens menu or mandatory hand instruction. The occasion causes the four different human moments. A simple quiet candid is valid. Visible teeth or overt laughter must be caused by the event and must never be the default method of variation.
 
 Keep one location zone, outfit and lighting state. Use the brief's continuity essentials as private scene truth; do not repeat them as a paragraph in every capturePrompt. Mention a scene element only when the exact photograph needs it. Never invent or relocate architecture merely to support a pose.
+
+The referenced man must be the only visible person in all four photographs. The photographer, friend, companion, date, server and every bystander stay completely outside the frame. Do not name any secondary person in capturePrompt. Social provenance can be felt through an off-camera remark, his eyeline or the occasion itself; never request another face, body, hand, reflection, crowd or partial person.
+
+The server inserts the brief's complete locked outfit verbatim into every final prompt. Do not replace it with vague continuity language such as "the same denim", "the same shirt" or "the same outfit", and do not introduce a different garment. Mention clothing in capturePrompt only when its physical movement is essential to that exact moment.
+
+Before returning, silently account for both hands, whether they are visible or cropped out; do not force hands into the composition. Give each visible hand at most one job at the captured instant. A hand cannot brace on furniture while also holding something. If he pours, the bottle uses one hand and the receiving glass must be explicitly resting on a stable surface or held by the other free hand. Nothing floats. Prefer one clear primary action over simultaneous gestures.
 
 Choose exactly one anchor. It renders first and must also be a profile candidate with a clear face at close, chest-up or waist-up distance. A three-quarter, full-body, wide or environmental frame cannot be the anchor. The anchor should establish enough of the nearby location, outfit and light to guide later images without becoming an object catalogue.
 
@@ -111,6 +126,12 @@ const EXCLUSION_PATTERNS: Record<CustomerCreativeInput["exclusions"][number], Re
 };
 
 const FACE_STRONG_DISTANCES = new Set(["close", "chest-up", "waist-up"]);
+const SECONDARY_PERSON_REFERENCE =
+  /\b(friend|companion|date|teammate|host|server|waiter|bartender|stranger|bystander|crowd|group of people|another person|someone else|photographer)\b/i;
+const POURING_ACTION = /\bpour(?:s|ed|ing)?\b/i;
+const RECEIVING_VESSEL = /\b(glass|cup|mug|bowl|pitcher|carafe)\b/i;
+const SUPPORTED_RECEIVING_VESSEL =
+  /\b(glass|cup|mug|bowl|pitcher|carafe)\b[^.!?]{0,80}\b(rests?|resting|stands?|standing|sits?|sitting|set|placed|supported|held|on (?:a|the) (?:table|counter|bench|tray|ground|floor))\b|\b(holds?|holding|supports?|supporting)\b[^.!?]{0,80}\b(glass|cup|mug|bowl|pitcher|carafe)\b/i;
 
 export function validateShootOutput(args: {
   output: DatingShootOutput;
@@ -150,6 +171,25 @@ export function validateShootOutput(args: {
     }
     if (!frame.prompt.startsWith(IDENTITY_SENTENCE)) {
       problems.push(`${frame.frameId} was not compiled with the identity clause.`);
+    }
+    if (!frame.prompt.includes(SINGLE_VISIBLE_IDENTITY_SENTENCE)) {
+      problems.push(`${frame.frameId} was not compiled with the single-visible-identity clause.`);
+    }
+    if (!frame.prompt.includes(`${OUTFIT_SENTENCE_PREFIX} ${args.brief.outfit}`)) {
+      problems.push(`${frame.frameId} was not compiled with the complete locked outfit.`);
+    }
+    if (!frame.prompt.includes(PHYSICAL_COHERENCE_SENTENCE)) {
+      problems.push(`${frame.frameId} was not compiled with the physical-coherence clause.`);
+    }
+    if (SECONDARY_PERSON_REFERENCE.test(frame.capturePrompt)) {
+      problems.push(`${frame.frameId} names a secondary person; express the cause without putting another identity in the image prompt.`);
+    }
+    if (
+      POURING_ACTION.test(frame.capturePrompt) &&
+      (!RECEIVING_VESSEL.test(frame.capturePrompt) ||
+        !SUPPORTED_RECEIVING_VESSEL.test(frame.capturePrompt))
+    ) {
+      problems.push(`${frame.frameId} includes pouring without an explicitly supported receiving vessel.`);
     }
     if (!frame.isAnchor && !frame.prompt.includes(ANCHOR_REFERENCE_SENTENCE)) {
       problems.push(`${frame.frameId} was not compiled with the anchor clause.`);

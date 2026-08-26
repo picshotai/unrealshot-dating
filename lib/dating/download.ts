@@ -23,18 +23,7 @@ export async function downloadPhoto(
     return;
   }
 
-  const params = new URLSearchParams({ photoId, filename });
-  const response = await fetch(`/api/download?${params.toString()}`);
-  if (!response.ok) {
-    const payload = (await response.json().catch(() => null)) as
-      | { error?: string }
-      | null;
-    throw new Error(
-      payload?.error || `Could not download the photo (${response.status})`
-    );
-  }
-
-  const blob = await response.blob();
+  const blob = await fetchPhotoBlob(photoId, filename);
   const objectUrl = URL.createObjectURL(blob);
   try {
     triggerDownload(objectUrl, filename);
@@ -43,6 +32,26 @@ export async function downloadPhoto(
     // Safari before it has read the blob.
     setTimeout(() => URL.revokeObjectURL(objectUrl), 10_000);
   }
+}
+
+/** Fetch delivered bytes through our authenticated same-origin proxy. */
+export async function fetchPhotoBlob(
+  photoId: string,
+  filename: string
+): Promise<Blob> {
+  const params = new URLSearchParams({ photoId, filename });
+  const response = await fetch(`/api/download?${params.toString()}`, {
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    const payload = (await response.json().catch(() => null)) as
+      | { error?: string }
+      | null;
+    throw new Error(
+      payload?.error || `Could not download the photo (${response.status})`
+    );
+  }
+  return response.blob();
 }
 
 function triggerDownload(href: string, filename: string): void {

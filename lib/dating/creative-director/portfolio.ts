@@ -26,6 +26,8 @@ Invent original occasions from the customer's real interests and a broad, believ
 
 Plan the reason the moment exists, who naturally takes the photographs and why. Do not plan four poses. State only why four genuinely different photographs could happen during the same occasion. The photographer must belong there naturally: friend, companion, date, teammate or host as appropriate, not an unexplained professional crew.
 
+The image model receives identity references for the customer only, so the customer must be the only visible person. The photographer and every friend, companion, server or bystander remain outside the frame. Build social credibility through why the off-camera person took the picture, the customer's reaction and environmental evidence—not a second visible body, face, hand, reflection or crowd.
+
 Choose clothing independently for every shoot from the activity, place, weather, time and social context. Sports use correct sports clothing; dinner, home, travel and nightlife use their own believable register. Avoid conspicuous logos, costume wealth and contextually absurd tailoring.
 
 Keep each shoot inside one small location zone, one outfit and one lighting state. Supply no object inventory. continuityEssentials contains at most three short physical facts whose stability actually matters. Do not manufacture furniture, props or poses merely to satisfy continuity.

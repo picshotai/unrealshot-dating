@@ -24,15 +24,15 @@ export function mockProductionModelCall(brief: DatingShootIntent): CreativeModel
       title: brief.title,
       frames: [
         {
-          frameId: "friend-notices-him",
-          roleLabel: "Caught by a friend",
+          frameId: "off-camera-notice",
+          roleLabel: "Caught naturally",
           moment: `His companion notices him during ${brief.centralMoment}.`,
           cameraDistance: "chest-up",
           width: 1728,
           height: 2304,
           isAnchor: true,
           isProfileCandidate: true,
-          capturePrompt: `During ${brief.occasion}, his companion catches a chest-up photograph just after ${brief.centralMoment}; the turn of his shoulders follows the interruption instead of a pose, his mouth is relaxed and his face is clear. ${brief.light} falls naturally across real skin texture while ${brief.location} remains softly legible nearby. A 3:4 candid dating photograph with credible anatomy and unretouched fabric.`,
+          capturePrompt: `During ${brief.occasion}, an off-camera remark catches him just after ${brief.centralMoment}; the turn of his shoulders follows the interruption instead of a pose, his mouth is relaxed and his face is clear. ${brief.light} falls naturally across real skin texture while ${brief.location} remains softly legible nearby. A 3:4 candid dating photograph with credible anatomy and unretouched fabric.`,
         },
         {
           frameId: "absorbed-in-the-moment",
@@ -43,7 +43,7 @@ export function mockProductionModelCall(brief: DatingShootIntent): CreativeModel
           height: 2304,
           isAnchor: false,
           isProfileCandidate: false,
-          capturePrompt: `He has returned to ${brief.whyHeIsThere}, so his weight and gaze follow the real action rather than the camera. The companion photographs from a few steps to the side at waist-up distance; the changed angle is caused by moving around him, not rebuilding the scene. Preserve natural skin, fabric tension and ${brief.light}. A 3:4 observational photograph.`,
+          capturePrompt: `He has returned to ${brief.whyHeIsThere}, so his weight and gaze follow the real action rather than the camera. The camera has moved a few steps to the side at waist-up distance; the changed angle comes from moving around him, not rebuilding the scene. Preserve natural skin, fabric tension and ${brief.light}. A 3:4 observational photograph.`,
         },
         {
           frameId: "quiet-transition",
@@ -54,7 +54,7 @@ export function mockProductionModelCall(brief: DatingShootIntent): CreativeModel
           height: 2304,
           isAnchor: false,
           isProfileCandidate: false,
-          capturePrompt: `In a quiet transition inside ${brief.shootingZone}, he shifts naturally before the next part of the occasion and the photographer steps back to include more of his body. His posture follows that movement and his expression stays neutral, with no clothing adjustment or performance for the lens. Keep the existing light and grounded textures. A 3:4 three-quarter candid photograph.`,
+          capturePrompt: `In a quiet transition inside ${brief.shootingZone}, he shifts naturally before the next part of the occasion as the camera steps back to include more of his body. His posture follows that movement and his expression stays neutral, with no clothing adjustment or performance for the lens. Keep the existing light and grounded textures. A 3:4 three-quarter candid photograph.`,
         },
         {
           frameId: "brief-reconnection",
@@ -65,7 +65,7 @@ export function mockProductionModelCall(brief: DatingShootIntent): CreativeModel
           height: 2304,
           isAnchor: false,
           isProfileCandidate: true,
-          capturePrompt: `A comment from ${brief.photographerRelationship} brings his attention back for a brief close photograph, giving a different human beat without forcing laughter. His eyes respond first while his shoulders remain connected to what he was doing. Let ${brief.light} retain pores, fine hair and the real weave of ${brief.outfit}. A 3:4 close dating photograph.`,
+          capturePrompt: `An off-camera comment brings his attention back for a brief close photograph, giving a different human beat without forcing laughter. His eyes respond first while his shoulders remain connected to what he was doing. Let ${brief.light} retain pores, fine hair and the real fabric weave. A 3:4 close dating photograph.`,
         },
       ],
     }),
