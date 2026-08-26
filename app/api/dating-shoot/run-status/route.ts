@@ -275,14 +275,44 @@ export async function GET(request: NextRequest) {
   // Failed dynamic-order rows are operational diagnostics, not a partial paid
   // delivery. Do not expose them as a gallery after the reservation is released.
   const all = isTerminalFailure && order.pipeline_mode === "dynamic" ? [] : photos || [];
-  const { data: dynamicShoots } = order.pipeline_mode === "dynamic"
-    ? await supabase
+  let dynamicShoots: unknown[] | null = null;
+  if (order.pipeline_mode === "dynamic") {
+    const shootResult = await supabase
+      .from("dating_order_shoots" as any)
+      .select("id, slot_index, title, kind, status, render_mode, prompt_source, contract_version")
+      .eq("order_id", orderId)
+      .neq("status", "abandoned")
+      .order("slot_index");
+
+    if (shootResult.error) {
+      // New delivery columns can be deployed before their authenticated column
+      // grants. Keep completed photos visible using the long-standing public
+      // shoot fields instead of silently turning a successful order into an
+      // empty gallery.
+      console.error("dating run status: extended shoot metadata lookup failed", {
+        orderId,
+        code: shootResult.error.code,
+        message: shootResult.error.message,
+      });
+      const compatibleShootResult = await supabase
         .from("dating_order_shoots" as any)
-        .select("id, slot_index, title, kind, status, render_mode, prompt_source, contract_version")
+        .select("id, slot_index, title, kind, status")
         .eq("order_id", orderId)
         .neq("status", "abandoned")
-        .order("slot_index")
-    : { data: null };
+        .order("slot_index");
+      if (compatibleShootResult.error) {
+        console.error("dating run status: compatible shoot metadata lookup failed", {
+          orderId,
+          code: compatibleShootResult.error.code,
+          message: compatibleShootResult.error.message,
+        });
+      } else {
+        dynamicShoots = compatibleShootResult.data;
+      }
+    } else {
+      dynamicShoots = shootResult.data;
+    }
+  }
   const promptRows = (dynamicShoots ?? []) as unknown as Array<{
     id: string;
     slot_index: number;
@@ -327,12 +357,20 @@ export async function GET(request: NextRequest) {
   }
 
   const dynamicById = new Map(promptRows.map((row) => [row.id, row]));
+  const photoShootIds = [...byShoot.keys()];
+  const passedShootIds = promptRows
+    .filter((row) => row.status === "passed")
+    .map((row) => row.id);
+  const passedShootIdSet = new Set(passedShootIds);
   const orderedShootIds = isTerminalFailure
     ? []
     : order.pipeline_mode === "dynamic"
-    ? promptRows.filter((row) => row.status === "passed").map((row) => row.id)
-    : [...byShoot.keys()];
-  const shoots = orderedShootIds.map((shootId) => {
+    ? [
+        ...passedShootIds,
+        ...photoShootIds.filter((shootId) => !passedShootIdSet.has(shootId)),
+      ]
+    : photoShootIds;
+  const shoots = orderedShootIds.map((shootId, shootIndex) => {
     const rows = byShoot.get(shootId) ?? [];
     const shoot = SHOOT_BY_ID.get(shootId);
     const dynamicShoot = dynamicById.get(shootId);
@@ -341,10 +379,10 @@ export async function GET(request: NextRequest) {
       shootId,
       // A delivered order keeps its photos even if the shoot later leaves the
       // library, so the id is the fallback rather than an error.
-      title: dynamicShoot?.title ?? shoot?.title ?? `Shoot ${dynamicShoot?.slot_index ?? ""}`.trim(),
+      title: dynamicShoot?.title ?? shoot?.title ?? `Shoot ${shootIndex + 1}`,
       kind: shootKind,
       completed: rows.filter((p) => p.status === "completed").length,
-      total: dynamicShoot ? 4 : rows.length,
+      total: order.pipeline_mode === "dynamic" ? 4 : rows.length,
       // Every photo is returned, not just finished ones.
       //
       // This used to filter to `completed && image_url`, which meant a photo
@@ -352,7 +390,7 @@ export async function GET(request: NextRequest) {
       // indistinguishable from a photo that never existed. The client needs the
       // in-flight rows to hold their place and show progress.
       photos: rows.map((p) => {
-        const role = dynamicShoot
+        const role = order.pipeline_mode === "dynamic"
           ? p.is_profile_candidate ? "opener" : "more"
           : lineupRoleFor({
               shootId,
