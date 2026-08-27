@@ -37,7 +37,7 @@ export function ShootStory() {
 
           <div className="relative z-10 mx-auto max-w-[840px] px-2 text-center md:px-28 lg:px-24">
             <span className="mb-5 inline-block font-serif text-2xl italic text-black">here&apos;s the difference</span>
-            <h2 className="font-[family-name:var(--font-space-grotesk)] text-[clamp(2.4rem,6vw,5.8rem)] font-medium leading-[0.98] tracking-[-0.065em] text-black">
+            <h2 className="font-oxanium text-[clamp(2.4rem,6vw,5.8rem)] font-medium leading-[0.98] tracking-[-0.065em] text-black">
               Sixty unrelated photos look generated. <span className="text-[#25a882]">A few real days look like you.</span>
             </h2>
             <p className="mx-auto mt-7 max-w-2xl text-[15px] leading-7 text-black/58 sm:text-[17px]">
@@ -69,7 +69,7 @@ export function ShootStory() {
               className="flex h-12 items-center shadow-sm sm:h-14"
             >
               <span
-                className={`flex h-full items-center px-4 font-[family-name:var(--font-space-grotesk)] text-lg font-semibold sm:px-5 sm:text-xl ${fact.light ? "text-white" : "text-black"}`}
+                className={`flex h-full items-center px-4 font-oxanium text-lg font-semibold sm:px-5 sm:text-xl ${fact.light ? "text-white" : "text-black"}`}
                 style={{ backgroundColor: fact.color }}
               >
                 {fact.label}

@@ -91,7 +91,7 @@ export function EditorChrome() {
       </div>
 
       {menuOpen && (
-        <div id="landing-menu" className="absolute right-4 top-[62px] z-[60] w-[min(340px,calc(100vw-2rem))] border border-black bg-white p-2 shadow-[8px_8px_0_#45c4f9] sm:right-6">
+        <div id="landing-menu" className="absolute right-4 top-[62px] z-[60] w-[min(340px,calc(100vw-2rem))] border border-black bg-white p-2 shadow-[0_20px_50px_rgba(0,0,0,0.15)] sm:right-6">
           {navItems.map((item, index) => (
             <a
               key={item.href}

@@ -42,7 +42,7 @@ function CardContent({ card, index, mobile = false }: { card: ShootCard; index: 
             <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: card.ink }} />
             {card.index} · UNREALSHOT SYSTEM
           </div>
-          <h3 className="max-w-lg font-[family-name:var(--font-space-grotesk)] text-[clamp(2.25rem,4.5vw,4.25rem)] font-medium leading-[0.96] tracking-[-0.06em]">
+          <h3 className="max-w-lg font-oxanium text-[clamp(2.25rem,4.5vw,4.25rem)] font-medium leading-[0.96] tracking-[-0.06em]">
             {card.title}
           </h3>
           <p className="mt-5 max-w-md text-[14px] leading-6 opacity-75 sm:text-base sm:leading-7">{card.copy}</p>
@@ -153,7 +153,7 @@ export default function ProjectDeck() {
     <section id="shoots" className="scroll-mt-8 py-16 lg:py-0">
       <div className="mx-auto mb-8 max-w-4xl px-4 text-center sm:px-6 lg:mb-0 lg:pb-16">
         <span className="font-serif text-2xl italic text-black">inside the system</span>
-        <h2 className="mt-2 font-[family-name:var(--font-space-grotesk)] text-[clamp(2.5rem,6vw,5.5rem)] font-medium leading-[0.95] tracking-[-0.065em] text-black">
+        <h2 className="mt-2 font-oxanium text-[clamp(2.5rem,6vw,5.5rem)] font-medium leading-[0.95] tracking-[-0.065em] text-black">
           The profile is built <span className="text-[#ec2578]">as a whole.</span>
         </h2>
       </div>

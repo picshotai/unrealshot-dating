@@ -6,12 +6,19 @@ export function LandingFooter() {
       <div className="mx-auto max-w-[1240px]">
         <div className="flex flex-col items-center text-center">
           <span className="font-serif text-2xl italic text-[#45c4f9]">the profile can be done now</span>
-          <h2 className="mt-4 max-w-5xl font-[family-name:var(--font-space-grotesk)] text-[clamp(3.4rem,9vw,9rem)] font-medium leading-[0.82] tracking-[-0.085em]">
+          <h2 className="mt-4 max-w-5xl font-oxanium text-[clamp(3.4rem,9vw,9rem)] font-medium leading-[0.82] tracking-[-0.085em]">
             Stop putting off your photos.
           </h2>
-          <Link href="/login" className="mt-10 flex h-16 items-center bg-white pr-6 font-mono text-[11px] font-bold tracking-[0.13em] text-black shadow-[7px_7px_0_#ec2578] transition-transform hover:-translate-y-1">
-            <span className="mr-6 grid h-16 w-16 place-items-center bg-[#f7b733] text-2xl">↗</span>
-            START FOR $39
+          <Link
+            href="/login"
+            className="group mt-10 flex h-14 items-center shadow-sm transition-transform hover:-translate-y-1 sm:h-16"
+          >
+            <span className="flex h-full items-center bg-white px-6 font-mono text-[11px] font-bold tracking-[0.13em] text-black sm:px-8 sm:text-[12px]">
+              START FOR $39
+            </span>
+            <span className="grid h-full w-14 place-items-center border-l-2 border-dashed border-black bg-[#f7b733] text-2xl text-black transition-colors group-hover:bg-[#ec2578] group-hover:text-white sm:w-16">
+              ↗
+            </span>
           </Link>
         </div>
 
@@ -34,8 +41,11 @@ export function LandingFooter() {
 
 export function FloatingCta() {
   return (
-    <Link href="/login" className="fixed bottom-4 right-4 z-50 flex items-center gap-3 rounded-full border border-black/10 bg-white px-4 py-3 font-mono text-[9px] font-bold tracking-[0.12em] text-black shadow-[0_5px_24px_rgba(0,0,0,0.14)] transition-transform hover:-translate-y-1">
-      <span className="h-2.5 w-2.5 rounded-full bg-[#ec2578]" />
+    <Link
+      href="/login"
+      className="fixed bottom-4 right-4 z-50 flex items-center gap-3 border border-black bg-white px-4 py-3 font-mono text-[9px] font-bold tracking-[0.12em] text-black shadow-[0_5px_24px_rgba(0,0,0,0.14)] transition-transform hover:-translate-y-1"
+    >
+      <span className="h-2 w-2 bg-[#ec2578]" />
       BUILD MY PROFILE
       <span>↗</span>
     </Link>
