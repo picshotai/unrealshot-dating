@@ -7,58 +7,58 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function StylePacks() {
   const cardData = [
     {
-      title: "MD Doctor Headshots",
+      title: "The Opener",
       description:
-        "Present yourself with the trust and authority of a medical professional, perfect for medical profiles or practice websites.",
+        "Clear face. Good light. Relaxed confidence. The photo that earns the second swipe.",
       image: "/content/doctor1.webp",
       url: "/ai-doctor-headshots",
     },
     {
-      title: "Social Media AI Photos",
+      title: "The Full-Body",
       description:
-        "Make your profile pop with creative, eye-catching images that show off your personality and style.",
+        "Natural, flattering and believable — without looking like you hired someone to photograph you.",
       image: "/content/socialimage.jpg",
       url: "/ai-instagram-photoshoot",
     },
     {
-      title: "AI Glamour Photos",
+      title: "The Candid",
       description:
-        "Unleash your inner star with stunning glamour photos that highlight your confidence and elegance.",
+        "Looking away, laughing, walking, doing something. Less “AI portrait.” More actual camera roll.",
       image: "/content/glamour3.webp",
       url: "/ai-glamour-photoshoot",
     },
     {
-      title: "Corporate Headshots",
+      title: "The Well-Dressed One",
       description:
-        "Make a strong impression with corporate headshots that reflect your professionalism, ideal for company websites or business cards.",
+        "Dinner, drinks, weddings, evenings out — when looking sharp actually makes sense.",
       image: "/content/corporate1.jpg",
       url: "/corporate-headshots",
     },
     {
-      title: "Professional Headshots",
+      title: "The Outdoors One",
       description:
-        "Create a polished, professional image for LinkedIn or your resume, making a strong first impression in any industry.",
+        "Trips, walks, beaches, mountains and weekends that make your profile feel alive.",
       image: "/content/professional1.jpg",
       url: "/professional-headshots",
     },
     {
-      title: "Christmas Photoshoot",
+      title: "The “I Actually Do Things” One",
       description:
-        "Embrace the holiday spirit with festive photos that capture the joy and warmth of the season, perfect for family cards or social media.",
+        "Choose from real interests so your profile gives someone something to ask you about.",
       image: "/content/christmas1.jpg",
       url: "/ai-christmas-photoshoot",
     },
     {
-      title: "Founder Headshots",
+      title: "The Golden Hour One",
       description:
-        "Capture the essence of your startup with stunning founder headshots that highlight your vision and drive.",
+        "Warm sunset light, relaxed vibe, natural aesthetic that catches the eye instantly.",
       image: "/content/founder1.jpg",
       url: "/founder-headshots",
     },
     {
-      title: "Lawyer Headshots",
+      title: "The Weekend Casual",
       description:
-        "Project confidence and professionalism with sharp, approachable lawyer headshots that leave a lasting impression on clients and colleagues.",
+        "Coffee runs, bookshops, Sunday walks — effortless lifestyle photos that feel genuine.",
       image: "/content/lawyer5.webp",
       url: "/ai-lawyer-headshots",
     },
@@ -70,13 +70,15 @@ export default function StylePacks() {
           <div className="max-w-7xl mx-auto px-4">
             {/* Title Section */}
             <div className="mb-16 max-w-4xl">
-                <p className="text-gray-100 font-normal text-xl mb-4 block">
-                  Choose From 10+ AI Photoshoot Styles
+                <p className="text-orange-500 font-bold uppercase tracking-wider text-sm mb-4 block">
+                  NOT RANDOM AI PHOTOS
                 </p>
-              <h2 className="text-4xl md:text-6xl text-white font-bold mb-6">
-                
-                Explore the Curated Shoots Library of <span className="text-[#ff6f00]">Our AI Photo Maker</span>
+              <h2 className="text-4xl md:text-6xl text-white font-bold mb-6 leading-tight">
+                A dating profile needs <span className="text-[#ff6f00]">more than one good picture.</span>
               </h2>
+              <p className="text-gray-300 text-lg md:text-xl">
+                A great profile should show what you look like and what being around you might feel like.
+              </p>
             </div>
 
             {/* Cards Grid */}
@@ -124,15 +126,12 @@ export default function StylePacks() {
             <div className="flex flex-col md:flex-row justify-between items-center">
               <div className="max-w-2xl mb-4 md:mb-0">
                 <p className="text-lg text-gray-300 max-w-3xl mx-auto">
-                UnrealShot AI turns your selfies into professional AI photoshoots.{" "}
-                  <span className="text-[#ff6f00] font-semibold">
-                  Upload your photos, choose a style pack, enter a prompt,{" "}  
-                  </span> 
-                   and get photos that feel real, not AI-generated.
+                  <span className="text-white font-semibold">15 shoots. 60 photos.</span>{" "}
+                  Enough range to build one complete profile.
                 </p>
               </div>
               <p className="text-gray-300 italic text-sm md:transform md:rotate-6 md:w-48 sm:text-center sm:w-auto">
-                If you're not happy, we will refund your full money
+                30 individual re-shoots included with every order
               </p>
             </div>
           </div>

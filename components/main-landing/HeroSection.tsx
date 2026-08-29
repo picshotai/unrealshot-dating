@@ -85,7 +85,7 @@ export function HeroSection() {
                 {/* Left Side: The Hook (High Contrast Orange) */}
                 <div className="bg-[#ff6f00] text-white text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
                   <Sparkles size={12} className="text-white" />
-                  <span className="tracking-wide uppercase ">Halloween Sale</span>
+                  <span className="tracking-wide uppercase">AI DATING PHOTOS FOR MEN</span>
                 </div>
 
                 {/* --- The NEW Interactive Right Side --- */}
@@ -117,15 +117,16 @@ export function HeroSection() {
             </div>
             <h1 className="text-4xl sm:text-6xl max-w-4xl mx-auto font-bold leading-[1.1] mb-4 font-[var(--font-inter-tight)]">
               <span className="text-white">
-                AI Photoshoots That Actually
+                You look better in real life.
               </span>
-              <span className="text-[#ff6f00] ml-2">
-                Look Like You
+              <span className="text-[#ff6f00] block mt-2">
+                Your dating profile should too.
               </span>
             </h1>
 
             <p className="text-lg text-gray-300 max-w-3xl mx-auto mb-8">
-              Transform your casual photos into a professional-grade photoshoot that captures you at your absolute best. Get an entire portfolio of authentic photos for every profile.            </p>
+              Turn 4–6 ordinary selfies into 60 natural dating photos across 15 believable shoots — built to give your Tinder, Hinge or Bumble profile the camera roll it should have had.
+            </p>
           </div>
           <div className="flex  sm:flex-row gap-2 justify-center items-center w-full relative">
 
@@ -133,7 +134,7 @@ export function HeroSection() {
               <Button
                 className="text-sm sm:text-md font-semibold py-5 sm:py-6 group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer pr-12"
               >
-                Start Your Shoot
+                Fix My Dating Profile — $39
                 <div className="bg-white rounded-sm p-2 sm:p-3 absolute right-1 top-1/2 -translate-y-1/2">
                   <img
                     src="/arrow.svg"
@@ -143,7 +144,7 @@ export function HeroSection() {
                 </div>
               </Button>
             </Link>
-            <Link href="#">
+            <Link href="#gallery">
               <Button
                 className="text-sm sm:text-md py-5 sm:py-6 group relative bg-white hover:bg-white/90 text-black rounded-md overflow-hidden cursor-pointer pr-12"
                 onClick={(e) => {
@@ -151,7 +152,7 @@ export function HeroSection() {
                   setIsVideoModalOpen(true);
                 }}
               >
-                Watch Demo
+                See Real Results
                 <div className="bg-[#ff6f00] text-white rounded-sm p-2 sm:p-3 absolute right-1 top-1/2 -translate-y-1/2">
                   <Play className="w-6 h-6 transition-transform duration-200 group-hover:translate-x-1" />
                 </div>
@@ -215,7 +216,7 @@ export function HeroSection() {
                 ))}
               </div>
             </div>
-            <p className="text-gray-400 text-md">Starting at $9.99 ONLY</p>
+            <p className="text-gray-400 text-md">One-time payment · 30 re-shoots included · No prompts to write</p>
           </div>
         </div>
       </div>

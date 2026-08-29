@@ -6,34 +6,34 @@ import { FeatureCard } from '@/components/ui/grid-feature-cards';
 
 const features = [ 
 	 { 
-	 	 title: "Hyper-Realistic Authenticity", 
+	 	 title: "Looks like a camera roll", 
 	 	 icon: Shield, 
-	 	 description: "Our AI is trained to preserve your unique features, not replace them. The result is a stunningly realistic photo that actually looks like you.", 
+	 	 description: "Natural compositions, candid moments and multiple frames from the same setting.", 
 	 }, 
 	 { 
-	 	 title: "A Style for Every Profile", 
+	 	 title: "15 different shoots", 
 	 	 icon: Palette, 
-	 	 description: "Go beyond a single headshot. Get a diverse portfolio with styles for every platform, from corporate to creative, and everything in between.", 
+	 	 description: "Enough variety for your opener, full-body photo, lifestyle shots and conversation starters.", 
 	 }, 
 	 { 
-	 	 title: "Ready in Minutes, Not Weeks", 
+	 	 title: "No prompt engineering", 
 	 	 icon: Zap, 
-	 	 description: "Skip the scheduling, travel, and awkward poses. Your entire professional photoshoot is generated and delivered in less time than a coffee break.", 
+	 	 description: "You answer three simple questions. We handle the shot planning.", 
 	 }, 
 	 { 
-	 	 title: "Perfect Studio Quality", 
+	 	 title: "Your interests matter", 
 	 	 icon: Sparkles, 
-	 	 description: "Every image is generated with perfect lighting, composition, and detail, giving you the quality of a professional studio shoot without the hassle.", 
+	 	 description: "Choose what you actually do so your photos don't invent a personality for you.", 
 	 }, 
 	 { 
-	 	 title: "You Are The Art Director", 
+	 	 title: "Re-shoot the misses", 
 	 	 icon: SlidersHorizontal, 
-	 	 description: "Take full control of your look. Generate countless options with different outfits, backgrounds, and styles until you find the perfect shots.", 
+	 	 description: "30 re-shoots are already included so you can tweak any frame that doesn't feel right.", 
 	 }, 
 	 { 
-	 	 title: "Full Commercial License", 
+	 	 title: "One person throughout", 
 	 	 icon: FileText, 
-	 	 description: "Your photos are yours. Every image comes with a full commercial license for your business, your brand, or any project with complete peace of mind.", 
+	 	 description: "Your photos are built around the same identity instead of generating a new version of you every time.", 
 	 }, 
 ]; 
 
@@ -43,11 +43,11 @@ export function FeaturesSection() {
 	 	 	 <div className="mx-auto w-full max-w-6xl space-y-8 px-4"> 
 	 	 	 	 <div className="mx-auto max-w-3xl text-center mb-12"> 
 	 	 	 	 	 <h2 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold mb-6"> 
-	 	 	 	 	 	 The Full Studio Experience.  <br /> 
-	 	 	 	 	 	 <span className="text-[#ff6f00]">Zero Studio Hassle.</span> 
+	 	 	 	 	 	 Built for dating profiles. <br /> 
+	 	 	 	 	 	 <span className="text-[#ff6f00]">Not LinkedIn.</span> 
 	 	 	 	 	 </h2> 
 	 	 	 	 	 <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-tight"> 
-	 	 	 	 	 	Unrealshot is a suite of powerful photoshoot ai tools designed to give you complete creative control and stunning, authentic results.
+	 	 	 	 	 	UnrealShot is built from the ground up to give your profile the coherent, authentic camera roll it should have had.
 	 	 	 	 	 </p> 
 	 	 	 	 </div> 
 

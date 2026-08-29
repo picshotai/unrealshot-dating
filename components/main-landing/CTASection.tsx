@@ -12,12 +12,15 @@ export function CTASection() {
 
             {/* The Headline */}
             <h2 className="text-4xl sm:text-5xl max-w-4xl mx-auto font-bold leading-tight mb-4 font-[var(--font-inter-tight)] text-gray-900">
-              Your professional photoshoot is <span className="text-[#ff6f00]">one click away.</span>
+              Stop letting bad photos <span className="text-[#ff6f00]">make the decision for you.</span>
             </h2>
             
             {/* The Sub-headline */}
-            <p className="text-lg text-gray-600 max-w-xl mx-auto mb-8">
-              Stop scrolling through a thousand bad photos. In the next 20 minutes, you could have an entire portfolio of stunning, authentic images ready for any platform.
+            <p className="text-lg text-gray-600 max-w-xl mx-auto mb-2">
+              You already know what it&apos;s like to scroll through your camera roll and realize none of it really works for your dating profile.
+            </p>
+            <p className="text-xl font-bold text-gray-900 mb-8">
+              Fix the camera roll.
             </p>
 
             {/* The Primary Call to Action Button */}
@@ -25,7 +28,7 @@ export function CTASection() {
               <Button
                 className="text-md py-6 group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer pr-12"
               >
-                Start Your Photoshoot
+                Build My Profile — $39
                 <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">
                   <img
                     src="/arrow.svg"
@@ -36,11 +39,11 @@ export function CTASection() {
               </Button>
             </Link>
 
-            {/* The Risk Reversal / Guarantee */}
+            {/* The Badges */}
             <div className="flex justify-center items-center gap-2 mt-8 text-sm text-gray-500">
                <p className="text-gray-600 font-medium">
-                    Rated <strong>4.9/5</strong> by over <strong>1,200+</strong> happy professionals.
-                </p>
+                 60 photos · 15 shoots · 30 re-shoots · One-time purchase
+               </p>
             </div>
             
             

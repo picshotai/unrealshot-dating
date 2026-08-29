@@ -5,9 +5,9 @@ import { MultipleStructuredData } from "@/components/seo/StructuredData";
 import { generateMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = generateMetadata({
-  title: "AI Dating Photos Built as 15 Real Shoots",
+  title: "AI Dating Photos for Men | Realistic Profile Pictures | UnrealShot",
   description:
-    "Turn 4–6 selfies into 60 dating photos from 15 coherent shoots. Four frames per shoot, 30 included re-shoots, and one finished profile for $39.",
+    "Turn 4–6 selfies into 60 realistic dating photos across 15 coherent shoots. Built for Tinder, Hinge and Bumble. 30 re-shoots included. $39 once.",
   canonical: "/",
   keywords: [
     "AI dating photos",

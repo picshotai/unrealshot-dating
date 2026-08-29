@@ -9,62 +9,45 @@ export default function FAQSection() {
 
   const faqs = [
     {
-    question: "What kind of photos do I need to upload?",
-    answer:
-      "You should upload clear, front-facing photos with good lighting. Ensure your face is clearly visible and the photo is of high quality.",
-  },
-  {
-    question: "Do I need to wear a suit in the photos I upload?",
-    answer:
-      "No, you don't necessarily need to wear a suit. Wear what you'd typically wear in daily life.",
-  },
-  {
-    question: "What outfits will my headshots be wearing?",
-    answer:
-      "Our AI can generate a variety of professional outfits. You can specify preferences or let the AI choose based on common professional attire.",
-  },
-  {
-    question: "What kind of backgrounds will my headshots have?",
-    answer: "We offer a range of professional backgrounds, from solid colors to blurred office settings.",
-  },
-  {
-    question: "Do I have full rights to use my AI photoshoots?",
-    answer: "Yes, you have full commercial rights to all AI-generated images of yourself.",
-  },
-  {
-    question: "Are my photos private?",
-    answer:
-      "Yes, we take your privacy seriously. Your uploaded and generated photos are kept private, secure and deleted after certain time period.",
-  },
-  {
-    question: "How does Unrealshot AI photoshoot Generator work?",
-    answer:
-      "Unrealshot AI uses advanced AI technology to transform your input into high-quality photoshoots in just three simple steps. Simply upload your photo, choose your preferences, and let the AI do the rest!",
-  },
-  {
-    question: "Is my payment information secure?",
-    answer: "Absolutely. We use industry-standard encryption to ensure all payment information is secure.",
-  },
-  {
-    question: "Can our company order headshots for multiple employees?",
-    answer: "Yes, we offer corporate plans for companies looking to generate headshots for multiple employees.",
-  },
-  {
-    question: "Is Unrealshot AI free to use?",
-    answer:
-      "Unrealshot AI operates on a credits-based system. You can purchase credits and use them to generate photoshoots based on your needs.",
-  },
-  {
-    question: "How long does it take to generate a photoshoot?",
-    answer:
-      "Once you submit your request, Unrealshot AI typically trains an ai model and generates your photoshoot within a 20-30 minutes, depending on server load. You will receive an Email once it's ready.",
-  },
-  {
-    question: "What if I'm not satisfied with the results? ",
-    answer:
-      "If you're not happy with your photoshoot, you can retry with different preferences or contact our support team for assistance.",
-  },
-
+      question: "Will these actually look like me?",
+      answer:
+        "That's what your reference selfies are for. UnrealShot keeps the same identity across your shoots. Individual generations can occasionally miss, which is also why 30 re-shoots are included.",
+    },
+    {
+      question: "Won't AI photos look fake?",
+      answer:
+        "That's exactly what we're trying to avoid. The shoots use believable locations, lighting, framing and repeated environments instead of making every photo look like a polished advertising campaign.",
+    },
+    {
+      question: "Why are there four photos from every shoot?",
+      answer:
+        "Because real photos come in sets. A friend doesn't take exactly one perfect photograph of you and teleport you somewhere else. You get different frames from the same moment.",
+    },
+    {
+      question: "Do I have to write prompts?",
+      answer:
+        "No. Pick your look, choose things you actually do and tell us what to avoid. We plan the shoots.",
+    },
+    {
+      question: "What if one photo looks wrong?",
+      answer:
+        "Re-shoot that individual frame. You get 30 re-shoots with your order.",
+    },
+    {
+      question: "Is this a subscription?",
+      answer:
+        "No. $39 is a one-time purchase for the complete profile shoot.",
+    },
+    {
+      question: "Can I use these on Tinder, Hinge and Bumble?",
+      answer:
+        "They're created specifically for dating profiles, so you can choose photos that fit the style of whichever dating apps you use.",
+    },
+    {
+      question: "Is this catfishing?",
+      answer:
+        "The product is designed to represent you more effectively, not turn you into someone else. Your strongest photos should still look like the person somebody will meet in real life.",
+    },
   ]
 
   return (
@@ -74,10 +57,10 @@ export default function FAQSection() {
         <div className="text-center mb-16">
           
           <h2 className="text-white text-4xl sm:text-6xl max-w-4xl mx-auto font-bold leading-[1.1] mb-4 font-[var(--font-inter-tight)]">
-            Frequently asked <span className="text-[#ff6f00]">photoshoot questions</span> 
+            Frequently asked <span className="text-[#ff6f00]">dating shoot questions</span> 
           </h2>
           <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-tight">
-            Everything you need to know about Unrealshot AI photoshoots.
+            Everything you need to know about UnrealShot AI dating photos.
           </p>
         </div>
 
@@ -85,7 +68,7 @@ export default function FAQSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* First Column */}
           <div className="space-y-4">
-            {faqs.slice(0, 6).map((faq, index) => (
+            {faqs.slice(0, 4).map((faq, index) => (
               <div
               key={index}
               className="bg-[#1a1a1a] rounded-2xl border border-[rgba(255,255,255,0.1)] overflow-hidden transition-all duration-200"
@@ -120,8 +103,8 @@ export default function FAQSection() {
           
           {/* Second Column */}
           <div className="space-y-4">
-            {faqs.slice(6).map((faq, index) => {
-              const actualIndex = index + 6;
+            {faqs.slice(4).map((faq, index) => {
+              const actualIndex = index + 4;
               return (
                 <div
                   key={actualIndex}

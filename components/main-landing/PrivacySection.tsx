@@ -31,35 +31,36 @@ export default function PrivacySection() {
       <div className="px-4 md:px-0 py-16 sm:py-24 max-w-6xl mx-auto">
       <div className="text-center mb-12">
         <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 text-center">
-          We Might Not Be Perfect.
-          <span className="block mt-2 text-[#ff6f00]"> But We're The Best.</span>
+          Still you.
+          <span className="block mt-2 text-[#ff6f00]"> Just finally photographed well.</span>
         </h2>      
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto text-center">
-We deliver hyper-realistic results without the subscription trap or data retention risks.        </p>
+          The goal isn&apos;t to make you taller, richer, younger or mysteriously turn you into a model. It&apos;s to create the photos you could realistically have taken on a good day.
+        </p>
       </div>
      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
         <FeatureCard 
           icon={<ThumbsUp className="text-green-500" size={24} />}
-          title="Look Your Best in Every Shot"
-          description="Our AI enhances your natural features, creating professional ai images that showcase your best self—perfect for any platform."
+          title="Realistic, Not Uncanny"
+          description="Better light, better clothes, better setting, better timing. Authentic photos that look natural and grounded on dating apps."
         />
         <FeatureCard 
           icon={<Shield className="text-blue-500" size={24} />}
-          title="Flexible Credits, No Subscriptions"
-          description="Buy credits when you need them. No subscriptions, no hidden fees, and you have full ownership of your photos."
+          title="Same Person. Better Camera Roll."
+          description="One continuous identity across 15 believable shoots with 4 frames each, so you don't look like 60 different people."
         />
         <FeatureCard 
           icon={<Lock className="text-purple-500" size={24} />}
-          title="We Respect Your Privacy"
-          description="Your privacy matters. All your photos are deleted after 7 days, or you can delete them instantly whenever you want. We'll never sell or share your data."
+          title="30 Re-shoots Included"
+          description="And if one frame misses? Re-shoot it. Every order includes 30 individual re-shoots so you can replace misses without rebuilding."
         />
       </div>
       
       <div className="text-center relative">
         <div className="inline-block relative">
           <Button className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-6 pr-16 py-6 font-semibold text-base shadow-[0_4px_20px_-5px_rgba(0,0,0,0.2)]">
-            Choose Your Photoshoot Package
+            Build My Dating Profile — $39
             <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">
                   <img
                     src="/arrow.svg"
@@ -89,11 +90,11 @@ We deliver hyper-realistic results without the subscription trap or data retenti
           <p className={`text-gray-600 ${caveat.className} text-lg font-semibold leading-none 
                         md:absolute md:transform md:rotate-6 md:-right-52 md:top-1/2 md:-translate-y-1/2 md:w-48
                         sm:static sm:mt-2 sm:transform-none sm:rotate-0 sm:text-center sm:w-auto`}>
-            If you're not happy, we will refund your full money
+            30 individual re-shoots included
           </p>
         </div>
       </div>
-      </ div>
+      </div>
     </section>
   );
 }

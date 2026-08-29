@@ -21,10 +21,10 @@ export default function HowItWorksShowcase() {
         {/* Header */}
         <div className="text-center mb-16 sm:mb-20">
           <h2 className="text-4xl sm:text-5xl md:text-6xl max-w-4xl mx-auto font-bold leading-none mb-4 font-[var(--font-inter-tight)] text-gray-900">
-            Your Professional Photoshoot in <span className="text-[#ff6f00]">3 Simple Steps.</span>
+            Your new dating profile in <span className="text-[#ff6f00]">3 steps.</span>
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            Our process is designed to be effortless, transparent, and deliver stunning results every time.
+            No photographer. No awkward posing. No figuring out what photos you&apos;re supposed to take.
           </p>
         </div>
 
@@ -43,10 +43,10 @@ export default function HowItWorksShowcase() {
 
           {/* Text element */}
           <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold text-center mt-2 mb-4">
-            Upload your selfies
+            Upload 4–6 selfies
           </h3>
           <p className="text-center text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-Start by providing 5+ clear photos. Our AI learns from a diverse set of your images to ensure an authentic result.
+            Use normal photos already on your phone. Different angles and clear views of your face work best.
           </p>
 
           {/* Graphic element */}
@@ -262,10 +262,10 @@ Start by providing 5+ clear photos. Our AI learns from a diverse set of your ima
 
           {/* Text element */}
           <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold text-center mt-2 mb-4">
-            Our AI gets to work
+            Tell us what feels like you
           </h3>
           <p className="text-center text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-This isn't a filter - it's a generative engine. Our system analyzes your features to create a hyper-realistic model trained exclusively on you.
+            Choose your style, the things you actually do, and anything you don&apos;t want appearing.
           </p>
 
           {/* AI Visual element */}
@@ -334,17 +334,17 @@ This isn't a filter - it's a generative engine. Our system analyzes your feature
 
           {/* Text element */}
           <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold text-center mt-10 mb-4">
-            Get amazing photoshoots
+            Get 15 complete shoots
           </h3>
           <p className="text-center text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-Get a diverse portfolio of studio-quality images in minutes, ready for any platform, from the boardroom to the bar.
+            60 photos across different places, outfits and moments — ready to sort into your Tinder, Hinge or Bumble profile.
           </p>
           <div className="animate-fadeIn container mx-auto pt-10">
             <Carousal images={humans} />
             <Carousal images={humans2} reverse={true} />
           </div>
           <div className="text-center justify-center flex text-sm font-md px-10 uppercase tracking-wider text-slate-400">
-            Results from unrealshot ai photoshoot generator.
+            Results from UnrealShot AI dating photos.
           </div>
         </div>
       </div>
