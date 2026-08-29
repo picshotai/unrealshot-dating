@@ -19,7 +19,7 @@ export const PhotoTile: React.FC<{
   photo: PhotoItem;
   isRegenerating: boolean;
   onOpen: (photo: PhotoItem) => void;
-  onRegenerate: (photoId: string) => void;
+  onRegenerate: (photoId: string, feedback?: string) => void;
   reshootsRemaining: number;
   /** The filtered view mixes shoots, so a tile has to say which one it is from. */
   showShootTitle?: boolean;
@@ -189,9 +189,9 @@ export const PhotoTile: React.FC<{
         reshootsRemaining={reshootsRemaining}
         shootTitle={photo.shootTitle}
         frameIndex={photo.frameIndex}
-        onConfirm={() => {
+        onConfirm={(feedback) => {
           setConfirmOpen(false);
-          onRegenerate(photo.id);
+          onRegenerate(photo.id, feedback);
         }}
       />
     </>

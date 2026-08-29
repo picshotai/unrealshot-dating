@@ -61,7 +61,7 @@ interface PhotoInspectorModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectPhoto: (photo: PhotoItem) => void;
-  onRegenerate: (photoId: string) => Promise<void>;
+  onRegenerate: (photoId: string, feedback?: string) => Promise<void>;
   isRegenerating: boolean;
   customCreditsRemaining: number;
 }
@@ -87,7 +87,6 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
-  const currentIndex = photos.findIndex((p) => p.id === photo?.id);
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < photos.length - 1;
 
@@ -329,9 +328,9 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
         reshootsRemaining={customCreditsRemaining}
         shootTitle={photo.shootTitle}
         frameIndex={photo.frameIndex}
-        onConfirm={() => {
+        onConfirm={(feedback) => {
           setConfirmOpen(false);
-          void onRegenerate(photo.id);
+          void onRegenerate(photo.id, feedback);
         }}
       />
     </div>

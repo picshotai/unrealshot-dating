@@ -250,7 +250,6 @@ export function ImageGeneration({
   status = "generating",
   label,
   prompt,
-  resolution = "1024 × 1024",
   aspectRatio = "1 / 1",
   size = "compact",
   interactive = true,
@@ -329,12 +328,6 @@ export function ImageGeneration({
               </motion.div>
             ) : null}
           </AnimatePresence>
-
-          {resolution ? (
-            <span className="absolute top-2 right-2 z-10 rounded-full bg-black/70 px-2 py-0.5 font-mono text-[10px] tabular-nums text-zinc-400">
-              {resolution}
-            </span>
-          ) : null}
         </div>
 
         {showStatus || prompt ? (

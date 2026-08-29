@@ -320,7 +320,7 @@ export function DatingShootClient({
   // returns. This used to clear the spinner in a `finally`, so the UI declared
   // itself done the instant the request came back and the user watched nothing
   // happen. The loading state now ends when polling reports the row finished.
-  const handleRegenerate = async (photoId: string) => {
+  const handleRegenerate = async (photoId: string, feedback?: string) => {
     if (!activeOrderId) return;
     const previousImageUrl = status?.shoots
       .flatMap((shoot) => shoot.photos)
@@ -335,7 +335,11 @@ export function DatingShootClient({
       const res = await fetch('/api/dating-shoot/regenerate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId: activeOrderId, photoId }),
+        body: JSON.stringify({
+          orderId: activeOrderId,
+          photoId,
+          feedback: feedback?.trim() || undefined,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Regenerate failed');

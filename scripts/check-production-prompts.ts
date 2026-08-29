@@ -25,6 +25,7 @@ import {
   parsePortfolioTransport,
   portfolioCandidateToTransport,
   portfolioJsonSchema,
+  refinePromptForRetake,
   selectCraftReferences,
   validatePortfolioCandidate,
   validateShootOutput,
@@ -250,6 +251,53 @@ async function main() {
     input,
   });
   assert(!supportedValidation.problems.some((problem) => /supported receiving vessel/i.test(problem)));
+
+  // Test Retake Prompt Refinement
+  const originalFollowerPrompt = shoot.output.frames[1].prompt;
+  
+  // 1. No feedback returns exact original prompt
+  const unrefined = await refinePromptForRetake({
+    originalPrompt: originalFollowerPrompt,
+    feedback: "",
+    outfit: first.outfit,
+    isAnchor: false,
+  });
+  assert.equal(unrefined, originalFollowerPrompt);
+
+  // 2. Refinement with mock model call produces clean compiled prompt
+  const refined = await refinePromptForRetake({
+    originalPrompt: originalFollowerPrompt,
+    feedback: "His hand is awkwardly placed on his thigh, make both hands rest casually in his pockets",
+    outfit: first.outfit,
+    isAnchor: false,
+    shootTitle: first.title,
+    cameraDistance: "waist-up",
+    modelCall: async () => ({
+      text: JSON.stringify({
+        revisedCapturePrompt: "He stands comfortably with both hands resting casually inside his trouser pockets, weight shifted to his back leg. A 3:4 waist-up candid photograph.",
+        rationale: "Moved both hands into pockets to eliminate awkward thigh contact.",
+      }),
+      usage: { inputTokens: 100, outputTokens: 50, reasoningTokens: 0, totalTokens: 150 },
+      interactionId: null,
+    }),
+  });
+  assert(refined.startsWith(IDENTITY_SENTENCE));
+  assert(refined.includes(SINGLE_VISIBLE_IDENTITY_SENTENCE));
+  assert(refined.includes(`${OUTFIT_SENTENCE_PREFIX} ${first.outfit}`));
+  assert(refined.includes(PHYSICAL_COHERENCE_SENTENCE));
+  assert(refined.includes(ANCHOR_REFERENCE_SENTENCE));
+  assert(refined.includes("both hands resting casually inside his trouser pockets"));
+  assert(refined.includes(NEUTRAL_FOLLOWER_EXPRESSION_SENTENCE));
+
+  // 3. Graceful fallback on model failure
+  const fallback = await refinePromptForRetake({
+    originalPrompt: originalFollowerPrompt,
+    feedback: "Some feedback",
+    modelCall: async () => {
+      throw new Error("Provider rate limit");
+    },
+  });
+  assert.equal(fallback, originalFollowerPrompt);
 
   const config = getDatingProductConfig();
   assert(config.promptAttemptsPerIdea <= 2);

@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { orderId, photoId } = await request.json();
+    const { orderId, photoId, feedback } = await request.json();
     if (!orderId || !photoId) {
       return NextResponse.json(
         { error: "orderId and photoId required" },
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     const { data: photo } = await admin
       .from("order_photos")
       .select(
-        "id, shoot_id, frame_index, is_anchor, anchor_photo_id, prompt_template, image_width, image_height, deterministic_id, status, image_url"
+        "id, order_shoot_id, shoot_id, frame_index, framing, role_label, moment_summary, is_anchor, anchor_photo_id, prompt_template, image_width, image_height, deterministic_id, status, image_url"
       )
       .eq("id", photoId)
       .eq("order_id", orderId)
@@ -101,6 +101,31 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Handle optional user feedback to refine the prompt before re-generating
+    let targetPrompt = photo.prompt_template;
+    const cleanFeedback = typeof feedback === "string" ? feedback.trim() : "";
+    if (cleanFeedback) {
+      let shootIntent: any = null;
+      if (photo.order_shoot_id) {
+        const { data: shootRow } = await (admin as any)
+          .from("dating_order_shoots")
+          .select("shoot_intent")
+          .eq("id", photo.order_shoot_id)
+          .maybeSingle();
+        shootIntent = shootRow?.shoot_intent;
+      }
+
+      const { refinePromptForRetake } = await import("@/lib/dating/creative-director");
+      targetPrompt = await refinePromptForRetake({
+        originalPrompt: photo.prompt_template,
+        feedback: cleanFeedback,
+        outfit: shootIntent?.outfit,
+        isAnchor: photo.is_anchor,
+        cameraDistance: photo.framing,
+        shootTitle: shootIntent?.title || photo.role_label,
+      });
+    }
+
     // Optimistically deduct 1 Photo Retake
     const { error: creditErr } = await admin
       .from("user_shoot_orders")
@@ -128,6 +153,7 @@ export async function POST(request: NextRequest) {
       .update({
         status: "pending",
         image_url: null,
+        prompt_template: targetPrompt,
         fal_request_id: null,
         failed_reason: null,
         aesthetic_score: null,
@@ -160,7 +186,7 @@ export async function POST(request: NextRequest) {
           modelId: order.model_id,
           shootId: photo.shoot_id,
           frameIndex: photo.frame_index,
-          prompt: photo.prompt_template,
+          prompt: targetPrompt,
           referenceImageUrls,
           anchorImageUrl,
           imageWidth: photo.image_width,

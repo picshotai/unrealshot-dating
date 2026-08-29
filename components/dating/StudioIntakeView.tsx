@@ -185,7 +185,6 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                       )}
                     </div>
                     <p className="text-[11px] text-zinc-500 font-mono">
-                      {currentModel?.samples?.length || 0} sample photos ·{' '}
                       {step === 'configure' ? 'Click to switch' : 'Active Model'}
                     </p>
                   </div>
@@ -279,9 +278,9 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
           {showCancel && (
             <button
               onClick={onCancel}
-              className="text-xs text-zinc-400 hover:text-white border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 font-oxanium"
+              className="h-12 text-xs text-zinc-400 hover:text-white border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 font-oxanium"
             >
-              Cancel <X className="w-3.5 h-3.5" />
+             <X className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
