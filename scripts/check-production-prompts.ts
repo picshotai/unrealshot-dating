@@ -3,13 +3,16 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import {
+  ANCHOR_EXPRESSION_SENTENCE,
   ANCHOR_REFERENCE_SENTENCE,
   CRAFT_REFERENCE_MANIFEST,
   IDENTITY_SENTENCE,
+  NEUTRAL_FOLLOWER_EXPRESSION_SENTENCE,
   OUTFIT_SENTENCE_PREFIX,
   PHYSICAL_COHERENCE_SENTENCE,
   SHOOT_WRITER_SYSTEM_INSTRUCTION,
   SINGLE_VISIBLE_IDENTITY_SENTENCE,
+  WARM_FOLLOWER_EXPRESSION_SENTENCE,
   buildDatingInteractionRequest,
   buildPortfolioRequest,
   buildShootWriterRequest,
@@ -153,10 +156,12 @@ async function main() {
   const anchor = shoot.output.frames.find((frame) => frame.isAnchor)!;
   assert(anchor.isProfileCandidate);
   assert(["close", "chest-up", "waist-up"].includes(anchor.cameraDistance));
+  assert.equal(anchor.expressionType, "neutral");
   assert(anchor.prompt.startsWith(IDENTITY_SENTENCE));
   assert(anchor.prompt.includes(SINGLE_VISIBLE_IDENTITY_SENTENCE));
   assert(anchor.prompt.includes(`${OUTFIT_SENTENCE_PREFIX} ${first.outfit}`));
   assert(anchor.prompt.includes(PHYSICAL_COHERENCE_SENTENCE));
+  assert(anchor.prompt.includes(ANCHOR_EXPRESSION_SENTENCE));
   assert(!anchor.prompt.includes(ANCHOR_REFERENCE_SENTENCE));
   for (const follower of shoot.output.frames.filter((frame) => !frame.isAnchor)) {
     assert(follower.prompt.startsWith(IDENTITY_SENTENCE));
@@ -164,8 +169,50 @@ async function main() {
     assert(follower.prompt.includes(`${OUTFIT_SENTENCE_PREFIX} ${first.outfit}`));
     assert(follower.prompt.includes(PHYSICAL_COHERENCE_SENTENCE));
     assert(follower.prompt.includes(ANCHOR_REFERENCE_SENTENCE));
+    if (follower.expressionType === "warm") {
+      assert(follower.prompt.includes(WARM_FOLLOWER_EXPRESSION_SENTENCE));
+    } else {
+      assert(follower.prompt.includes(NEUTRAL_FOLLOWER_EXPRESSION_SENTENCE));
+    }
   }
   assert(shoot.output.frames.every((frame) => frame.prompt.length < 1_200));
+
+  // Verify craft references are stripped of smile/laugh/expression cues
+  for (const ref of CRAFT_REFERENCE_MANIFEST) {
+    const loadedRefs = selectCraftReferences({ ...first, light: ref.lightFamily });
+    for (const r of loadedRefs) {
+      assert.doesNotMatch(
+        r.prompt,
+        /\b(half-smile|faint smile|slight smile|subtle smile|subtle smirk|corners? lifted|lips just parted|parted mouth|laugh|laughing|grin|grinning|teeth)\b/i,
+        `Craft reference ${r.shootId} still contains expression cues`
+      );
+    }
+  }
+
+  // Anchor cannot smile or have warm expression
+  const smilingAnchor = structuredClone(shoot.output);
+  const anchorFrame = smilingAnchor.frames.find((frame) => frame.isAnchor)!;
+  anchorFrame.capturePrompt += " A subtle smile shows on his face.";
+  const smilingAnchorVal = validateShootOutput({ output: smilingAnchor, brief: first, input });
+  assert(!smilingAnchorVal.passed);
+  assert(smilingAnchorVal.problems.some((problem) => /anchor frame must have a calm, neutral, relaxed expression/i.test(problem)));
+
+  // Max 1 subtle smile across the shoot
+  const multiSmile = structuredClone(shoot.output);
+  multiSmile.frames[1].expressionType = "warm";
+  multiSmile.frames[1].capturePrompt += " A subtle smile softens his face.";
+  multiSmile.frames[3].expressionType = "warm";
+  multiSmile.frames[3].capturePrompt += " A subtle smile softens his face.";
+  const multiSmileVal = validateShootOutput({ output: multiSmile, brief: first, input });
+  assert(!multiSmileVal.passed);
+  assert(multiSmileVal.problems.some((problem) => /at most 1 subtle smile/i.test(problem)));
+
+  // Laughter / teeth / grin strictly forbidden anywhere
+  const laughingShoot = structuredClone(shoot.output);
+  laughingShoot.frames[2].capturePrompt += " He laughs with teeth visible.";
+  const laughingVal = validateShootOutput({ output: laughingShoot, brief: first, input });
+  assert(!laughingVal.passed);
+  assert(laughingVal.problems.some((problem) => /overt laughter/i.test(problem)));
 
   const invalidAnchor = structuredClone(shoot.output);
   const selected = invalidAnchor.frames.find((frame) => frame.isAnchor)!;

@@ -68,11 +68,15 @@ export const cameraDistanceSchema = z.enum([
   "close", "chest-up", "waist-up", "three-quarter", "full-body", "environmental",
 ]);
 
+export const expressionTypeSchema = z.enum(["neutral", "warm"]);
+export type ExpressionType = z.infer<typeof expressionTypeSchema>;
+
 export const shootWriterFrameSchema = z.object({
   frameId: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(80),
   roleLabel: text(3, 80),
   moment: text(8, 320),
   cameraDistance: cameraDistanceSchema,
+  expressionType: expressionTypeSchema.default("neutral"),
   width: z.number().int().positive(),
   height: z.number().int().positive(),
   isAnchor: z.boolean(),
@@ -187,7 +191,7 @@ export const SHOOT_OUTPUT_JSON_SCHEMA = {
       items: {
         type: "object", additionalProperties: false,
         required: [
-          "frameId", "roleLabel", "moment", "cameraDistance", "width", "height",
+          "frameId", "roleLabel", "moment", "cameraDistance", "expressionType", "width", "height",
           "isAnchor", "isProfileCandidate", "capturePrompt",
         ],
         properties: {
@@ -196,6 +200,10 @@ export const SHOOT_OUTPUT_JSON_SCHEMA = {
           cameraDistance: {
             type: "string",
             enum: ["close", "chest-up", "waist-up", "three-quarter", "full-body", "environmental"],
+          },
+          expressionType: {
+            type: "string",
+            enum: ["neutral", "warm"],
           },
           width: { type: "integer" }, height: { type: "integer" },
           isAnchor: { type: "boolean" }, isProfileCandidate: { type: "boolean" },

@@ -41,6 +41,49 @@ export type CraftReference = {
   prompt: string;
 };
 
+/**
+ * Strips expression-bearing text and smile/laugh cues from craft reference prompts
+ * while preserving framing, body mechanics, light, lens/camera parameters, and scene coherence.
+ */
+export function cleanCraftReferencePrompt(prompt: string): string {
+  return prompt
+    // Standalone expression sentences
+    .replace(/His mouth is closed with (?:one|the) corners? lifted\.?\s*/gi, "")
+    .replace(/His mouth is closed in a slight smile\.?\s*/gi, "")
+    // Clauses with half-smile, faint smile, slight smile, subtle smile, subtle smirk
+    .replace(/,\s*with a (?:closed-mouth )?(?:half-smile|faint smile|slight smile|subtle smile|subtle smirk)(?: pulling one cheek higher)?/gi, "")
+    .replace(/\bwith a (?:closed-mouth )?(?:half-smile|faint smile|slight smile|subtle smile|subtle smirk)(?: pulling one cheek higher)?\b/gi, "")
+    // Clauses with corners lifted / mouth closed
+    .replace(/,\s*mouth closed with (?:the|one) corners? lifted/gi, "")
+    .replace(/\bmouth closed with (?:the|one) corners? lifted,?\s*/gi, "")
+    .replace(/\bmouth closed in a slight smile,?\s*/gi, "")
+    .replace(/,\s*mouth closed in a slight smile/gi, "")
+    // Faint / slight smile phrases
+    .replace(/,\s*with a faint(?:, knowing)? smile/gi, "")
+    .replace(/\bwith a faint(?:, knowing)? smile,?\s*/gi, "")
+    .replace(/with a slight smile and his head tilted/gi, "with his head tilted")
+    .replace(/,\s*with a slight smile/gi, "")
+    .replace(/\bwith a slight smile,?\s*/gi, "")
+    // Smirks
+    .replace(/,\s*with a subtle smirk lifting one side of his mouth(?: as he checks his look in the glass)?/gi, "")
+    .replace(/\bwith a subtle smirk lifting one side of his mouth(?: as he checks his look in the glass)?\b/gi, "")
+    // Parted mouth / lips
+    .replace(/,\s*breathing through a parted mouth/gi, "")
+    .replace(/\bbreathing through a parted mouth,?\s*/gi, "")
+    .replace(/,\s*with his lips just parted/gi, "")
+    .replace(/\bwith his lips just parted\b/gi, "")
+    // Laughter
+    .replace(/He laughs with[^\.]*\.\s*/gi, "")
+    .replace(/\bmid-laugh,\s*/gi, "")
+    // Fix grammar and punctuation artifacts
+    .replace(/chin level,\s*and his eyes are on the lens/gi, "chin level and his eyes are on the lens")
+    .replace(/,\s*,/g, ",")
+    .replace(/\s+,/g, ",")
+    .replace(/\s+\./g, ".")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
 function inferLightFamily(light: string): ShootLightFamily {
   if (/flash|night|direct light|hard light/i.test(light)) return "flash";
   if (/door|entrance|threshold|open side/i.test(light)) return "open-door";
@@ -55,7 +98,7 @@ function referenceFor(item: ReferenceManifestItem): CraftReference {
   if (!metadata || metadata.availability !== "active" || !shoot || !frame) {
     throw new Error(`Invalid dating craft reference ${item.shootId}/${item.framing}.`);
   }
-  return { ...item, prompt: frame.prompt };
+  return { ...item, prompt: cleanCraftReferencePrompt(frame.prompt) };
 }
 
 function stableNumber(value: string) {

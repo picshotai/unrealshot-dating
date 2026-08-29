@@ -6,12 +6,16 @@ import {
 } from "./model";
 import { formatCraftReferences, selectCraftReferences } from "./craft-references";
 import {
+  ANCHOR_EXPRESSION_SENTENCE,
   ANCHOR_REFERENCE_SENTENCE,
   IDENTITY_SENTENCE,
+  NEUTRAL_FOLLOWER_EXPRESSION_SENTENCE,
   OUTFIT_SENTENCE_PREFIX,
   PHYSICAL_COHERENCE_SENTENCE,
   SINGLE_VISIBLE_IDENTITY_SENTENCE,
+  WARM_FOLLOWER_EXPRESSION_SENTENCE,
   compileShootOutput,
+  getDeterministicExpressionSentence,
 } from "./prompt-compiler";
 import {
   DATING_CREATIVE_MODEL,
@@ -24,23 +28,31 @@ import {
 } from "./schemas";
 
 export {
+  ANCHOR_EXPRESSION_SENTENCE,
   ANCHOR_REFERENCE_SENTENCE,
   IDENTITY_SENTENCE,
+  NEUTRAL_FOLLOWER_EXPRESSION_SENTENCE,
   OUTFIT_SENTENCE_PREFIX,
   PHYSICAL_COHERENCE_SENTENCE,
   SINGLE_VISIBLE_IDENTITY_SENTENCE,
+  WARM_FOLLOWER_EXPRESSION_SENTENCE,
+  getDeterministicExpressionSentence,
 } from "./prompt-compiler";
 
 export const SHOOT_WRITER_SYSTEM_INSTRUCTION = `
 You write four photographic capture events for one approved men's dating-profile shoot.
 
-The four images must feel like they were naturally taken during the same real occasion by the person named in the brief. Describe how each photograph happened: the cause of the body position and expression, camera position, crop, light behavior and the few textures that matter. Do not write an inventory of everything in the scene.
+The four images must feel like they were naturally taken during the same real occasion by the person named in the brief. Describe how each photograph happened: the cause of the body position and gaze/action, camera position, crop, light behavior and the few textures that matter. Do not write an inventory of everything in the scene.
 
-There is no required close/medium/full/expression order, pose menu, gaze sequence, smile sequence, lens menu or mandatory hand instruction. The occasion causes the four different human moments. A simple quiet candid is valid. Visible teeth or overt laughter must be caused by the event and must never be the default method of variation.
+EXPRESSION ALLOCATION POLICY:
+Human variation comes from gaze direction, posture, physical task, head turn, listening, and focus of attention—never from forced smiles or facial gymnastics. Candid does NOT mean smiling.
+- Anchor frame (isAnchor: true): MUST have expressionType "neutral". His expression is relaxed, composed, natural and closed-mouth with calm, attentive eyes. Never smiling, grinning, laughing, smirking, or showing teeth. Even "half-smile" is forbidden on the anchor.
+- Follower frames (isAnchor: false): Default to expressionType "neutral" (calm attentiveness, looking away, noticing something, mid-action, adjusting clothing/object, listening, or thinking). At most ONE follower frame per shoot may optionally have expressionType "warm", which represents subtle, understated, closed-mouth warmth only.
+- STRICT PROHIBITION: Laughter, laughing, grinning, beaming, open-mouth smiles, toothy expressions, or visible teeth are STRICTLY PROHIBITED in every frame. Never invent off-camera jokes or forced hilarity.
 
 Keep one location zone, outfit and lighting state. Use the brief's continuity essentials as private scene truth; do not repeat them as a paragraph in every capturePrompt. Mention a scene element only when the exact photograph needs it. Never invent or relocate architecture merely to support a pose.
 
-The referenced man must be the only visible person in all four photographs. The photographer, friend, companion, date, server and every bystander stay completely outside the frame. Do not name any secondary person in capturePrompt. Social provenance can be felt through an off-camera remark, his eyeline or the occasion itself; never request another face, body, hand, reflection, crowd or partial person.
+The referenced man must be the only visible person in all four photographs. The photographer, friend, companion, date, server and every bystander stay completely outside the frame. Do not name any secondary person in capturePrompt. Social provenance can be felt through his eyeline, subtle posture, or the occasion itself; never request another face, body, hand, reflection, crowd or partial person.
 
 The server inserts the brief's complete locked outfit verbatim into every final prompt. Do not replace it with vague continuity language such as "the same denim", "the same shirt" or "the same outfit", and do not introduce a different garment. Mention clothing in capturePrompt only when its physical movement is essential to that exact moment.
 
@@ -48,7 +60,7 @@ Before returning, silently account for both hands, whether they are visible or c
 
 Choose exactly one anchor. It renders first and must also be a profile candidate with a clear face at close, chest-up or waist-up distance. A three-quarter, full-body, wide or environmental frame cannot be the anchor. The anchor should establish enough of the nearby location, outfit and light to guide later images without becoming an object catalogue.
 
-capturePrompt contains creative photographic instructions only. Do not write identity-reference or anchor-reference boilerplate; the server adds it. Aim for 450–750 efficient characters, but prioritize photographic clarity over a character target.
+capturePrompt contains creative photographic instructions only. Do not write identity-reference, anchor-reference, or expression boilerplate; the server adds them. Aim for 450–750 efficient characters, but prioritize photographic clarity over a character target.
 
 3:4 is the normal dating-photo default. Use 4:3 only when meaningful horizontal context improves that exact photograph. Use 9:16 exceptionally when real vertical travel or scale improves it. There is no required ratio distribution. State exactly one ratio in every capturePrompt and use its approved dimensions.
 
@@ -90,6 +102,12 @@ export function buildShootWriterRequest(args: {
     "",
     "CUSTOMER EXCLUSIONS",
     args.input.exclusions.join(", ") || "none",
+    "",
+    "EXPRESSION ALLOCATION POLICY",
+    "- Exactly 1 anchor frame (isAnchor: true): MUST have expressionType 'neutral'. Relaxed, composed, closed-mouth face with attentive eyes. No smiles, no grins, no laughter, no teeth.",
+    "- Follower frames (isAnchor: false): Default to expressionType 'neutral' (calm attentiveness, looking away, mid-action, listening). At most ONE follower frame may optionally have expressionType 'warm' (subtle closed-mouth warmth only).",
+    "- Target shoot mix: 1 anchor neutral, 2 neutral followers, 1 optional subtle-warm follower.",
+    "- STRICT BAN: No laugh, laughing, chuckle, grin, grinning, beaming, open-mouth smile, or visible teeth in ANY frame.",
     "",
     "AUTHORED PHOTOGRAPHIC-CRAFT FRAGMENTS",
     "Learn only their causal camera/body/light writing. Do not reuse their content.",
@@ -140,6 +158,15 @@ const RECEIVING_VESSEL = /\b(glass|cup|mug|bowl|pitcher|carafe)\b/i;
 const SUPPORTED_RECEIVING_VESSEL =
   /\b(glass|cup|mug|bowl|pitcher|carafe)\b[^.!?]{0,80}\b(rests?|resting|stands?|standing|sits?|sitting|set|placed|supported|held|on (?:a|the) (?:table|counter|bench|tray|ground|floor))\b|\b(holds?|holding|supports?|supporting)\b[^.!?]{0,80}\b(glass|cup|mug|bowl|pitcher|carafe)\b/i;
 
+const ANCHOR_FORBIDDEN_EXPRESSION_REGEX =
+  /\b(smile|smiling|smiles|smirk|smirks|smirking|half-smile|faint smile|slight smile|subtle smile|grin|grinning|grins|laugh|laughing|laughs|laughter|chuckle|chortle|beaming|teeth|toothy|open-mouth|open-mouthed)\b/i;
+
+const OVERT_EXPRESSION_REGEX =
+  /\b(laugh|laughing|laughs|laughter|chuckle|chortle|giggle|grin|grinning|grins|beaming|teeth|toothy|open-mouth|open-mouthed|wide smile|broad smile)\b/i;
+
+const SMILE_FAMILY_REGEX =
+  /\b(smile|smiling|smiles|smirk|smirks|smirking|half-smile|warm smile|subtle smile|faint smile|slight smile)\b/i;
+
 export function validateShootOutput(args: {
   output: DatingShootOutput;
   brief: DatingShootIntent;
@@ -151,15 +178,23 @@ export function validateShootOutput(args: {
   const anchors = args.output.frames.filter((frame) => frame.isAnchor);
   if (anchors.length !== 1) problems.push(`Exactly one frame must be the anchor; received ${anchors.length}.`);
   const anchor = anchors[0];
-  if (anchor && (!anchor.isProfileCandidate || !FACE_STRONG_DISTANCES.has(anchor.cameraDistance))) {
-    problems.push("The anchor must be a profile candidate at close, chest-up or waist-up distance.");
+  if (anchor) {
+    if (!anchor.isProfileCandidate || !FACE_STRONG_DISTANCES.has(anchor.cameraDistance)) {
+      problems.push("The anchor must be a profile candidate at close, chest-up or waist-up distance.");
+    }
+    if (anchor.expressionType !== "neutral") {
+      problems.push("The anchor frame must have expressionType 'neutral'.");
+    }
+    if (ANCHOR_FORBIDDEN_EXPRESSION_REGEX.test(anchor.capturePrompt)) {
+      problems.push("The anchor frame must have a calm, neutral, relaxed expression and cannot contain smile, laugh, grin, smirk, or teeth wording.");
+    }
   }
   if (!args.output.frames.some((frame) => frame.isProfileCandidate)) {
     problems.push("At least one frame must be a profile candidate.");
   }
   const frameIds = new Set<string>();
   const capturePrompts = new Set<string>();
-  let expressiveFrames = 0;
+  let warmOrSmilingFrames = 0;
   for (const frame of args.output.frames) {
     if (frameIds.has(frame.frameId)) problems.push(`Frame id ${frame.frameId} is duplicated.`);
     frameIds.add(frame.frameId);
@@ -209,15 +244,22 @@ export function validateShootOutput(args: {
         problems.push(`${frame.frameId} violates the ${exclusion} exclusion.`);
       }
     }
-    if (/\b(laugh|laughing|toothy|teeth|open-mouth|open mouthed)\b/i.test(frame.capturePrompt)) {
-      expressiveFrames += 1;
+    if (OVERT_EXPRESSION_REGEX.test(frame.capturePrompt)) {
+      problems.push(`${frame.frameId} contains overt laughter, grinning, teeth, or open-mouth expressions which are strictly prohibited.`);
+    }
+    if (frame.expressionType === "warm" || SMILE_FAMILY_REGEX.test(frame.capturePrompt)) {
+      warmOrSmilingFrames += 1;
+    }
+    const expectedExpressionSentence = getDeterministicExpressionSentence(frame.isAnchor, frame.expressionType);
+    if (!frame.prompt.includes(expectedExpressionSentence)) {
+      problems.push(`${frame.frameId} was not compiled with the deterministic expression sentence.`);
     }
     if (frame.capturePrompt.length > 1_000) {
       warnings.push(`${frame.frameId} is longer than the authored-efficiency target.`);
     }
   }
-  if (expressiveFrames > 1) {
-    warnings.push("Multiple frames use overt laughter or teeth; this is not a retry condition.");
+  if (warmOrSmilingFrames > 1) {
+    problems.push(`A shoot can contain at most 1 subtle smile / warm frame; received ${warmOrSmilingFrames}.`);
   }
   return {
     passed: problems.length === 0,
@@ -266,3 +308,4 @@ export async function generateShootCandidate(args: {
     ...creativeCost(response.usage),
   };
 }
+

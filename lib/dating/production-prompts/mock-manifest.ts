@@ -21,6 +21,7 @@ export function createLocalMockShoot(brief: DatingShootIntent) {
       roleLabel: String(roleLabel),
       moment: String(moment),
       cameraDistance: cameraDistance as "close" | "chest-up" | "waist-up" | "three-quarter",
+      expressionType: "neutral" as const,
       width: 1728,
       height: 2304,
       isAnchor: Boolean(isAnchor),
