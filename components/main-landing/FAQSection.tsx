@@ -11,7 +11,7 @@ export default function FAQSection() {
     {
       question: "Will these actually look like me?",
       answer:
-        "That's what your reference selfies are for. UnrealShot keeps the same identity across your shoots. Individual generations can occasionally miss, which is also why 30 re-shoots are included.",
+        "That's what your reference selfies are for. UnrealShot keeps the same identity across your shoots. Individual generations can occasionally miss, which is also why 15 Photo Retakes are included.",
     },
     {
       question: "Won't AI photos look fake?",
@@ -31,7 +31,7 @@ export default function FAQSection() {
     {
       question: "What if one photo looks wrong?",
       answer:
-        "Re-shoot that individual frame. You get 30 re-shoots with your order.",
+        "Retake that individual photo. You get 15 Photo Retakes with your order.",
     },
     {
       question: "Is this a subscription?",

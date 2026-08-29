@@ -12,24 +12,10 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 /**
- * Spend 1 reshoot → a single run of the same child worker.
+ * Spend 1 Photo Retake → a single run of the same child worker.
  *
- * A reshoot now regenerates the frame **in place**: same shoot, same prompt,
- * same anchor. Under the compositional library that would have been pointless —
- * the prompt was deterministic, so re-sending it returned the same photo, and
- * the route had to draw a *different* shot from the library to give the user
- * anything new. Two things changed that:
- *
- *   1. The model is not reproducible in edit mode. Identical prompt, identical
- *      references and an identical seed return a different image, which testing
- *      confirmed repeatedly. Re-sending the prompt is a real second take.
- *   2. A shoot is the unit of coherence. Swapping in a scene from elsewhere
- *      would put a marina frame inside the kitchen shoot, which is exactly the
- *      incoherence the whole rewrite exists to remove.
- *
- * So the replacement planner, the prompt compiler and the used-slot bookkeeping
- * are all gone, along with the bug where this route wrote the replacement's slot
- * while the child wrote the original one back from its payload.
+ * A Photo Retake regenerates exactly 1 individual existing photo in place:
+ * same shoot, same prompt, same anchor, keeping it inside its original shoot.
  */
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
@@ -66,7 +52,7 @@ export async function POST(request: NextRequest) {
 
     if ((order.custom_credits_remaining ?? 0) < 1) {
       return NextResponse.json(
-        { error: "No reshoots remaining" },
+        { error: "No Photo Retakes remaining" },
         { status: 402 }
       );
     }
@@ -74,7 +60,7 @@ export async function POST(request: NextRequest) {
     const { data: photo } = await admin
       .from("order_photos")
       .select(
-        "id, shoot_id, frame_index, is_anchor, anchor_photo_id, prompt_template, image_width, image_height, deterministic_id"
+        "id, shoot_id, frame_index, is_anchor, anchor_photo_id, prompt_template, image_width, image_height, deterministic_id, status, image_url"
       )
       .eq("id", photoId)
       .eq("order_id", orderId)
@@ -102,13 +88,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // The frame this one was anchored on when the delivery ran. Read from the
-    // stored id rather than recomputed, so a reshoot lands in the same room,
-    // the same clothes and the same light as its three siblings.
-    //
-    // Reshooting the anchor itself deliberately leaves the siblings pointing at
-    // its row: they keep referencing whatever that frame is, and since a reshot
-    // anchor re-runs the same authored prompt it is the same scene either way.
+    // The frame this one was anchored on when the delivery ran.
     let anchorImageUrl: string | null = null;
     if (!photo.is_anchor && photo.anchor_photo_id) {
       const { data: anchor } = await admin
@@ -121,6 +101,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Optimistically deduct 1 Photo Retake
     const { error: creditErr } = await admin
       .from("user_shoot_orders")
       .update({
@@ -132,7 +113,7 @@ export async function POST(request: NextRequest) {
 
     if (creditErr) {
       return NextResponse.json(
-        { error: "Failed to deduct reshoot" },
+        { error: "Failed to deduct Photo Retake" },
         { status: 500 }
       );
     }
@@ -141,12 +122,7 @@ export async function POST(request: NextRequest) {
       photo.deterministic_id ||
       makeDeterministicPhotoId(orderId, photo.shoot_id, photo.frame_index);
 
-    // Clear completed so the child re-generates (its upsert will overwrite).
-    //
-    // This error used to be discarded. When the update failed the row kept its
-    // old status and image_url, the child then hit its "already completed" fast
-    // path and skipped the GPU entirely — so the user paid a reshoot and got the
-    // same photo back, silently. Refund and refuse instead.
+    // Clear completed so the child re-generates
     const { error: resetErr } = await admin
       .from("order_photos")
       .update({
@@ -170,39 +146,59 @@ export async function POST(request: NextRequest) {
         .eq("id", orderId);
 
       return NextResponse.json(
-        { error: "Could not start the reshoot. Your reshoot was not used." },
+        { error: "Could not start the Photo Retake. Your Photo Retake was not used." },
         { status: 500 }
       );
     }
 
-    const handle = await generateSingleDatingImage.trigger(
-      {
-        userId: user.id,
-        batchId: orderId,
-        modelId: order.model_id,
-        shootId: photo.shoot_id,
-        frameIndex: photo.frame_index,
-        prompt: photo.prompt_template,
-        referenceImageUrls,
-        anchorImageUrl,
-        imageWidth: photo.image_width,
-        imageHeight: photo.image_height,
-        // A reshoot costs the user something, so it must never be served by the
-        // mock path. Under DATING_TEST_MODE=mock the placeholder is a pure
-        // function of (shootId, frameIndex) and comes back byte-identical, which
-        // is exactly the "regenerate does nothing" the user reported.
-        useMock: false,
-        // Forces a fresh R2 object. The key is otherwise derived from
-        // (shootId, frameIndex) alone, so a regenerated photo overwrote the same
-        // path and the CDN kept serving the old image.
-        variantKey: `r${Date.now().toString(36)}`,
-      },
-      {
-        // Unique per attempt. A raw-string key is run-scoped on this SDK, and a
-        // reused one returns the earlier run's result — including its failure.
-        idempotencyKey: `${deterministicId}_regen_${Date.now()}`,
-      }
-    );
+    let handle;
+    try {
+      handle = await generateSingleDatingImage.trigger(
+        {
+          userId: user.id,
+          batchId: orderId,
+          modelId: order.model_id,
+          shootId: photo.shoot_id,
+          frameIndex: photo.frame_index,
+          prompt: photo.prompt_template,
+          referenceImageUrls,
+          anchorImageUrl,
+          imageWidth: photo.image_width,
+          imageHeight: photo.image_height,
+          useMock: false,
+          variantKey: `r${Date.now().toString(36)}`,
+        },
+        {
+          idempotencyKey: `${deterministicId}_regen_${Date.now()}`,
+        }
+      );
+    } catch (dispatchErr) {
+      console.error("regenerate: trigger dispatch failed, refunding retake:", dispatchErr);
+      // Refund the 1 Photo Retake
+      await admin
+        .from("user_shoot_orders")
+        .update({
+          custom_credits_remaining: order.custom_credits_remaining,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", orderId);
+
+      // Restore the photo row so it is not stuck in pending
+      await admin
+        .from("order_photos")
+        .update({
+          status: photo.status || "completed",
+          image_url: photo.image_url,
+          failed_reason: "Photo Retake dispatch failed",
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", photoId);
+
+      return NextResponse.json(
+        { error: "Could not dispatch Photo Retake. Your Photo Retake was refunded." },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
@@ -214,7 +210,7 @@ export async function POST(request: NextRequest) {
     console.error("regenerate failed:", error);
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : "Regenerate failed",
+        error: error instanceof Error ? error.message : "Photo Retake failed",
       },
       { status: 500 }
     );

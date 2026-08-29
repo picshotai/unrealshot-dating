@@ -90,7 +90,7 @@ export async function sendDatingShootReadyNotification(
               </a>
             </div>
             <p style="font-size: 13px; color: #71717a; text-align: center; margin-bottom: 0;">
-              You also have ${reshoots} reshoots in your dashboard if you want to redo any frame.
+              You also have ${reshoots} Photo Retakes in your dashboard if you want to redo any individual photo.
             </p>
           </div>
         </body>

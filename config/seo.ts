@@ -63,7 +63,7 @@ export interface OrganizationSchema {
 // Default SEO Configuration
 export const defaultSEO: SEOConfig = {
   title: 'AI Dating Photos for Men | Realistic Profile Pictures | UnrealShot',
-  description: 'Turn 4–6 selfies into 60 realistic dating photos across 15 coherent shoots. Built for Tinder, Hinge and Bumble. 30 re-shoots included. $39 once.',
+  description: 'Turn 4–6 selfies into 60 realistic dating photos across 15 coherent shoots. Built for Tinder, Hinge and Bumble. 15 Photo Retakes included. $39 once.',
   keywords: [
     'AI dating photos',
     'AI dating photoshoot',

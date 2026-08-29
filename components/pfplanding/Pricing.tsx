@@ -14,7 +14,7 @@ const plan = {
         { text: "A different place, outfit and light in every shoot" },
         { text: "Close, half-body, full-length and a candid from each" },
         { text: "Shoots built around what you actually do" },
-        { text: "30 free re-shoots — hate one, replace it" },
+        { text: "15 free Photo Retakes — hate one, replace it" },
     ],
     cta: "Get My 60 Photos",
 }

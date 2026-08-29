@@ -40,7 +40,7 @@ export default function PricingCards() {
   const starterFeatures = [
     "15 complete shoots (60 photos)",
     "4 photos per shoot",
-    "30 individual re-shoots",
+    "15 individual Photo Retakes",
     "4–6 selfies needed",
     "One coherent identity throughout",
     "No subscription"
@@ -50,7 +50,7 @@ export default function PricingCards() {
   const proFeatures = [
     "30 complete shoots (120 photos)",
     "4 photos per shoot",
-    "60 individual re-shoots",
+    "30 individual Photo Retakes",
     "4–6 selfies needed",
     "Priority generation queue",
     "One coherent identity throughout",
@@ -84,7 +84,7 @@ export default function PricingCards() {
             <span className="bg-[#ff6f00]/10 text-[#ff6f00] text-xs font-semibold px-2.5 py-0.5 rounded-full">Most Popular</span>
           </div>
           <p className="text-gray-600 text-base leading-relaxed mb-8">
-            Complete profile shoot. 15 believable shoots with 4 frames each, plus 30 re-shoots included.
+            Complete profile shoot. 15 believable shoots with 4 frames each, plus 15 Photo Retakes included.
           </p>
           <div className="flex items-baseline mb-8">
             <span className="text-5xl font-bold text-gray-900 tracking-tighter">$39</span>
@@ -127,7 +127,7 @@ export default function PricingCards() {
             <span className="bg-[#ff6f00] text-white text-xs font-semibold px-2.5 py-0.5 rounded-full">Max Range</span>
           </div>
           <p className="text-gray-300 text-base leading-relaxed mb-8">
-            Double the range. 30 complete shoots (120 photos) with 60 re-shoots for guys wanting maximum variety.
+            Double the range. 30 complete shoots (120 photos) with 30 Photo Retakes for guys wanting maximum variety.
           </p>
           <div className="flex items-baseline mb-8">
             <span className="text-5xl font-bold text-white tracking-tighter">$59</span>
@@ -160,7 +160,7 @@ export default function PricingCards() {
             </div>
             <div className="flex items-center justify-between text-sm mt-2">
               <span className="text-gray-400">Includes:</span>
-              <span className="font-semibold text-[#ff6f00]">60 individual re-shoots</span>
+              <span className="font-semibold text-[#ff6f00]">30 individual Photo Retakes</span>
             </div>
           </div>
         </div>

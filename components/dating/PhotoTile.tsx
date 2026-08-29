@@ -170,7 +170,7 @@ export const PhotoTile: React.FC<{
                 ) : (
                   <RefreshCw className="w-3 h-3" strokeWidth={1.5} />
                 )}
-                Reshoot
+                Retake
               </button>
             </div>
             {saveError && (

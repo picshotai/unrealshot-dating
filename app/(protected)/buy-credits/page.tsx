@@ -48,7 +48,7 @@ export default async function BuyCreditsPage() {
     `${SHOOTS_PER_DELIVERY} separate shoots, ${TOTAL_PHOTOS} photos in total`,
     "A different place, outfit and light in every shoot",
     `${FRAMES_PER_SHOOT} shots from each — close, half-body, full-length and a candid`,
-    `${CUSTOM_CREDITS_DEFAULT} reshoots included — redo any frame you don't love`,
+    `${CUSTOM_CREDITS_DEFAULT} Photo Retakes included — redo any individual photo you don't love`,
     "Every scene planned for variety and every generated prompt mechanically validated before rendering",
     "Instant ZIP download, one folder per shoot",
     "Full commercial rights",

@@ -12,7 +12,7 @@ import { motion } from 'framer-motion';
  *   wardrobe lean 65 / 20 / 15  (lib/dating/interests.ts)
  *   5 lineup roles              (lib/dating/roles.ts)
  *   22 interests, max 3 shoots  (lib/dating/select-shoots.ts)
- *   4 exclusions, 30 re-shoots  (lib/dating/types.ts)
+ *   4 exclusions, 15 Photo Retakes  (lib/dating/types.ts)
  * No placeholder imagery — every visual is SVG or CSS.
  * ------------------------------------------------------------------ */
 
@@ -509,9 +509,9 @@ export default function LandingDraft() {
             </p>
           </div>
 
-          {/* re-shoot meter */}
+          {/* Photo Retakes meter */}
           <div className="my-8">
-            <CardLabel>Free re-shoots</CardLabel>
+            <CardLabel>Free Photo Retakes</CardLabel>
             <div className="flex flex-col gap-[3px] mt-3 w-14">
               {[...Array(6)].map((_, i) => (
                 <motion.div
@@ -525,7 +525,7 @@ export default function LandingDraft() {
               ))}
             </div>
             <p className="text-[28px] font-bold tracking-tight mt-3 leading-none">
-              30
+              15
             </p>
             <p className="font-mono text-[9px] text-[#5a5a5c] mt-1">
               Hate one? Replace it.

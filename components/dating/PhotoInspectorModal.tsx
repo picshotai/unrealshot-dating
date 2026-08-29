@@ -182,9 +182,6 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
                 className="w-full h-full object-contain select-none max-w-full max-h-full"
               />
             ) : (
-              // The reshoot takes ~30-60s. This is the one place worth the full
-              // dither field: a single instance, and the user is watching it.
-              // Deliberately no `prompt` — that text is the product.
               <div className="w-full max-w-md">
                 <ImageGeneration
                   status={generationStatus}
@@ -197,8 +194,8 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
                   }
                   statusText={
                     generationStatus === 'error'
-                      ? 'Reshoot failed'
-                      : 'Shooting a new frame'
+                      ? 'Photo Retake failed'
+                      : 'Retaking photo'
                   }
                   onRetry={() => void onRegenerate(photo.id)}
                 />
@@ -292,12 +289,6 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
               )}
               {saving ? 'Saving…' : 'Download full size'}
             </Button>
-            {saveError && (
-              <p className="text-xs text-red-400 text-center" role="alert">
-                {saveError}
-              </p>
-            )}
-
             {/* Custom Regenerate Button */}
             <Button
               variant="outline"
@@ -308,23 +299,23 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
               {isRegenerating ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Generating Variation...
+                  Retaking photo...
                 </>
               ) : (
                 <>
                   <RefreshCw className="w-4 h-4" strokeWidth={1.5} />
-                  Reshoot This Photo
+                  Retake This Photo
                   <span className="text-zinc-600 font-normal ml-1">
-                    (1 reshoot)
+                    (1 retake)
                   </span>
                 </>
               )}
             </Button>
 
-            {/* Reshoots remaining on this order */}
+            {/* Photo Retakes remaining on this order */}
             <div className="text-center mt-2">
               <span className="text-[10px] font-mono text-zinc-600">
-                {customCreditsRemaining} reshoots left
+                {customCreditsRemaining} Photo Retakes left
               </span>
             </div>
           </div>

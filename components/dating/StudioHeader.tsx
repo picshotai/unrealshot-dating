@@ -132,7 +132,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
                       ? '1 pack reserved for this shoot'
                       : status.creditState === 'released'
                         ? 'pack returned'
-                        : `${status.customCreditsRemaining} reshoots left`}
+                        : `${status.customCreditsRemaining} Photo Retakes left`}
                   </span>
                 </>
               ) : (

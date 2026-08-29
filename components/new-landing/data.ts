@@ -2,7 +2,7 @@ export const landingFaq = [
   {
     question: "Will the photos still look like me?",
     answer:
-      "That is what your 4–6 reference selfies are for. UnrealShot keeps one identity across all 60 photos. A small amount of drift can happen in individual frames, which is why every pack includes 30 re-shoots.",
+      "That is what your 4–6 reference selfies are for. UnrealShot keeps one identity across all 60 photos. A small amount of drift can happen in individual frames, which is why every pack includes 15 Photo Retakes.",
   },
   {
     question: "Why four photos from the same shoot?",
@@ -22,12 +22,12 @@ export const landingFaq = [
   {
     question: "What if I do not like a photo?",
     answer:
-      "Use one of the 30 included re-shoots. The replacement stays inside the original shoot, so it still matches the other three frames instead of becoming a random one-off.",
+      "Use one of the 15 included Photo Retakes. The replacement stays inside the original shoot, so it still matches the other three frames instead of becoming a random one-off.",
   },
   {
     question: "What exactly is included for $39?",
     answer:
-      "One complete delivery: 15 shoots, 60 photos, four frames per shoot, 30 individual re-shoots, and a ZIP download. It is a one-time purchase, not a subscription.",
+      "One complete delivery: 15 shoots, 60 photos, four frames per shoot, 15 individual Photo Retakes, and a ZIP download. It is a one-time purchase, not a subscription.",
   },
 ] as const;
 
@@ -72,10 +72,10 @@ export const shootCards = [
     id: "reshoots",
     tab: "THE SAFETY NET",
     index: "04 / 04",
-    title: "Keep the set. Re-shoot the miss.",
+    title: "Keep the set. Retake the miss.",
     copy:
-      "Thirty re-shoots are included. Replace one frame without breaking the three photographs around it—or turning your profile back into a folder of one-offs.",
-    tags: ["30 RE-SHOOTS", "ONE FRAME EACH", "STAYS COHERENT"],
+      "Fifteen Photo Retakes are included. Replace one individual photo without breaking the three photographs around it—or turning your profile back into a folder of one-offs.",
+    tags: ["15 PHOTO RETAKES", "ONE PHOTO EACH", "STAYS COHERENT"],
     image: "/new-landing/29ecda7f13764ee595abe3c9be049ddb.jpg",
     bg: "#ec2578",
     ink: "#ffffff",

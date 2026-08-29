@@ -26,9 +26,9 @@ const features = [
 	 	 description: "Choose what you actually do so your photos don't invent a personality for you.", 
 	 }, 
 	 { 
-	 	 title: "Re-shoot the misses", 
+	 	 title: "Photo Retakes included", 
 	 	 icon: SlidersHorizontal, 
-	 	 description: "30 re-shoots are already included so you can tweak any frame that doesn't feel right.", 
+	 	 description: "15 Photo Retakes are included so you can regenerate any individual photo that doesn't feel right.", 
 	 }, 
 	 { 
 	 	 title: "One person throughout", 

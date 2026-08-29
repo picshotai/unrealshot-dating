@@ -38,7 +38,7 @@ export const HowItWorks: React.FC = () => {
                     {
                         step: '03',
                         title: 'Download 60 Photos',
-                        desc: 'Fifteen shoots, four photos from each — a close portrait, a half-body, a full-length and a candid. Plus 30 free re-shoots for any frame you do not love.',
+                        desc: 'Fifteen shoots, four photos from each — a close portrait, a half-body, a full-length and a candid. Plus 15 free Photo Retakes for any photo you do not love.',
                         meta: 'SORTED_LINEUP'
                     }
                 ].map((item, i) => (

@@ -52,8 +52,8 @@ export default function PrivacySection() {
         />
         <FeatureCard 
           icon={<Lock className="text-purple-500" size={24} />}
-          title="30 Re-shoots Included"
-          description="And if one frame misses? Re-shoot it. Every order includes 30 individual re-shoots so you can replace misses without rebuilding."
+          title="15 Photo Retakes Included"
+          description="And if one photo misses? Retake it. Every order includes 15 individual Photo Retakes so you can replace misses without rebuilding."
         />
       </div>
       
@@ -90,7 +90,7 @@ export default function PrivacySection() {
           <p className={`text-gray-600 ${caveat.className} text-lg font-semibold leading-none 
                         md:absolute md:transform md:rotate-6 md:-right-52 md:top-1/2 md:-translate-y-1/2 md:w-48
                         sm:static sm:mt-2 sm:transform-none sm:rotate-0 sm:text-center sm:w-auto`}>
-            30 individual re-shoots included
+            15 individual Photo Retakes included
           </p>
         </div>
       </div>

@@ -170,7 +170,7 @@ export function LandingHero() {
         </div>
 
         <p className="mt-8 font-mono text-[9px] font-semibold tracking-[0.15em] text-white/40">
-          ONE-TIME PURCHASE · 30 RE-SHOOTS INCLUDED
+          ONE-TIME PURCHASE · 15 PHOTO RETAKES INCLUDED
         </p>
       </motion.div>
     </section>

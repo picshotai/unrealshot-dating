@@ -42,7 +42,7 @@ export function CTASection() {
             {/* The Badges */}
             <div className="flex justify-center items-center gap-2 mt-8 text-sm text-gray-500">
                <p className="text-gray-600 font-medium">
-                 60 photos · 15 shoots · 30 re-shoots · One-time purchase
+                 60 photos · 15 shoots · 15 Photo Retakes · One-time purchase
                </p>
             </div>
             

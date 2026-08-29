@@ -50,11 +50,11 @@ export const ConfirmReshootDialog: React.FC<{
       <AlertDialogContent className="bg-zinc-950 border-zinc-800 text-white max-w-sm">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-white text-base font-semibold">
-            {none ? 'You have used every reshoot' : 'Reshoot this photo?'}
+            {none ? 'You have used every Photo Retake' : 'Retake this photo?'}
           </AlertDialogTitle>
           <AlertDialogDescription className="text-zinc-400 text-xs leading-relaxed">
             {none ? (
-              <>This order has no reshoots left, so this photo stays as it is.</>
+              <>This order has no Photo Retakes left, so this photo stays as it is.</>
             ) : (
               <>
                 This replaces{' '}
@@ -66,9 +66,9 @@ export const ConfirmReshootDialog: React.FC<{
                   'this photo'
                 )}{' '}
                 with a new take in the same place and the same clothes. The
-                current photo is lost, and it uses{' '}
+                current photo is replaced, and it uses{' '}
                 <span className="text-white font-medium">1 of your {reshootsRemaining}</span>{' '}
-                remaining reshoots.
+                remaining Photo Retakes.
               </>
             )}
           </AlertDialogDescription>
@@ -91,7 +91,7 @@ export const ConfirmReshootDialog: React.FC<{
               ) : (
                 <>
                   <RefreshCw className="w-3.5 h-3.5 mr-1.5" strokeWidth={1.5} />
-                  Reshoot it
+                  Retake photo
                 </>
               )}
             </AlertDialogAction>

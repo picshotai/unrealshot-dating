@@ -450,7 +450,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                 <span className="text-white font-semibold">
                   {shootsPerDelivery} shoots · {totalPhotos} photos
                 </span>{' '}
-                + <span className="text-accent font-semibold">{CUSTOM_CREDITS_DEFAULT} reshoots</span>
+                + <span className="text-accent font-semibold">{CUSTOM_CREDITS_DEFAULT} Photo Retakes</span>
               </div>
 
               <Button

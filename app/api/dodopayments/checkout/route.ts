@@ -69,7 +69,7 @@ async function getPricingPlan(planId: string, supabase: any) {
 
   // Fallback default for the Complete Dating Shoot ($39).
   // Credits must cover SHOOT_CREDIT_COST or the buyer cannot start the shoot
-  // they just paid for. The 30 free reshoots are granted separately on the
+  // they just paid for. The 15 free Photo Retakes are granted separately on the
   // order row and do not come out of this balance.
   return {
     id: planId || 'dating-pack-39',

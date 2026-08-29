@@ -7,7 +7,7 @@ const facts = [
   { label: "15 shoots", color: "#f7b733", symbol: "✣", borderStyle: "border-dashed", borderColor: "border-black" },
   { label: "4 frames each", color: "#25a882", symbol: "◎", borderStyle: "border-solid", borderColor: "border-black" },
   { label: "60 photos", color: "#ec2578", symbol: "✦", light: true, borderStyle: "border-solid", borderColor: "border-white" },
-  { label: "30 re-shoots", color: "#45c4f9", symbol: "↻", borderStyle: "border-solid", borderColor: "border-white" },
+  { label: "15 Photo Retakes", color: "#45c4f9", symbol: "↻", borderStyle: "border-solid", borderColor: "border-white" },
 ];
 
 export function ShootStory() {

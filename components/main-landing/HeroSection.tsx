@@ -384,7 +384,7 @@ export function HeroSection() {
                 ))}
               </div>
             </div>
-            <p className="text-gray-400 text-md">One-time payment · 30 re-shoots included · No prompts to write</p>
+            <p className="text-gray-400 text-md">One-time payment · 15 Photo Retakes included · No prompts to write</p>
           </div>
         </div>
       </div>

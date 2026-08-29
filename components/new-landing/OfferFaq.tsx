@@ -28,7 +28,7 @@ export function OfferFaq() {
                 <span className="font-oxanium text-6xl font-medium tracking-[-0.08em] text-black">$39</span>
               </div>
               <ul className="mt-7 space-y-4">
-                {["15 different photoshoots", "60 photos in tall + wide crops", "4 frames from every shoot", "30 individual re-shoots", "Profile filters + ZIP download"].map((item, index) => (
+                {["15 different photoshoots", "60 photos in tall + wide crops", "4 frames from every shoot", "15 individual Photo Retakes", "Profile filters + ZIP download"].map((item, index) => (
                   <li key={item} className="flex items-center gap-3 text-sm text-black sm:text-base">
                     <span className="grid h-6 w-6 place-items-center font-mono text-[9px] font-bold text-black" style={{ backgroundColor: ["#45c4f9", "#f7b733", "#ec2578", "#25a882", "#45c4f9"][index] }}>✓</span>
                     {item}
@@ -56,7 +56,7 @@ export function OfferFaq() {
           <div>
             <span className="font-serif text-2xl italic text-black">the honest answers</span>
             <h2 className="mt-2 font-oxanium text-[clamp(3rem,6vw,6rem)] font-medium leading-[0.9] tracking-[-0.07em] text-black">Before you upload anything.</h2>
-            <p className="mt-6 max-w-sm text-[15px] leading-7 text-black/55">No outcome promises. No “indistinguishable from real” theatre. Just what the system does and where the re-shoots help.</p>
+            <p className="mt-6 max-w-sm text-[15px] leading-7 text-black/55">No outcome promises. No “indistinguishable from real” theatre. Just what the system does and where Photo Retakes help.</p>
           </div>
 
           <div className="border-t border-black">

@@ -81,7 +81,7 @@ Use these freely. Each one is true of every delivery.
 - 4 photos from each shoot: a close portrait, a half-body, a full-length and a candid
 - One person in every frame: him. No filler crowds, no background extras.
 - Photos arrive in the crops dating apps actually use — tall portrait and wide
-- 30 free re-shoots of any individual photo he does not love
+- 15 free Photo Retakes of any individual photo he does not love
 - Up to 3 shoots built around each thing he says he does, so one hobby never takes over the profile
 - He can exclude 4 kinds of content: drinks in hand, dogs, bikes, team sport. A shoot featuring any of them is dropped whole.
 - Setup needs 4–6 reference selfies
@@ -151,7 +151,7 @@ questions; he does not build a shot list.
 - **"Will it look AI?"** — The camera and lighting specifications are the point: real focal lengths, real light directions, phone-plausible framing. No filler people in frames, which is where AI photos usually give themselves away.
 - **"Aren't four photos from one shoot just the same photo?"** — No, and this is worth answering directly: the four differ in distance and in what he is doing, from a close portrait to a full-length to a candid. Same day, four photographs. That is what a real shoot produces.
 - **"Only 60?"** — Sixty photographs he would actually post, rather than a hundred he has to sift. Do not get defensive; the smaller number is the confident one.
-- **"What if I hate some?"** — 30 free re-shoots, and a re-shoot stays inside its shoot, so the replacement still matches its three siblings.
+- **"What if I hate some?"** — 15 free Photo Retakes, and a Photo Retake stays inside its shoot, so the replacement still matches its three siblings.
 
 ---
 
@@ -205,7 +205,7 @@ If a claim is not in this brief, read it out of the code before writing it:
 | 3 shoots per interest cap | `lib/dating/select-shoots.ts` — `MAX_SHOOTS_PER_INTEREST` |
 | 22 interests, 3 wardrobes, 4 exclusions | `lib/dating/interests.ts` |
 | Slot labels | `lib/dating/roles.ts` — `LINEUP_LABELS` |
-| 30 re-shoots, 1 per regeneration | `app/api/dating-shoot/regenerate/route.ts` |
+| 15 Photo Retakes, 1 per regeneration | `app/api/dating-shoot/regenerate/route.ts` |
 | 4-photo minimum | `lib/dating/create-order.ts` |
 | Price | `supabase/migrations/028_dating_plan_60_photos.sql`, and the live plan row |
 

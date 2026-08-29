@@ -131,7 +131,7 @@ export default function StylePacks() {
                 </p>
               </div>
               <p className="text-gray-300 italic text-sm md:transform md:rotate-6 md:w-48 sm:text-center sm:w-auto">
-                30 individual re-shoots included with every order
+                15 individual Photo Retakes included with every order
               </p>
             </div>
           </div>

@@ -40,16 +40,8 @@ export const SHOOT_CREDIT_COST = Number(
   process.env.DATING_SHOOT_CREDIT_COST ?? 60
 );
 
-/** Free regenerations included with a delivered shoot. */
-export const CUSTOM_CREDITS_DEFAULT = 30;
-
-/**
- * Whole shoots rendered for real in sample mode.
- *
- * Sampling individual frames cannot answer the only question worth asking of
- * this library — whether a shoot holds together across its frames. So a sample
- * run renders complete shoots and mocks the rest.
- */
+/** Free Photo Retakes included with a delivered shoot. */
+export const CUSTOM_CREDITS_DEFAULT = 15;
 
 /**
  * How many shoots the balance can pay for.
@@ -64,7 +56,6 @@ export function packsFromCredits(balance: number): number {
   return Math.floor(balance / SHOOT_CREDIT_COST);
 }
 
-/** Statuses that mean a shoot is already running for this user. */
 export const ACTIVE_ORDER_STATUSES = ["queued", "developing"] as const;
 
 /** Content a user can ask us to leave out of their delivery. */
