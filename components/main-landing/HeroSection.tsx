@@ -13,39 +13,207 @@ const caveat = Caveat({
   weight: '500',
 });
 
-// Using your actual image paths from the original component
-const images = [
-  { src: "/landing/landingphotowoman1.webp", alt: "AI-generated glamorous photoshoot - Unrealshot AI" },
-  { src: "/landing/landingphotoman2.webp", alt: "AI-generated vintage photoshoot of a man - Unrealshot AI" },
-  { src: "/landing/landingphotowoman3.webp", alt: "AI-generated influencer photoshoot of a lady - Unrealshot AI" },
-  { src: "/landing/landingphotoman4.webp", alt: "AI-generated 90s photoshoot of a man - Unrealshot AI" },
-  { src: "/landing/landingphotowoman5.webp", alt: "AI-generated Natural Looks photoshoot of a lady - Unrealshot AI" },
-  { src: "/landing/landingphotoman16.webp", alt: "- MD doctor AI headshot of a man - Unrealshot AI" },
-  { src: "/landing/landingphotowoman7.webp", alt: "Stylish AI Portraits of a woman - Unrealshot AI" },
+interface ShootMarqueeItem {
+  id: string;
+  shootNumber: string;
+  theme: string;
+  mainImage: { src: string; alt: string };
+  thumbnails: [
+    { src: string; alt: string },
+    { src: string; alt: string },
+    { src: string; alt: string }
+  ];
+}
 
-  { src: "/landing/landingphotoman8.webp", alt: "AI-generated professional headshot of a man - Unrealshot AI" },
-  { src: "/landing/landingphotowoman9.webp", alt: "AI-generated Neutral Muse photoshoot of woman - Unrealshot AI" },
-  { src: "/landing/landingphotoman10.webp", alt: "AI real estate headshot of a man - Unrealshot AI" },
-  { src: "/landing/landingphotowoman11.webp", alt: "AI-generated romantic indoor photoshoot of a lady - Unrealshot AI" },
-  { src: "/landing/landingphotoman12.webp", alt: "AI Dating photoshoot of a man  - Unrealshot AI" },
-  { src: "/landing/landingphotowoman13.webp", alt: "urban street style photo of a woman - Unrealshot AI" },
-  { src: "/landing/landingphotoman14.webp", alt: "AI-generated Fantasy photoshoot of a man - Unrealshot AI" },
-  { src: "/landing/landingphotowoman15.webp", alt: "AI Yearbook photo of a woman - Unrealshot AI" },
-  { src: "/landing/landingphotoman6.webp", alt: "AI-generated natural outdoor photography of a man - Unrealshot AI" },
-  { src: "/landing/landingphotoman17.webp", alt: "black swan inspired photoshoot of a man - Unrealshot AI" },
-]
+const marqueeShoots: ShootMarqueeItem[] = [
+  {
+    id: "shoot-01",
+    shootNumber: "SHOOT 01",
+    theme: "GYM / TRAINING",
+    mainImage: {
+      src: "/new-landing/training-floor-morning-2.png",
+      alt: "UnrealShot Gym Shoot - Frame 1: Mid-workout portrait with gym rack lighting"
+    },
+    thumbnails: [
+      {
+        src: "/new-landing/training-floor-morning-1.png",
+        alt: "UnrealShot Gym Shoot - Frame 2: Full-length floor perspective"
+      },
+      {
+        src: "/new-landing/fa9c4cc3f3a3413c8ae0e898869f1f49.jpg",
+        alt: "UnrealShot Gym Shoot - Frame 3: Equipment training candid"
+      },
+      {
+        src: "/new-landing/01616e3c4bb24641b1f623e80cea9e12.jpg",
+        alt: "UnrealShot Gym Shoot - Frame 4: Rest interval water break"
+      }
+    ]
+  },
+  {
+    id: "shoot-02",
+    shootNumber: "SHOOT 02",
+    theme: "MOTORCYCLE / ROAD TRIP",
+    mainImage: {
+      src: "/new-landing/mountain-layby-motorcycle_4.png",
+      alt: "UnrealShot Motorcycle Shoot - Frame 1: Highway layby portrait"
+    },
+    thumbnails: [
+      {
+        src: "/new-landing/mountain-layby-motorcycle_2.png",
+        alt: "UnrealShot Motorcycle Shoot - Frame 2: Leaning against bike candid"
+      },
+      {
+        src: "/new-landing/3TZbYnm-kqNBZfoXDdx7W_f7197f805cd34f84b2252dcacd65ee49.jpg",
+        alt: "UnrealShot Motorcycle Shoot - Frame 3: Helmet off landscape"
+      },
+      {
+        src: "/new-landing/ZvwZd8Jx-PREBesBKZF38_aa31a675ef8c43bcbc372bc78c2e2712.jpg",
+        alt: "UnrealShot Motorcycle Shoot - Frame 4: Mountain ridge scenic view"
+      }
+    ]
+  },
+  {
+    id: "shoot-03",
+    shootNumber: "SHOOT 03",
+    theme: "OUTDOOR COFFEE",
+    mainImage: {
+      src: "/new-landing/2ba004de6cf9475b82150b7bd1ff4807.jpg",
+      alt: "UnrealShot Outdoor Coffee Shoot - Frame 1: Espresso terrace opener"
+    },
+    thumbnails: [
+      {
+        src: "/new-landing/49f810cc6e4344b480aadb5df98f6d7d.jpg",
+        alt: "UnrealShot Outdoor Coffee Shoot - Frame 2: Relaxed table candid"
+      },
+      {
+        src: "/new-landing/519170ac2c004900af87f015bf5a1771.jpg",
+        alt: "UnrealShot Outdoor Coffee Shoot - Frame 3: Morning sunlight angle"
+      },
+      {
+        src: "/new-landing/5cc8c2fbbd9a4e8b92ebbe72530d367e.jpg",
+        alt: "UnrealShot Outdoor Coffee Shoot - Frame 4: Laughing natural candid"
+      }
+    ]
+  },
+  {
+    id: "shoot-04",
+    shootNumber: "SHOOT 04",
+    theme: "DINNER / DRESSED UP",
+    mainImage: {
+      src: "/new-landing/29ecda7f13764ee595abe3c9be049ddb.jpg",
+      alt: "UnrealShot Evening Shoot - Frame 1: Cocktail lounge sharp opener"
+    },
+    thumbnails: [
+      {
+        src: "/new-landing/4436e4eadfa843ab94ad12db98a8664b.jpg",
+        alt: "UnrealShot Evening Shoot - Frame 2: Smart tailored jacket candid"
+      },
+      {
+        src: "/new-landing/7545cc16b7a94c059fb42bba5aa0ec03.jpg",
+        alt: "UnrealShot Evening Shoot - Frame 3: Ambient bar counter framing"
+      },
+      {
+        src: "/new-landing/758bff1bb9d64242badcae3db5b9da54.jpg",
+        alt: "UnrealShot Evening Shoot - Frame 4: Low warm evening light portrait"
+      }
+    ]
+  },
+  {
+    id: "shoot-05",
+    shootNumber: "SHOOT 05",
+    theme: "CITY WALK",
+    mainImage: {
+      src: "/new-landing/8cf00013ec6f459f986d903e2c55b6bd.jpg",
+      alt: "UnrealShot City Walk Shoot - Frame 1: Street crosswalk candid"
+    },
+    thumbnails: [
+      {
+        src: "/new-landing/98d351a9c32544b6a6cf67f849b3709d.jpg",
+        alt: "UnrealShot City Walk Shoot - Frame 2: Downtown golden hour framing"
+      },
+      {
+        src: "/new-landing/9f8c395288d14566a2082aa1f97f1a8d.jpg",
+        alt: "UnrealShot City Walk Shoot - Frame 3: Brick wall half-body"
+      },
+      {
+        src: "/new-landing/b0e37df119704fc3a10d49b8eb3d3e05.jpg",
+        alt: "UnrealShot City Walk Shoot - Frame 4: Walking movement perspective"
+      }
+    ]
+  },
+  {
+    id: "shoot-06",
+    shootNumber: "SHOOT 06",
+    theme: "TRAVEL / COASTLINE",
+    mainImage: {
+      src: "/new-landing/cf26ce46ee2b4559b3074b6df276b578.jpg",
+      alt: "UnrealShot Coastal Shoot - Frame 1: Ocean cliff portrait"
+    },
+    thumbnails: [
+      {
+        src: "/new-landing/d46441e7fade4496ac0415207e1bd999.jpg",
+        alt: "UnrealShot Coastal Shoot - Frame 2: Sea breeze half-body"
+      },
+      {
+        src: "/new-landing/d8800712954d45639eb5caa2ab54f3e4.jpg",
+        alt: "UnrealShot Coastal Shoot - Frame 3: Boardwalk shoreline candid"
+      },
+      {
+        src: "/new-landing/e6dc622a63504a7bab9846e0c904750b.jpg",
+        alt: "UnrealShot Coastal Shoot - Frame 4: Sunset beach walk"
+      }
+    ]
+  },
+  {
+    id: "shoot-07",
+    shootNumber: "SHOOT 07",
+    theme: "HOME / COOKING",
+    mainImage: {
+      src: "/new-landing/ed0d2abb04e84ccca0af74ac8c4b4838.jpg",
+      alt: "UnrealShot Home Shoot - Frame 1: Sunlit kitchen casual opener"
+    },
+    thumbnails: [
+      {
+        src: "/new-landing/jzimL01q4n-HYR3LGOpNd_edd9c15406384b23a4881168a98275d2.jpg",
+        alt: "UnrealShot Home Shoot - Frame 2: Window sofa coffee moment"
+      },
+      {
+        src: "/new-landing/qypjwusLmXPBiDK6QDNwN_185eda5c96bc4c2ba32d238a42ba51a9.jpg",
+        alt: "UnrealShot Home Shoot - Frame 3: Cooking prep natural laugh"
+      },
+      {
+        src: "/new-landing/SHnKUu0hqzogDc12-W8eP_24713af628db4f8b95aba0dc06caf9a6.jpg",
+        alt: "UnrealShot Home Shoot - Frame 4: Relaxed indoor smile"
+      }
+    ]
+  },
+  {
+    id: "shoot-08",
+    shootNumber: "SHOOT 08",
+    theme: "SUNSET / ROOFTOP",
+    mainImage: {
+      src: "/showcase1.png",
+      alt: "UnrealShot Rooftop Shoot - Frame 1: Skyline golden hour opener"
+    },
+    thumbnails: [
+      {
+        src: "/showcase2.png",
+        alt: "UnrealShot Rooftop Shoot - Frame 2: Balcony railing half-body"
+      },
+      {
+        src: "/showcase3.png",
+        alt: "UnrealShot Rooftop Shoot - Frame 3: Natural laughing candid"
+      },
+      {
+        src: "/showcase4.png",
+        alt: "UnrealShot Rooftop Shoot - Frame 4: City overlook sunset view"
+      }
+    ]
+  }
+];
 
 export function HeroSection() {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const [isCopied, setIsCopied] = useState(false)
   const couponCode = "WELCOME15"
@@ -225,29 +393,52 @@ export function HeroSection() {
       <div className="w-full pt-4 sm:pt-12 overflow-hidden">
         <div className="hidden md:flex w-full">
           <div className="flex animate-slide-rtl">
-            {/* Duplicate images for seamless loop */}
-            {[...images, ...images].map((image, index) => (
+            {/* Duplicate shoots for seamless loop */}
+            {[...marqueeShoots, ...marqueeShoots].map((shoot, index) => (
               <div
-                key={index}
+                key={`${shoot.id}-${index}`}
                 className="min-w-[200px] p-2 relative flex-shrink-0"
                 style={{ padding: "0 10px" }}
               >
-                <div className="relative w-[200px] h-[280px]">
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    className="rounded-lg object-cover"
-                    style={{ objectPosition: 'center' }}
-                  />
-                  <div className="absolute bottom-2 left-2 flex items-center gap-[1.5px]">
+                {/* 1 Moving Card = 1 Shoot = 4 Photos (200 x 280 footprint) */}
+                <div className="relative w-[200px] h-[280px] rounded-xl overflow-hidden bg-[#141414] border border-white/15 shadow-2xl flex flex-col p-1.5 gap-1.5 group">
+                  {/* Top Main Photo (~65%) */}
+                  <div className="relative w-full h-[180px] rounded-lg overflow-hidden bg-neutral-900">
                     <Image
-                      src="/site-logo.png"
-                      alt="Unrealshot AI Logo"
-                      width={24}
-                      height={24}
-                      className="w-6 h-6 rounded"
+                      src={shoot.mainImage.src}
+                      alt={shoot.mainImage.alt}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      sizes="200px"
                     />
+                    {/* Subtle Shoot Badge with Logo */}
+                    <div className="absolute bottom-2 left-2 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-2 py-0.5 rounded border border-white/15">
+                      <Image
+                        src="/site-logo.png"
+                        alt="Unrealshot AI Logo"
+                        width={14}
+                        height={14}
+                        className="w-3.5 h-3.5 rounded"
+                      />
+                      <span className="font-mono text-[9px] font-bold tracking-wider text-white uppercase">
+                        {shoot.shootNumber} · 4 PHOTOS
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Bottom 3 Frames (~35%, 3:4 each) */}
+                  <div className="grid grid-cols-3 gap-1.5 h-[84px] w-full">
+                    {shoot.thumbnails.map((thumb, tIdx) => (
+                      <div key={tIdx} className="relative w-full h-full rounded-md overflow-hidden bg-neutral-900 border border-white/10">
+                        <Image
+                          src={thumb.src}
+                          alt={thumb.alt}
+                          fill
+                          className="object-cover"
+                          sizes="60px"
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -260,61 +451,99 @@ export function HeroSection() {
           <div
             className="flex animate-slide-rtl-mobile"
             style={{
-              width: `${images.length * 2 * 220}px` // Double width for seamless loop
+              width: `${marqueeShoots.length * 2 * 220}px` // Double width for seamless loop
             }}
           >
-            {/* First set of images */}
-            {images.map((image, index) => (
+            {/* First set of shoots */}
+            {marqueeShoots.map((shoot, index) => (
               <div
-                key={`first-${index}`}
+                key={`mobile-first-${shoot.id}-${index}`}
                 className="w-[200px] p-2 relative flex-shrink-0"
               >
-                <div className="relative w-full h-full max-w-[200px] mx-auto aspect-[3/4]">
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    className="rounded-lg object-cover"
-                    style={{ objectPosition: 'center top' }}
-                  />
-                  <div className="absolute bottom-2 right-2 flex items-center gap-[1px] bg-white/80 rounded text-[10px]">
+                <div className="relative w-[200px] h-[280px] rounded-xl overflow-hidden bg-[#141414] border border-white/15 shadow-2xl flex flex-col p-1.5 gap-1.5">
+                  {/* Top Main Photo (~65%) */}
+                  <div className="relative w-full h-[180px] rounded-lg overflow-hidden bg-neutral-900">
                     <Image
-                      src="/site-logo.png"
-                      alt="Unrealshot AI Logo"
-                      width={16}
-                      height={16}
-                      className="w-4 h-4 rounded"
-                    /><span className="px-1 py-0.5">
-                      AI
-                    </span>
+                      src={shoot.mainImage.src}
+                      alt={shoot.mainImage.alt}
+                      fill
+                      className="object-cover"
+                      sizes="200px"
+                    />
+                    <div className="absolute bottom-2 left-2 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-2 py-0.5 rounded border border-white/15">
+                      <Image
+                        src="/site-logo.png"
+                        alt="Unrealshot AI Logo"
+                        width={14}
+                        height={14}
+                        className="w-3.5 h-3.5 rounded"
+                      />
+                      <span className="font-mono text-[9px] font-bold tracking-wider text-white uppercase">
+                        {shoot.shootNumber} · 4 PHOTOS
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Bottom 3 Frames */}
+                  <div className="grid grid-cols-3 gap-1.5 h-[84px] w-full">
+                    {shoot.thumbnails.map((thumb, tIdx) => (
+                      <div key={tIdx} className="relative w-full h-full rounded-md overflow-hidden bg-neutral-900 border border-white/10">
+                        <Image
+                          src={thumb.src}
+                          alt={thumb.alt}
+                          fill
+                          className="object-cover"
+                          sizes="60px"
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
             ))}
-            {/* Second set of images for seamless loop */}
-            {images.map((image, index) => (
+            {/* Second set of shoots for seamless loop */}
+            {marqueeShoots.map((shoot, index) => (
               <div
-                key={`second-${index}`}
+                key={`mobile-second-${shoot.id}-${index}`}
                 className="w-[200px] p-2 relative flex-shrink-0"
               >
-                <div className="relative w-full h-full max-w-[200px] mx-auto aspect-[3/4]">
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    className="rounded-lg object-cover"
-                    style={{ objectPosition: 'center top' }}
-                  />
-                  <div className="absolute bottom-2 right-2 flex items-center gap-[1px] bg-white/80 rounded text-[10px]">
+                <div className="relative w-[200px] h-[280px] rounded-xl overflow-hidden bg-[#141414] border border-white/15 shadow-2xl flex flex-col p-1.5 gap-1.5">
+                  {/* Top Main Photo (~65%) */}
+                  <div className="relative w-full h-[180px] rounded-lg overflow-hidden bg-neutral-900">
                     <Image
-                      src="/site-logo.png"
-                      alt="Unrealshot AI Logo"
-                      width={16}
-                      height={16}
-                      className="w-4 h-4 rounded"
-                    /><span className="px-1 py-0.5">
-                      AI
-                    </span>
+                      src={shoot.mainImage.src}
+                      alt={shoot.mainImage.alt}
+                      fill
+                      className="object-cover"
+                      sizes="200px"
+                    />
+                    <div className="absolute bottom-2 left-2 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-2 py-0.5 rounded border border-white/15">
+                      <Image
+                        src="/site-logo.png"
+                        alt="Unrealshot AI Logo"
+                        width={14}
+                        height={14}
+                        className="w-3.5 h-3.5 rounded"
+                      />
+                      <span className="font-mono text-[9px] font-bold tracking-wider text-white uppercase">
+                        {shoot.shootNumber} · 4 PHOTOS
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Bottom 3 Frames */}
+                  <div className="grid grid-cols-3 gap-1.5 h-[84px] w-full">
+                    {shoot.thumbnails.map((thumb, tIdx) => (
+                      <div key={tIdx} className="relative w-full h-full rounded-md overflow-hidden bg-neutral-900 border border-white/10">
+                        <Image
+                          src={thumb.src}
+                          alt={thumb.alt}
+                          fill
+                          className="object-cover"
+                          sizes="60px"
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
