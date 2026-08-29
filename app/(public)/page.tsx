@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { UnrealLandingPage } from "@/components/new-landing/UnrealLandingPage";
+import { UnrealLandingPage } from "@/components/main-landing/UnrealLandingPage";
 import { landingFaq } from "@/components/new-landing/data";
 import { MultipleStructuredData } from "@/components/seo/StructuredData";
 import { generateMetadata } from "@/lib/seo";
