@@ -87,17 +87,18 @@ export const PhotoInspectorModal: React.FC<PhotoInspectorModalProps> = ({
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
+  const currentIndex = photo ? photos.findIndex((p) => p.id === photo.id) : -1;
   const hasPrev = currentIndex > 0;
-  const hasNext = currentIndex < photos.length - 1;
+  const hasNext = currentIndex >= 0 && currentIndex < photos.length - 1;
 
   const handlePrev = useCallback(() => {
-    if (hasPrev) {
+    if (hasPrev && currentIndex > 0) {
       onSelectPhoto(photos[currentIndex - 1]);
     }
   }, [hasPrev, currentIndex, photos, onSelectPhoto]);
 
   const handleNext = useCallback(() => {
-    if (hasNext) {
+    if (hasNext && currentIndex >= 0 && currentIndex < photos.length - 1) {
       onSelectPhoto(photos[currentIndex + 1]);
     }
   }, [hasNext, currentIndex, photos, onSelectPhoto]);
