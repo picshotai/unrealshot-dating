@@ -173,7 +173,7 @@ function Header() {
             <Button
               className="text-sm py-5 group relative bg-[#ff6f00] text-white rounded-md overflow-hidden cursor-pointer pr-10"
             >
-              Start Your Photoshoot
+              Start Your Dating Shoot
               <div className="bg-white rounded-sm p-[10px] absolute right-1 top-1/2 -translate-y-1/2">
               <img
                 src="/arrow.svg"
@@ -213,7 +213,7 @@ function Header() {
                 <Button
                   className="text-md py-6 group relative bg-[#ff6f00] text-white rounded-md overflow-hidden cursor-pointer pr-12"
                 >
-                  Start Your Photoshoot
+                  Start Your Dating Shoot
                   <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">
                     <img
                       src="/arrow.svg"
