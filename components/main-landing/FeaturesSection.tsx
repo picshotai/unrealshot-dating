@@ -51,16 +51,15 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section id="features" className="py-20 md:py-28 bg-[#111111] text-white">
-      <div className="mx-auto w-full max-w-6xl space-y-12 px-4">
+    <section id="features" className="py-16 md:py-20 bg-[#111111] text-white">
+      <div className="mx-auto w-full max-w-6xl space-y-10 px-4">
         {/* Header */}
-        <div className="mx-auto max-w-3xl text-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ff6f00]/10 border border-[#ff6f00]/25 text-[#ff6f00] text-xs font-mono tracking-wider uppercase mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#ff6f00] animate-pulse" />
+        <div className="mx-auto max-w-4xl text-center mb-10">
+          <p className="text-orange-500 font-bold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
             WHEN YOUR PHOTOS FINALLY WORK
-          </div>
+          </p>
 
-          <h2 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight leading-[1.12]">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white font-bold mb-4 tracking-tight leading-[1.08]">
             Your profile starts <span className="text-[#ff6f00]">feeling like you.</span>
           </h2>
 
@@ -78,18 +77,14 @@ export function FeaturesSection() {
           ))}
         </div>
 
-        {/* Bottom Line Box */}
+        {/* Bottom Line */}
         <div className="pt-4 text-center max-w-3xl mx-auto">
-          <div className="relative p-px rounded-2xl bg-gradient-to-r from-transparent via-[#ff6f00]/40 to-transparent">
-            <div className="bg-zinc-950/90 border border-zinc-800 rounded-2xl px-6 sm:px-10 py-6 sm:py-8 backdrop-blur-md shadow-2xl">
-              <p className="text-lg sm:text-xl md:text-2xl font-bold text-white tracking-tight leading-snug">
-                The goal is not to make you look like someone else.{" "}
-                <span className="text-[#ff6f00] block sm:inline">
-                  It is to make your profile stop underselling you.
-                </span>
-              </p>
-            </div>
-          </div>
+          <p className="text-xl md:text-2xl font-bold text-white leading-snug">
+            The goal is not to make you look like someone else.{" "}
+            <span className="text-[#ff6f00]">
+              It is to make your profile stop underselling you.
+            </span>
+          </p>
         </div>
       </div>
     </section>

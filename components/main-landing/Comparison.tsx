@@ -35,8 +35,8 @@ export default function TheVerdictFinal() {
     <section className="relative mx-auto py-16 sm:py-24 overflow-hidden bg-[#F7F5F3]">
       <div className="px-4 max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12 sm:mb-16">
-          <h2 className="leading-tight text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-4xl mx-auto font-bold mb-4 font-[var(--font-inter-tight)] text-gray-900">
+        <div className="text-center mb-10 sm:mb-12">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-5xl mx-auto font-bold mb-4 font-[var(--font-inter-tight)] tracking-tight leading-[1.08] text-gray-900">
             Good photos still need to <span className="text-[#ff6f00]">belong together.</span>
           </h2>
 
