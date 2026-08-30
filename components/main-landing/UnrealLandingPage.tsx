@@ -2,6 +2,7 @@
 import { Metadata } from 'next'
 import PublicHeader from '@/components/Header'
 import { HeroSection } from '@/components/main-landing/HeroSection'
+import { PainSection } from '@/components/main-landing/PainSection'
 import NewHowItWorks from '@/components/main-landing/NewHowItWorks'
 import { FeaturesSection } from '@/components/main-landing/FeaturesSection'
 import PremiumComparison from "@/components/main-landing/Comparison";
@@ -31,6 +32,7 @@ export function UnrealLandingPage() {
       <PublicHeader />
       <main>
         <HeroSection />
+        <PainSection />
         <NewHowItWorks />
         <StylePacks />
         <PremiumComparison />
