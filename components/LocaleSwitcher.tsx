@@ -1,7 +1,6 @@
 "use client"
 
-import { usePathname, useRouter } from "@/i18n/navigation"
-import { useTransition } from "react"
+import { usePathname } from "@/i18n/navigation"
 import {
   isBlogArchivePathname,
   isPhase2LocalizedPathname,
@@ -43,8 +42,6 @@ export function LocaleSwitcher({
   className,
 }: LocaleSwitcherProps = {}) {
   const pathname = usePathname()
-  const router = useRouter()
-  const [isPending, startTransition] = useTransition()
   const currentLocale = (useLocale() as AppLocale) || "en"
   const t = useTranslations("Common")
   const publicPathname = splitLocalePathname(pathname).pathname
@@ -59,13 +56,21 @@ export function LocaleSwitcher({
 
   const handleSelect = (nextLocale: AppLocale) => {
     if (nextLocale === currentLocale) return
-    const localizedPathname =
-      localizedPaths?.[nextLocale] ??
-      localizePublicPathname(publicPathname, nextLocale)
 
-    startTransition(() => {
-      router.replace(localizedPathname, { scroll: false })
-    })
+    if (localizedPaths?.[nextLocale]) {
+      const search = typeof window !== "undefined" ? window.location.search : ""
+      const hash = typeof window !== "undefined" ? window.location.hash : ""
+      window.location.assign(`${localizedPaths[nextLocale]}${search}${hash}`)
+      return
+    }
+
+    const currentBrowserPath = typeof window !== "undefined" ? window.location.pathname : pathname
+    const cleanPath = splitLocalePathname(currentBrowserPath).pathname
+    const targetUrl = localizePublicPathname(cleanPath, nextLocale)
+    const search = typeof window !== "undefined" ? window.location.search : ""
+    const hash = typeof window !== "undefined" ? window.location.hash : ""
+
+    window.location.assign(`${targetUrl}${search}${hash}`)
   }
 
   const currentBadge = localeBadges[currentLocale] || {
