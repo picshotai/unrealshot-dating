@@ -1,6 +1,7 @@
 "use client"
 
-import { usePathname } from "@/i18n/navigation"
+import { usePathname, useRouter } from "@/i18n/navigation"
+import { useTransition } from "react"
 import {
   isBlogArchivePathname,
   isPhase2LocalizedPathname,
@@ -42,6 +43,8 @@ export function LocaleSwitcher({
   className,
 }: LocaleSwitcherProps = {}) {
   const pathname = usePathname()
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
   const currentLocale = (useLocale() as AppLocale) || "en"
   const t = useTranslations("Common")
   const publicPathname = splitLocalePathname(pathname).pathname
@@ -59,9 +62,10 @@ export function LocaleSwitcher({
     const localizedPathname =
       localizedPaths?.[nextLocale] ??
       localizePublicPathname(publicPathname, nextLocale)
-    window.location.assign(
-      `${localizedPathname}${window.location.search}${window.location.hash}`
-    )
+
+    startTransition(() => {
+      router.replace(localizedPathname, { scroll: false })
+    })
   }
 
   const currentBadge = localeBadges[currentLocale] || {
@@ -72,7 +76,7 @@ export function LocaleSwitcher({
 
   return (
     <div className={cn("relative inline-flex items-center", className)}>
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger
           className="group inline-flex items-center gap-1.5 rounded-full border border-gray-200/90 bg-white/90 px-2.5 py-1.5 text-xs font-semibold text-gray-700 shadow-2xs backdrop-blur-md transition-all hover:border-gray-300 hover:bg-gray-50/90 hover:text-gray-950 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-[#ff6f00]/30 cursor-pointer select-none"
           aria-label={t("language")}
