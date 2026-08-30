@@ -50,14 +50,14 @@ interface MobileNavMenuProps {
 }
 
 export const Navbar = ({ children, className }: NavbarProps) => {
-  return <motion.header className={cn("fixed inset-x-0 top-0 z-60 w-full pt-3 sm:pt-4 px-3 sm:px-4", className)}>{children}</motion.header>
+  return <motion.div className={cn("fixed inset-x-0 top-0 z-60 w-full pt-4 px-4", className)}>{children}</motion.div>
 }
 
 export const NavBody = ({ children, className }: NavBodyProps) => {
   return (
     <motion.div
       className={cn(
-        "relative z-[60] mx-auto max-w-5xl xl:max-w-6xl w-full flex flex-row items-center justify-between rounded-2xl bg-white/95 border border-gray-200/80 px-4 py-2.5 hidden backdrop-blur-xl shadow-xs lg:flex",
+        "relative z-[60] mx-auto max-w-5xl xl:max-w-6xl w-full flex flex-row items-center justify-between rounded-lg bg-white/95 border border-gray-200 px-3 py-2 hidden backdrop-blur-lg lg:flex",
         className,
       )}
     >
@@ -72,10 +72,10 @@ export { Header }
 export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
   const [hovered, setHovered] = useState<number | null>(null)
   return (
-    <motion.nav
+    <motion.div
       onMouseLeave={() => setHovered(null)}
       className={cn(
-        "flex flex-row items-center justify-center gap-1 text-sm font-semibold text-gray-700 transition duration-200 whitespace-nowrap",
+        "flex flex-row items-center justify-center gap-1 text-sm font-semibold text-gray-600 transition duration-200 whitespace-nowrap mx-4",
         className,
       )}
     >
@@ -83,17 +83,17 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
         <PublicLink
           onMouseEnter={() => setHovered(idx)}
           onClick={onItemClick}
-          className="relative px-3.5 py-1.5 font-semibold transition-colors cursor-pointer text-gray-700 hover:text-gray-950"
+          className="relative px-3 py-2 font-semibold transition-colors cursor-pointer"
           key={`link-${idx}`}
           href={item.link}
         >
           {hovered === idx && (
-            <motion.div layoutId="hovered" className="absolute inset-0 h-full w-full rounded-lg bg-gray-100/90" />
+            <motion.div layoutId="hovered" className="absolute inset-0 h-full w-full rounded-md bg-gray-100" />
           )}
           <span className="relative z-20">{item.name}</span>
         </PublicLink>
       ))}
-    </motion.nav>
+    </motion.div>
   )
 }
 
@@ -101,7 +101,7 @@ export const MobileNav = ({ children, className }: MobileNavProps) => {
   return (
     <motion.div
       className={cn(
-        "relative z-50 mx-auto flex w-full max-w-[calc(100vw-1.5rem)] flex-col items-center justify-between bg-white/95 border border-gray-200/80 rounded-2xl backdrop-blur-xl py-2.5 px-4 shadow-xs lg:hidden",
+        "relative z-50 mx-auto flex w-[95%] max-w-[calc(100vw-1rem)] flex-col items-center justify-between bg-white/95 border border-gray-200 rounded-lg backdrop-blur-lg py-3 px-4 lg:hidden",
         className,
       )}
     >
@@ -123,7 +123,7 @@ export const MobileNavMenu = ({ children, className, isOpen, onClose }: MobileNa
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           className={cn(
-            "absolute inset-x-0 top-[60px] z-50 flex w-full text-black font-semibold flex-col justify-start gap-2 rounded-2xl bg-white/98 border border-gray-200/80 px-4 py-5 shadow-xl backdrop-blur-xl",
+            "absolute inset-x-0 top-16 z-50 flex w-full text-black font-semibold flex-col justify-start gap-2 rounded-lg bg-white border border-gray-200 px-4 py-6",
             className,
           )}
         >
@@ -142,13 +142,9 @@ export const MobileNavToggle = ({
   onClick: () => void
 }) => {
   return (
-    <button
-      onClick={onClick}
-      aria-label="Toggle navigation menu"
-      className="p-1.5 rounded-lg border border-gray-200 bg-gray-50/80 hover:bg-gray-100 transition-colors text-gray-800 cursor-pointer"
-    >
-      {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-    </button>
+    <Button onClick={onClick} className="text-sm py-1 group overflow-hidden bg-white hover:bg-gray-50 border border-gray-200">
+      {isOpen ? <X className="h-8 w-8 text-black" /> : <Menu className="h-8 w-8 text-black" />}
+    </Button>
   )
 }
 
@@ -173,26 +169,26 @@ function Header({ localeSwitcher }: HeaderProps = {}) {
         {/* Logo */}
         <div className="flex items-center shrink-0">
           <PublicLink href="/" className="flex items-center gap-2 cursor-pointer">
-            <FolioLogo className="w-28 h-7 sm:w-32 sm:h-8" />
+            <FolioLogo className="w-32 h-8" />
           </PublicLink>
         </div>
 
         {/* Streamlined Navigation Items */}
-        <NavItems items={navItems} className="mx-2" />
+        <NavItems items={navItems} />
 
         {/* CTA & Language Switcher */}
         <div className="flex items-center gap-3 shrink-0">
           <LocaleSwitcher {...localeSwitcher} />
           <Link href="/dashboard" className="shrink-0">
             <Button
-              className="text-xs sm:text-sm font-semibold h-10 px-4 py-2 group relative bg-[#ff6f00] hover:bg-[#e66400] text-white rounded-xl overflow-hidden cursor-pointer flex items-center gap-2 shadow-xs transition-all whitespace-nowrap"
+              className="text-sm py-5 group relative bg-[#ff6f00] text-white rounded-md overflow-hidden cursor-pointer pr-10 whitespace-nowrap"
             >
-              <span>{t("navigation.startDatingShoot")}</span>
-              <div className="bg-white/20 rounded-md p-1 flex items-center justify-center transition-transform duration-200 group-hover:translate-x-0.5">
+              {t("navigation.startDatingShoot")}
+              <div className="bg-white rounded-sm p-[10px] absolute right-1 top-1/2 -translate-y-1/2">
                 <img
                   src="/arrow.svg"
                   alt=""
-                  className="w-3 h-3 invert brightness-0"
+                  className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-1"
                 />
               </div>
             </Button>
@@ -214,28 +210,28 @@ function Header({ localeSwitcher }: HeaderProps = {}) {
         </MobileNavHeader>
 
         <MobileNavMenu isOpen={isOpen} onClose={() => setIsOpen(false)}>
-          <div className="flex flex-col items-center w-full gap-1">
+          <div className="flex flex-col items-center w-full">
             {navItems.map((item, idx) => (
               <PublicLink
                 key={idx}
                 href={item.link}
-                className="w-full px-3 py-2.5 text-gray-700 hover:text-black hover:bg-gray-50 rounded-lg transition-colors cursor-pointer text-center font-medium"
+                className="w-full px-2 py-2 text-gray-600 hover:text-black transition-colors cursor-pointer text-center"
                 onClick={() => setIsOpen(false)}
               >
                 {item.name}
               </PublicLink>
             ))}
-            <div className="flex flex-col gap-2 mt-3 w-full items-center">
+            <div className="flex flex-col gap-2 mt-4 w-full items-center">
               <Link href="/dashboard" className="w-full">
                 <Button
-                  className="w-full text-sm font-semibold py-5 bg-[#ff6f00] hover:bg-[#e66400] text-white rounded-xl overflow-hidden cursor-pointer flex items-center justify-center gap-2 shadow-sm transition-all"
+                  className="text-md py-6 group relative bg-[#ff6f00] text-white rounded-md overflow-hidden cursor-pointer pr-12 w-full"
                 >
-                  <span>{t("navigation.startDatingShoot")}</span>
-                  <div className="bg-white/20 rounded-md p-1 flex items-center justify-center">
+                  {t("navigation.startDatingShoot")}
+                  <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">
                     <img
                       src="/arrow.svg"
                       alt=""
-                      className="w-3.5 h-3.5 invert brightness-0"
+                      className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
                     />
                   </div>
                 </Button>
