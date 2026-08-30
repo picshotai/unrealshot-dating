@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { Link as PublicLink } from "@/i18n/navigation"
 import { cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
 import type React from "react"
@@ -8,6 +9,9 @@ import { useState } from "react"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { FolioLogo } from "@/components/icons/FolioLogo"
+import { LocaleSwitcher, type LocaleSwitcherProps } from "@/components/LocaleSwitcher"
+import { useLocale, useTranslations } from "next-intl"
+import { isPublishedBlogLocale } from "@/i18n/config"
 
 interface NavbarProps {
   children: React.ReactNode
@@ -76,7 +80,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
       )}
     >
       {items.map((item, idx) => (
-        <a
+        <PublicLink
           onMouseEnter={() => setHovered(idx)}
           onClick={onItemClick}
           className="relative px-3 py-2 font-semibold transition-colors cursor-pointer"
@@ -87,7 +91,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
             <motion.div layoutId="hovered" className="absolute inset-0 h-full w-full rounded-md bg-gray-100" />
           )}
           <span className="relative z-20">{item.name}</span>
-        </a>
+        </PublicLink>
       ))}
     </motion.div>
   )
@@ -144,15 +148,21 @@ export const MobileNavToggle = ({
   )
 }
 
-function Header() {
+export interface HeaderProps {
+  localeSwitcher?: LocaleSwitcherProps
+}
+
+function Header({ localeSwitcher }: HeaderProps = {}) {
   const [isOpen, setIsOpen] = useState(false)
+  const t = useTranslations("Common")
+  const locale = useLocale()
 
   const navItems = [
-    { name: "Features", link: "/#features" },
-    { name: "How it works", link: "/#how-it-works" },
-    { name: "Shoot Packs", link: "/#style-packs" },
-    { name: "Pricing", link: "/pricing" },
-    { name: "Blog", link: "/blog" },
+    { name: t("navigation.features"), link: "/#features" },
+    { name: t("navigation.howItWorks"), link: "/#how-it-works" },
+    { name: t("navigation.shootPacks"), link: "/#style-packs" },
+    { name: t("navigation.pricing"), link: "/pricing" },
+    ...(isPublishedBlogLocale(locale) ? [{ name: t("navigation.blog"), link: "/blog" }] : []),
   ]
 
   return (
@@ -160,9 +170,9 @@ function Header() {
       <NavBody>
         {/* Logo */}
         <div className="flex items-center">
-          <a href="/" className="flex items-center gap-2 cursor-pointer">
+          <PublicLink href="/" className="flex items-center gap-2 cursor-pointer">
             <FolioLogo className="w-32 h-8" />
-          </a>
+          </PublicLink>
         </div>
 
         {/* Navigation Items */}
@@ -170,15 +180,16 @@ function Header() {
 
         {/* CTA Button */}
         <div className="flex items-center gap-3">
+          <LocaleSwitcher {...localeSwitcher} />
           <Link href="/dashboard">
             <Button
               className="text-sm py-5 group relative bg-[#ff6f00] text-white rounded-md overflow-hidden cursor-pointer pr-10"
             >
-              Start Your Dating Shoot
+              {t("navigation.startDatingShoot")}
               <div className="bg-white rounded-sm p-[10px] absolute right-1 top-1/2 -translate-y-1/2">
               <img
                 src="/arrow.svg"
-                alt="arrow-right"
+                alt=""
                 className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-1"
               />
               </div>
@@ -190,35 +201,36 @@ function Header() {
       <MobileNav>
         <MobileNavHeader>
           <div className="flex items-center">
-            <a href="/" className="flex items-center gap-2">
+            <PublicLink href="/" className="flex items-center gap-2">
               <FolioLogo className="w-24 h-7" />
-            </a>
+            </PublicLink>
           </div>
+          <LocaleSwitcher {...localeSwitcher} />
           <MobileNavToggle isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
         </MobileNavHeader>
 
         <MobileNavMenu isOpen={isOpen} onClose={() => setIsOpen(false)}>
           <div className="flex flex-col items-center w-full">
             {navItems.map((item, idx) => (
-              <a
+              <PublicLink
                 key={idx}
                 href={item.link}
                 className="w-full px-2 py-2 text-gray-600 hover:text-black transition-colors cursor-pointer text-center"
                 onClick={() => setIsOpen(false)}
               >
                 {item.name}
-              </a>
+              </PublicLink>
             ))}
             <div className="flex flex-col gap-2 mt-4 w-full items-center">
               <Link href="/dashboard">
                 <Button
                   className="text-md py-6 group relative bg-[#ff6f00] text-white rounded-md overflow-hidden cursor-pointer pr-12"
                 >
-                  Start Your Dating Shoot
+                  {t("navigation.startDatingShoot")}
                   <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">
                     <img
                       src="/arrow.svg"
-                      alt="arrow-right"
+                      alt=""
                       className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
                     />
                   </div>

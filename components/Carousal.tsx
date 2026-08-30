@@ -5,9 +5,11 @@ import React from "react";
 interface CarouselProps {
   reverse?: boolean; // Add a reverse prop to control the direction
   images: string[]; // Add an images prop to accept an array of image URLs
+  imageAlt?: string;
+  overlayLabel?: string;
 }
 
-const Carousal: React.FC<CarouselProps> = ({ reverse = false, images }) => {
+const Carousal: React.FC<CarouselProps> = ({ reverse = false, images, imageAlt = "Image", overlayLabel }) => {
   return (
     <div className="pb-2 mb-4 mt-0 relative overflow-hidden">
       <div className="absolute top-0 left-0 z-10 h-full w-16 bg-gradient-to-r from-[#F7F5F3] to-transparent pointer-events-none" />
@@ -19,7 +21,7 @@ const Carousal: React.FC<CarouselProps> = ({ reverse = false, images }) => {
         }`}
       >
         {[...images, ...images].map((item, idx) => (
-          <Card image={item} key={idx} />
+          <Card image={item} alt={imageAlt} overlayLabel={overlayLabel} key={idx} />
         ))}
       </div>
     </div>

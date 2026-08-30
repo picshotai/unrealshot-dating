@@ -6,7 +6,7 @@
  * about the page content for better SEO and rich snippets.
  */
 
-import Script from 'next/script';
+import { serializeJsonLd } from '@/lib/json-ld';
 
 interface StructuredDataProps {
   data: Record<string, any> | Record<string, any>[];
@@ -14,14 +14,11 @@ interface StructuredDataProps {
 }
 
 export function StructuredData({ data, id }: StructuredDataProps) {
-  const jsonLd = JSON.stringify(data, null, 0);
-
   return (
-    <Script
+    <script
       id={id || 'structured-data'}
       type="application/ld+json"
-      strategy="beforeInteractive"
-      dangerouslySetInnerHTML={{ __html: jsonLd }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(data) }}
     />
   );
 }

@@ -1,4 +1,4 @@
-import Link from "next/link"
+import { Link } from "@/i18n/navigation"
 import { Calendar, Clock, ArrowRight } from "lucide-react"
 
 interface BlogCardProps {
@@ -9,6 +9,8 @@ interface BlogCardProps {
   readTime: string
   category: string
   image: string
+  imageAlt?: string
+  readGuide: string
   featured?: boolean
 }
 
@@ -20,6 +22,8 @@ export default function BlogCard({
   readTime,
   category,
   image,
+  imageAlt,
+  readGuide,
   featured = false,
 }: BlogCardProps) {
   return (
@@ -30,7 +34,7 @@ export default function BlogCard({
           <div className="relative overflow-hidden aspect-[16/10] bg-gray-100">
             <img
               src={image || "/placeholder.svg"}
-              alt={title}
+              alt={imageAlt || title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             {/* Category Badge */}
@@ -69,7 +73,7 @@ export default function BlogCard({
 
             {/* Read More */}
             <div className="flex items-center text-xs font-bold text-[#ff6f00] group-hover:translate-x-0.5 transition-transform mt-auto pt-2">
-              <span>Read Guide</span>
+              <span>{readGuide}</span>
               <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1 transition-transform" />
             </div>
           </div>

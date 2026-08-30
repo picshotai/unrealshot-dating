@@ -3,9 +3,11 @@
 import { useEffect, useState } from 'react'
 import { AlertTriangle, WifiOff } from 'lucide-react'
 import { useNetworkStatus } from '@/hooks/use-network-status'
+import { useTranslations } from 'next-intl'
 
 export default function NetworkStatus() {
   const { isOnline, isOffline } = useNetworkStatus()
+  const t = useTranslations('Blog.errors')
 
   if (isOnline) {
     return null
@@ -15,7 +17,7 @@ export default function NetworkStatus() {
     <div className="fixed bottom-4 right-4 z-50 bg-orange-500 text-white px-4 py-3 rounded-lg shadow-lg max-w-sm">
       <div className="flex items-center gap-2">
         <WifiOff className="h-4 w-4 flex-shrink-0" />
-        <span className="text-sm font-medium">You're offline - showing cached content</span>
+        <span className="text-sm font-medium">{t('offlineCached')}</span>
       </div>
     </div>
   )
@@ -24,6 +26,7 @@ export default function NetworkStatus() {
 // Offline banner component for pages
 export function OfflineBanner() {
   const [isOnline, setIsOnline] = useState(true)
+  const t = useTranslations('Blog.errors')
 
   useEffect(() => {
     setIsOnline(navigator.onLine)
@@ -49,12 +52,8 @@ export function OfflineBanner() {
       <div className="flex items-center">
         <AlertTriangle className="w-5 h-5 text-orange-500 mr-3" />
         <div>
-          <p className="text-orange-700 font-medium">
-            You're currently offline
-          </p>
-          <p className="text-orange-600 text-sm">
-            Some content may be outdated. Please check your internet connection.
-          </p>
+          <p className="text-orange-700 font-medium">{t('offlineTitle')}</p>
+          <p className="text-orange-600 text-sm">{t('offlineBannerDescription')}</p>
         </div>
       </div>
     </div>

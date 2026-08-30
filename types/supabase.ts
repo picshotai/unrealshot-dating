@@ -615,8 +615,13 @@ export interface Database {
         Row: {
           id: string
           order_id: string
+          order_shoot_id: string | null
           shoot_id: string
           frame_index: number
+          framing: string | null
+          role_label: string | null
+          moment_summary: string | null
+          is_profile_candidate: boolean
           is_anchor: boolean
           anchor_photo_id: string | null
           prompt_template: string
@@ -630,14 +635,20 @@ export interface Database {
           fal_cost_cents: number
           deterministic_id: string | null
           aesthetic_score: number | null
+          render_mode: string
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
           order_id: string
+          order_shoot_id?: string | null
           shoot_id: string
           frame_index: number
+          framing?: string | null
+          role_label?: string | null
+          moment_summary?: string | null
+          is_profile_candidate?: boolean
           is_anchor?: boolean
           anchor_photo_id?: string | null
           prompt_template: string
@@ -651,14 +662,20 @@ export interface Database {
           fal_cost_cents?: number
           deterministic_id?: string | null
           aesthetic_score?: number | null
+          render_mode?: string
           created_at?: string
           updated_at?: string
         }
         Update: {
           id?: string
           order_id?: string
+          order_shoot_id?: string | null
           shoot_id?: string
           frame_index?: number
+          framing?: string | null
+          role_label?: string | null
+          moment_summary?: string | null
+          is_profile_candidate?: boolean
           is_anchor?: boolean
           anchor_photo_id?: string | null
           prompt_template?: string
@@ -672,6 +689,7 @@ export interface Database {
           fal_cost_cents?: number
           deterministic_id?: string | null
           aesthetic_score?: number | null
+          render_mode?: string
           created_at?: string
           updated_at?: string
         }
@@ -680,6 +698,12 @@ export interface Database {
             foreignKeyName: "order_photos_order_id_fkey"
             columns: ["order_id"]
             referencedRelation: "user_shoot_orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_photos_order_shoot_id_fkey"
+            columns: ["order_shoot_id"]
+            referencedRelation: "dating_order_shoots"
             referencedColumns: ["id"]
           }
         ]

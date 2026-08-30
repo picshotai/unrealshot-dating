@@ -5,6 +5,7 @@ import Link from "next/link";
 import { UserX, CameraOff, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Caveat } from "next/font/google";
+import { useTranslations } from "next-intl";
 
 const caveat = Caveat({
   subsets: ["latin"],
@@ -28,23 +29,22 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description }) =
 );
 
 export function PainSection() {
+  const t = useTranslations("Home.pain");
+  const cards = t.raw("cards") as Array<{ title: string; description: string }>;
+
   return (
     <section className="w-full relative bg-[#F7F5F3]">
       <div className="px-4 md:px-0 py-16 sm:py-24 max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 text-center leading-tight">
-            People aren&apos;t rejecting the version of you they&apos;d meet.
+            {t("title")}
             <span className="block mt-2 text-[#ff6f00]">
-              {" "}
-              They&apos;re judging your photos first.
+              {t("titleAccent")}
             </span>
           </h2>
           <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-3xl mx-auto text-center leading-relaxed">
-            You can be funny, confident, interesting and look great in person. None
-            of that matters if your profile is five bad selfies, an old group photo
-            and the one picture of yourself you&apos;ve been recycling for three
-            years.
+            {t("description")}
           </p>
         </div>
 
@@ -52,18 +52,18 @@ export function PainSection() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <FeatureCard
             icon={<UserX className="text-red-500" size={24} />}
-            title="You look better in person"
-            description="Your profile doesn't show what people actually see when they meet you."
+            title={cards[0].title}
+            description={cards[0].description}
           />
           <FeatureCard
             icon={<CameraOff className="text-blue-500" size={24} />}
-            title="Nobody takes good photos of you"
-            description="So you keep choosing from the same weak camera roll."
+            title={cards[1].title}
+            description={cards[1].description}
           />
           <FeatureCard
             icon={<EyeOff className="text-purple-500" size={24} />}
-            title="Your photos say nothing about your life"
-            description="A face alone gives someone very little reason to become curious."
+            title={cards[2].title}
+            description={cards[2].description}
           />
         </div>
 
@@ -72,7 +72,7 @@ export function PainSection() {
           <div className="inline-block relative">
             <Link href="/dashboard">
               <Button className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-6 pr-16 py-6 font-semibold text-base shadow-[0_4px_20px_-5px_rgba(0,0,0,0.2)]">
-                Fix My Dating Profile — $39
+                {t("cta")}
                 <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">
                   <img
                     src="/arrow.svg"
@@ -105,7 +105,7 @@ export function PainSection() {
                           md:absolute md:transform md:rotate-6 md:-right-72 md:top-1/2 md:-translate-y-1/2 md:w-64
                           sm:static sm:mt-4 sm:transform-none sm:rotate-0 sm:text-center sm:w-auto`}
             >
-              You don&apos;t need to become more attractive. You need better evidence.
+              {t("note")}
             </p>
           </div>
         </div>

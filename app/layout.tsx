@@ -7,12 +7,12 @@ import Script from "next/script"
 import ErrorBoundary from "@/components/error-boundary"
 import { generateMetadata } from "@/lib/seo"
 import { StructuredData } from "@/components/seo/StructuredData"
-import {
-  generateOrganizationJsonLd,
-  generateWebsiteJsonLd
-} from "@/lib/seo"
+import { generateOrganizationJsonLd } from "@/lib/seo"
 import { Toaster } from "@/components/ui/sonner"
 import { Toaster as ShadcnToaster } from "@/components/ui/toaster"
+import { getLocale, getTranslations } from "next-intl/server"
+import { getHtmlLang, type PublishedPublicLocale } from "@/i18n/config"
+import { makeWebsiteJsonLd } from "@/lib/public-seo"
 
 
 const inter = Inter({
@@ -49,9 +49,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const locale = await getLocale() as PublishedPublicLocale
+  const t = await getTranslations({ locale, namespace: "Home" })
+  const websiteSchema = makeWebsiteJsonLd({
+    name: t("meta.title"),
+    description: t("meta.description"),
+    locale,
+  })
 
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${oxanium.variable} antialiased`}>
+    <html lang={getHtmlLang(locale)} className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${oxanium.variable} antialiased`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -93,7 +100,7 @@ export default async function RootLayout({
         {/* Website Schema - Global */}
         <StructuredData
           id="website-schema"
-          data={JSON.parse(generateWebsiteJsonLd())}
+          data={websiteSchema}
         />
 
 

@@ -1,31 +1,39 @@
+"use client"
+
 import Link from 'next/link';
+import { Link as PublicLink } from '@/i18n/navigation';
 import Image from 'next/image';
+import { useLocale, useTranslations } from 'next-intl';
+import { isPublishedBlogLocale } from '@/i18n/config';
 
 export default function Footer() {
+  const t = useTranslations('Common');
+  const locale = useLocale();
+
   const companyLinks = [
-    { href: '/about', label: 'About' },
-    { href: '/blog', label: 'Dating Photo Guides' },
-    { href: '/pricing', label: 'Pricing' },
-    { href: '/privacy-policy', label: 'Privacy Policy' },
-    { href: '/terms', label: 'Terms of Service' },
-    { href: '/refund-policy', label: 'Refund Policy' },
+    { href: '/about', label: t('footer.about') },
+    ...(isPublishedBlogLocale(locale) ? [{ href: '/blog', label: t('footer.datingPhotoGuides') }] : []),
+    { href: '/pricing', label: t('navigation.pricing') },
+    { href: '/privacy-policy', label: t('footer.privacyPolicy') },
+    { href: '/terms', label: t('footer.terms') },
+    { href: '/refund-policy', label: t('footer.refundPolicy') },
   ];
 
   const datingFeatures = [
-    { href: '/use-case/dating-photos', label: 'AI Dating Photos' },
-    { href: '/#styles', label: '15 Cohesive Shoots' },
-    { href: '/#pricing', label: '15 Photo Retakes' },
-    { href: '/#how-it-works', label: 'How It Works' },
-    { href: '/#faq', label: 'Dating Photo FAQs' },
-    { href: '/dashboard', label: 'Start Your Shoot' },
+    { href: '/use-case/dating-photos', label: t('footer.aiDatingPhotos'), public: true },
+    { href: '/#style-packs', label: t('footer.cohesiveShoots'), public: true },
+    { href: '/#pricing', label: t('footer.photoRetakes'), public: true },
+    { href: '/#how-it-works', label: t('navigation.howItWorks'), public: true },
+    { href: '/#faq', label: t('footer.datingPhotoFaqs'), public: true },
+    { href: '/dashboard', label: t('footer.startYourShoot'), public: false },
   ];
 
   const datingApps = [
-    { href: '/use-case/dating-photos', label: 'Tinder Profile Photos' },
-    { href: '/use-case/dating-photos', label: 'Hinge Profile Pictures' },
-    { href: '/use-case/dating-photos', label: 'Bumble Photo Optimization' },
-    { href: '/use-case/dating-photos', label: 'Natural Candid Shots' },
-    { href: '/use-case/dating-photos', label: 'Identity Preservation' },
+    { href: '/use-case/dating-photos', label: t('footer.tinderProfilePhotos') },
+    { href: '/use-case/dating-photos', label: t('footer.hingeProfilePictures') },
+    { href: '/use-case/dating-photos', label: t('footer.bumblePhotoOptimization') },
+    { href: '/use-case/dating-photos', label: t('footer.naturalCandidShots') },
+    { href: '/use-case/dating-photos', label: t('footer.identityPreservation') },
   ];
 
   return (
@@ -33,27 +41,27 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-10 border-b border-gray-200">
           <div>
-            <Link href="/" className="flex items-center gap-2.5">
+            <PublicLink href="/" className="flex items-center gap-2.5">
               <Image
                 src="/site-logo.png"
-                alt="Unrealshot AI Logo"
+                alt={t('footer.logoAlt')}
                 width={28}
                 height={28}
                 className="w-7 h-7 rounded"
               />
               <span className="text-2xl font-bold tracking-tight text-gray-900 hover:text-[#ff6f00] transition-colors">
-                Unrealshot AI
+                {t('brandName')}
               </span>
-            </Link>
+            </PublicLink>
             <p className="text-gray-600 text-sm mt-2 max-w-md">
-              Believable AI dating profile shoots for men. 15 shoots, 60 natural photos, and 15 Photo Retakes included.
+              {t('footer.description')}
             </p>
           </div>
 
           {/* Social Links */}
           <div className="flex gap-3">
             <a
-              href="https://x.com"
+              href="https://x.com/unrealshotai"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="X (Twitter)"
@@ -64,7 +72,7 @@ export default function Footer() {
               </svg>
             </a>
             <a
-              href="https://instagram.com"
+              href="https://instagram.com/unrealshotai"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram"
@@ -81,13 +89,15 @@ export default function Footer() {
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {/* Product & Features */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Dating Photoshoot</h3>
+            <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">{t('footer.datingPhotoshoot')}</h3>
             <ul className="mt-4 space-y-2.5">
               {datingFeatures.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">
-                    {link.label}
-                  </Link>
+                  {link.public ? (
+                    <PublicLink href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">{link.label}</PublicLink>
+                  ) : (
+                    <Link href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">{link.label}</Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -95,13 +105,13 @@ export default function Footer() {
 
           {/* Dating App Optimization */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">App Optimization</h3>
+            <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">{t('footer.appOptimization')}</h3>
             <ul className="mt-4 space-y-2.5">
               {datingApps.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">
+                  <PublicLink href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">
                     {link.label}
-                  </Link>
+                  </PublicLink>
                 </li>
               ))}
             </ul>
@@ -109,13 +119,13 @@ export default function Footer() {
 
           {/* Company & Legal */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Company</h3>
+            <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">{t('footer.company')}</h3>
             <ul className="mt-4 space-y-2.5">
               {companyLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">
+                  <PublicLink href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">
                     {link.label}
-                  </Link>
+                  </PublicLink>
                 </li>
               ))}
             </ul>
@@ -125,10 +135,10 @@ export default function Footer() {
         {/* Bottom Copyright */}
         <div className="border-t border-gray-200 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-gray-500 text-xs">
-            © {new Date().getFullYear()} Unrealshot AI. All rights reserved.
+            {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
           <p className="text-gray-500 text-xs">
-            Engineered specifically for Tinder, Hinge & Bumble dating profiles.
+            {t('footer.tagline')}
           </p>
         </div>
       </div>

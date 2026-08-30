@@ -6,6 +6,7 @@ import Link from "next/link"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import { Caveat } from 'next/font/google';
+import { useTranslations } from 'next-intl';
 
 // Configure the Caveat font
 const caveat = Caveat({
@@ -213,6 +214,8 @@ const marqueeShoots: ShootMarqueeItem[] = [
 ];
 
 export function HeroSection() {
+  const t = useTranslations('Home.hero');
+  const common = useTranslations('Common');
   const [isCopied, setIsCopied] = useState(false)
   const couponCode = "WELCOME15"
 
@@ -251,21 +254,21 @@ export function HeroSection() {
                 {/* Left Side: The Hook (High Contrast Orange) */}
                 <div className="bg-[#ff6f00] text-white text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
                   <Sparkles size={12} className="text-white" />
-                  <span className="tracking-wide uppercase">AI DATING PHOTOS FOR MEN</span>
+                  <span className="tracking-wide uppercase">{t('badge')}</span>
                 </div>
 
                 {/* --- The NEW Interactive Right Side --- */}
                 <div
                   className="flex items-center px-3 cursor-pointer"
                   onClick={handleCopy}
-                  title="Click to copy coupon code"
+                  title={t('discountLabel')}
                 >
                   <span className="text-gray-300 text-xs font-medium mr-1 transition-all duration-300">
                     {isCopied ? (
-                      <span className="text-green-400 font-bold">Code Copied!</span>
+                      <span className="text-green-400 font-bold">{t('discountCopied')}</span>
                     ) : (
                       <>
-                        Get <span className="text-white font-bold">15% Off</span>
+                        {t('discount', { discount: 15 })}
                       </>
                     )}
                   </span>
@@ -283,15 +286,15 @@ export function HeroSection() {
             </div>
             <h1 className="text-4xl sm:text-6xl max-w-4xl mx-auto font-bold leading-[1.1] mb-4 font-[var(--font-inter-tight)]">
               <span className="text-white">
-                You look better in real life.
+                {t('title')}
               </span>
               <span className="text-[#ff6f00] block mt-2">
-                Your dating profile should too.
+                {t('titleAccent')}
               </span>
             </h1>
 
             <p className="text-lg text-gray-300 max-w-3xl mx-auto mb-8">
-              Bad photos make you easy to swipe past. UnrealShot gives you natural dating photos that look like you, show your life, and make your profile worth stopping for.
+              {t('description')}
             </p>
           </div>
           <div className="flex sm:flex-row gap-2 justify-center items-center w-full relative">
@@ -300,7 +303,7 @@ export function HeroSection() {
               <Button
                 className="text-sm sm:text-md font-semibold py-5 sm:py-6 group relative bg-white hover:bg-white/90 text-black rounded-md overflow-hidden cursor-pointer pr-12"
               >
-                Fix My Dating Profile
+                {t('primaryCta')}
                 <div className="bg-[#ff6f00] text-white rounded-sm p-2 sm:p-3 absolute right-1 top-1/2 -translate-y-1/2 flex items-center justify-center">
                   <img
                     src="/arrow.svg"
@@ -314,7 +317,7 @@ export function HeroSection() {
               <Button
                 className="text-sm sm:text-md font-semibold py-5 sm:py-6 group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer pr-12"
               >
-                Sign in with Google
+                {t('signIn')}
                 <div className="bg-white rounded-sm p-2 sm:p-3 absolute right-1 top-1/2 -translate-y-1/2 flex items-center justify-center">
                   <svg
                     className="w-5 h-5 transition-transform duration-200 group-hover:scale-110"
@@ -365,8 +368,7 @@ export function HeroSection() {
 
             {/* Floating text */}
             <p className={`hidden md:block text-gray-300 text-lg font-semibold leading-none md:absolute md:transform md:rotate-6 md:right-40 md:top-full md:mt-8 md:w-48 sm:static sm:mt-2 sm:transform-none sm:rotate-0 sm:text-center sm:w-auto pointer-events-none ${caveat.className}`}>
-              Just 4–6 selfies.
-              We do the rest.
+              {t('floatingNote')}
             </p>
           </div>
           <div className="flex flex-col items-center space-y-2 pt-2">
@@ -374,26 +376,26 @@ export function HeroSection() {
               <div className="flex -space-x-2">
                 <img
                   src="/content/sachin.webp"
-                  alt="User profile photo"
+                  alt={t('userPhotoAlt')}
                   className="w-8 h-8 rounded-full border-2 border-white object-cover"
                 />
                 <img
                   src="/content/sumesh.webp"
-                  alt="User profile photo"
+                  alt={t('userPhotoAlt')}
                   className="w-8 h-8 rounded-full border-2 border-white object-cover"
                 />
                 <img
                   src="/content/manoj.jpg"
-                  alt="User profile photo"
+                  alt={t('userPhotoAlt')}
                   className="w-8 h-8 rounded-full border-2 border-white object-cover"
                 />
                 <img
                   src="/content/emma-thopmson.jpg"
-                  alt="User profile photo"
+                  alt={t('userPhotoAlt')}
                   className="w-8 h-8 rounded-full border-2 border-white object-cover"
                 />
                 <div className="w-8 h-8 rounded-full bg-gray-900 border-2 border-white flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">1.2k</span>
+                  <span className="text-white text-xs font-bold">{t('proof')}</span>
                 </div>
               </div>
               <div className="flex text-yellow-400">
@@ -404,7 +406,7 @@ export function HeroSection() {
                 ))}
               </div>
             </div>
-            <p className="text-gray-400 text-md">60 photos · 15 believable shoots · 15 Photo Retakes · $39 once</p>
+            <p className="text-gray-400 text-md">{t('summary')}</p>
           </div>
         </div>
       </div>
@@ -426,7 +428,7 @@ export function HeroSection() {
                   <div className="relative w-full h-[180px] rounded-lg overflow-hidden bg-neutral-900">
                     <Image
                       src={shoot.mainImage.src}
-                      alt={shoot.mainImage.alt}
+                       alt={t('showcaseAlt')}
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                       sizes="200px"
@@ -435,13 +437,13 @@ export function HeroSection() {
                     <div className="absolute bottom-2 left-2 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-2 py-0.5 rounded border border-white/15">
                       <Image
                         src="/site-logo.png"
-                        alt="Unrealshot AI Logo"
+                         alt={common('footer.logoAlt')}
                         width={14}
                         height={14}
                         className="w-3.5 h-3.5 rounded"
                       />
                       <span className="font-mono text-[9px] font-bold tracking-wider text-white uppercase">
-                        {shoot.shootNumber} · 4 PHOTOS
+                         {shoot.shootNumber} · {t('photoCount')}
                       </span>
                     </div>
                   </div>
@@ -452,7 +454,7 @@ export function HeroSection() {
                       <div key={tIdx} className="relative w-full h-full rounded-md overflow-hidden bg-neutral-900 border border-white/10">
                         <Image
                           src={thumb.src}
-                          alt={thumb.alt}
+                           alt={t('showcaseAlt')}
                           fill
                           className="object-cover"
                           sizes="60px"
@@ -485,7 +487,7 @@ export function HeroSection() {
                   <div className="relative w-full h-[180px] rounded-lg overflow-hidden bg-neutral-900">
                     <Image
                       src={shoot.mainImage.src}
-                      alt={shoot.mainImage.alt}
+                       alt={t('showcaseAlt')}
                       fill
                       className="object-cover"
                       sizes="200px"
@@ -493,13 +495,13 @@ export function HeroSection() {
                     <div className="absolute bottom-2 left-2 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-2 py-0.5 rounded border border-white/15">
                       <Image
                         src="/site-logo.png"
-                        alt="Unrealshot AI Logo"
+                         alt={common('footer.logoAlt')}
                         width={14}
                         height={14}
                         className="w-3.5 h-3.5 rounded"
                       />
                       <span className="font-mono text-[9px] font-bold tracking-wider text-white uppercase">
-                        {shoot.shootNumber} · 4 PHOTOS
+                         {shoot.shootNumber} · {t('photoCount')}
                       </span>
                     </div>
                   </div>
@@ -510,7 +512,7 @@ export function HeroSection() {
                       <div key={tIdx} className="relative w-full h-full rounded-md overflow-hidden bg-neutral-900 border border-white/10">
                         <Image
                           src={thumb.src}
-                          alt={thumb.alt}
+                           alt={t('showcaseAlt')}
                           fill
                           className="object-cover"
                           sizes="60px"
@@ -532,7 +534,7 @@ export function HeroSection() {
                   <div className="relative w-full h-[180px] rounded-lg overflow-hidden bg-neutral-900">
                     <Image
                       src={shoot.mainImage.src}
-                      alt={shoot.mainImage.alt}
+                       alt={t('showcaseAlt')}
                       fill
                       className="object-cover"
                       sizes="200px"
@@ -540,13 +542,13 @@ export function HeroSection() {
                     <div className="absolute bottom-2 left-2 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-2 py-0.5 rounded border border-white/15">
                       <Image
                         src="/site-logo.png"
-                        alt="Unrealshot AI Logo"
+                         alt={common('footer.logoAlt')}
                         width={14}
                         height={14}
                         className="w-3.5 h-3.5 rounded"
                       />
                       <span className="font-mono text-[9px] font-bold tracking-wider text-white uppercase">
-                        {shoot.shootNumber} · 4 PHOTOS
+                         {shoot.shootNumber} · {t('photoCount')}
                       </span>
                     </div>
                   </div>
@@ -557,7 +559,7 @@ export function HeroSection() {
                       <div key={tIdx} className="relative w-full h-full rounded-md overflow-hidden bg-neutral-900 border border-white/10">
                         <Image
                           src={thumb.src}
-                          alt={thumb.alt}
+                           alt={t('showcaseAlt')}
                           fill
                           className="object-cover"
                           sizes="60px"

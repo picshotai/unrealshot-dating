@@ -8,9 +8,19 @@ interface ShareButtonProps {
   title: string
   url: string
   text?: string
+  label?: string
+  sharingLabel?: string
+  copiedLabel?: string
 }
 
-export default function ShareButton({ title, url, text }: ShareButtonProps) {
+export default function ShareButton({
+  title,
+  url,
+  text,
+  label = "Share",
+  sharingLabel = "Sharing...",
+  copiedLabel = "Link copied to clipboard!",
+}: ShareButtonProps) {
   const [isSharing, setIsSharing] = useState(false)
   const [isClient, setIsClient] = useState(false)
 
@@ -37,7 +47,7 @@ export default function ShareButton({ title, url, text }: ShareButtonProps) {
         
         // Show a temporary notification
         const notification = document.createElement('div')
-        notification.textContent = 'Link copied to clipboard!'
+        notification.textContent = copiedLabel
         notification.className = 'fixed top-4 right-4 bg-black text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-opacity'
         document.body.appendChild(notification)
         
@@ -57,7 +67,7 @@ export default function ShareButton({ title, url, text }: ShareButtonProps) {
           await navigator.clipboard.writeText(url)
           
           const notification = document.createElement('div')
-          notification.textContent = 'Link copied to clipboard!'
+          notification.textContent = copiedLabel
           notification.className = 'fixed top-4 right-4 bg-black text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-opacity'
           document.body.appendChild(notification)
           
@@ -86,7 +96,7 @@ export default function ShareButton({ title, url, text }: ShareButtonProps) {
         disabled
       >
         <Share2 className="w-4 h-4" />
-        Share
+        {label}
       </Button>
     )
   }
@@ -100,7 +110,7 @@ export default function ShareButton({ title, url, text }: ShareButtonProps) {
       disabled={isSharing}
     >
       <Share2 className="w-4 h-4" />
-      {isSharing ? 'Sharing...' : 'Share'}
+      {isSharing ? sharingLabel : label}
     </Button>
   )
 }

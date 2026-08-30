@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { UploadCloud, Play } from "lucide-react"
 import Carousal from "@/components/Carousal"
+import { useTranslations } from "next-intl"
 
 // Using your specific image requests
 const womanInputImages = ["/images/demo1.jpg", "/images/demo2.jpg", "/images/demo3.jpg", "/images/demo4.jpg", "/images/demo9.jpg", "/images/demo10.jpg"];
@@ -15,19 +16,21 @@ const humans = [...womanOutputImages, ...manOutputImages];
 const humans2 = [...manOutputImages, ...womanOutputImages]; // Different order for second carousel
 
 export default function HowItWorksShowcase() {
+  const t = useTranslations("Home.howItWorks")
+
   return (
     <section id="how-it-works" className="relative mx-auto py-16 sm:py-24 overflow-hidden bg-[#F7F5F3]">
       <div className="px-4 max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 sm:mb-20">
             <p className="text-orange-500 font-bold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
-            HOW IT WORKS
+            {t("eyebrow")}
           </p>
           <h2 className="text-4xl sm:text-5xl md:text-6xl max-w-4xl mx-auto font-bold leading-none mb-4 font-[var(--font-inter-tight)] text-gray-900">
-            Fixing your dating profile shouldn't  <span className="text-[#ff6f00]">become another project.</span>
+            {t("title")} <span className="text-[#ff6f00]">{t("titleAccent")}</span>
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            No photographer hunt. No asking your friends to take 200 photos of you. No prompt engineering.
+            {t("description")}
           </p>
         </div>
 
@@ -46,10 +49,10 @@ export default function HowItWorksShowcase() {
 
           {/* Text element */}
           <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold text-center mt-2 mb-4">
-            Upload 4–6 selfies
+            {t("step1Title")}
           </h3>
           <p className="text-center text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            Use normal photos already on your phone. Different angles and clear views of your face work best. And Tell us what actually feels like you
+            {t("step1Description")}
           </p>
 
           {/* Graphic element */}
@@ -66,7 +69,7 @@ export default function HowItWorksShowcase() {
                          width={105} 
                          height={140} 
                          className="w-full h-full object-cover"
-                         alt="woman image 1" 
+                         alt={t("inputImageAlt", { index: 1 })}
                        />
                      </div>
                      <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
@@ -75,7 +78,7 @@ export default function HowItWorksShowcase() {
                          width={105} 
                          height={140} 
                          className="w-full h-full object-cover"
-                         alt="woman image 2" 
+                         alt={t("inputImageAlt", { index: 2 })}
                        />
                      </div>
                      <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
@@ -84,7 +87,7 @@ export default function HowItWorksShowcase() {
                          width={105} 
                          height={140} 
                          className="w-full h-full object-cover"
-                         alt="woman image 3" 
+                         alt={t("inputImageAlt", { index: 3 })}
                        />
                      </div>
                    </div>
@@ -98,7 +101,7 @@ export default function HowItWorksShowcase() {
                       {/* Upload interface mockup */}
                       <div className="absolute inset-0 flex flex-col p-4 bg-white">
                         {/* Header */}
-                          <h3 className="text-lg font-semibold text-gray-900 mb-1 mt-4">Training Images</h3>
+                          <h3 className="text-lg font-semibold text-gray-900 mb-1 mt-4">{t("trainingImages")}</h3>
 
                         
                         {/* Upload area - smaller since we have file list */}
@@ -107,8 +110,8 @@ export default function HowItWorksShowcase() {
                             <div className="w-8 h-8 bg-[#ff6f00]/30 rounded-full flex items-center justify-center mb-2">
                               <UploadCloud className="w-4 h-4 text-gray-500" />
                             </div>
-                            <p className="text-xs font-medium text-gray-700 mb-1">Drop your images here</p>
-                            <p className="text-xs text-gray-500">PNG, JPG or JPEG</p>
+                            <p className="text-xs font-medium text-gray-700 mb-1">{t("dropImages")}</p>
+                            <p className="text-xs text-gray-500">{t("fileTypes")}</p>
                           </div>
                         </div>
                         
@@ -120,7 +123,7 @@ export default function HowItWorksShowcase() {
                                 <div className="bg-gray-100 aspect-square shrink-0 rounded w-8 h-8">
                                   <Image 
                                     src={src} 
-                                    alt={`Upload ${i + 1}`} 
+                            alt={t("inputImageAlt", { index: i + 1 })}
                                     width={32} 
                                     height={32} 
                                     className="w-full h-full rounded object-cover" 
@@ -147,7 +150,7 @@ export default function HowItWorksShowcase() {
                         {/* Footer info */}
                         <div className="mt-3 pt-2 border-t border-gray-100">
                           <p className="text-xs text-gray-500 text-center">
-                            4 of 6 images selected
+                            {t("selected")}
                           </p>
                         </div>
                       </div>
@@ -163,7 +166,7 @@ export default function HowItWorksShowcase() {
                          width={105} 
                          height={140} 
                          className="w-full h-full object-cover"
-                         alt="man image 1" 
+                         alt={t("inputImageAlt", { index: 4 })}
                        />
                      </div>
                      <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
@@ -172,7 +175,7 @@ export default function HowItWorksShowcase() {
                          width={105} 
                          height={140} 
                          className="w-full h-full object-cover"
-                         alt="man image 2" 
+                         alt={t("inputImageAlt", { index: 5 })}
                        />
                      </div>
                      <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
@@ -181,7 +184,7 @@ export default function HowItWorksShowcase() {
                          width={105} 
                          height={140} 
                          className="w-full h-full object-cover"
-                         alt="man image 3" 
+                         alt={t("inputImageAlt", { index: 6 })}
                        />
                      </div>
                    </div>
@@ -203,10 +206,10 @@ export default function HowItWorksShowcase() {
 
           {/* Text element */}
           <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold text-center mt-2 mb-4">
-            Unrealshot AI gets to work
+            {t("step2Title")}
           </h3>
           <p className="text-center text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            Our engine maps your facial features and generates unposed, candid scenes built specifically for Tinder, Hinge, and Bumble — with natural lighting, authentic outfits, and believable moments that actually look like you.
+            {t("step2Description")}
           </p>
 
 
@@ -254,7 +257,7 @@ export default function HowItWorksShowcase() {
               <iframe
                 className="w-full h-full opacity-0 pointer-events-none transition-opacity duration-300"
                 src="https://www.youtube.com/embed/UL357H91Gc0?rel=0"
-                title="AI Processing Video"
+                title={t("videoTitle")}
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
@@ -276,17 +279,17 @@ export default function HowItWorksShowcase() {
 
           {/* Text element */}
           <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold text-center mt-10 mb-4">
-            Get 15 complete shoots
+            {t("step3Title")}
           </h3>
           <p className="text-center text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            Receive 60 photos organized into coherent 4-shot scenes. Pick your favorite 6 for Tinder, Hinge, or Bumble with 15 free Photo Retakes included.
+            {t("step3Description")}
           </p>
           <div className="animate-fadeIn container mx-auto pt-10">
-            <Carousal images={humans} />
-            <Carousal images={humans2} reverse={true} />
+            <Carousal images={humans} imageAlt={t("resultsAlt")} overlayLabel={t("generated")} />
+            <Carousal images={humans2} reverse={true} imageAlt={t("resultsAlt")} overlayLabel={t("generated")} />
           </div>
           <div className="text-center justify-center flex text-sm font-md px-10 uppercase tracking-wider text-slate-400">
-            Results from UnrealShot AI dating photos.
+            {t("resultCaption")}
           </div>
         </div>
       </div>

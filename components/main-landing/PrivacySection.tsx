@@ -2,7 +2,9 @@
 import React from 'react';
 import { ThumbsUp, Shield, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import { Caveat } from 'next/font/google';
+import { useTranslations } from 'next-intl';
 
 // Configure the Caveat font
 const caveat = Caveat({
@@ -26,41 +28,45 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description }) =
 );
 
 export default function PrivacySection() {
+  const t = useTranslations('Home.privacy');
+  const cards = t.raw('cards') as Array<{ title: string; description: string }>;
+
   return (
     <section className="w-full relative bg-[#F7F5F3]">
       <div className="px-4 md:px-0 py-16 sm:py-24 max-w-6xl mx-auto">
       <div className="text-center mb-12">
         <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 text-center">
-          Still you.
-          <span className="block mt-2 text-[#ff6f00]"> Just finally photographed well.</span>
+          {t('title')}
+          <span className="block mt-2 text-[#ff6f00]">{t('titleAccent')}</span>
         </h2>      
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto text-center">
-          The goal isn&apos;t to make you taller, richer, younger or mysteriously turn you into a model. It&apos;s to create the photos you could realistically have taken on a good day.
+          {t('description')}
         </p>
       </div>
      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
         <FeatureCard 
           icon={<ThumbsUp className="text-green-500" size={24} />}
-          title="Realistic, Not Uncanny"
-          description="Better light, better clothes, better setting, better timing. Authentic photos that look natural and grounded on dating apps."
+          title={cards[0].title}
+          description={cards[0].description}
         />
         <FeatureCard 
           icon={<Shield className="text-blue-500" size={24} />}
-          title="Same Person. Better Camera Roll."
-          description="One continuous identity across 15 believable shoots with 4 frames each, so you don't look like 60 different people."
+          title={cards[1].title}
+          description={cards[1].description}
         />
         <FeatureCard 
           icon={<Lock className="text-purple-500" size={24} />}
-          title="15 Photo Retakes Included"
-          description="And if one photo misses? Retake it. Every order includes 15 individual Photo Retakes so you can replace misses without rebuilding."
+          title={cards[2].title}
+          description={cards[2].description}
         />
       </div>
       
       <div className="text-center relative">
         <div className="inline-block relative">
-          <Button className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-6 pr-16 py-6 font-semibold text-base shadow-[0_4px_20px_-5px_rgba(0,0,0,0.2)]">
-            Build My Dating Profile — $39
+          <Link href="/dashboard">
+            <Button className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-6 pr-16 py-6 font-semibold text-base shadow-[0_4px_20px_-5px_rgba(0,0,0,0.2)]">
+            {t('cta')}
             <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">
                   <img
                     src="/arrow.svg"
@@ -68,7 +74,8 @@ export default function PrivacySection() {
                     className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
                   />
                 </div>
-          </Button>
+            </Button>
+          </Link>
           
           {/* Whirl Arrow pointing to floating text */}
            <div className="hidden md:block absolute -right-12 top-8 mt-4 -translate-y-1/2 w-16 h-20 pointer-events-none">
@@ -90,7 +97,7 @@ export default function PrivacySection() {
           <p className={`text-gray-600 ${caveat.className} text-lg font-semibold leading-none 
                         md:absolute md:transform md:rotate-6 md:-right-52 md:top-1/2 md:-translate-y-1/2 md:w-48
                         sm:static sm:mt-2 sm:transform-none sm:rotate-0 sm:text-center sm:w-auto`}>
-            15 individual Photo Retakes included
+            {t('note')}
           </p>
         </div>
       </div>

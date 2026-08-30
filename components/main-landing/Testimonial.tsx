@@ -5,6 +5,7 @@ import { Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Caveat } from 'next/font/google';
+import { useTranslations } from 'next-intl';
 
 // Configure the Caveat font
 const caveat = Caveat({
@@ -52,50 +53,10 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ quote, name, role, av
 }
 
 export default function TestimonialSection() {
-  const testimonials: TestimonialCardProps[] = [
-    {
-      quote: "Went from getting maybe 1 match a week on Hinge to daily likes and actual conversations. The crazy thing is people always say I look just like my photos in person.",
-      name: "Alex M.",
-      role: "Hinge & Bumble user",
-      avatar: "/images/aimodel5.jpg",
-      rating: 5,
-    },
-    {
-      quote: "I hate posing for photos, so my profile was literally 3 selfies in my car and an old group shot from 2021. UnrealShot gave me a full camera roll that looks like my friends took it.",
-      name: "Marcus K.",
-      role: "Software Engineer",
-      avatar: "/images/aimodel6.jpg",
-      rating: 5,
-    },
-    {
-      quote: "I was skeptical of AI photos because most look fake or hyper-edited. But having 4 shots from the same shoot makes it feel 100% natural and consistent.",
-      name: "David S.",
-      role: "Product Designer",
-      avatar: "/images/aimodel7.jpg",
-      rating: 5,
-    },
-    {
-      quote: "Finally have photos that actually show my personality instead of just my face. Women on Hinge constantly comment on the coffee shop and outdoor shots now.",
-      name: "Liam T.",
-      role: "Consultant",
-      avatar: "/images/aimodel8.jpg",
-      rating: 5,
-    },
-    {
-      quote: "One photo had weird lighting, but the retake button fixed it in 2 minutes with zero hassle. Total game changer for anyone who doesn't have an Instagram girlfriend.",
-      name: "Jordan P.",
-      role: "Architect",
-      avatar: "/images/demo14.jpg",
-      rating: 5,
-    },
-    {
-      quote: "Got 60 photos across 15 different settings. Picked my top 6, revamped my Tinder and Bumble, and my match quality doubled in the first 48 hours.",
-      name: "Sam R.",
-      role: "Finance Analyst",
-      avatar: "/images/demo12.jpg",
-      rating: 5,
-    },
-  ]
+  const t = useTranslations('Home.testimonials')
+  const copy = t.raw('cards') as Array<{ quote: string; name: string; role: string }>
+  const avatars = ['/images/aimodel5.jpg', '/images/aimodel6.jpg', '/images/aimodel7.jpg', '/images/aimodel8.jpg', '/images/demo14.jpg', '/images/demo12.jpg']
+  const testimonials: TestimonialCardProps[] = copy.map((item, index) => ({ ...item, avatar: avatars[index], rating: 5 }))
 
   return (
     <section className="relative py-20 bg-[#111111]">
@@ -103,13 +64,13 @@ export default function TestimonialSection() {
         {/* Header */}
         <div className="text-center mb-16">
           <p className="text-orange-500 font-bold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
-            REAL USER REVIEWS
+            {t('eyebrow')}
           </p>
           <h2 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight leading-[1.08]">
-            Real Results from <br /><span className="text-[#ff6f00]">Real Dating Profiles</span>
+            {t('title')} <br /><span className="text-[#ff6f00]">{t('titleAccent')}</span>
           </h2>
           <p className="mx-auto max-w-2xl text-lg md:text-xl text-gray-300">
-            See how men replaced recycled selfies and weak camera rolls with believable, match-worthy photos.
+            {t('description')}
           </p>
         </div>
 
@@ -149,7 +110,7 @@ export default function TestimonialSection() {
                 size="lg"
                 className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-6 pr-16 py-6 font-semibold text-base shadow-[0_4px_20px_-5px_rgba(0,0,0,0.2)]"
               >
-                Build My Dating Profile — $39
+                {t('cta')}
                 <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">
                   <img
                     src="/arrow.svg"
@@ -180,7 +141,7 @@ export default function TestimonialSection() {
             <p className={`text-gray-400 ${caveat.className} text-lg font-semibold 
                           md:absolute md:transform md:-rotate-6 md:-left-52 md:-top-1/4 md:-translate-y-1/2 md:w-48
                           sm:static sm:mt-2 sm:transform-none sm:rotate-0 sm:text-center sm:w-auto leading-none`}>
-              Trusted by 1,200+ guys upgrading their profiles
+              {t('trusted')}
             </p>
           </div>
         </div>

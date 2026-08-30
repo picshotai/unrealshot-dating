@@ -5,10 +5,12 @@ import { AnimatePresence, motion } from "framer-motion";
 
 interface CardProps {
   image: string;
+  alt?: string;
+  overlayLabel?: string;
   reverse?: boolean;
 }
 
-const Card: React.FC<CardProps> = ({ image }) => {
+const Card: React.FC<CardProps> = ({ image, alt = image, overlayLabel = "AI Generated" }) => {
   const [showOverlay, setShowOverlay] = useState(false);
 
   return (
@@ -35,12 +37,12 @@ const Card: React.FC<CardProps> = ({ image }) => {
               animate={{ y: 0 }}
               exit={{ y: 10 }}
             >
-              <span>AI Generated</span>
+              <span>{overlayLabel}</span>
             </motion.h1>
           </motion.div>
         )}
       </AnimatePresence>
-      <Image src={image} alt={image} fill style={{ objectFit: "cover" }} />
+      <Image src={image} alt={alt} fill style={{ objectFit: "cover" }} />
     </motion.div>
   );
 };

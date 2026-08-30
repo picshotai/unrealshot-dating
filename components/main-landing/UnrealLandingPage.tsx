@@ -1,5 +1,4 @@
 
-import { Metadata } from 'next'
 import PublicHeader from '@/components/Header'
 import { HeroSection } from '@/components/main-landing/HeroSection'
 import { PainSection } from '@/components/main-landing/PainSection'
@@ -10,11 +9,9 @@ import StylePacks from '@/components/main-landing/StylePacks';
 import PricingCards from '@/components/main-landing/pricing-cards'
 import FAQSection from '@/components/main-landing/FAQSection'
 import { CTASection } from '@/components/main-landing/CTASection'
-import { StructuredData } from '@/components/seo/StructuredData'
 import  Footer  from '@/components/main-landing/Footer'
 import TestimonialSection from "@/components/main-landing/Testimonial";
 import PrivacySection from "@/components/main-landing/PrivacySection";
-import { generateWebApplicationJsonLd } from '@/lib/seo'
 
 export function UnrealLandingPage() {
   return (
@@ -44,10 +41,7 @@ export function UnrealLandingPage() {
         <CTASection />
       </main>
       <Footer />
-      {/* WebApplication Schema - Home Page Only */}
-        <StructuredData data={JSON.parse(generateWebApplicationJsonLd())} />
     </div>
     </div>
   );
 }
-

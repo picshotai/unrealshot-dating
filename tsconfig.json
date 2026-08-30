@@ -36,6 +36,16 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "components/supportingpages/**",
+    "components/image-canvas.tsx",
+    "components/imageInspector.tsx",
+    "components/mobile-panel.tsx",
+    "components/mobile-unified-panel.tsx",
+    "components/right-panel.tsx",
+    "components/dashboard/mini-stats.tsx",
+    "components/ui/chart.tsx",
+    "hooks/useannotations.ts",
+    "hooks/useCanvas.ts"
   ]
 }

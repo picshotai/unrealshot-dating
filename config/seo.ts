@@ -11,6 +11,8 @@
  * 4. Customize page-specific SEO in the pageSEO object
  */
 
+import { getSiteUrl } from '@/lib/site-url';
+
 export interface SEOConfig {
   title: string;
   description: string;
@@ -39,6 +41,7 @@ export interface SocialConfig {
 
 export interface OrganizationSchema {
   '@type': string;
+  '@id'?: string;
   name: string;
   url: string;
   logo: string;
@@ -76,7 +79,7 @@ export const defaultSEO: SEOConfig = {
     'candid dating photos'
   ],  
   author: 'Unrealshot AI',
-  siteUrl: process.env.NEXT_PUBLIC_APP_URL || 'https://www.unrealshot.com',
+  siteUrl: getSiteUrl(),
   siteName: 'Unrealshot AI',
   locale: 'en_US',
   type: 'website',
@@ -101,25 +104,13 @@ export const socialConfig: SocialConfig = {
 // Organization Schema for Structured Data
 export const organizationSchema: OrganizationSchema = {
   '@type': 'Organization',
+  '@id': `${defaultSEO.siteUrl}/#organization`,
   name: 'Unrealshot AI',
   url: defaultSEO.siteUrl,
-  logo: `${defaultSEO.siteUrl}/logo.png`, // Ensure this path is correct
+  logo: `${defaultSEO.siteUrl}/site-logo.png`,
   description: defaultSEO.description,
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: 'Sadabad',
-    addressLocality: 'Sadabad',
-    addressRegion: 'Hathras, UP',
-    postalCode: '281306',
-    addressCountry: 'IN',
-  },
-  contactPoint: {
-    '@type': 'ContactPoint',
-    contactType: 'customer service',
-    email: 'support@unrealshot.com', // Replace with your support email
-  },
   sameAs: [
-    'https://x.com/unrealshotai', // Replace with your actual social links
+    'https://x.com/unrealshotai',
     'https://instagram.com/unrealshotai',
   ],
 };
@@ -326,7 +317,7 @@ export const openGraphImages = {
     alt: defaultSEO.title,
   },
   logo: {
-    url: `${defaultSEO.siteUrl}/logo.png`,
+    url: `${defaultSEO.siteUrl}/site-logo.png`,
     width: 400,
     height: 400,
     alt: `${defaultSEO.siteName} Logo`,
@@ -340,9 +331,13 @@ export const robotsConfig = {
     allow: '/',
     disallow: [
       '/api/',
+      '/dashboard',
       '/dashboard/',
+      '/account',
       '/account/',
+      '/settings',
       '/settings/',
+      '/admin',
       '/admin/',
       '/landing-draft',
     ],

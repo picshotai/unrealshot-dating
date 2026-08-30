@@ -1,11 +1,24 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import createMiddleware from 'next-intl/middleware'
 import {
   readStage,
   setStage,
   REQUIRED_SAMPLES,
   type OnboardingStage,
 } from '@/lib/auth/stage'
+import {
+  isPublicPathname,
+  isBlogPathname,
+  isLocaleRoutedPublicPathname,
+  isPublishedBlogLocale,
+  isPublishedPublicLocale,
+  localizePublicPathname,
+  splitLocalePathname,
+} from '@/i18n/config'
+import { routing } from '@/i18n/routing'
+
+const handleI18nRouting = createMiddleware(routing)
 
 /** Signed-in users have no business here; they belong in the studio or onboarding. */
 const ENTRY_ROUTES = ['/login', '/dashboard']
@@ -32,7 +45,7 @@ function matches(pathname: string, routes: string[]) {
   return routes.some((route) => pathname === route || pathname.startsWith(`${route}/`))
 }
 
-export async function proxy(request: NextRequest) {
+async function runAuthProxy(request: NextRequest) {
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -199,6 +212,71 @@ export async function proxy(request: NextRequest) {
   }
 
   return response
+}
+
+function isRedirectResponse(response: NextResponse) {
+  return response.status >= 300 && response.status < 400 && response.headers.has('location')
+}
+
+function copyResponseCookies(source: NextResponse, target: NextResponse) {
+  for (const cookie of source.cookies.getAll()) {
+    target.cookies.set(cookie)
+  }
+}
+
+/**
+ * Compose locale routing with the existing Supabase session proxy. Auth owns
+ * redirects and cookie rotation; next-intl owns only the explicitly public
+ * route surface. Product, auth and API URLs therefore remain unprefixed.
+ */
+export async function proxy(request: NextRequest) {
+  const authResponse = await runAuthProxy(request)
+
+  if (isRedirectResponse(authResponse)) {
+    return authResponse
+  }
+
+  // The application locale is `pt-BR`, but its public URL prefix is the
+  // canonical lowercase `/pt-br`. Because `[locale]` is a dynamic segment,
+  // protect the non-canonical casing before Next can serve it directly.
+  const nonCanonicalPtBrPrefix = '/pt-BR'
+  if (
+    request.nextUrl.pathname === nonCanonicalPtBrPrefix ||
+    request.nextUrl.pathname.startsWith(`${nonCanonicalPtBrPrefix}/`)
+  ) {
+    const publicPathname = request.nextUrl.pathname.slice(nonCanonicalPtBrPrefix.length) || '/'
+    if (isPublicPathname(publicPathname)) {
+      const canonicalUrl = request.nextUrl.clone()
+      canonicalUrl.pathname = localizePublicPathname(publicPathname, 'pt-BR')
+      const canonicalResponse = NextResponse.redirect(canonicalUrl, 308)
+      copyResponseCookies(authResponse, canonicalResponse)
+      return canonicalResponse
+    }
+  }
+
+  if (!isLocaleRoutedPublicPathname(request.nextUrl.pathname)) {
+    return authResponse
+  }
+
+  const localePath = splitLocalePathname(request.nextUrl.pathname)
+
+  if (
+    (localePath.hadLocalePrefix && !isPublishedPublicLocale(localePath.locale)) ||
+    (isBlogPathname(localePath.pathname) && !isPublishedBlogLocale(localePath.locale))
+  ) {
+    const notFoundUrl = request.nextUrl.clone()
+    notFoundUrl.pathname = '/_not-found'
+    notFoundUrl.search = ''
+
+    const notFoundResponse = NextResponse.rewrite(notFoundUrl, { status: 404 })
+    notFoundResponse.headers.set('x-robots-tag', 'noindex, nofollow')
+    copyResponseCookies(authResponse, notFoundResponse)
+    return notFoundResponse
+  }
+
+  const i18nResponse = handleI18nRouting(request)
+  copyResponseCookies(authResponse, i18nResponse)
+  return i18nResponse
 }
 
 export const config = {

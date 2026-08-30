@@ -1,3 +1,7 @@
+/** @deprecated Import the canonical locale-aware client from `./wordpress-cms`. */
+export * from "./wordpress-cms"
+
+/*
 interface WordPressPost {
   id: string
   title: string
@@ -296,10 +300,10 @@ export function extractExcerpt(content: string, length: number = 160): string {
     : textContent
 }
 
-/**
+//
  * Clean WordPress excerpt by removing "Read more" links and other auto-generated content.
  * Returns empty string if excerpt is only auto-generated boilerplate.
- */
+//
 export function cleanWordPressExcerpt(excerpt: string): string {
   if (!excerpt) return ''
 
@@ -323,10 +327,10 @@ export function cleanWordPressExcerpt(excerpt: string): string {
   return text
 }
 
-/**
+//
  * Check if WordPress post has a native/custom excerpt (not auto-generated from content).
  * WordPress auto-generated excerpts typically end with "Read more" or are truncated from content.
- */
+//
 export function hasNativeExcerpt(post: WordPressPost): boolean {
   if (!post.excerpt) return false
 
@@ -337,3 +341,4 @@ export function hasNativeExcerpt(post: WordPressPost): boolean {
 }
 
 export type { WordPressPost }
+*/

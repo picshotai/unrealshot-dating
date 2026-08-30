@@ -17,6 +17,7 @@ import {
   type SEOConfig,
   pageSEO,
 } from '@/config/seo';
+import { serializeJsonLd } from '@/lib/json-ld';
 
 export interface PageSEOProps {
   title?: string;
@@ -126,7 +127,7 @@ export function generateMetadata(props: PageSEOProps = {}): Metadata {
  * Generate JSON-LD structured data
  */
 export function generateJsonLd(schema: Record<string, any> | Record<string, any>[]): string {
-  return JSON.stringify(schema, null, 0);
+  return serializeJsonLd(schema);
 }
 
 /**
@@ -206,7 +207,7 @@ export function generateWebApplicationJsonLd(props?: { title?: string; descripti
       "name": "Unrealshot AI",
       "logo": {
         "@type": "ImageObject",
-        "url": `${process.env.NEXT_PUBLIC_APP_URL}/site-logo.png`
+        "url": `${defaultSEO.siteUrl}/site-logo.png`
       }
     },
     "offers": [

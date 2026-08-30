@@ -2,34 +2,12 @@
 
 import type React from "react"
 import { XCircle, CheckCircle } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 export default function TheVerdictFinal() {
-  const traditionalPainPoints = [
-    "Different version of you in every photo",
-    "Random lifestyles you do not actually live",
-    "Outfits that make no sense together",
-    "Every image feels deliberately generated",
-    "Too many polished portraits and not enough real moments",
-    "Photos look like they came from different people, places and days",
-    "Nothing gives someone a feel for what being around you is actually like",
-    "You still have to figure out which six photos make a good profile",
-    "Hundreds of images to sort through",
-    "The final profile can still feel fake even when individual photos look good",
-  ];
-
-  const unrealshotSolutions = [
-    "One recognizable version of you throughout",
-    "Shoots based around things that actually fit your life",
-    "4 photos from the same place, outfit and moment",
-    "A mix of close-ups, full-body shots, candids and lifestyle photos",
-    "Photos that look like someone was actually there taking them",
-    "Different moods and situations without looking like different people",
-    "Enough variety to show more than just your face",
-    "Photos that naturally give people things to ask you about",
-    "15 complete shoots for a total of 60 photos",
-    "Enough strong options to build a believable six-photo profile",
-    "15 Photo Retakes if an individual image misses",
-  ];
+  const t = useTranslations("Home.comparison");
+  const traditionalPainPoints = t.raw("randomPoints") as string[];
+  const unrealshotSolutions = t.raw("solutions") as string[];
 
   return (
     <section className="relative mx-auto py-16 sm:py-24 overflow-hidden bg-[#F7F5F3]">
@@ -37,11 +15,11 @@ export default function TheVerdictFinal() {
         {/* Header */}
         <div className="text-center mb-10 sm:mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-5xl mx-auto font-bold mb-4 font-[var(--font-inter-tight)] tracking-tight leading-[1.08] text-gray-900">
-            Good photos still need to <span className="text-[#ff6f00]">belong together.</span>
+            {t("title")} <span className="text-[#ff6f00]">{t("titleAccent")}</span>
           </h2>
 
           <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            They should look like the same person, living the same life, across different real moments. Not like a stack of unrelated AI generations.
+            {t("description")}
           </p>
         </div>
 
@@ -52,7 +30,7 @@ export default function TheVerdictFinal() {
             <div className="p-4 sm:p-6 flex flex-col justify-between">
               <div>
                 <h3 className="text-xl text-center font-bold text-gray-500 mb-6">
-                  Random AI Photo Packs
+                  {t("randomTitle")}
                 </h3>
                 <div className="p-4 sm:p-6 border border-dashed border-gray-300 rounded-2xl bg-gray-50/50">
                   <ul className="space-y-3.5">
@@ -67,10 +45,10 @@ export default function TheVerdictFinal() {
                   </ul>
                   <div className="mt-8 pt-6 border-t border-gray-200">
                     <p className="text-xs font-mono uppercase tracking-wider text-gray-400 mb-1">
-                      THE OUTCOME
+                      {t("outcomeLabel")}
                     </p>
                     <p className="text-xl sm:text-2xl font-bold text-gray-700">
-                      Looks like an AI folder.
+                      {t("randomOutcome")}
                     </p>
                   </div>
                 </div>
@@ -81,7 +59,7 @@ export default function TheVerdictFinal() {
             <div className="p-4 sm:p-6 flex flex-col justify-between">
               <div>
                 <h3 className="text-center text-xl font-bold text-[#ff6f00] mb-6">
-                  UnrealShot AI
+                  {t("unrealshotTitle")}
                 </h3>
                 <div className="p-4 sm:p-6 bg-zinc-950 border border-dashed border-zinc-700 rounded-2xl shadow-xl">
                   <ul className="space-y-3.5">
@@ -96,10 +74,10 @@ export default function TheVerdictFinal() {
                   </ul>
                   <div className="mt-8 pt-6 border-t border-zinc-800">
                     <p className="text-xs font-mono uppercase tracking-wider text-[#ff6f00] mb-1">
-                      THE OUTCOME
+                      {t("outcomeLabel")}
                     </p>
                     <p className="text-xl sm:text-2xl font-bold text-white">
-                      Exactly you, but Better.
+                      {t("unrealshotOutcome")}
                     </p>
                   </div>
                 </div>
