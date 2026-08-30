@@ -6,7 +6,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
 export default function PricingCards() {
-  const LightCheckIcon = ({ className }: { className?: string }) => (
+  const DarkCheckIcon = ({ className }: { className?: string }) => (
     <svg
       className={className}
       width="16"
@@ -15,8 +15,8 @@ export default function PricingCards() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle cx="8" cy="8" r="8" fill="#111827" />
-      <path d="M5.5 8.5L7 10L11 6" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="8" cy="8" r="7.5" fill="#27272a" stroke="#ff6f00" strokeWidth="1" />
+      <path d="M5.5 8.5L7 10L11 6" stroke="#ff6f00" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 
@@ -39,52 +39,52 @@ export default function PricingCards() {
   ]
 
   return (
-    <section id="pricing" className="relative mx-auto py-16 sm:py-24 overflow-hidden bg-[#F7F5F3] px-4">
+    <section id="pricing" className="relative mx-auto py-16 sm:py-24 overflow-hidden bg-[#111111] px-4">
       <div className="w-full max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-10 sm:mb-12">
           <p className="text-orange-500 font-bold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
             SIMPLE, TRANSPARENT PRICING
           </p>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl max-w-4xl mx-auto font-bold mb-4 font-[var(--font-inter-tight)] tracking-tight leading-[1.08] text-gray-900">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl max-w-4xl mx-auto font-bold mb-4 font-[var(--font-inter-tight)] tracking-tight leading-[1.08] text-white">
             Your entire dating profile shoot. <br />
             <span className="text-[#ff6f00]">$39 once.</span>
           </h2>
-          <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-normal mb-1 font-medium">
+          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-normal mb-1 font-medium">
             You don&apos;t need 200 photos. You need six good ones that belong together.
           </p>
-          <p className="text-base md:text-lg text-gray-500 max-w-2xl mx-auto leading-tight">
+          <p className="text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-tight">
             We&apos;re giving you 60 so you can choose them.
           </p>
         </div>
 
         {/* Master Split Card with Left and Right Panes */}
-        <div className="max-w-6xl mx-auto bg-white rounded-3xl border-2 border-dashed border-gray-200 shadow-2xl shadow-gray-200/60 p-2.5 sm:p-4">
+        <div className="max-w-6xl mx-auto bg-[#161616] rounded-3xl border-2 border-dashed border-zinc-800 shadow-2xl p-2.5 sm:p-4">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 items-stretch">
             {/* Left Pane: What's Included */}
-            <div className="lg:col-span-7 p-6 sm:p-8 flex flex-col justify-between border border-dashed border-gray-300 rounded-2xl bg-gray-50/50">
+            <div className="lg:col-span-7 p-6 sm:p-8 flex flex-col justify-between border border-dashed border-zinc-700/60 rounded-2xl bg-[#1c1c1c]">
               <div>
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-[#ff6f00]/10 text-[#ff6f00] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                  <span className="bg-[#ff6f00]/15 text-[#ff6f00] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                     Full Profile Shoot
                   </span>
-                  <span className="bg-gray-200 text-gray-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                  <span className="bg-zinc-800 text-zinc-300 text-xs font-semibold px-2.5 py-1 rounded-full border border-zinc-700">
                     Most Popular
                   </span>
                 </div>
 
-                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-2">
+                <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-2">
                   Everything You Need for a Winning Profile
                 </h3>
-                <p className="text-gray-600 text-sm sm:text-base leading-relaxed mb-6">
-                  15 believable shoots with 4 frames each, designed to build a complete dating profile from scratch, plus 15 Photo Retakes included so you never settle.
+                <p className="text-zinc-400 text-sm sm:text-base leading-relaxed mb-6">
+                  15 believable shoots with 4 frames each, designed to build a complete dating profile from scratch, plus 15 free Photo Retakes included so you never settle.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3.5 gap-x-4 mb-6">
                   {features.map((feature) => (
                     <div key={feature} className="flex items-start gap-2.5">
-                      <LightCheckIcon className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-700 text-sm font-medium leading-snug">
+                      <DarkCheckIcon className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                      <span className="text-zinc-200 text-sm font-medium leading-snug">
                         {feature}
                       </span>
                     </div>
@@ -92,16 +92,16 @@ export default function PricingCards() {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-zinc-800">
                 <div className="flex items-center justify-between text-xs sm:text-sm">
-                  <span className="text-gray-500 font-mono uppercase">THE DELIVERABLE:</span>
-                  <span className="font-bold text-gray-900">60 Photos (15 Shoots) · 15 Retakes</span>
+                  <span className="text-zinc-400 font-mono uppercase">THE DELIVERABLE:</span>
+                  <span className="font-bold text-white">60 Photos (15 Shoots) · 15 Retakes</span>
                 </div>
               </div>
             </div>
 
             {/* Right Pane: Dark Checkout & Shoot Preview */}
-            <div className="lg:col-span-5 p-6 sm:p-8 bg-zinc-950 border border-dashed border-zinc-700 rounded-2xl shadow-xl flex flex-col justify-between text-center">
+            <div className="lg:col-span-5 p-6 sm:p-8 bg-black border border-dashed border-zinc-800 rounded-2xl shadow-xl flex flex-col justify-between text-center">
               <div>
                 <p className="text-xs font-mono uppercase tracking-wider text-[#ff6f00] mb-2 font-semibold">
                   ONE-TIME INVESTMENT
@@ -165,10 +165,10 @@ export default function PricingCards() {
         </div>
 
         {/* Security / Trust Footer */}
-        <p className="text-center text-gray-600 text-sm sm:text-base leading-relaxed mt-8 flex items-center justify-center gap-1.5">
+        <p className="text-center text-zinc-400 text-sm sm:text-base leading-relaxed mt-8 flex items-center justify-center gap-1.5">
           <Shield className="w-4 h-4 text-[#ff6f00] inline-block mr-1" />
           Payments are processed securely with
-          <Image src="/dodo-logo.png" alt="dodopayments" width={96} height={96} className="inline-block ml-1 bg-black px-1.5 py-0.5 rounded" />
+          <Image src="/dodo-logo.png" alt="dodopayments" width={96} height={96} className="inline-block ml-1 bg-black px-1.5 py-0.5 rounded border border-zinc-800" />
         </p>
       </div>
     </section>

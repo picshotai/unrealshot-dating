@@ -279,7 +279,7 @@ export default function HowItWorksShowcase() {
             Get 15 complete shoots
           </h3>
           <p className="text-center text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            Receive 60 photos organized into coherent 4-shot scenes. Pick your favorite 6 for Tinder, Hinge, or Bumble with 15 Photo Retakes included.
+            Receive 60 photos organized into coherent 4-shot scenes. Pick your favorite 6 for Tinder, Hinge, or Bumble with 15 free Photo Retakes included.
           </p>
           <div className="animate-fadeIn container mx-auto pt-10">
             <Carousal images={humans} />
