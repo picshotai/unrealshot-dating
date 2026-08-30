@@ -151,6 +151,7 @@ function Header() {
     { name: "Features", link: "/#features" },
     { name: "How it works", link: "/#how-it-works" },
     { name: "Shoot Packs", link: "/#style-packs" },
+    { name: "Pricing", link: "/pricing" },
     { name: "Blog", link: "/blog" },
   ]
 

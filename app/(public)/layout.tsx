@@ -1,5 +1,4 @@
 import type React from "react"
-import { Cursor } from "@/components/pfplanding/ui/Cursor"
 
 export default function PublicLayout({
     children,
@@ -7,9 +6,7 @@ export default function PublicLayout({
     children: React.ReactNode
 }) {
     return (
-        <div className="theme-public relative min-h-screen cursor-none font-mono selection:bg-accent selection:text-foreground">
-            <div className="grain"></div>
-            <Cursor />
+        <div className="relative min-h-screen cursor-auto font-[family-name:var(--font-inter)] bg-[#F7F5F3] text-gray-900 selection:bg-[#ff6f00]/20 selection:text-gray-900">
             {children}
         </div>
     )

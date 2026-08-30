@@ -1,148 +1,95 @@
 import { Metadata } from 'next'
-import { Navbar } from '@/components/pfplanding/Navbar'
-import { Footer } from '@/components/pfplanding/Footer'
+import PublicHeader from '@/components/Header'
+import Footer from '@/components/main-landing/Footer'
 import { generateBreadcrumbJsonLd, generateMetadata } from '@/lib/seo'
 import { MultipleStructuredData } from '@/components/seo/StructuredData'
 import { seoUtils } from '@/config/seo'
+import Link from 'next/link'
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Terms of Service',
-  description: 'Review the terms and conditions for using UnrealShot AI, our AI headshot generator service.',
+  title: 'Terms of Service | UnrealShot AI Dating Photography',
+  description: 'Review the terms and conditions for using UnrealShot AI dating photoshoot generator services.',
   canonical: '/terms',
 })
 
 export default function TermsOfService() {
   return (
-    <div className="theme-public min-h-screen bg-background text-foreground">
-      <Navbar />
-      <main className="pt-20 md:pt-24">
+    <div className="min-h-screen bg-[#F7F5F3] font-[family-name:var(--font-inter)] text-gray-900">
+      <PublicHeader />
+      <main className="pt-20 md:pt-24 pb-16">
         {/* Hero */}
-        <section className="border-b border-foreground/10">
-          <div className="max-w-5xl mx-auto px-4 py-12 text-center">
-            <div className="font-mono text-xs text-foreground/40 mb-4">
-              LEGAL // TERMS_OF_SERVICE
-            </div>
-            <h1 className="font-display text-4xl sm:text-5xl font-bold uppercase leading-[0.95] mb-3">
-              Terms of<br />
-              <span className="text-foreground/30">Service.</span>
-            </h1>
-            <p className="font-mono text-foreground/60 text-sm">
-              Review the terms and conditions for using UnrealShot AI.
-            </p>
-          </div>
+        <section className="px-4 py-16 sm:py-20 max-w-5xl mx-auto text-center">
+          <p className="text-orange-500 font-bold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
+            LEGAL &amp; COMPLIANCE
+          </p>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-[var(--font-inter-tight)] tracking-tight leading-[1.08] text-gray-900 mb-4 max-w-4xl mx-auto">
+            Terms of Service
+          </h1>
+          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
+            Please read these Terms of Service carefully before purchasing or using UnrealShot AI services.
+          </p>
         </section>
 
         {/* Content */}
-        <section className="max-w-5xl mx-auto px-4 py-12">
-          <div className="space-y-8 bg-[#0a0a0a] border border-foreground/10 rounded-lg p-6 md:p-8">
+        <section className="max-w-5xl mx-auto px-4 pb-16">
+          <div className="bg-white rounded-3xl border border-gray-200/80 shadow-[0_12px_50px_-15px_rgba(0,0,0,0.08)] p-8 sm:p-12 space-y-8">
+            <p className="text-gray-500 text-xs font-mono">Last Updated: January 1, 2025</p>
+
             <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">1. Introduction</h2>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                Welcome to <strong className="text-foreground">UnrealShot AI</strong> ("we," "our," "us"). By accessing or using our website at
-                <a href="https://www.unrealshot.com" className="text-accent hover:underline ml-1">unrealshot.com</a>
-                ("Site"), you agree to comply with and be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use the Site.
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">1. Introduction &amp; Acceptance</h2>
+              <p className="text-gray-700 text-sm sm:text-base leading-relaxed">
+                Welcome to <strong className="text-gray-900">UnrealShot AI</strong> (&ldquo;we,&rdquo; &ldquo;our,&rdquo; &ldquo;us&rdquo;). By accessing our website (<a href="https://www.unrealshot.com" className="text-[#ff6f00] font-semibold hover:underline">unrealshot.com</a>) and purchasing our AI dating photoshoot services, you agree to comply with and be bound by these Terms of Service. If you disagree with any part of these terms, please do not use our services.
               </p>
             </div>
 
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">2. Use of Our Service</h2>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                <strong className="text-foreground">UnrealShot AI</strong> is an AI-powered headshot generator that allows users to create professional images.
-                Users must adhere to all applicable laws and agree not to misuse our services. Any violations of these rules can result in the termination of access to the platform.
+            <div className="border-t border-gray-100 pt-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">2. Description of Service</h2>
+              <p className="text-gray-700 text-sm sm:text-base leading-relaxed">
+                UnrealShot AI provides an advanced AI photography engine designed specifically for personal dating profiles (Tinder, Hinge, Bumble, Feeld, and similar platforms). Users upload 4–6 clear reference selfies to generate 15 distinct, high-resolution dating shoots (totaling 60 photos, with 4 cohesive angles and crops per shoot).
               </p>
             </div>
 
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">3. Account and User Responsibilities</h2>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                To access certain features of the Site, you may need to create an account. You agree to provide accurate and complete information when registering and to keep this information updated.
-                Users are responsible for maintaining the confidentiality of their account details and for all activities under their account.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">4. Payment and Credits</h2>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                <strong className="text-foreground">UnrealShot AI</strong> operates on a credit-based system for using our services. All purchases of credits are final and non-refundable, except as specified in our
-                <a href="/refund-policy" className="text-accent hover:underline ml-1">Refund Policy</a>.
-                We reserve the right to modify pricing and the terms of credits at any time.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">5. Data Retention and Deletion</h2>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                We value your privacy. Data, including photos and generated headshots, is stored for a period of 14 days, after which it is permanently deleted. Users may request the deletion of their data at any time by contacting us at
-                <a href="mailto:support@unrealshot.com" className="text-accent hover:underline ml-1">support@unrealshot.com</a>.
-                For more information, please review our
-                <a href="/privacy-policy" className="text-accent hover:underline ml-1">Privacy Policy</a>.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">6. Third-Party Services</h2>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                <strong className="text-foreground">UnrealShot AI</strong> uses third-party services, including <strong className="text-foreground">FAL.ai</strong> for AI image generation. By using our service, you agree to be bound by the terms and policies of these third parties.
-                Please review <strong className="text-foreground">FAL.ai's</strong> terms at
-                <a href="https://fal.ai/terms" className="text-accent hover:underline ml-1">FAL.ai Terms of Service</a>.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">7. Limitation of Liability</h2>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                To the maximum extent permitted by law, <strong className="text-foreground">UnrealShot AI</strong> and its affiliates shall not be liable for any indirect, incidental, special, or consequential damages arising out of or in connection with your use of our services.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">8. Changes to the Terms</h2>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                We reserve the right to update these Terms at any time. Any changes will be posted on this page, with the updated date. Continued use of the Site after any changes constitutes acceptance of those changes.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">9. Contact Us</h2>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                If you have any questions about these Terms, please contact us at
-                <a href="mailto:support@unrealshot.com" className="text-accent hover:underline ml-1">support@unrealshot.com</a>.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">10. Shipping Policy</h2>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                UnrealShot AI provides a fully digital service. No physical products are shipped as part of our offerings. All generated images and digital assets are delivered directly to the user's dashboard on our platform. Once a photoshoot is complete, users can download their generated images from the dashboard at any time. Since all products are digital, there are no shipping fees, and delivery is instant upon generation completion.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">11. Affiliate Program Disclosure</h2>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed mb-4">
-                We offer an affiliate program that allows users to earn rewards by referring others to <strong className="text-foreground">UnrealShot AI</strong>. By participating in the affiliate program, you agree to the following terms:
-              </p>
-              <ul className="space-y-2 font-mono text-sm text-foreground/70">
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-accent mr-3 mt-1.5 flex-shrink-0"></span>
-                  <span><strong className="text-foreground">Referral Tracking:</strong> We may use affiliate tracking cookies to monitor referrals. When someone clicks your referral link and signs up, we track the referral to attribute the reward.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-accent mr-3 mt-1.5 flex-shrink-0"></span>
-                  <span><strong className="text-foreground">Earnings & Payouts:</strong> Affiliate earnings will be credited to your account according to our program's rules. You can view your earnings and program details in your affiliate dashboard. Payment terms, minimum payout thresholds, and related conditions may apply.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-accent mr-3 mt-1.5 flex-shrink-0"></span>
-                  <span><strong className="text-foreground">Prohibited Practices:</strong> You agree not to engage in deceptive, fraudulent, or unethical practices (e.g., spamming, misleading claims) to generate referrals. Any violation may result in suspension or termination of your affiliate privileges and forfeiture of any unpaid earnings.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-accent mr-3 mt-1.5 flex-shrink-0"></span>
-                  <span><strong className="text-foreground">Taxes:</strong> You are responsible for complying with applicable tax laws and regulations on any income earned through the affiliate program.</span>
-                </li>
+            <div className="border-t border-gray-100 pt-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">3. Pricing, Payments &amp; Photo Retakes</h2>
+              <ul className="space-y-3 text-sm text-gray-700 list-disc list-inside">
+                <li><strong className="text-gray-900">One-Time Pricing:</strong> The full dating package is a one-time payment of $39. We do not charge recurring subscriptions or hidden membership fees.</li>
+                <li><strong className="text-gray-900">15 Photo Retakes Included:</strong> Every package includes 15 single-photo retakes to replace any frame with adjusted prompts and pose directions.</li>
+                <li><strong className="text-gray-900">Refund Policy:</strong> In the event of system errors or unrecoverable generation failures, purchases are covered under our <Link href="/refund-policy" className="text-[#ff6f00] font-semibold hover:underline">Refund Policy</Link>.</li>
               </ul>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed mt-4">
-                We reserve the right to modify or terminate the affiliate program at any time. Please contact us at
-                <a href="mailto:support@unrealshot.com" className="text-accent hover:underline ml-1">support@unrealshot.com</a> if you have any questions about the affiliate program.
+            </div>
+
+            <div className="border-t border-gray-100 pt-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">4. Intellectual Property &amp; Commercial Ownership</h2>
+              <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-3">
+                You retain all rights to the reference photos you upload. Upon generation and delivery, you receive full, perpetual, worldwide ownership and commercial license to use, publish, crop, and display your generated dating photos anywhere online or in print.
+              </p>
+            </div>
+
+            <div className="border-t border-gray-100 pt-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">5. User Conduct &amp; Prohibited Content</h2>
+              <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-3">
+                You agree not to upload photos of minors, photos of third parties without their explicit legal consent, or content depicting illegal acts, non-consensual material, or severe harm. Violation of this rule results in immediate permanent account termination and forfeiture of access.
+              </p>
+            </div>
+
+            <div className="border-t border-gray-100 pt-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">6. Digital Delivery &amp; Turnaround</h2>
+              <p className="text-gray-700 text-sm sm:text-base leading-relaxed">
+                UnrealShot AI is 100% digital. No physical prints or items are shipped. Generated photos are delivered directly to your secure user dashboard within 30–60 minutes following selfie submission.
+              </p>
+            </div>
+
+            <div className="border-t border-gray-100 pt-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">7. Limitation of Liability</h2>
+              <p className="text-gray-700 text-sm sm:text-base leading-relaxed">
+                To the maximum extent permitted by applicable law, UnrealShot AI and its operators shall not be liable for any indirect, incidental, or consequential damages arising out of your use of our platform or results obtained on dating applications.
+              </p>
+            </div>
+
+            <div className="border-t border-gray-100 pt-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">8. Contact Us</h2>
+              <p className="text-gray-700 text-sm sm:text-base leading-relaxed">
+                If you have questions about these Terms, please contact our support team at <a href="mailto:support@unrealshot.com" className="text-[#ff6f00] font-semibold hover:underline">support@unrealshot.com</a>.
               </p>
             </div>
           </div>

@@ -1,152 +1,73 @@
 import { Metadata } from 'next'
-import { Navbar } from '@/components/pfplanding/Navbar'
-import { Footer } from '@/components/pfplanding/Footer'
+import PublicHeader from '@/components/Header'
+import Footer from '@/components/main-landing/Footer'
 import { generateBreadcrumbJsonLd, generateMetadata } from '@/lib/seo'
 import { MultipleStructuredData } from '@/components/seo/StructuredData'
 import { seoUtils } from '@/config/seo'
 
 export const metadata: Metadata = generateMetadata({
-  title: 'Refund Policy',
+  title: 'Refund Policy | UnrealShot AI Dating Photography',
   description:
-    'Read about our refund policy for AI-generated headshots at UnrealShot AI, including eligibility and refund process details.',
+    'Read about our refund policy, 15 photo retakes guarantee, and customer satisfaction commitments at UnrealShot AI.',
   canonical: '/refund-policy',
 })
 
 export default function RefundPolicy() {
   return (
-    <div className="theme-public min-h-screen bg-background text-foreground">
-      <Navbar />
-      <main className="pt-20 md:pt-24">
+    <div className="min-h-screen bg-[#F7F5F3] font-[family-name:var(--font-inter)] text-gray-900">
+      <PublicHeader />
+      <main className="pt-20 md:pt-24 pb-16">
         {/* Hero */}
-        <section className="border-b border-foreground/10">
-          <div className="max-w-5xl mx-auto px-4 py-12 text-center">
-            <div className="font-mono text-xs text-foreground/40 mb-4">
-              LEGAL // REFUND_POLICY
-            </div>
-            <h1 className="font-display text-4xl sm:text-5xl font-bold uppercase leading-[0.95] mb-3">
-              Refund<br />
-              <span className="text-foreground/30">Policy.</span>
-            </h1>
-            <p className="font-mono text-foreground/60 text-sm">
-              Understand when and how refunds may be issued for UnrealShot AI services.
-            </p>
-          </div>
+        <section className="px-4 py-16 sm:py-20 max-w-5xl mx-auto text-center">
+          <p className="text-orange-500 font-bold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
+            CUSTOMER GUARANTEE
+          </p>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-[var(--font-inter-tight)] tracking-tight leading-[1.08] text-gray-900 mb-4 max-w-4xl mx-auto">
+            Refund &amp; Retake Policy
+          </h1>
+          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
+            We are committed to delivering believable, high-performing dating photos you feel proud to use.
+          </p>
         </section>
 
         {/* Content */}
-        <section className="max-w-5xl mx-auto px-4 py-12">
-          <div className="space-y-8 bg-[#0a0a0a] border border-foreground/10 rounded-lg p-6 md:p-8">
+        <section className="max-w-5xl mx-auto px-4 pb-16">
+          <div className="bg-white rounded-3xl border border-gray-200/80 shadow-[0_12px_50px_-15px_rgba(0,0,0,0.08)] p-8 sm:p-12 space-y-8">
+            <p className="text-gray-500 text-xs font-mono">Last Updated: January 1, 2025</p>
+
             <div>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                Thank you for choosing our{' '}
-                <a href="https://www.unrealshot.com" className="text-accent hover:underline">AI Photoshoot generator</a>{' '}
-                service. We strive to provide the best experience for our users. Please review our refund policy below to understand the circumstances under which refunds may be issued.
+              <p className="text-gray-700 text-base leading-relaxed">
+                Thank you for choosing <strong className="text-gray-900">UnrealShot AI</strong>. Generating high-quality AI dating photos requires significant GPU computational resources, but our primary mission is making sure you get authentic photos that accurately represent your real-life likeness.
               </p>
             </div>
 
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">1. Refund Scenarios</h2>
-              <ul className="space-y-3 font-mono text-sm text-foreground/70">
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-accent mr-3 mt-1.5 flex-shrink-0"></span>
-                  <span><strong className="text-foreground">Technical Issues or Errors:</strong> If you encounter technical problems that prevent you from receiving our service—such as the AI failing to generate headshots or producing unusable results—you may be eligible for a refund.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-accent mr-3 mt-1.5 flex-shrink-0"></span>
-                  <span><strong className="text-foreground">Service Not Delivered:</strong> If you have paid for headshots but did not receive them, you are entitled to a refund.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-accent mr-3 mt-1.5 flex-shrink-0"></span>
-                  <span><strong className="text-foreground">Duplicate Charges:</strong> If you are accidentally charged more than once for the same service, we will issue a refund for the duplicate charge.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-accent mr-3 mt-1.5 flex-shrink-0"></span>
-                  <span><strong className="text-foreground">Unsatisfactory Results:</strong> Refunds for dissatisfaction with the quality of headshots are handled on a case-by-case basis. As the output is subjective, please contact us to discuss your concerns.</span>
-                </li>
+            <div className="border-t border-gray-100 pt-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">1. Built-In 15 Photo Retakes</h2>
+              <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-3">
+                Every purchase of the $39 dating package includes <strong>15 free individual Photo Retakes</strong>. If a specific frame has an awkward pose, angle, or facial expression, click &ldquo;Retake Photo&rdquo; directly on that image to regenerate a fresh version without having to restart your entire photoshoot.
+              </p>
+            </div>
+
+            <div className="border-t border-gray-100 pt-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">2. Eligible Refund Scenarios</h2>
+              <ul className="space-y-3 text-sm text-gray-700 list-disc list-inside">
+                <li><strong className="text-gray-900">Technical System Failures:</strong> If an unforeseen server error prevents your 15 shoots from completing generation or rendering, you are eligible for an immediate full refund.</li>
+                <li><strong className="text-gray-900">Duplicate Billing:</strong> If you were accidentally charged more than once for a single order, the duplicate transaction will be refunded immediately.</li>
+                <li><strong className="text-gray-900">Non-Delivery:</strong> If your order does not complete processing within 24 hours of valid selfie submission and our support team cannot deliver your photos, a full refund will be granted.</li>
               </ul>
             </div>
 
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">2. Refund Timeframe</h2>
-              <ul className="space-y-3 font-mono text-sm text-foreground/70">
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-foreground/40 mr-3 mt-1.5 flex-shrink-0"></span>
-                  <span><strong className="text-foreground">Request Period:</strong> You may request a refund within 7 days of your purchase.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-foreground/40 mr-3 mt-1.5 flex-shrink-0"></span>
-                  <span><strong className="text-foreground">Processing Time:</strong> Once a refund is approved, it will be processed within 3 to 7 business days. Please allow additional time for the refund to reflect in your account.</span>
-                </li>
-              </ul>
+            <div className="border-t border-gray-100 pt-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">3. Request Timeframe &amp; Processing</h2>
+              <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-3">
+                Refund requests must be submitted within <strong>7 days</strong> of the initial purchase date. Approved refunds are credited directly back to the original payment method through Dodo Payments within 3–7 business days.
+              </p>
             </div>
 
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">3. Conditions for Refunds</h2>
-              <ul className="space-y-3 font-mono text-sm text-foreground/70">
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-foreground/40 mr-3 mt-1.5 flex-shrink-0"></span>
-                  <span><strong className="text-foreground">Original Payment Method:</strong> Refunds will be issued to the original payment method used for the purchase.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-foreground/40 mr-3 mt-1.5 flex-shrink-0"></span>
-                  <span><strong className="text-foreground">Partial Refunds:</strong> Partial refunds may be offered if part of the service has been delivered or used.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-foreground/40 mr-3 mt-1.5 flex-shrink-0"></span>
-                  <div>
-                    <strong className="text-foreground">Non-Refundable Situations:</strong>
-                    <ul className="mt-2 space-y-2">
-                      <li className="flex items-start">
-                        <span className="w-1 h-1 bg-foreground/30 mr-2 mt-1.5 flex-shrink-0"></span>
-                        <span>Changes of mind after the service has been delivered.</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-1 h-1 bg-foreground/30 mr-2 mt-1.5 flex-shrink-0"></span>
-                        <span>Refund requests made outside the 7-day request period.</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-1 h-1 bg-foreground/30 mr-2 mt-1.5 flex-shrink-0"></span>
-                        <span>Issues beyond our control, such as dissatisfaction due to unrealistic expectations or failure to follow guidelines for uploading photos.</span>
-                      </li>
-                    </ul>
-                  </div>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">4. Handling Abusive Refund Requests</h2>
-              <ul className="space-y-3 font-mono text-sm text-foreground/70">
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-accent mr-3 mt-1.5 flex-shrink-0"></span>
-                  <span><strong className="text-foreground">Fraud Prevention:</strong> To prevent misuse of our refund policy, we may limit the number of refund requests per user.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-accent mr-3 mt-1.5 flex-shrink-0"></span>
-                  <span><strong className="text-foreground">Case-by-Case Basis:</strong> Subjective dissatisfaction will be evaluated individually to determine if a refund is justified.</span>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">5. Alternative Solutions</h2>
-              <ul className="space-y-3 font-mono text-sm text-foreground/70">
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-accent mr-3 mt-1.5 flex-shrink-0"></span>
-                  <span><strong className="text-foreground">Free Redos:</strong> If you are unhappy with the initial headshots, we offer free redos to ensure you receive a result you are satisfied with.</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="w-1.5 h-1.5 bg-accent mr-3 mt-1.5 flex-shrink-0"></span>
-                  <span><strong className="text-foreground">Discounts or Credits:</strong> As an alternative to a full refund, we may offer a discount or credit towards future services if you have used part of the service.</span>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                If you have any questions or need to request a refund, please contact our support team at{' '}
-                <a href="mailto:support@unrealshot.com" className="text-accent hover:underline">support@unrealshot.com</a>.
-                We are here to assist you!
+            <div className="border-t border-gray-100 pt-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">4. How to Request Assistance or a Refund</h2>
+              <p className="text-gray-700 text-sm sm:text-base leading-relaxed">
+                If you encounter any issues or need assistance, simply send your order email and details to <a href="mailto:support@unrealshot.com" className="text-[#ff6f00] font-semibold hover:underline">support@unrealshot.com</a>. Our support team typically resolves inquiries within 24 hours.
               </p>
             </div>
           </div>

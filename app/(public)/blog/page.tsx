@@ -1,52 +1,51 @@
 import type { Metadata } from "next"
-import { Navbar } from "@/components/pfplanding/Navbar"
-import { Footer } from "@/components/pfplanding/Footer"
+import PublicHeader from "@/components/Header"
+import Footer from "@/components/main-landing/Footer"
 import BlogCard from "@/components/blog-card"
 import { OfflineBanner } from "@/components/network-status"
 import { getAllPosts, formatDate, calculateReadingTime, cleanWordPressExcerpt, type WordPressPost } from "@/lib/wordpress"
 import { Suspense } from "react"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
 export const dynamic = 'force-static'
 export const revalidate = 600 // 10 minutes
 
 export const metadata: Metadata = {
-  title: "The Unrealshot AI Blog",
+  title: "Dating Photo Guides & Insights | UnrealShot AI Blog",
   description:
-    "Actionable guides and insights on AI photography. Get the latest tips for creating stunning AI headshots, professional photos for LinkedIn, and authentic, high-quality images for your social and dating profiles.",
+    "Actionable guides on optimizing your dating profile photos for Tinder, Hinge, and Bumble. Tips on lighting, wardrobe, angles, and realistic AI photography.",
   robots: "index, follow",
   alternates: {
     canonical: "https://www.unrealshot.com/blog",
   },
   openGraph: {
-    title: "The Unrealshot AI Blog",
-    description: "Your definitive guide to mastering your digital identity. In The Studio, we share expert tips, creative inspiration, and deep dives into the art of the perfect AI photoshoot.",
+    title: "Dating Photo Guides & Insights | UnrealShot AI Blog",
+    description: "Actionable guides on optimizing your dating profile photos for Tinder, Hinge, and Bumble.",
     type: "website",
     url: "https://www.unrealshot.com/blog",
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Unrealshot AI Blog",
-    description: "Your definitive guide to mastering your digital identity. In The Studio, we share expert tips, creative inspiration, and deep dives into the art of the perfect AI photoshoot.",
+    title: "Dating Photo Guides & Insights | UnrealShot AI Blog",
+    description: "Actionable guides on optimizing your dating profile photos for Tinder, Hinge, and Bumble.",
   },
 }
 
 // Transform WordPress post to blog card format
 function transformWordPressPost(post: WordPressPost, index: number) {
-  // Only use native WordPress excerpt (cleaned of "Read more" etc.)
-  // If no native excerpt exists, don't show any excerpt
   const excerpt = cleanWordPressExcerpt(post.excerpt || '')
 
   return {
     title: post.title,
-    excerpt, // Will be empty string if no native excerpt
+    excerpt,
     slug: post.slug,
     publishedAt: formatDate(post.date),
     readTime: calculateReadingTime(post.content),
-    category: post.categories.nodes[0]?.name || "General",
+    category: post.categories?.nodes?.[0]?.name || "Dating Guides",
     image: post.featuredImage?.node?.sourceUrl || "/placeholder.svg?height=400&width=600&text=Blog+Post",
-    featured: index === 0, // First post is featured
-    author: post.author.node.name,
+    featured: index === 0,
+    author: post.author?.node?.name || "UnrealShot Team",
   }
 }
 
@@ -68,38 +67,30 @@ async function BlogContent() {
 
 function BlogPageContent({ blogPosts }: { blogPosts: any[] }) {
   return (
-    <div className="theme-public min-h-screen flex flex-col text-foreground">
-      {/* Film Grain Overlay */}
-      <div className="grain"></div>
+    <div className="min-h-screen bg-[#F7F5F3] font-[family-name:var(--font-inter)] text-gray-900 flex flex-col">
+      <PublicHeader />
 
-      {/* Grid Background */}
-      <div className="fixed inset-0 opacity-[0.03] pointer-events-none"
-        style={{ backgroundImage: 'linear-gradient(#EBEBEB 1px, transparent 1px), linear-gradient(90deg, #EBEBEB 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
-      </div>
-
-      <Navbar />
-
-      <main className="flex-1 pt-24 pb-20 relative z-10">
-        <div className="max-w-7xl mx-auto px-6 md:px-12">
+      <main className="flex-1 pt-24 pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Offline Banner */}
           <OfflineBanner />
 
           {/* Header Section */}
-          <div className="border-b border-foreground/10 pb-12 mb-12">
-            <div className="font-mono text-[10px] text-foreground/40 mb-4 tracking-widest">
-              BLOG_ARCHIVE // ALL_POSTS
-            </div>
-            <h1 className="font-display text-4xl md:text-6xl font-bold uppercase leading-[0.95] mb-4">
-              The<br />
-              <span className="text-foreground/30">Studio.</span>
+          <div className="py-12 sm:py-16 text-center max-w-3xl mx-auto">
+            <p className="text-orange-500 font-bold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
+              THE UNREALSHOT AI JOURNAL
+            </p>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-[var(--font-inter-tight)] tracking-tight leading-[1.08] text-gray-900 mb-5">
+              Dating Photo Guides <br className="hidden sm:block" />
+              <span className="text-[#ff6f00]">&amp; Profile Strategy</span>
             </h1>
-            <p className="font-mono text-foreground/60 max-w-xl text-sm leading-relaxed">
-              Your guide to mastering AI photography. Expert tips, creative inspiration, and deep dives into the art of the hyper-realistic photoshoot.
+            <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+              Actionable advice on styling, facial angles, lighting, and how to build a high-performing dating profile that converts matches into real dates.
             </p>
           </div>
 
           {/* Blog Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {blogPosts.length > 0 ? (
               blogPosts.map((post) => (
                 <BlogCard
@@ -114,38 +105,37 @@ function BlogPageContent({ blogPosts }: { blogPosts: any[] }) {
                 />
               ))
             ) : (
-              <div className="col-span-full text-center py-16 border border-foreground/10 bg-[#0a0a0a]">
-                <p className="font-mono text-foreground/50 text-sm">No blog posts available at the moment.</p>
-                <p className="font-mono text-foreground/30 text-xs mt-2">Please check your internet connection and try again.</p>
+              <div className="col-span-full text-center py-20 bg-white rounded-3xl border border-gray-200/80 shadow-sm">
+                <p className="text-gray-900 font-semibold text-lg">No guides found at this time.</p>
+                <p className="text-gray-500 text-sm mt-1">Please check back soon for fresh profile strategy tips.</p>
               </div>
             )}
           </div>
-
-          {/* Load More Button */}
-          {blogPosts.length > 8 && (
-            <div className="text-center mt-12">
-              <button className="cursor-pointer font-mono uppercase tracking-wider text-sm px-8 py-4 bg-accent text-background hover:bg-white hover:text-black font-bold transition-all duration-200 border border-transparent active:scale-95">
-                Load More Posts →
-              </button>
-            </div>
-          )}
         </div>
 
         {/* CTA Section */}
-        <div className="mt-20 border-t border-foreground/10 pt-20 px-6 md:px-12">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="font-display text-3xl md:text-5xl font-bold uppercase leading-[0.95] mb-6">
-              Ready To Create<br />
-              <span className="text-foreground/30">Your Photos?</span>
+        <div className="mt-24 max-w-5xl mx-auto px-4">
+          <div className="bg-[#111111] rounded-3xl p-8 sm:p-12 text-white text-center border-2 border-dashed border-zinc-800 shadow-2xl">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4 font-[var(--font-inter-tight)]">
+              Fix Your Entire Camera Roll Today
             </h2>
-            <p className="font-mono text-foreground/60 text-sm max-w-md mx-auto mb-8">
-              Turn your selfies into professional, candid photos. No camera required.
+            <p className="text-gray-300 text-base sm:text-lg max-w-xl mx-auto mb-8">
+              Get 15 cohesive shoots, 60 natural photos, and 15 Photo Retakes delivered in under 30 minutes.
             </p>
-            <Link href="/login">
-              <button className="font-mono uppercase tracking-wider text-sm px-8 py-4 bg-accent text-background hover:bg-white hover:text-black font-bold transition-all duration-200">
-                Start Your Roll →
-              </button>
-            </Link>
+            <div className="inline-block relative">
+              <Link href="/dashboard">
+                <Button className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-8 pr-16 py-6 font-semibold text-base shadow-lg shadow-orange-500/20">
+                  Start Your Shoot — $39
+                  <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">
+                    <img
+                      src="/arrow.svg"
+                      alt="arrow-right"
+                      className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
+                    />
+                  </div>
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </main>
@@ -158,23 +148,18 @@ function BlogPageContent({ blogPosts }: { blogPosts: any[] }) {
 export default function BlogPage() {
   return (
     <Suspense fallback={
-      <div className="theme-public min-h-screen flex flex-col">
-        <div className="grain"></div>
-        <Navbar />
-        <main className="flex-1 pt-24 pb-16">
-          <div className="max-w-7xl mx-auto px-6 md:px-12">
-            <div className="mb-12">
-              <div className="font-mono text-[10px] text-foreground/40 mb-4">LOADING...</div>
-              <div className="font-display text-4xl md:text-6xl font-bold uppercase leading-[0.95] mb-4">
-                The<br />
-                <span className="text-foreground/30">Studio.</span>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="bg-[#0a0a0a] border border-foreground/10 animate-pulse aspect-[4/3]"></div>
-              ))}
-            </div>
+      <div className="min-h-screen bg-[#F7F5F3] flex flex-col font-[family-name:var(--font-inter)]">
+        <PublicHeader />
+        <main className="flex-1 pt-28 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="text-center mb-12 animate-pulse">
+            <div className="h-4 w-32 bg-gray-200 mx-auto rounded mb-4"></div>
+            <div className="h-12 w-96 bg-gray-200 mx-auto rounded mb-4"></div>
+            <div className="h-4 w-80 bg-gray-200 mx-auto rounded"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="bg-white rounded-2xl border border-gray-200 p-4 aspect-[4/3] animate-pulse"></div>
+            ))}
           </div>
         </main>
         <Footer />

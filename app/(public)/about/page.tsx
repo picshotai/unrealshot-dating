@@ -1,116 +1,161 @@
 import { Metadata } from 'next'
-import { Navbar } from '@/components/pfplanding/Navbar'
-import { Footer } from '@/components/pfplanding/Footer'
+import PublicHeader from '@/components/Header'
+import Footer from '@/components/main-landing/Footer'
 import { generateBreadcrumbJsonLd, generateMetadata } from '@/lib/seo'
 import { MultipleStructuredData } from '@/components/seo/StructuredData'
 import { seoUtils } from '@/config/seo'
 import Link from 'next/link'
-import { Button } from "@/components/pfplanding/ui/Button"
+import { Button } from "@/components/ui/button"
+import { Camera, ShieldCheck, Heart, RotateCcw, Sparkles } from 'lucide-react'
 
 export const metadata: Metadata = generateMetadata({
-  title: 'About Us',
+  title: 'About Us | UnrealShot AI Dating Photography',
   description:
-    'Learn more about the journey and team behind Unrealshot AI, the AI headshot generator helping users create professional-grade headshots worldwide.',
+    'Learn how UnrealShot AI is helping men replace weak selfies with 60 realistic, candid dating photos across 15 believable shoots.',
   canonical: '/about',
 })
 
 export default function AboutUs() {
   return (
-    <div className="theme-public min-h-screen bg-background text-foreground">
-      <Navbar />
-      <main className="pt-20 md:pt-24">
-        {/* Hero */}
-        <section className="border-b border-foreground/10">
-          <div className="max-w-5xl mx-auto px-4 py-12 text-center">
-            <div className="font-mono text-xs text-foreground/40 mb-4">
-              COMPANY // ABOUT_US
+    <div className="min-h-screen bg-[#F7F5F3] font-[family-name:var(--font-inter)] text-gray-900">
+      <PublicHeader />
+      <main className="pt-20 md:pt-24 pb-16">
+        {/* Hero Section */}
+        <section className="px-4 py-16 sm:py-20 max-w-5xl mx-auto text-center">
+          <p className="text-orange-500 font-bold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
+            ABOUT UNREALSHOT AI
+          </p>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-[var(--font-inter-tight)] tracking-tight leading-[1.08] text-gray-900 mb-6 max-w-4xl mx-auto">
+            We built UnrealShot AI to solve one problem: <br />
+            <span className="text-[#ff6f00]">Bad dating photos.</span>
+          </h1>
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            You don&apos;t need to become taller, richer, or mysteriously turn into a male model. You just need believable evidence of what you look like on a great day.
+          </p>
+        </section>
+
+        {/* Narrative Section */}
+        <section className="max-w-5xl mx-auto px-4 pb-16">
+          <div className="bg-white rounded-3xl border border-gray-200/80 shadow-[0_12px_50px_-15px_rgba(0,0,0,0.08)] p-8 sm:p-12 space-y-10">
+            <div>
+              <span className="text-xs font-mono uppercase tracking-wider text-[#ff6f00] font-bold block mb-2">
+                01 // THE PROBLEM
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-4">
+                The Dating Camera Roll Paradox
+              </h2>
+              <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
+                Most men have thousands of photos on their phones, but when they sit down to build a Tinder, Hinge, or Bumble profile, almost none of them work. They have blurry cropped group shots from three years ago, awkward bathroom selfies, or stiff corporate headshots with heavy &ldquo;LinkedIn energy&rdquo; that kill dating momentum.
+              </p>
             </div>
-            <h1 className="font-display text-4xl sm:text-5xl font-bold uppercase leading-[0.95] mb-3">
-              About<br />
-              <span className="text-foreground/30">UnrealShot AI.</span>
-            </h1>
-            <p className="font-mono text-foreground/60 text-sm">
-              Our journey, mission, and the people behind the product.
+
+            <div className="border-t border-gray-100 pt-8">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#ff6f00] font-bold block mb-2">
+                02 // WHY GENERIC AI FAILED
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-4">
+                Why Glossy AI Filters &amp; $600 Studios Miss the Mark
+              </h2>
+              <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
+                Traditional dating photographers charge $400–$800 for two hours of awkward public posing in one or two outfits. Meanwhile, first-generation AI generators produced airbrushed, plastic-skinned avatars that look robotic and scream &ldquo;fake&rdquo; on dating apps.
+              </p>
+              <p className="text-gray-600 text-base sm:text-lg leading-relaxed mt-4">
+                Dating apps reward natural lighting, authentic skin texture, realistic clothing wrinkles, and candid unposed moments. That required a completely new engine architecture.
+              </p>
+            </div>
+
+            <div className="border-t border-gray-100 pt-8">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#ff6f00] font-bold block mb-2">
+                03 // OUR SOLUTION
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-4">
+                The 15-Shoot Coherent Camera Roll
+              </h2>
+              <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
+                Instead of giving you 100 disconnected random pictures, UnrealShot AI generates <strong>15 complete cohesive shoots with 4 frames each (60 total photos)</strong>. Each shoot captures 4 natural angles and expressions from the same setting and outfit—just like a friend took multiple candid snaps over coffee, on a rooftop lounge, or walking downtown.
+              </p>
+              <p className="text-gray-600 text-base sm:text-lg leading-relaxed mt-4">
+                Plus, we included <strong>15 individual Photo Retakes</strong> with every order so you can replace any single frame without rebuilding your entire camera roll.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Core Principles Grid */}
+        <section className="max-w-5xl mx-auto px-4 pb-16">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+              Our Core Principles
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-gray-200/80 shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-[#ff6f00]/10 flex items-center justify-center mb-4 text-[#ff6f00]">
+                <Camera className="w-5 h-5" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Authenticity Above All</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                We strictly preserve your facial geometry and real bone structure. You look like the person someone meets on date night—just captured in ideal lighting with great style.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-gray-200/80 shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-[#ff6f00]/10 flex items-center justify-center mb-4 text-[#ff6f00]">
+                <Sparkles className="w-5 h-5" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Coherent Camera Rolls</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Real camera rolls have photo bursts from the same day. Our 4-frames-per-shoot system gives you authentic narrative sets that feel 100% natural on dating profiles.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-gray-200/80 shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-[#ff6f00]/10 flex items-center justify-center mb-4 text-[#ff6f00]">
+                <RotateCcw className="w-5 h-5" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">15 Retakes Included</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                If a single generation misses the mark, click Retake with your feedback to generate an updated version at zero extra cost.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-gray-200/80 shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-[#ff6f00]/10 flex items-center justify-center mb-4 text-[#ff6f00]">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Privacy &amp; One-Time Pricing</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Strictly $39 one-time. We never sell your facial data, and your uploaded selfies and generated shoots can be permanently wiped from our servers at any time.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="max-w-5xl mx-auto px-4 text-center">
+          <div className="bg-[#111111] rounded-3xl p-8 sm:p-12 text-white border-2 border-dashed border-zinc-800 shadow-2xl">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4 font-[var(--font-inter-tight)]">
+              Ready to fix your dating camera roll?
+            </h2>
+            <p className="text-gray-300 text-base sm:text-lg max-w-xl mx-auto mb-8">
+              Get 15 complete shoots (60 high-resolution photos) and 15 Photo Retakes delivered in 30 minutes.
             </p>
-          </div>
-        </section>
-
-        {/* Content */}
-        <section className="max-w-5xl mx-auto px-4 py-12">
-          <div className="space-y-8 bg-[#0a0a0a] border border-foreground/10 rounded-lg p-6 md:p-8">
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">Our Journey</h2>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                We are a small team of passionate developers, self-learned, and driven by curiosity. Hailing from India,
-                our journey into the tech world started in a rather unconventional way—through blogging. Back then, we were
-                just eager to share our thoughts, tips, and insights with the world, covering everything from tech tutorials
-                to life hacks. It was our way of staying connected to the ever-evolving world of technology.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">The Spark of AI</h2>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                As with any journey, we soon found ourselves intrigued by something bigger: Artificial Intelligence. AI had
-                this magical quality—it was reshaping industries, changing the way people interacted with technology, and making
-                the impossible possible. We dove into it headfirst, testing AI tools, tinkering with algorithms, and experimenting
-                with different use cases. The more we explored, the more fascinated we became.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">The Birth of UnrealShot AI</h2>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                One evening, after weeks of brainstorming and countless cups of coffee, it hit us—what if AI could make something
-                as personal as a headshot? What if you didn't need an expensive photographer or a studio setup to get that
-                professional, polished look? That's when UnrealShot AI was born.
-              </p>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed mt-4">
-                We wanted to build something that made it effortless for people to present themselves in the best light, whether
-                for their LinkedIn profile, job applications, or business websites. So, we started developing an AI headshot
-                generator that could do just that—deliver high-quality, professional-grade images in just a few clicks.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">Empowering People</h2>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                This wasn't just about the tech. It was about empowerment. We believe everyone deserves a professional-looking
-                headshot, whether you're starting your career or running a business. Our goal has always been to make AI accessible,
-                practical, and—most importantly—beneficial for people.
-              </p>
-            </div>
-
-            <div>
-              <h2 className="font-display text-xl md:text-2xl font-bold uppercase mb-3 text-foreground">Today and Tomorrow</h2>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed">
-                Today, UnrealShot AI is serving users worldwide, helping them create stunning and professional AI headshots that
-                look like they've been shot in a studio. From freelancers looking to stand out, to business owners crafting a
-                professional brand, we're proud to be a part of your journey.
-              </p>
-              <p className="text-foreground/70 font-mono text-sm leading-relaxed mt-4">
-                Our story is far from over. We continue to innovate, improve, and grow with every bit of feedback we receive. But
-                at the heart of everything we do is the same passion that started it all—an unshakable belief in the power of
-                technology to make life a little easier, and a lot more creative.
-              </p>
-            </div>
-
-            <div className="bg-[#111] border border-foreground/10 rounded-lg p-6">
-              <p className="text-foreground/80 font-mono text-sm font-medium">Thank you for trusting us with your image. We look forward to seeing where this adventure takes us next!</p>
-              <p className="text-foreground/60 font-mono text-sm mt-4">Warm regards,<br />The UnrealShot AI Team</p>
+            <div className="inline-block relative">
+              <Link href="/dashboard">
+                <Button className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-8 pr-16 py-6 font-semibold text-base shadow-lg shadow-orange-500/20">
+                  Build My Dating Profile — $39
+                  <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">
+                    <img
+                      src="/arrow.svg"
+                      alt="arrow-right"
+                      className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
+                    />
+                  </div>
+                </Button>
+              </Link>
             </div>
           </div>
-        </section>
-
-        {/* Contact CTA */}
-        <section className="max-w-5xl mx-auto px-4 pb-12 text-center">
-          <h3 className="font-display text-xl font-bold uppercase mb-3 text-foreground">Want to talk?</h3>
-          <p className="text-foreground/60 font-mono text-sm mb-6">We're happy to answer any questions.</p>
-          <Link href="mailto:support@unrealshot.com">
-            <Button size="lg" variant="primary">
-              Contact us →
-            </Button>
-          </Link>
         </section>
       </main>
       <Footer />
