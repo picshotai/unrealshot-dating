@@ -54,45 +54,45 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ quote, name, role, av
 export default function TestimonialSection() {
   const testimonials: TestimonialCardProps[] = [
     {
-      quote: "I got my perfect Instagram profile photo in just 40 minutes. The quality is amazing!",
-      name: "Sachin Singh",
-      role: "Influencer",
-      avatar: "/content/sachin.webp",
+      quote: "Went from getting maybe 1 match a week on Hinge to daily likes and actual conversations. The crazy thing is people always say I look just like my photos in person.",
+      name: "Alex M.",
+      role: "Hinge & Bumble user",
+      avatar: "/images/aimodel5.jpg",
       rating: 5,
     },
     {
-      quote: "The transformation is unbelievable. My LinkedIn profile looks so professional now!",
-      name: "Mariah Edwards",
-      role: "Marketing Director",
-      avatar: "/content/mariah-edwards.png",
+      quote: "I hate posing for photos, so my profile was literally 3 selfies in my car and an old group shot from 2021. UnrealShot gave me a full camera roll that looks like my friends took it.",
+      name: "Marcus K.",
+      role: "Software Engineer",
+      avatar: "/images/aimodel6.jpg",
       rating: 5,
     },
     {
-      quote: "I've tried many AI photo tools, but Unrealshot AI gives the most natural-looking results.",
-      name: "Sumesh",
-      role: "Tech Enthusiast",
-      avatar: "/content/sumesh.webp",
+      quote: "I was skeptical of AI photos because most look fake or hyper-edited. But having 4 shots from the same shoot makes it feel 100% natural and consistent.",
+      name: "David S.",
+      role: "Product Designer",
+      avatar: "/images/aimodel7.jpg",
       rating: 5,
     },
     {
-      quote: "Being a model, having standout photos is everything. After using this AI tool, my portfolio photos look more polished and professional!",
-      name: "Emma Thompson",
-      role: "Model",
-      avatar: "/content/emma-thopmson.jpg",
+      quote: "Finally have photos that actually show my personality instead of just my face. Women on Hinge constantly comment on the coffee shop and outdoor shots now.",
+      name: "Liam T.",
+      role: "Consultant",
+      avatar: "/images/aimodel8.jpg",
       rating: 5,
     },
     {
-      quote: "The customer service is as impressive as the AI. They helped me choose the perfect style.",
-      name: "Manoj",
-      role: "Photographer",
-      avatar: "/content/manoj.jpg",
+      quote: "One photo had weird lighting, but the retake button fixed it in 2 minutes with zero hassle. Total game changer for anyone who doesn't have an Instagram girlfriend.",
+      name: "Jordan P.",
+      role: "Architect",
+      avatar: "/images/demo14.jpg",
       rating: 5,
     },
     {
-      quote: "Our entire team uses Unrealshot AI for our corporate headshots. Consistent quality every time!",
-      name: "Shrey Singh",
-      role: "HR Manager",
-      avatar: "/images/demo2.jpg",
+      quote: "Got 60 photos across 15 different settings. Picked my top 6, revamped my Tinder and Bumble, and my match quality doubled in the first 48 hours.",
+      name: "Sam R.",
+      role: "Finance Analyst",
+      avatar: "/images/demo12.jpg",
       rating: 5,
     },
   ]
@@ -102,12 +102,14 @@ export default function TestimonialSection() {
       <div className="container mx-auto max-w-7xl px-4">
         {/* Header */}
         <div className="text-center mb-16">
-          
-          <h2 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            Real Results from <br /><span className="text-[#ff6f00]">Real Peoples</span>
+          <p className="text-orange-500 font-bold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
+            REAL USER REVIEWS
+          </p>
+          <h2 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight leading-[1.08]">
+            Real Results from <br /><span className="text-[#ff6f00]">Real Dating Profiles</span>
           </h2>
-          <p className="mx-auto max-w-2xl text-xl text-gray-300">
-            Don't just take our word for it. See what our users are saying about their transformative experiences.
+          <p className="mx-auto max-w-2xl text-lg md:text-xl text-gray-300">
+            See how men replaced recycled selfies and weak camera rolls with believable, match-worthy photos.
           </p>
         </div>
 
@@ -141,26 +143,25 @@ export default function TestimonialSection() {
 
         {/* CTA Section */}
         <div className="text-center mt-16">
-          
           <div className="inline-block relative">
-            <Link href="/ai-glamour-photoshoot" className="inline-block">
+            <Link href="/dashboard" className="inline-block">
               <Button
                 size="lg"
                 className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-6 pr-16 py-6 font-semibold text-base shadow-[0_4px_20px_-5px_rgba(0,0,0,0.2)]"
               >
-                Transform Your Photos Now
+                Build My Dating Profile — $39
                 <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">
-                    <img
-                      src="/arrow.svg"
-                      alt="arrow-right"
-                      className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
-                    />
-                  </div>
+                  <img
+                    src="/arrow.svg"
+                    alt="arrow-right"
+                    className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
+                  />
+                </div>
               </Button>
             </Link>
             
-             {/* Whirl Arrow pointing to floating text */}
-              <div className="hidden md:block absolute right-75 top-4 mt-4 -translate-y-1/2 w-16 h-20 pointer-events-none">
+            {/* Whirl Arrow pointing to floating text */}
+            <div className="hidden md:block absolute right-75 top-4 mt-4 -translate-y-1/2 w-16 h-20 pointer-events-none">
               <svg 
                 viewBox="0 0 59 42" 
                 fill="none" 
@@ -179,7 +180,7 @@ export default function TestimonialSection() {
             <p className={`text-gray-400 ${caveat.className} text-lg font-semibold 
                           md:absolute md:transform md:-rotate-6 md:-left-52 md:-top-1/4 md:-translate-y-1/2 md:w-48
                           sm:static sm:mt-2 sm:transform-none sm:rotate-0 sm:text-center sm:w-auto leading-none`}>
-              Trusted by 1,200+ professionals worldwide
+              Trusted by 1,200+ guys upgrading their profiles
             </p>
           </div>
         </div>

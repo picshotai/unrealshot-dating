@@ -26,14 +26,14 @@ export default function TheVerdictFinal() {
     "Different moods and situations without looking like different people",
     "Enough variety to show more than just your face",
     "Photos that naturally give people things to ask you about",
-    "15 complete shoots instead of hundreds of unrelated generations",
+    "15 complete shoots for a total of 60 photos",
     "Enough strong options to build a believable six-photo profile",
     "15 Photo Retakes if an individual image misses",
   ];
 
   return (
     <section className="relative mx-auto py-16 sm:py-24 overflow-hidden bg-[#F7F5F3]">
-      <div className="px-4 max-w-6xl mx-auto">
+      <div className="px-4 max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10 sm:mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-5xl mx-auto font-bold mb-4 font-[var(--font-inter-tight)] tracking-tight leading-[1.08] text-gray-900">
@@ -99,7 +99,7 @@ export default function TheVerdictFinal() {
                       THE OUTCOME
                     </p>
                     <p className="text-xl sm:text-2xl font-bold text-white">
-                      Looks like your camera roll finally got good.
+                      Exactly you, but Better.
                     </p>
                   </div>
                 </div>

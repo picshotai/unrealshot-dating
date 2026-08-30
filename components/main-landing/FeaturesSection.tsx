@@ -52,7 +52,7 @@ const features = [
 export function FeaturesSection() {
   return (
     <section id="features" className="py-16 md:py-20 bg-[#111111] text-white">
-      <div className="mx-auto w-full max-w-6xl space-y-10 px-4">
+      <div className="mx-auto w-full max-w-7xl space-y-10 px-4">
         {/* Header */}
         <div className="mx-auto max-w-4xl text-center mb-10">
           <p className="text-orange-500 font-bold uppercase tracking-wider text-xs sm:text-sm mb-3 block">

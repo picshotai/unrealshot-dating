@@ -20,11 +20,14 @@ export default function HowItWorksShowcase() {
       <div className="px-4 max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 sm:mb-20">
+            <p className="text-orange-500 font-bold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
+            HOW IT WORKS
+          </p>
           <h2 className="text-4xl sm:text-5xl md:text-6xl max-w-4xl mx-auto font-bold leading-none mb-4 font-[var(--font-inter-tight)] text-gray-900">
-            Your new dating profile in <span className="text-[#ff6f00]">3 steps.</span>
+            Fixing your dating profile shouldn't  <span className="text-[#ff6f00]">become another project.</span>
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            No photographer. No awkward posing. No figuring out what photos you&apos;re supposed to take.
+            No photographer hunt. No asking your friends to take 200 photos of you. No prompt engineering.
           </p>
         </div>
 
@@ -46,7 +49,7 @@ export default function HowItWorksShowcase() {
             Upload 4–6 selfies
           </h3>
           <p className="text-center text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            Use normal photos already on your phone. Different angles and clear views of your face work best.
+            Use normal photos already on your phone. Different angles and clear views of your face work best. And Tell us what actually feels like you
           </p>
 
           {/* Graphic element */}
@@ -55,9 +58,8 @@ export default function HowItWorksShowcase() {
               {/* Row with images on left, center, and right */}
               <div className="flex justify-between w-full max-w-7xl">
                 {/* Left side - Woman images */}
-                 <div className="flex flex-col items-center justify-center">
-                   <div className="hidden lg:flex gap-6 mb-1">
-                     {/* Three images up */}
+                 <div className="flex items-center justify-center">
+                   <div className="hidden lg:flex gap-6">
                      <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
                        <Image 
                          src={womanInputImages[0]} 
@@ -83,36 +85,6 @@ export default function HowItWorksShowcase() {
                          height={140} 
                          className="w-full h-full object-cover"
                          alt="woman image 3" 
-                       />
-                     </div>
-                   </div>
-                   <div className="hidden lg:flex gap-6 mt-6">
-                     {/* Three images down */}
-                     <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
-                       <Image 
-                         src={womanInputImages[3]} 
-                         width={105} 
-                         height={140} 
-                         className="w-full h-full object-cover"
-                         alt="woman image 4" 
-                       />
-                     </div>
-                     <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
-                       <Image 
-                         src={womanInputImages[4]} 
-                         width={105} 
-                         height={140} 
-                         className="w-full h-full object-cover"
-                         alt="woman image 5" 
-                       />
-                     </div>
-                     <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
-                       <Image 
-                         src={womanInputImages[5]} 
-                         width={105} 
-                         height={140} 
-                         className="w-full h-full object-cover"
-                         alt="woman image 6" 
                        />
                      </div>
                    </div>
@@ -175,7 +147,7 @@ export default function HowItWorksShowcase() {
                         {/* Footer info */}
                         <div className="mt-3 pt-2 border-t border-gray-100">
                           <p className="text-xs text-gray-500 text-center">
-                            4 of 10 images selected
+                            4 of 6 images selected
                           </p>
                         </div>
                       </div>
@@ -183,9 +155,8 @@ export default function HowItWorksShowcase() {
                   </div>
                 </div>
                 {/* Right side - Man images */}
-                 <div className="flex flex-col items-center justify-center">
-                   <div className="hidden lg:flex gap-6 mb-1">
-                     {/* Three images up */}
+                 <div className="flex items-center justify-center">
+                   <div className="hidden lg:flex gap-6">
                      <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
                        <Image 
                          src={manInputImages[0]} 
@@ -214,36 +185,6 @@ export default function HowItWorksShowcase() {
                        />
                      </div>
                    </div>
-                   <div className="hidden lg:flex gap-6 mt-6">
-                     {/* Three images down */}
-                     <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
-                       <Image 
-                         src={manInputImages[3]} 
-                         width={105} 
-                         height={140} 
-                         className="w-full h-full object-cover"
-                         alt="man image 4" 
-                       />
-                     </div>
-                     <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
-                       <Image 
-                         src={manInputImages[4]} 
-                         width={105} 
-                         height={140} 
-                         className="w-full h-full object-cover"
-                         alt="man image 5" 
-                       />
-                     </div>
-                     <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
-                       <Image 
-                         src={manInputImages[5]} 
-                         width={105} 
-                         height={140} 
-                         className="w-full h-full object-cover"
-                         alt="man image 6" 
-                       />
-                     </div>
-                   </div>
                  </div>
               </div>
             </div>
@@ -262,11 +203,12 @@ export default function HowItWorksShowcase() {
 
           {/* Text element */}
           <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold text-center mt-2 mb-4">
-            Tell us what feels like you
+            Unrealshot AI gets to work
           </h3>
           <p className="text-center text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            Choose your style, the things you actually do, and anything you don&apos;t want appearing.
+            Our engine maps your facial features and generates unposed, candid scenes built specifically for Tinder, Hinge, and Bumble — with natural lighting, authentic outfits, and believable moments that actually look like you.
           </p>
+
 
           {/* AI Visual element */}
           <div className="flex justify-center items-center mt-8">
@@ -337,7 +279,7 @@ export default function HowItWorksShowcase() {
             Get 15 complete shoots
           </h3>
           <p className="text-center text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            60 photos across different places, outfits and moments — ready to sort into your Tinder, Hinge or Bumble profile.
+            Receive 60 photos organized into coherent 4-shot scenes. Pick your favorite 6 for Tinder, Hinge, or Bumble with 15 Photo Retakes included.
           </p>
           <div className="animate-fadeIn container mx-auto pt-10">
             <Carousal images={humans} />
