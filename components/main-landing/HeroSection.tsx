@@ -291,10 +291,10 @@ export function HeroSection() {
             </h1>
 
             <p className="text-lg text-gray-300 max-w-3xl mx-auto mb-8">
-              Bad photos make good guys easy to swipe past. UnrealShot builds the dating camera roll you should already have — natural photos that look like you, show your life, and give someone a reason to stop.
+              Bad photos make you easy to swipe past. UnrealShot gives you natural dating photos that look like you, show your life, and make your profile worth stopping for.
             </p>
           </div>
-          <div className="flex  sm:flex-row gap-2 justify-center items-center w-full relative">
+          <div className="flex sm:flex-row gap-2 justify-center items-center w-full relative">
 
             <Link href="/dashboard">
               <Button
@@ -310,7 +310,7 @@ export function HeroSection() {
                 </div>
               </Button>
             </Link>
-            <Link href="/login">
+            <Link href="/login" className="hidden sm:inline-block">
               <Button
                 className="text-sm sm:text-md font-semibold py-5 sm:py-6 group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer pr-12"
               >
