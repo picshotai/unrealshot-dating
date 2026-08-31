@@ -37,6 +37,8 @@
   ],
   "exclude": [
     "node_modules",
+    "scripts",
+    "scripts/**",
     "components/supportingpages/**",
     "components/image-canvas.tsx",
     "components/imageInspector.tsx",

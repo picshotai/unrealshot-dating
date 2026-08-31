@@ -141,8 +141,6 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          planId: 'dating-pack-39',
-          userId,
           returnUrl: `${window.location.origin}/payment-success?resume=dating-shoot`,
         }),
       });
@@ -211,6 +209,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
   const hasSelectedInterests = interests.length > 0;
   const canProceed =
     Boolean(selectedModelId) && hasSelectedInterests && !isLoading;
+  const needsPurchase = !hasPack || Boolean(creditError);
 
   const handleFinalSubmit = () => {
     if (!canProceed || !selectedModelId) return;
@@ -670,7 +669,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                         </div>
 
                         {/* Ready to start / Recovery Card */}
-                        {(creditError || !hasPack) && (
+                        {needsPurchase && (
                           <div className="p-4 rounded-xl bg-zinc-900/90 border border-emerald-500/30 text-zinc-200 shadow-lg">
                             <div className="flex items-center justify-between gap-2">
                               <div className="flex items-center gap-2 text-emerald-400 font-semibold font-oxanium text-sm">
@@ -709,7 +708,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                             Edit Parameters
                           </Button>
 
-                          {hasPack ? (
+                          {!needsPurchase ? (
                             <Button
                               onClick={handleFinalSubmit}
                               disabled={isLoading || isCheckingOut}

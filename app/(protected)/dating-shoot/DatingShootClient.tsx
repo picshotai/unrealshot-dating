@@ -152,9 +152,30 @@ export function DatingShootClient({
   const [status, setStatus] = useState<StatusResponse | null>(null);
   const [activeTab, setActiveTab] = useState<RoleFilter>('all');
 
+  // Pack status state synchronized with backend
+  const [hasPackState, setHasPackState] = useState<boolean>(hasPack);
+
+  const refreshPackStatus = useCallback(async () => {
+    try {
+      const res = await fetch('/api/dating-shoot/pack-status', { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        setHasPackState(Boolean(data.hasPack));
+      }
+    } catch (e) {
+      console.warn('Failed to refresh pack status:', e);
+    }
+  }, []);
+
   // If no orders exist, we force the intake view open.
   const hasOrders = orders.length > 0 || activeOrderId !== null;
   const [isIntakeOpen, setIsIntakeOpen] = useState(!hasOrders);
+
+  useEffect(() => {
+    if (isIntakeOpen) {
+      refreshPackStatus();
+    }
+  }, [isIntakeOpen, refreshPackStatus]);
   
   // Pending intake state restored from session if resuming
   const [restoredIntake, setRestoredIntake] = useState<{
@@ -275,6 +296,7 @@ export function DatingShootClient({
       if (!res.ok) {
         if (data.code === 'insufficient_credits') {
           setCreditError(data.error);
+          setHasPackState(false);
           return false;
         }
         if (data.code === 'order_in_progress' && data.orderId) {
@@ -291,6 +313,18 @@ export function DatingShootClient({
       await fetchStatus(data.orderId);
       setIsIntakeOpen(false);
       launchRequestId.current = null;
+
+      // Clean up saved draft & query parameters after ANY successful launch
+      try {
+        sessionStorage.removeItem('unrealshot_pending_shoot');
+        if (typeof window !== 'undefined' && window.location.search.includes('resume=')) {
+          window.history.replaceState({}, '', '/dating-shoot');
+        }
+      } catch (e) {
+        console.warn('Failed to clean up pending shoot draft:', e);
+      }
+
+      refreshPackStatus();
       return true;
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to launch shoot');
@@ -317,54 +351,54 @@ export function DatingShootClient({
             pending.modelId &&
             Date.now() - (pending.timestamp || 0) < 1000 * 60 * 120
           ) {
-            const modelExists = models.some((m) => m.id === pending.modelId);
-            const targetModelId = modelExists
-              ? pending.modelId
-              : models[0]?.id || null;
+            const targetModel = models.find((m) => m.id === pending.modelId);
+            
+            const draftData = {
+              interests: pending.interests || [],
+              excludeTags: pending.excludeTags || [],
+              includeSimpleCandids:
+                pending.includeSimpleCandids !== undefined
+                  ? pending.includeSimpleCandids
+                  : true,
+            };
 
-            if (targetModelId) {
-              const draftData = {
-                interests: pending.interests || [],
-                excludeTags: pending.excludeTags || [],
-                includeSimpleCandids:
-                  pending.includeSimpleCandids !== undefined
-                    ? pending.includeSimpleCandids
-                    : true,
-              };
+            if (!targetModel) {
+              // Never silently switch model! Restore settings to configure step and ask user to choose
+              setModelId(models[0]?.id || null);
+              setRestoredIntake({
+                ...draftData,
+                step: 'configure',
+              });
+              setIsIntakeOpen(true);
+              setError('Saved face model not found. Please select your active face model.');
+              return;
+            }
 
-              if (resumeMode === 'auto-start') {
-                autoLaunchTriggered.current = true;
-                // Auto-launch photoshoot instantly
-                handleLaunchShoot({
-                  modelId: targetModelId,
-                  ...draftData,
-                }).then((success) => {
-                  if (success) {
-                    try {
-                      sessionStorage.removeItem('unrealshot_pending_shoot');
-                      window.history.replaceState({}, '', '/dating-shoot');
-                    } catch (e) {
-                      console.warn(e);
-                    }
-                  } else {
-                    // Fallback to confirm step with pre-filled selections
-                    setModelId(targetModelId);
-                    setRestoredIntake({
-                      ...draftData,
-                      step: 'confirm',
-                    });
-                    setIsIntakeOpen(true);
-                  }
-                });
-              } else {
-                // Resume directly in intake confirmation screen
-                setModelId(targetModelId);
-                setRestoredIntake({
-                  ...draftData,
-                  step: 'confirm',
-                });
-                setIsIntakeOpen(true);
-              }
+            setModelId(targetModel.id);
+
+            if (resumeMode === 'auto-start') {
+              autoLaunchTriggered.current = true;
+              // Auto-launch photoshoot instantly
+              handleLaunchShoot({
+                modelId: targetModel.id,
+                ...draftData,
+              }).then((success) => {
+                if (!success) {
+                  // Fallback to confirm step with pre-filled selections
+                  setRestoredIntake({
+                    ...draftData,
+                    step: 'confirm',
+                  });
+                  setIsIntakeOpen(true);
+                }
+              });
+            } else {
+              // Resume directly in intake confirmation screen
+              setRestoredIntake({
+                ...draftData,
+                step: 'confirm',
+              });
+              setIsIntakeOpen(true);
             }
           }
         }
@@ -372,7 +406,7 @@ export function DatingShootClient({
         console.warn('Failed to parse pending shoot config:', e);
       }
     }
-  }, [models]);
+  }, [models, refreshPackStatus]);
 
   // Retry Failed
   const handleRetryFailed = async () => {
@@ -590,7 +624,7 @@ export function DatingShootClient({
     return (
       <StudioIntakeView
         userId={userId}
-        hasPack={hasPack}
+        hasPack={hasPackState}
         models={models}
         selectedModelId={modelId}
         onSelectModel={setModelId}

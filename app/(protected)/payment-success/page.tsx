@@ -142,11 +142,34 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentSucces
                 });
               }
             }
-          } catch (e) { /* ignore */ }
-        })();
-      `
-    }} />
-  )
+  const isDatingShootResume =
+    params.resume === 'dating-shoot' ||
+    params.resume === 'checkout' ||
+    params.resume === 'auto-start'
+
+  if (isDatingShootResume) {
+    return (
+      <div className="container max-w-lg mx-auto py-16 px-4 min-h-[70vh] flex items-center justify-center">
+        <TrackingScript />
+        <Card className="w-full border-zinc-800 bg-zinc-950 text-white shadow-2xl rounded-2xl overflow-hidden">
+          <CardHeader className="text-center pb-2 pt-8">
+            <div className="mx-auto w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4">
+              <Sparkles className="w-8 h-8 text-emerald-400" />
+            </div>
+            <CardTitle className="text-2xl font-bold font-oxanium text-white">
+              Payment Successful
+            </CardTitle>
+            <CardDescription className="text-zinc-400 text-sm mt-1">
+              Preparing your 15 photoshoot sessions…
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6 px-6 pb-8">
+            <AutoLaunchShoot />
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">

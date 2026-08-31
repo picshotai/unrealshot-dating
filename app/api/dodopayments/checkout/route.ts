@@ -1,6 +1,7 @@
 import { getDodoPaymentsClient } from "@/lib/dodopayments";
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/utils/supabase/admin";
+import { createClient } from "@/utils/supabase/server";
 import { SHOOT_CREDIT_COST, TOTAL_PHOTOS } from "@/lib/dating/types";
 import { z } from "zod";
 
@@ -39,15 +40,15 @@ const checkoutSessionSchema = z.object({
     customMetadata: z.record(z.string(), z.string()).optional(),
 });
 
-// Legacy checkout schema for backward compatibility
+// Legacy / Simple checkout schema
 const legacyCheckoutSchema = z.object({
-    planId: z.string().min(1, "Plan ID is required"),
-    userId: z.string().min(1, "User ID is required"),
+    planId: z.string().optional(),
+    userId: z.string().optional(),
     returnUrl: z.string().url("Return URL must be a valid URL").optional(),
 });
 
-// Fetch pricing plan from database or fallback to single Dating Shoot plan
-async function getPricingPlan(planId: string, supabase: any) {
+// Fetch active pricing plan from database or fallback to single Dating Shoot plan
+async function getPricingPlan(supabase: any) {
   const envProductId = process.env.DODO_PRODUCT_ID || process.env.DODO_DATING_PRODUCT_ID;
 
   const { data: plan } = await supabase
@@ -72,7 +73,7 @@ async function getPricingPlan(planId: string, supabase: any) {
   // they just paid for. The 15 free Photo Retakes are granted separately on the
   // order row and do not come out of this balance.
   return {
-    id: planId || 'dating-pack-39',
+    id: null,
     name: `${TOTAL_PHOTOS} Photo Dating Pack`,
     price: 39,
     credits: SHOOT_CREDIT_COST,
@@ -114,29 +115,28 @@ async function createCheckoutSession(args: {
 export async function POST(request: NextRequest) {
     const supabase = createAdminClient();
     
+    // Authenticate user securely on the server
+    const userSupabase = await createClient();
+    const { data: { user }, error: authError } = await userSupabase.auth.getUser();
+    
+    if (authError || !user) {
+        return NextResponse.json({ message: "Authentication required" }, { status: 401 });
+    }
+    
     try {
         const body = await request.json();
 
-        // Check if this is a legacy checkout request
+        // Check if this is a simple/legacy checkout request
         const legacyValidation = legacyCheckoutSchema.safeParse(body);
         if (legacyValidation.success) {
-            // Handle legacy checkout flow
-            const { planId, userId, returnUrl } = legacyValidation.data;
+            const { returnUrl } = legacyValidation.data;
 
-            if (!planId || !userId) {
-                return NextResponse.json({ message: "Missing required details" }, { status: 400 });
-            }
-
-            // Fetch plan from database
-            const plan = await getPricingPlan(planId, supabase);
-            if (!plan) {
-                return NextResponse.json({ message: "Invalid plan" }, { status: 400 });
-            }
-
+            // Fetch server-owned active plan
+            const plan = await getPricingPlan(supabase);
             const finalPrice = plan.price;
             const finalReturnUrl = returnUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`;
 
-            // Create checkout session (centralized helper to avoid duplication)
+            // Create checkout session
             const session = await createCheckoutSession({
                 productCart: [{
                     product_id: plan.productId,
@@ -145,35 +145,35 @@ export async function POST(request: NextRequest) {
                 }],
                 returnUrl: finalReturnUrl,
                 metadata: {
-                    user_id: userId,
-                    pricing_plan_id: planId,
+                    user_id: user.id,
+                    pricing_plan_id: plan.id || '',
                     credits: plan.credits.toString()
                 }
             });
 
-            // Store the checkout session in our database for tracking
+            // Store the checkout session in our database for tracking using the real plan.id foreign key
             const { error: insertError } = await supabase
                 .from('dodo_payments')
                 .insert({
                     dodo_payment_id: session.session_id,
                     dodo_checkout_session_id: session.session_id,
-                    user_id: userId,
+                    user_id: user.id,
                     amount: finalPrice,
                     currency: 'USD',
                     status: 'pending',
-                    pricing_plan_id: planId,
+                    pricing_plan_id: plan.id,
                     credits: plan.credits,
                     metadata: {
-                        user_id: userId,
-                        pricing_plan_id: planId,
+                        user_id: user.id,
+                        pricing_plan_id: plan.id || '',
                         credits: plan.credits.toString(),
                         checkout_session_id: session.session_id
                     }
                 });
 
             if (insertError) {
-                console.error('Database insert error:', insertError);
-                // Continue anyway, as the checkout session was created successfully
+                console.error('Database insert error in checkout:', insertError);
+                return NextResponse.json({ message: "Failed to record checkout session" }, { status: 500 });
             }
 
             return NextResponse.json({
