@@ -395,21 +395,25 @@ export function DatingShootClient({
                 ...draftData,
               }).then((success) => {
                 if (!success) {
-                  // Fallback to confirm step with pre-filled selections
+                  // Fallback to confirm step with pre-filled selections and show syncing warning if still unpaid/syncing
+                  setIsPaymentPendingSync(true);
                   setRestoredIntake({
                     ...draftData,
                     step: 'confirm',
                   });
                   setIsIntakeOpen(true);
+                  refreshPackStatus();
                 }
               });
             } else {
-              // Resume directly in intake confirmation screen
+              // Resume directly in intake confirmation screen (e.g. from Review Setup after payment)
+              setIsPaymentPendingSync(true);
               setRestoredIntake({
                 ...draftData,
                 step: 'confirm',
               });
               setIsIntakeOpen(true);
+              refreshPackStatus();
             }
           }
         }
