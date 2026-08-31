@@ -142,6 +142,12 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentSucces
                 });
               }
             }
+          } catch (e) { /* ignore */ }
+        })();
+      `
+    }} />
+  )
+
   const isDatingShootResume =
     params.resume === 'dating-shoot' ||
     params.resume === 'checkout' ||
