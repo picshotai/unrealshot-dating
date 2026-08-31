@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { DatingShootClient } from "./DatingShootClient";
 import { getDatingProductConfig } from "@/lib/dating/config";
 import { isAdminEmail } from "@/lib/auth/admin-access";
+import { creditService } from "@/lib/credits";
+import { packsFromCredits } from "@/lib/dating/types";
 
 export function generateMetadata(): Metadata {
   const config = getDatingProductConfig();
@@ -27,6 +29,11 @@ export default async function DatingShootPage({
 
   const params = await searchParams;
   const productConfig = getDatingProductConfig();
+
+  // Fetch user credits and derive pack status
+  const { balance: userCredits = 0 } = await creditService.getUserCredits(user.id);
+  const userPacks = packsFromCredits(userCredits);
+  const hasPack = userPacks >= 1;
 
   // Fetch all trained models for this user
   const { data: models, error: modelsError } = await supabase
@@ -56,6 +63,7 @@ export default async function DatingShootPage({
   return (
     <DatingShootClient
       userId={user.id}
+      hasPack={hasPack}
       models={models || []}
       orders={orders || []}
       initialModelId={params.modelId ? Number(params.modelId) : null}

@@ -115,6 +115,8 @@ type StatusResponse = {
 };
 
 export function DatingShootClient({
+  userId,
+  hasPack,
   models,
   orders,
   initialModelId,
@@ -123,6 +125,7 @@ export function DatingShootClient({
   ownerDiagnostics,
 }: {
   userId: string;
+  hasPack: boolean;
   models: Model[];
   orders: Order[];
   initialModelId: number | null;
@@ -134,6 +137,7 @@ export function DatingShootClient({
   } | null;
 }) {
   const launchRequestId = useRef<string | null>(null);
+  const autoLaunchTriggered = useRef(false);
   const regenerationAttempt = useRef<{
     photoId: string;
     previousImageUrl: string | null;
@@ -152,6 +156,14 @@ export function DatingShootClient({
   const hasOrders = orders.length > 0 || activeOrderId !== null;
   const [isIntakeOpen, setIsIntakeOpen] = useState(!hasOrders);
   
+  // Pending intake state restored from session if resuming
+  const [restoredIntake, setRestoredIntake] = useState<{
+    interests?: InterestId[];
+    excludeTags?: ExcludableTag[];
+    includeSimpleCandids?: boolean;
+    step?: 'configure' | 'confirm';
+  } | null>(null);
+
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoItem | null>(null);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);
 
@@ -239,7 +251,7 @@ export function DatingShootClient({
     interests: InterestId[];
     excludeTags: ExcludableTag[];
     includeSimpleCandids: boolean;
-  }) => {
+  }): Promise<boolean> => {
     setLoading(true);
     setError('');
     setCreditError('');
@@ -263,14 +275,14 @@ export function DatingShootClient({
       if (!res.ok) {
         if (data.code === 'insufficient_credits') {
           setCreditError(data.error);
-          return;
+          return false;
         }
         if (data.code === 'order_in_progress' && data.orderId) {
           setActiveOrderId(data.orderId);
           await fetchStatus(data.orderId);
           setIsIntakeOpen(false);
           launchRequestId.current = null;
-          return;
+          return true;
         }
         throw new Error(data.error || 'Failed to start photoshoot');
       }
@@ -279,12 +291,88 @@ export function DatingShootClient({
       await fetchStatus(data.orderId);
       setIsIntakeOpen(false);
       launchRequestId.current = null;
+      return true;
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to launch shoot');
+      return false;
     } finally {
       setLoading(false);
     }
   };
+
+  // Checkout Continuation & Auto-Launch Handler
+  useEffect(() => {
+    if (typeof window === 'undefined' || autoLaunchTriggered.current) return;
+    const searchParams = new URLSearchParams(window.location.search);
+    const resumeMode = searchParams.get('resume');
+
+    if (resumeMode === 'auto-start' || resumeMode === 'checkout') {
+      try {
+        const rawPending = sessionStorage.getItem('unrealshot_pending_shoot');
+        if (rawPending) {
+          const pending = JSON.parse(rawPending);
+          // Only resume if valid and saved within last 2 hours
+          if (
+            pending &&
+            pending.modelId &&
+            Date.now() - (pending.timestamp || 0) < 1000 * 60 * 120
+          ) {
+            const modelExists = models.some((m) => m.id === pending.modelId);
+            const targetModelId = modelExists
+              ? pending.modelId
+              : models[0]?.id || null;
+
+            if (targetModelId) {
+              const draftData = {
+                interests: pending.interests || [],
+                excludeTags: pending.excludeTags || [],
+                includeSimpleCandids:
+                  pending.includeSimpleCandids !== undefined
+                    ? pending.includeSimpleCandids
+                    : true,
+              };
+
+              if (resumeMode === 'auto-start') {
+                autoLaunchTriggered.current = true;
+                // Auto-launch photoshoot instantly
+                handleLaunchShoot({
+                  modelId: targetModelId,
+                  ...draftData,
+                }).then((success) => {
+                  if (success) {
+                    try {
+                      sessionStorage.removeItem('unrealshot_pending_shoot');
+                      window.history.replaceState({}, '', '/dating-shoot');
+                    } catch (e) {
+                      console.warn(e);
+                    }
+                  } else {
+                    // Fallback to confirm step with pre-filled selections
+                    setModelId(targetModelId);
+                    setRestoredIntake({
+                      ...draftData,
+                      step: 'confirm',
+                    });
+                    setIsIntakeOpen(true);
+                  }
+                });
+              } else {
+                // Resume directly in intake confirmation screen
+                setModelId(targetModelId);
+                setRestoredIntake({
+                  ...draftData,
+                  step: 'confirm',
+                });
+                setIsIntakeOpen(true);
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Failed to parse pending shoot config:', e);
+      }
+    }
+  }, [models]);
 
   // Retry Failed
   const handleRetryFailed = async () => {
@@ -501,6 +589,8 @@ export function DatingShootClient({
   if (isIntakeOpen) {
     return (
       <StudioIntakeView
+        userId={userId}
+        hasPack={hasPack}
         models={models}
         selectedModelId={modelId}
         onSelectModel={setModelId}
@@ -512,6 +602,8 @@ export function DatingShootClient({
         showCancel={hasOrders}
         shootsPerDelivery={deliveryConfig.shoots}
         totalPhotos={deliveryConfig.photos}
+        initialDraft={restoredIntake}
+        initialStep={restoredIntake?.step}
         ownerDiagnostics={ownerDiagnostics}
       />
     );

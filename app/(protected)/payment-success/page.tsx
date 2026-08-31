@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { CheckCircle, CreditCard, ArrowRight, Home, Zap, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import { RefreshButton } from './RefreshButton'
+import { AutoLaunchShoot } from './AutoLaunchShoot'
 import { formatPrice, formatCredits } from '@/lib/pricing-plans'
 
 interface PaymentSuccessPageProps {
@@ -17,6 +18,7 @@ interface PaymentSuccessPageProps {
     amount?: string
     credits?: string
     plan_name?: string
+    resume?: string
   }>
 }
 
@@ -247,21 +249,26 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentSucces
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         {isPaymentCompleted ? (
-          <>
-            <Link href="/dashboard">
-              <Button className="w-full sm:w-auto cursor-pointer">
-                <Home className="h-4 w-4 mr-2" />
-                Go to Dashboard
-              </Button>
-            </Link>
-            
-            <Link href="/example-tool">
-              <Button variant="outline" className="w-full sm:w-auto cursor-pointer">
-                Start Using Credits
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
-            </Link>
-          </>
+          params.resume === 'dating-shoot' || params.resume === 'checkout' || params.resume === 'auto-start' ? (
+            <AutoLaunchShoot />
+          ) : (
+            <>
+              <Link href="/dating-shoot">
+                <Button className="w-full sm:w-auto cursor-pointer bg-white text-black hover:bg-zinc-200 font-bold">
+                  <Zap className="h-4 w-4 mr-2" />
+                  Go to Dating Shoot
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </Link>
+              
+              <Link href="/dashboard">
+                <Button variant="outline" className="w-full sm:w-auto cursor-pointer border-zinc-700 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 hover:text-white">
+                  <Home className="h-4 w-4 mr-2" />
+                  Go to Dashboard
+                </Button>
+              </Link>
+            </>
+          )
         ) : isPaymentFailed ? (
           <>
             <Link href="/buy-credits">
