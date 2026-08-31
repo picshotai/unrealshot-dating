@@ -17,7 +17,7 @@ export type AuthorityPageContent = {
   related: Array<{ label: string; href: string }>
 }
 
-export const authorityPages: Record<string, AuthorityPageContent> = {
+const authorityPageCandidates: Record<string, AuthorityPageContent> = {
   "/how-it-works": {
     path: "/how-it-works",
     eyebrow: "The UnrealShot process",
@@ -126,3 +126,13 @@ export const authorityPages: Record<string, AuthorityPageContent> = {
     related: [{ label: "Privacy Policy", href: "/privacy-policy" }, { label: "Refund Policy", href: "/refund-policy" }, { label: "How It Works", href: "/how-it-works" }],
   },
 }
+
+const platformLandingPaths = new Set([
+  "/dating-photos/tinder",
+  "/dating-photos/hinge",
+  "/dating-photos/bumble",
+])
+
+export const authorityPages = Object.fromEntries(
+  Object.entries(authorityPageCandidates).filter(([path]) => !platformLandingPaths.has(path)),
+) as Record<string, AuthorityPageContent>

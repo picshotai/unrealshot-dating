@@ -1,5 +1,9 @@
 # Credit System Documentation
 
+> SEO release reference: [complete public page and URL inventory](./SEO_PAGE_INVENTORY.md)
+
+> SEO release reference: [complete public page and URL inventory](./SEO_PAGE_INVENTORY.md)
+
 Welcome to the comprehensive documentation for the credit system in this boilerplate. This documentation covers everything you need to know to understand, implement, and manage the credit system effectively.
 
 ## 📚 Documentation Overview

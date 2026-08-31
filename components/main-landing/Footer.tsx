@@ -31,9 +31,12 @@ export default function Footer() {
   ];
 
   const datingApps: FooterLink[] = [
-    { href: '/dating-photos/tinder', label: 'Tinder photo guide' },
-    { href: '/dating-photos/hinge', label: 'Hinge photo guide' },
-    { href: '/dating-photos/bumble', label: 'Bumble photo guide' },
+    { href: '/dating-photos/tinder', label: 'AI Tinder Photos' },
+    { href: '/dating-photos/hinge', label: 'AI Hinge Photos' },
+    { href: '/dating-photos/bumble', label: 'AI Bumble Photos' },
+    { href: '/guides/tinder-photos', label: 'Tinder Photo Guide' },
+    { href: '/guides/hinge-photos', label: 'Hinge Photo Guide' },
+    { href: '/guides/bumble-photos', label: 'Bumble Photo Guide' },
     { href: '/dating-photos/activity', label: 'Activity photos' },
   ];
 

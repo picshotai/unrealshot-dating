@@ -1,0 +1,97 @@
+import type { PlatformGuideContent, PlatformLandingContent } from "./types"
+
+const bumbleSources = [
+  { label: "Bumble: Uploading profile photos and videos", href: "https://support.bumble.com/hc/en-us/articles/28523708029341-Uploading-profile-photos-and-videos" },
+  { label: "Bumble: Photo Verification", href: "https://bumble.com/en/help/how-can-i-verify-my-profile" },
+  { label: "Bumble: Inauthentic profiles", href: "https://bumble.com/guidelines/inauthentic-profiles" },
+]
+
+export const bumbleLanding: PlatformLandingContent = {
+  app: "Bumble",
+  path: "/dating-photos/bumble",
+  eyebrow: "AI Bumble photo product for men",
+  title: "AI Bumble photos for a varied profile that still looks like you",
+  description: "Create 60 realistic AI Bumble photos across 15 coherent shoots from 4–6 selfies. Real-interest scenes, 15 retakes, 30-minute delivery and $39 once.",
+  answer: "UnrealShot helps men replace a repetitive Bumble camera roll with 15 coherent photo shoots: clear portraits, full-length choices, genuine activity scenes and relaxed context. Each shoot contains four related frames, giving you 60 photos plus 15 individual Photo Retakes within 30 minutes for a one-time $39 payment.",
+  reviewed: "August 31, 2026",
+  heroBullets: ["15 distinct shoots · 60 total photos", "Four coherent frames in every scene", "22 supported real-interest choices", "15 Photo Retakes · 30-minute delivery · $39"],
+  problemIntro: "Bumble’s own photo guidance recommends clear, well-lit images, different aspects of your life and four to six photos or videos. That sounds simple until your camera roll contains one good selfie, old group photos and no current activity or full-length image.",
+  problems: [
+    { title: "One strong selfie has to do everything", body: "A single portrait can identify you, but it cannot show full appearance, normal style, interests and different settings. Repeating that portrait with small angle changes leaves the rest of the profile underdeveloped." },
+    { title: "The available photos no longer match", body: "Different years, haircuts, facial hair and body changes can make a real camera roll less coherent than expected. Generated options are useful only when they are guided by recent references and reviewed against how you look now." },
+    { title: "Over-edited images conflict with authenticity", body: "Bumble tells members to avoid heavy filters and over-edited images, and its guidelines prohibit artificial or enhanced photos used to deceive. UnrealShot’s job is to create plausible options—not to change who you are." },
+  ],
+  solutionIntro: "UnrealShot creates an entire selection pool around identifiable photo roles. The aim is not to claim access to Bumble’s algorithm or promise a dating outcome. It is to give you enough realistic, internally coherent scenes to build a varied and accurate four-to-six-photo profile.",
+  differentiators: [
+    { title: "Variety beyond one portrait", body: "Fifteen shoots cover indoor, outdoor, active, everyday and smart-casual contexts. You can select a clear opener, a wider image and several distinct life moments rather than filling slots with near-duplicates." },
+    { title: "Coherence inside every shoot", body: "Four frames retain one setting, outfit and lighting direction while moving from close to half-body, full-length and candid. The sequence feels like one short session instead of four unrelated prompts." },
+    { title: "Interests remain grounded", body: "Choose from 22 supported interests that actually belong to your life. One interest can shape no more than two shoots, and current exclusions prevent scenes the product cannot represent reliably." },
+    { title: "A correction path is included", body: "Reference-guided generation can miss likeness or composition. Fifteen individual Photo Retakes let you address weak frames without pretending every first result is flawless." },
+  ],
+  lineup: [
+    { slot: "Photo 1", role: "Bright, current solo opener", explanation: "Show your full face clearly with an expression that fits the rest of your profile. Avoid heavy filters, visual clutter and anything covering your eyes.", shootSlug: "outdoor-coffee" },
+    { slot: "Photo 2", role: "Full-length everyday frame", explanation: "Add current proportions, posture and normal clothing. A city walk creates movement without turning the image into a fashion pose.", shootSlug: "city-walk" },
+    { slot: "Photo 3", role: "Specific real interest", explanation: "Use cooking, fitness, books, art or another activity only when it is genuinely part of your life. It should create an honest topic, not decorate the profile.", shootSlug: "home-cooking" },
+    { slot: "Photo 4", role: "Candid expression", explanation: "A relaxed frame adds warmth and keeps the lineup from feeling like six direct-to-camera portraits." },
+    { slot: "Photo 5", role: "Dressed-up or evening contrast", explanation: "Show how you look in a different wardrobe and social setting without implying wealth, access or a lifestyle the location cannot support.", shootSlug: "rooftop" },
+    { slot: "Photo 6", role: "Recent real-life photo or video", explanation: "Use a genuine recent social, travel or ordinary-life moment to anchor the final lineup. Bumble supports up to six photos and videos and recommends four to six." },
+  ],
+  sections: [
+    { heading: "Why four-frame scenes create better selection", paragraphs: ["Suppose a coffee scene looks like your real routine. A single generation forces you to accept its exact crop and expression. A four-frame shoot gives you a close opener candidate, a half-body activity view, a wider environmental frame and a candid reaction while the underlying moment stays consistent.", "You may use only one of those four photos on Bumble. That is expected. Their purpose is to let you select the best photographic role without changing identity, outfit and location every time you ask for another option."] },
+    { heading: "Bumble variety should remain believable", paragraphs: ["Bumble recommends showing different aspects of who you are, including hobbies, social moments, pets and travel. UnrealShot can support many activity and lifestyle roles, but it deliberately does not fabricate dogs and currently excludes them along with alcohol, bicycles and team sports.", "A generated scene should reflect something that could reasonably appear in your camera roll. Balance more polished images with ordinary daylight and at least one recent real photo or video. A coherent profile is varied in information, not exaggerated in status."] },
+    { heading: "No algorithm or match-rate promise", paragraphs: ["Bumble offers its own Best Photo setting, which can place a popular image first. UnrealShot does not read that signal, run tests inside your account or tailor generations to Bumble’s ranking systems. It also does not promise likes, matches, dates or conversations.", "The product controls inputs, scene design, framing variety and the retake workflow. You control which accurate images are published, their order and whether they continue to represent you over time."] },
+    { heading: "From references to 60 usable choices", paragraphs: ["Upload 4–6 recent solo selfies from varied angles. Answer three questions about your intended look and genuine interests. UnrealShot uses the references to guide likeness without training a custom model, then produces 15 scenes with four frames each.", "Delivery is within 30 minutes. The $39 one-time package includes 60 photos and 15 individual Photo Retakes. Review every result for current appearance, defining features, hands, text, reflections and scene truth before using it."], bullets: ["4–6 reference selfies", "15 coherent shoots", "60 total images", "15 individual Photo Retakes", "$39 once", "No subscription"] },
+  ],
+  exampleSlugs: ["outdoor-coffee", "home-cooking", "rooftop", "gym-training"],
+  policy: [
+    "Bumble says profiles can contain up to six photos and videos and recommends four to six. Its guidance emphasizes a visible face, bright light, varied interests and avoiding heavy filters or overly edited photos.",
+    "Bumble Photo Verification compares a prompted selfie with profile photos using automated and human review. Its support guidance recommends removing hats, sunglasses and filters when the selfie does not match.",
+    "Bumble prohibits fake or misleading profiles and artificial or enhanced photos used deceptively. UnrealShot cannot guarantee verification and is not affiliated with Bumble.",
+  ],
+  sources: bumbleSources,
+  faqs: [
+    { question: "What are AI Bumble photos?", answer: "They are generated photo options guided by your reference selfies. UnrealShot supplies them as coherent four-frame shoots so you can choose different profile roles." },
+    { question: "How many photos can you use on Bumble?", answer: "Bumble’s current support guidance says you can upload up to six photos and videos and that four to six work best." },
+    { question: "Does UnrealShot use Bumble’s Best Photo data?", answer: "No. UnrealShot cannot access your account, Best Photo performance or Bumble’s private systems. It creates photo options for you to select and review." },
+    { question: "Will UnrealShot photos pass Bumble verification?", answer: "Verification is controlled by Bumble and cannot be guaranteed. Use only accurate current likenesses, retain real photos and follow Bumble’s current guidance." },
+    { question: "Can generated photos show any hobby?", answer: "No. UnrealShot offers 22 supported interests and excludes alcohol, dogs, bicycles and team sports. Choose only interests that are genuinely yours." },
+    { question: "What happens if a Bumble photo does not resemble me?", answer: "Do not publish it. Use an included individual Photo Retake or choose a different frame that accurately matches your current appearance." },
+  ],
+  guidePath: "/guides/bumble-photos",
+  guideLabel: "Read the complete Bumble photo guide",
+}
+
+export const bumbleGuide: PlatformGuideContent = {
+  app: "Bumble",
+  path: "/guides/bumble-photos",
+  eyebrow: "Bumble photo guide for men",
+  title: "Bumble photos for men: a practical four-to-six-photo lineup",
+  description: "A detailed Bumble photo guide covering its current photo guidance, opener selection, Best Photo, activity images, AI-photo boundaries and verification.",
+  answer: "A strong Bumble lineup uses four to six distinct photos or videos: begin with a clear current face, then add full-length appearance, a genuine interest, a relaxed expression and another real-life setting. Bumble itself recommends bright, well-lit images, visible faces and different aspects of your life. Avoid heavy filters, repeated selfies and any generated image that changes who you are.",
+  reviewed: "August 31, 2026",
+  quickFacts: [["Available media", "Up to 6 photos/videos"], ["Bumble recommendation", "4–6"], ["Opener", "Clear, current face"], ["Best Photo", "Can reorder the first image"]],
+  sections: [
+    { heading: "Begin with an unmistakable current face", paragraphs: ["Use a solo image with bright, ordinary light, visible eyes and an expression that looks natural for you. Keep your face large enough to read on a phone without turning the image into an ID-photo crop.", "Bumble explicitly advises members to use clear, well-lit photos where the face is visible and to avoid heavy filters or over-editing. Treat that as the baseline before considering wardrobe, location or activity." ] },
+    { heading: "Build four core roles before filling six slots", paragraphs: ["Start with four jobs: opener, full-length view, genuine activity and relaxed context. These establish who you are, how you look, something you do and how you appear outside a posed portrait.", "If you have fifth and sixth positions, add a different wardrobe or setting and one recent camera-roll photo or video. Do not turn extra capacity into repeated selfies. Bumble supports up to six media items and says four to six work best."], bullets: ["1. Clear solo opener", "2. Full-length everyday style", "3. Genuine hobby or routine", "4. Relaxed candid", "5. Smart-casual or different environment", "6. Recent real photo or video"] },
+    { heading: "How Bumble’s Best Photo changes ordering decisions", paragraphs: ["Bumble says its Best Photo setting checks your photos and can put the most popular one first. If you use it, remember that the first image may change from your manually chosen sequence.", "Every likely opener candidate should therefore identify you clearly. Best Photo is a Bumble feature—not evidence that an outside generator can predict or optimize its result. Review your profile periodically to see how the selected first image fits the rest of the lineup." ] },
+    { heading: "Use interests to add information, not performance", paragraphs: ["An activity photo should reveal a real part of life: cooking, training, hiking, books, art, travel or another genuine routine. It does not need to be extreme. Familiar details often give a clearer sense of compatibility than an aspirational luxury scene.", "If a pet, friend or place appears, it should belong to your actual life. Bumble’s own examples say a pet photo should feature your pet. Do not generate borrowed social proof or invent relationships for the image." ] },
+    { heading: "Balance solo clarity with social context", paragraphs: ["A real group image can show social context, but it should appear after someone can already identify you. Avoid an opener that requires guessing, blurred faces or an aggressive crop that leaves fragments of other people.", "UnrealShot currently creates one-person scenes and does not fabricate friends. Use an authentic camera-roll photo when you want social evidence, and get permission before publishing recognizable people." ] },
+    { heading: "Using AI Bumble photos without creating a fake profile", paragraphs: ["Generated photos can fill missing roles, but only accurate frames belong in the final profile. Compare face shape, hair, facial hair, age, skin texture, body and expression with recent real photos. Remove anything that produces a more flattering but different identity.", "Bumble’s inauthentic-profile guidelines prohibit artificial or enhanced photos used deceptively. Keep real current media in the lineup, choose only true activities and never use AI imagery to impersonate someone or misstate your life." ] },
+    { heading: "Photo Verification is a separate app decision", paragraphs: ["Bumble’s verification flow asks for a prompted selfie and uses automated and human review to compare it with profile photos. Its troubleshooting guidance recommends visible faces, clear lighting, no filters and no obstruction when a selfie does not match.", "The process belongs entirely to Bumble. A photo service cannot promise acceptance. If any profile image no longer resembles you, replace it before attempting or maintaining verification." ] },
+    { heading: "Common Bumble photo mistakes", paragraphs: ["The most common structural mistake is a gallery of close selfies with no full-length or activity context. Other issues include old appearances, sunglasses in the opener, every photo using the same clothes, several staged luxury scenes and a social image where identification is difficult.", "Label each image by its role, remove duplicates and review the remaining set at phone size. Accuracy comes before polish."], bullets: ["Filtered or obscured opener", "No full-length image", "Several near-identical face crops", "Borrowed pet or invented hobby", "No current real photo or video", "Inconsistent AI likeness", "Every image in one wardrobe or setting"] },
+    { heading: "Use photos and videos for different jobs", paragraphs: ["Bumble counts photos and videos within the same set of up to six media items. A short real video can document movement, voice-adjacent personality and an actual environment in a way a generated still cannot. Keep it stable, audible where relevant and short enough that the central moment is immediately clear.", "Do not add video merely to create format variety. A blurry concert clip or distant sports recording may reveal less than a clear photo. Choose the medium that communicates the role most accurately, and keep a clear still opener even when later video adds useful life context."] },
+    { heading: "Know when the lineup needs updating", paragraphs: ["Update profile media after a meaningful change in hair, facial hair, body, glasses or other defining appearance. Also replace activity images when the interest is no longer part of your life. Accuracy is a continuing responsibility rather than a one-time check at upload.", "Review the profile after changing its first image or enabling Best Photo. Confirm that the selected opener still introduces the later sequence coherently. Archive outdated generated and camera-roll candidates so they do not accidentally return during a future refresh."] },
+    { heading: "Final Bumble lineup audit", paragraphs: ["Look at the sequence without reading your bio. It should still communicate one recognizable current person, ordinary style range and at least one specific interest. Then read the bio and prompts to confirm nothing contradicts the images.", "Update the set when your appearance changes. A technically excellent photo becomes inaccurate if it represents a haircut, beard, body or age that no longer matches." ] },
+  ],
+  checklist: ["My opener is solo and current", "My face is visible without filters or obstruction", "I use four to six distinct roles where available", "One image shows full-length appearance", "Activities and pets are genuinely mine", "Best Photo candidates can all work as openers", "At least one item is recent real media", "Generated frames match my current appearance", "No scene misstates status, travel or relationships", "I reviewed Bumble’s current guidelines and verification rules"],
+  sources: bumbleSources,
+  faqs: [
+    { question: "How many photos should men use on Bumble?", answer: "Bumble allows up to six photos and videos and currently recommends four to six. Use distinct roles rather than filling slots with repeated selfies." },
+    { question: "What should the first Bumble photo be?", answer: "Choose a recent solo image with bright light, visible eyes, a clear full face and a natural expression." },
+    { question: "What is Bumble Best Photo?", answer: "Bumble says Best Photo can check your photos and put the most popular one first. It is an in-app feature; UnrealShot does not access or predict its data." },
+    { question: "Can men use AI-generated photos on Bumble?", answer: "Only use images that accurately represent your current appearance and real life. Bumble prohibits artificial or enhanced photos used deceptively, so review its current rules and keep recent real media." },
+    { question: "Should you include a group photo on Bumble?", answer: "A real social image can add context later in the profile, but it should not create identification confusion. Lead with a solo photo and get permission from visible friends." },
+  ],
+  productPath: "/dating-photos/bumble",
+  productLabel: "Create a complete AI Bumble photo lineup",
+}

@@ -6,9 +6,12 @@ import PublicHeader from "@/components/Header"
 import Footer from "@/components/main-landing/Footer"
 import AuthorityContentPage from "@/components/seo/AuthorityContentPage"
 import ShootPage from "@/components/seo/ShootPage"
+import PlatformLandingPage from "@/components/seo/PlatformLandingPage"
+import PlatformGuidePage from "@/components/seo/PlatformGuidePage"
 import { MultipleStructuredData } from "@/components/seo/StructuredData"
 import { authorityPages } from "@/lib/dating-authority-content"
 import { datingShoots, getDatingShoot } from "@/lib/dating-shoot-content"
+import { platformGuides, platformLandings } from "@/lib/platform-pages"
 import { getLocalizedMetadata, makeBreadcrumbJsonLd, makeWebPageJsonLd, publicUrl } from "@/lib/public-seo"
 
 type Params = { params: Promise<{ locale: string; seo: string[] }> }
@@ -18,22 +21,27 @@ function getPath(segments: string[]) {
 }
 
 export function generateStaticParams() {
-  return [
+  const paths = new Set([
     ...Object.keys(authorityPages),
+    ...Object.keys(platformLandings),
+    ...Object.keys(platformGuides),
     "/dating-photos/examples",
     ...datingShoots.map((shoot) => `/dating-photos/shoots/${shoot.slug}`),
-  ].map((path) => ({ locale: "en", seo: path.slice(1).split("/") }))
+  ])
+  return [...paths].map((path) => ({ locale: "en", seo: path.slice(1).split("/") }))
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { locale, seo } = await params
   if (locale !== "en") return { robots: { index: false, follow: false } }
   const path = getPath(seo)
+  const platformLanding = platformLandings[path]
+  const platformGuide = platformGuides[path]
   const content = authorityPages[path]
   const shoot = path.startsWith("/dating-photos/shoots/") ? getDatingShoot(seo.at(-1) ?? "") : undefined
-  if (!content && !shoot && path !== "/dating-photos/examples") return {}
-  const title = content?.title ?? shoot?.title ?? "AI Dating Photo Examples: Seven Complete Shoots"
-  const description = content?.description ?? shoot?.description ?? "See seven complete four-frame AI dating photo shoots, with captions explaining the role of every frame."
+  if (!platformLanding && !platformGuide && !content && !shoot && path !== "/dating-photos/examples") return {}
+  const title = platformLanding?.title ?? platformGuide?.title ?? content?.title ?? shoot?.title ?? "AI Dating Photo Examples: Seven Complete Shoots"
+  const description = platformLanding?.description ?? platformGuide?.description ?? content?.description ?? shoot?.description ?? "See seven complete four-frame AI dating photo shoots, with captions explaining the role of every frame."
   return getLocalizedMetadata({ locale: "en", pathname: path, title, description, alternatePaths: { en: path } })
 }
 
@@ -54,6 +62,10 @@ export default async function SeoPage({ params }: Params) {
   if (locale !== "en") notFound()
   const path = getPath(seo)
   if (path === "/dating-photos/examples") return <ExamplesPage />
+  const platformLanding = platformLandings[path]
+  if (platformLanding) return <PlatformLandingPage content={platformLanding} />
+  const platformGuide = platformGuides[path]
+  if (platformGuide) return <PlatformGuidePage content={platformGuide} />
   const shoot = path.startsWith("/dating-photos/shoots/") ? getDatingShoot(seo.at(-1) ?? "") : undefined
   if (shoot) return <ShootPage shoot={shoot} />
   const content = authorityPages[path]

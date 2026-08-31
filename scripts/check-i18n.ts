@@ -16,12 +16,18 @@ import {
   localizePublicPathname,
   publishedPublicLocales,
   publishedBlogLocales,
+  publicRoutes,
   splitLocalePathname,
 } from "../i18n/config"
 
 assert.deepEqual(appLocales, ["en", "fr", "es", "de", "pt-BR"])
 assert.deepEqual(publishedPublicLocales, ["en", "fr", "es", "de", "pt-BR"])
 assert.deepEqual(publishedBlogLocales, ["en"])
+assert.equal(
+  new Set(publicRoutes.map((route) => route.path)).size,
+  publicRoutes.length,
+  "Public route registry contains duplicate paths",
+)
 
 assert.equal(isAppLocale("pt-BR"), true)
 assert.equal(isAppLocale("pt-br"), false)
@@ -67,6 +73,8 @@ assert.equal(isPhase2LocalizedPathname("/fr/pricing"), true)
 assert.equal(isPhase2LocalizedPathname("/fr/dating-photos"), true)
 assert.equal(isPublishedPublicPathname("/how-it-works", "en"), true)
 assert.equal(isPublishedPublicPathname("/how-it-works", "fr"), false)
+assert.equal(isPublishedPublicPathname("/guides/tinder-photos", "en"), true)
+assert.equal(isPublishedPublicPathname("/guides/tinder-photos", "fr"), false)
 assert.equal(isPhase2LocalizedPathname("/de/blog/a-post"), false)
 assert.equal(isLocaleRoutedPublicPathname("/login"), false)
 assert.equal(isLocaleRoutedPublicPathname("/fr/login"), false)

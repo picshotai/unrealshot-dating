@@ -3,7 +3,7 @@ const serverOrigin = (process.env.SEO_BASE_URL || "http://localhost:3200").repla
 let metadataOrigin = process.env.SEO_METADATA_ORIGIN?.replace(/\/$/, "") || ""
 
 const englishArticle = "/blog/7-common-dating-profile-photo-mistakes-and-how-ai-fixes-them"
-const englishOnlyPages = ["/how-it-works", "/dating-photos/examples", "/realistic-ai-dating-photos", "/dating-photos/activity", "/dating-photos/tinder", "/dating-photos/hinge", "/dating-photos/bumble", "/contact"]
+const englishOnlyPages = ["/how-it-works", "/dating-photos/examples", "/realistic-ai-dating-photos", "/dating-photos/activity", "/dating-photos/tinder", "/dating-photos/hinge", "/dating-photos/bumble", "/guides/tinder-photos", "/guides/hinge-photos", "/guides/bumble-photos", "/contact"]
 
 function attribute(tag: string, name: string): string | undefined {
   return new RegExp(`${name}=["']([^"']+)["']`, "i").exec(tag)?.[1]
@@ -63,7 +63,7 @@ async function main() {
   await expectPage("/blog", "en-US", "/blog")
   for (const pathname of englishOnlyPages) await expectPage(pathname, "en-US", pathname)
 
-  for (const pathname of ["/fr/blog", "/es/blog", "/de/blog", "/pt-br/blog", "/fr/how-it-works", "/de/dating-photos/examples"]) {
+  for (const pathname of ["/fr/blog", "/es/blog", "/de/blog", "/pt-br/blog", "/fr/how-it-works", "/de/dating-photos/examples", "/fr/guides/tinder-photos"]) {
     const response = await request(pathname)
     const html = await response.text()
     assert.equal(response.status, 404, `${pathname} must remain unpublished`)

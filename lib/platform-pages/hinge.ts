@@ -1,0 +1,97 @@
+import type { PlatformGuideContent, PlatformLandingContent } from "./types"
+
+const hingeSources = [
+  { label: "Hinge: How to edit your profile", href: "https://help.hinge.co/hc/en-us/articles/360011053094-How-do-I-edit-my-profile" },
+  { label: "Hinge: Adding and editing photos", href: "https://help.hinge.co/hc/en-us/articles/36311675387155-Adding-and-Editing-Photos" },
+  { label: "Hinge: Prohibited Content & Behavior", href: "https://help.hinge.co/hc/en-us/articles/42464295207187-Prohibited-Content-Behavior" },
+]
+
+export const hingeLanding: PlatformLandingContent = {
+  app: "Hinge",
+  path: "/dating-photos/hinge",
+  eyebrow: "AI Hinge photo product for men",
+  title: "AI Hinge photos that give your prompts a believable visual story",
+  description: "Create 60 realistic AI Hinge photos in 15 coherent shoots. Build clear portrait, full-length and real-interest options from 4–6 selfies for $39 once.",
+  answer: "UnrealShot creates 15 coherent four-photo shoots for men who need a complete Hinge photo lineup, not another folder of unrelated portraits. Your 4–6 selfies guide likeness while real-interest choices shape plausible scenes. You receive 60 photos, 15 individual Photo Retakes and delivery within 30 minutes for $39 once.",
+  reviewed: "August 31, 2026",
+  heroBullets: ["15 shoots with four related frames each", "Real-interest scenes that can support honest prompts", "60 photos plus 15 Photo Retakes", "Delivered within 30 minutes · $39 once"],
+  problemIntro: "Hinge makes photos and written prompts part of one profile narrative. A prompt about cooking beside a staged luxury photo creates no useful connection. A clear opener followed by accurate activity and context images gives the written profile something visible to build on.",
+  problems: [
+    { title: "Photos and prompts describe different people", body: "A profile feels assembled when the writing is casual but every photo is formal, or when an activity image has no relationship to a real interest. The issue is not a missing keyword; it is a missing, believable through-line." },
+    { title: "Four to six slots repeat one portrait", body: "Hinge currently requires between four and six photos depending on local requirements, alongside three prompt answers. Repeating the same crop wastes the limited visual space that could show appearance, style, interests and everyday context." },
+    { title: "Generated scenes invent a persona", body: "A borrowed hobby or impossible trip may look impressive for one second and become awkward as soon as someone asks about it. UnrealShot limits scene selection to supported interests you choose as genuinely yours." },
+  ],
+  solutionIntro: "The UnrealShot workflow begins with the roles a Hinge lineup needs and creates enough coherent options to fill those roles honestly. Four frames per shoot make it possible to select the crop that fits beside a prompt without changing the entire scene or identity.",
+  differentiators: [
+    { title: "Prompt-compatible scene choices", body: "Cooking, fitness, coffee, books, art, music, travel and other supported interests can shape a full shoot. Select an activity only when it reflects your real week and could lead to a conversation you can actually continue." },
+    { title: "Four crops from one visual fact", body: "Each shoot supplies a close, half-body, full-length and candid frame while keeping its location, clothing and light coherent. That lets you choose a conversational activity crop or a clearer portrait from the same believable moment." },
+    { title: "Range across 15 shoots", body: "A Hinge profile should not look as though every image was taken during one afternoon. Fifteen shoots offer everyday, active, dressed-up, indoor and outdoor choices while one interest is capped at two scenes." },
+    { title: "Retakes for individual misses", body: "Reference guidance is not flawless. If one image changes your face, expression or composition, use one of 15 individual Photo Retakes instead of accepting an inaccurate frame." },
+  ],
+  lineup: [
+    { slot: "Photo 1", role: "Recognizable solo opener", explanation: "Start with your current face, a natural expression and minimal ambiguity. The first image establishes who the later stories belong to.", shootSlug: "outdoor-coffee" },
+    { slot: "Photo 2", role: "Full-length everyday style", explanation: "Show posture and normal clothing in a plausible setting. This adds information that another face crop cannot.", shootSlug: "city-walk" },
+    { slot: "Photo 3", role: "Interest connected to a prompt", explanation: "Pair a truthful written detail with a visual one. A cooking image belongs beside a prompt about food or Sunday routine only when that detail is real.", shootSlug: "home-cooking" },
+    { slot: "Photo 4", role: "Relaxed expression or action", explanation: "Use a candid frame that gives someone an easy detail to comment on. The action should read without a caption explaining it." },
+    { slot: "Photo 5", role: "Different social or evening context", explanation: "A smart-casual restaurant or rooftop image changes clothing and mood without pretending to document status or access.", shootSlug: "dinner" },
+    { slot: "Photo 6", role: "Recent camera-roll anchor", explanation: "Where six slots are available, use a genuine recent image that confirms the generated selections fit your current life and appearance." },
+  ],
+  sections: [
+    { heading: "A Hinge image should create a response path", paragraphs: ["A useful Hinge photo does more than display appearance. It can contain one small, truthful detail that makes a response easy: the meal you actually cook, the neighborhood walk you take or the kind of architecture you stop to photograph.", "That does not mean every photo needs a dramatic story. The opener can remain simple. Supporting images carry the conversational detail, and the written prompts can add meaning without repeating what the image already shows."] },
+    { heading: "How the four-frame shoot supports a prompt-led profile", paragraphs: ["Consider one home-cooking shoot. The close frame may keep your face readable, the half-body frame makes the preparation clear, the full-length frame shows the kitchen context and the candid frame adds a warm expression. All four share one visual event.", "You select the frame that works with your prompt rather than forcing one isolated generation into the slot. The other frames remain useful alternatives or retake references. This structure is different from receiving dozens of unrelated locations with no internal consistency."] },
+    { heading: "What the product can solve—and what it cannot", paragraphs: ["UnrealShot can solve missing photo roles: no usable full-length image, no relaxed activity photo, no dressed-up contrast or no clear alternative opener. It cannot write a true life story for you, determine what Hinge users will prefer or guarantee likes, matches, conversations or verification.", "Use the final choice process as an accuracy audit. Does the person look like you today? Is the activity yours? Would a friend recognize the clothing and setting as plausible? If not, remove the image or use a Photo Retake."] },
+    { heading: "The complete UnrealShot delivery", paragraphs: ["Upload 4–6 solo reference selfies and answer three intake questions. The system uses those references to guide likeness; it does not train a custom model. Interest selections influence whole scenes, with a two-shoot cap per interest to preserve variety.", "Within 30 minutes, you receive 15 four-frame shoots—60 photos—plus 15 individual Photo Retakes. The price is $39 once with no subscription."], bullets: ["4–6 current references", "15 coherent scenes", "Four photographic roles per scene", "22 supported interests", "15 individual Photo Retakes", "$39 one-time payment"] },
+  ],
+  exampleSlugs: ["home-cooking", "outdoor-coffee", "coastal-travel", "dinner"],
+  policy: [
+    "Hinge says members need between four and six photos depending on local requirements, together with three prompt answers.",
+    "Hinge’s prohibited-content guidance bars misrepresentation, including posting another person’s photo or likeness, and prohibits AI-generated content used to deceive or mislead.",
+    "Use generated frames only when they accurately represent you. UnrealShot does not guarantee verification, acceptance or any dating outcome and is not affiliated with Hinge.",
+  ],
+  sources: hingeSources,
+  faqs: [
+    { question: "What are AI Hinge photos?", answer: "They are generated photo options based on your reference selfies. UnrealShot organizes them into coherent four-frame scenes that can fill distinct Hinge profile roles." },
+    { question: "How many photos does a Hinge profile require?", answer: "Hinge’s current help material says members need between four and six photos depending on local requirements, along with three prompt answers. Check the app and official help center for your region." },
+    { question: "Can UnrealShot match photos to my Hinge prompts?", answer: "You can select real interests that influence scenes, then choose a frame that supports a truthful prompt. UnrealShot does not invent personal facts or automatically read your Hinge profile." },
+    { question: "Does UnrealShot optimize for Hinge’s algorithm?", answer: "No. It does not access or claim to tailor images to Hinge’s ranking systems. It creates varied, coherent photo choices for you to review." },
+    { question: "Are AI photos allowed on Hinge?", answer: "Hinge prohibits AI-generated content used to deceive or mislead. Use only accurate images, represent your interests truthfully and review Hinge’s current rules before publishing." },
+    { question: "What if one frame does not look like me?", answer: "Do not use it. The package includes 15 individual Photo Retakes for likeness, expression or composition misses." },
+  ],
+  guidePath: "/guides/hinge-photos",
+  guideLabel: "Read the complete Hinge photo guide",
+}
+
+export const hingeGuide: PlatformGuideContent = {
+  app: "Hinge",
+  path: "/guides/hinge-photos",
+  eyebrow: "Hinge photo guide for men",
+  title: "Hinge photos for men: build a profile people can respond to",
+  description: "A detailed Hinge photo guide covering four-to-six-photo lineups, prompt alignment, photo roles, captions, AI-image boundaries and current Hinge rules.",
+  answer: "Build a Hinge lineup by giving each available photo a different job: identify you clearly, show your full appearance, reveal a real interest, add a relaxed expression and provide another believable part of your life. Written prompts should add context to those images rather than contradict them. Hinge currently requires four to six photos depending on local requirements, so repeated portraits waste meaningful space.",
+  reviewed: "August 31, 2026",
+  quickFacts: [["Current requirement", "4–6 photos by region"], ["Written profile", "3 prompt answers"], ["Strongest connection", "Real activity + truthful prompt"], ["AI boundary", "Never deceptive or misleading"]],
+  sections: [
+    { heading: "Treat the Hinge profile as one connected story", paragraphs: ["Hinge places photos among written details and prompts, so viewers do not experience the images as a separate gallery. A photo can make a prompt more specific, while a prompt can explain why an ordinary-looking moment matters.", "Start by listing the facts your profile already communicates: work, neighborhood, intentions, routines and real interests. Your images should broaden that picture, not stage a second identity. If the writing says quiet Sundays and the gallery shows only nightlife, the profile creates avoidable uncertainty." ] },
+    { heading: "What the first Hinge photo should establish", paragraphs: ["The opener should make you easy to recognize: solo, recent, well lit and close enough for the face to remain clear on a phone. Avoid sunglasses, an aggressive crop or a distant full-body frame as the first point of identification.", "Personality can appear through expression and clothing without loading the opener with props. Save detailed activity scenes for later positions, where the viewer has enough context to understand what they reveal." ] },
+    { heading: "How to use four to six photo slots", paragraphs: ["Hinge says members are required to use between four and six photos depending on local requirements. Build a four-photo core first: clear opener, full-length context, genuine activity and relaxed or dressed-up contrast. If five or six slots are available, add a different real-life setting and a current camera-roll anchor.", "Do not fill an extra slot simply because it exists. Two coffee portraits in the same clothes still perform one job. Choose the version with the clearer face or expression and use the remaining space for new information."], bullets: ["1. Solo opener", "2. Full-length everyday image", "3. Real-interest activity", "4. Relaxed expression or social context", "5. Different wardrobe or setting", "6. Recent real-life anchor"] },
+    { heading: "Connect activity photos to prompts without repeating yourself", paragraphs: ["A kitchen image plus a prompt that only says ‘I love cooking’ repeats one fact. A stronger pairing lets the image establish cooking and uses the prompt for a specific detail: the dish you are learning, a family recipe or your harmless kitchen controversy.", "The same principle works for running, books, art, photography or travel. Let the image prove the broad category and let the writing provide the response hook. Both must remain true." ] },
+    { heading: "Photo prompts and captions need specificity", paragraphs: ["If your version of Hinge offers a photo prompt or caption, use it only when it adds information the frame cannot show. Naming a real place, explaining the moment or inviting a narrow response can help; generic labels such as ‘adventure time’ add little.", "Never use a caption to repair an implausible image. If the photo needs text to explain why your hand, face or environment looks strange, remove it." ] },
+    { heading: "Choose candid images that remain readable", paragraphs: ["Candid does not mean blurry, distant or unaware of composition. A useful candid frame has a clear expression and an action that makes sense in the setting. Looking slightly away from the lens can feel relaxed, but the face should remain visible somewhere else in the lineup.", "Balance candids with one direct, straightforward portrait. A profile made entirely of looking-away images can hide the very information the opener needs to establish." ] },
+    { heading: "Using AI Hinge photos responsibly", paragraphs: ["AI photos should fill a genuine camera-roll gap, not create a more impressive fictional person. Use recent selfies as references, select only real interests and reject changes to face, age, body, hair or identity-defining details.", "Hinge explicitly prohibits AI-generated content used to deceive or mislead. Keep recent real photos in the profile, avoid false locations or activities and do not assume any generated frame will pass moderation or verification." ] },
+    { heading: "Common Hinge photo problems", paragraphs: ["Repeated headshots are the obvious issue, but contradiction is equally damaging: radically different facial hair across adjacent photos, prompts unsupported by the gallery, several old appearances or every image looking like professional branding.", "Audit by role and truth. Write one sentence describing what each photo contributes. If the sentence is the same twice, remove one. Then ask whether every visible interest and setting could be discussed honestly."], bullets: ["No current solo opener", "Prompt and activity contradictions", "Several portraits with the same crop", "No full-length photo", "Old or inconsistent appearance", "Invented lifestyle scenes", "Every image over-polished"] },
+    { heading: "Check facial and wardrobe continuity across the whole profile", paragraphs: ["People change hair, facial hair and clothing over time, so perfect sameness is neither possible nor desirable. The set should still read as one current person. Compare jaw shape, hairline, eye spacing, facial-hair pattern, age and body proportions across adjacent photos rather than reviewing each frame alone.", "Wardrobe needs variety without becoming costume changes. One casual layer, one active outfit and one smart-casual look can show range. Several luxury outfits or radically different personal styles may communicate a persona your prompts and real camera-roll photos do not support."] },
+    { heading: "Retake the frame or replace the role?", paragraphs: ["Use a retake when the role and scene are right but one controllable detail is wrong: likeness, expression, hand position or crop. Replace the entire role when the underlying idea is false, repetitive or irrelevant to your profile. Retaking an invented hobby more cleanly does not make it a truthful choice.", "Keep a simple selection note for each slot: the job, the real fact it shows and the reason it belongs next to the surrounding prompt. This prevents visual polish from overruling accuracy during the final review."] },
+    { heading: "Final profile review", paragraphs: ["Preview the profile in its actual sequence, including prompts. Check whether the first two items establish appearance and tone, whether the middle creates conversation material and whether the final items add something new.", "Ask one trusted person a narrow question: ‘Which photo looks least like me today?’ That is more useful than asking which image is best. Remove inaccurate frames even when they are flattering." ] },
+  ],
+  checklist: ["My opener is solo, recent and recognizable", "My available slots perform different roles", "I include a clear full-length image", "An activity connects to a real prompt or detail", "My prompts add context instead of repeating captions", "No scene invents a hobby, trip or lifestyle", "Facial hair, age and build remain consistent", "At least one current camera-roll photo anchors the set", "Every image remains readable at phone size", "I reviewed Hinge’s current content rules"],
+  sources: hingeSources,
+  faqs: [
+    { question: "How many photos do you need on Hinge?", answer: "Hinge currently says members need between four and six photos depending on local requirements, together with three prompt answers." },
+    { question: "What should the first Hinge photo be?", answer: "Use a recent solo close or chest-up image with visible eyes, natural light and a recognizable current appearance." },
+    { question: "Should Hinge photos match your prompts?", answer: "They should support the same truthful profile, but they do not need to repeat each other. Let an activity image establish the broad fact and use the prompt to add a specific story or response hook." },
+    { question: "Can you use AI photos on Hinge?", answer: "Hinge prohibits AI-generated content used to deceive or mislead. Use only accurate frames, keep real recent photos and consult Hinge’s current rules." },
+    { question: "Are professional-looking photos bad for Hinge?", answer: "One polished photo can add range. A complete profile made only of studio-like portraits can feel less informative than a mix of ordinary, active and candid settings." },
+  ],
+  productPath: "/dating-photos/hinge",
+  productLabel: "Create coherent AI Hinge photo shoots",
+}
