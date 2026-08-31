@@ -11,6 +11,7 @@ import {
   isLocaleRoutedPublicPathname,
   isPublishedPublicLocale,
   isPublishedBlogLocale,
+  isPublishedPublicPathname,
   localeDefinitions,
   localizePublicPathname,
   publishedPublicLocales,
@@ -20,22 +21,22 @@ import {
 
 assert.deepEqual(appLocales, ["en", "fr", "es", "de", "pt-BR"])
 assert.deepEqual(publishedPublicLocales, ["en", "fr", "es", "de", "pt-BR"])
-assert.deepEqual(publishedBlogLocales, ["en", "fr", "es", "de", "pt-BR"])
+assert.deepEqual(publishedBlogLocales, ["en"])
 
 assert.equal(isAppLocale("pt-BR"), true)
 assert.equal(isAppLocale("pt-br"), false)
 assert.equal(isPublishedPublicLocale("en"), true)
 assert.equal(isPublishedPublicLocale("fr"), true)
-assert.equal(isPublishedBlogLocale("fr"), true)
-assert.equal(isPublishedBlogLocale("es"), true)
-assert.equal(isPublishedBlogLocale("de"), true)
-assert.equal(isPublishedBlogLocale("pt-BR"), true)
+assert.equal(isPublishedBlogLocale("fr"), false)
+assert.equal(isPublishedBlogLocale("es"), false)
+assert.equal(isPublishedBlogLocale("de"), false)
+assert.equal(isPublishedBlogLocale("pt-BR"), false)
 assert.equal(localeDefinitions["pt-BR"].wordpressCode, "PT")
 assert.equal(localeDefinitions["pt-BR"].pathnamePrefix, "/pt-br")
-assert.equal(getLocaleForWordPressCode("FR"), "fr")
-assert.equal(getLocaleForWordPressCode("ES"), "es")
-assert.equal(getLocaleForWordPressCode("DE"), "de")
-assert.equal(getLocaleForWordPressCode("PT"), "pt-BR")
+assert.equal(getLocaleForWordPressCode("FR"), undefined)
+assert.equal(getLocaleForWordPressCode("ES"), undefined)
+assert.equal(getLocaleForWordPressCode("DE"), undefined)
+assert.equal(getLocaleForWordPressCode("PT"), undefined)
 assert.equal(getLocaleForWordPressCode("pt-BR"), undefined)
 assert.equal(localeDefinitions.fr.hrefLang, "fr")
 assert.equal(localeDefinitions.es.hrefLang, "es")
@@ -58,11 +59,14 @@ assert.deepEqual(splitLocalePathname("/about"), {
 
 assert.equal(isLocaleRoutedPublicPathname("/"), true)
 assert.equal(isLocaleRoutedPublicPathname("/en"), true)
-assert.equal(isLocaleRoutedPublicPathname("/de/use-case/dating-photos"), true)
+assert.equal(isLocaleRoutedPublicPathname("/de/dating-photos"), true)
 assert.equal(isLocaleRoutedPublicPathname("/pt-br/blog/a-post"), true)
 assert.equal(isBlogPathname("/fr/blog/a-post"), true)
 assert.equal(isBlogArchivePathname("/de/blog"), true)
 assert.equal(isPhase2LocalizedPathname("/fr/pricing"), true)
+assert.equal(isPhase2LocalizedPathname("/fr/dating-photos"), true)
+assert.equal(isPublishedPublicPathname("/how-it-works", "en"), true)
+assert.equal(isPublishedPublicPathname("/how-it-works", "fr"), false)
 assert.equal(isPhase2LocalizedPathname("/de/blog/a-post"), false)
 assert.equal(isLocaleRoutedPublicPathname("/login"), false)
 assert.equal(isLocaleRoutedPublicPathname("/fr/login"), false)

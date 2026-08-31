@@ -13,18 +13,14 @@ import { getSiteUrl } from "../lib/site-url"
 
 const englishSlug = "english-article"
 const frenchSlug = "article-francais"
-const paths = {
-  en: `/blog/${englishSlug}`,
-  fr: `/blog/${frenchSlug}`,
-} as const
+const paths = { en: `/blog/${englishSlug}`, fr: `/blog/${frenchSlug}` } as const
 
 const alternates = getPublicAlternates(paths.en, paths, publishedBlogLocales)
 const languages = alternates.languages as Record<string, string>
 assert.equal(alternates.canonical, publicUrl(paths.en, "en"))
 assert.equal(languages.en, publicUrl(paths.en, "en"))
-assert.equal(languages.fr, publicUrl(paths.fr, "fr"))
+assert.equal(languages.fr, undefined)
 assert.equal(languages["x-default"], publicUrl(paths.en, "en"))
-assert.equal(languages.fr.includes("/fr/fr/"), false)
 assert.equal(localeDefinitions.fr.hrefLang, "fr")
 assert.equal(localeDefinitions["pt-BR"].hrefLang, "pt-BR")
 

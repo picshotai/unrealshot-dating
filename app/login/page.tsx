@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { commonPageMetadata } from '@/lib/seo'
+import { commonPageMetadata } from '@/lib/private-metadata'
 import LoginClient from './login-client'
 import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'

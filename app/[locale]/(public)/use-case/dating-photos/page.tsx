@@ -14,7 +14,7 @@ type Params = { params: Promise<{ locale: string }> }
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const locale = (await params).locale as PublishedPublicLocale
   const t = await getTranslations({ locale, namespace: "DatingPhotos" })
-  return getLocalizedMetadata({ locale, pathname: "/use-case/dating-photos", title: t("meta.title"), description: t("meta.description"), keywords: t.raw("meta.keywords") as string[] })
+  return getLocalizedMetadata({ locale, pathname: "/dating-photos", title: t("meta.title"), description: t("meta.description") })
 }
 
 export default async function DatingPhotosPage({ params }: Params) {
@@ -27,7 +27,7 @@ export default async function DatingPhotosPage({ params }: Params) {
   const faqs = t.raw("faq.items") as Array<{ question: string; answer: string }>
   const breadcrumbs = [
     { name: t("breadcrumbHome"), url: publicUrl("/", locale) },
-    { name: t("hero.eyebrow"), url: publicUrl("/use-case/dating-photos", locale) },
+    { name: t("hero.eyebrow"), url: publicUrl("/dating-photos", locale) },
   ]
 
   return (
@@ -49,13 +49,14 @@ export default async function DatingPhotosPage({ params }: Params) {
 
         <section className="max-w-6xl mx-auto px-4 pb-20"><div className="text-center max-w-3xl mx-auto mb-12"><p className="text-xs font-mono font-bold uppercase tracking-wider text-[#ff6f00] mb-2">{t("slots.eyebrow")}</p><h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight font-[var(--font-inter-tight)]">{t("slots.heading")}</h2><p className="text-gray-600 text-sm sm:text-base mt-3">{t("slots.description")}</p></div><div className="grid grid-cols-1 md:grid-cols-2 gap-6">{photoTypes.map((item) => <div key={item.title} className="bg-white rounded-3xl p-8 border border-gray-200/80 shadow-sm flex flex-col justify-between"><div><div className="flex items-center justify-between mb-4"><span className="text-xs font-bold text-[#ff6f00] uppercase tracking-wider">{item.tag}</span><span className="text-xs font-semibold px-2.5 py-1 bg-gray-100 text-gray-600 rounded-full">{item.vibe}</span></div><h3 className="text-xl font-bold text-gray-900 mb-2 font-[var(--font-inter-tight)]">{item.title}</h3><p className="text-gray-600 text-sm leading-relaxed">{item.description}</p></div></div>)}</div></section>
 
+        {locale === "en" && <section className="max-w-6xl mx-auto px-4 pb-20"><div className="rounded-3xl border border-gray-200 bg-white p-8 sm:p-10"><h2 className="text-3xl font-bold">Build the lineup for your app and real life</h2><p className="mt-4 max-w-3xl leading-7 text-gray-600">Start with clear identity, then add range. Use these guides to adapt crops and ordering without pretending that any photo is optimized for an app algorithm.</p><div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[{ href: "/dating-photos/tinder", label: "Tinder photo guide" }, { href: "/dating-photos/hinge", label: "Hinge photo guide" }, { href: "/dating-photos/bumble", label: "Bumble photo guide" }, { href: "/dating-photos/activity", label: "Real-interest photos" }].map((item) => <Link key={item.href} href={item.href} className="rounded-2xl border border-gray-200 p-5 font-semibold text-[#c94e24] hover:border-[#ff805d]">{item.label} →</Link>)}</div><div className="mt-6 flex flex-wrap gap-5 text-sm"><Link className="underline underline-offset-4" href="/dating-photos/examples">See seven complete examples</Link><Link className="underline underline-offset-4" href="/realistic-ai-dating-photos">Read the realism methodology</Link><Link className="underline underline-offset-4" href="/how-it-works">See how UnrealShot works</Link></div></div></section>}
+
         <section className="max-w-4xl mx-auto px-4 pb-20"><div className="text-center mb-12"><p className="text-xs font-mono font-bold uppercase tracking-wider text-[#ff6f00] mb-2">{t("faq.eyebrow")}</p><h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight font-[var(--font-inter-tight)]">{t("faq.heading")}</h2></div><div className="space-y-4">{faqs.map((faq) => <div key={faq.question} className="bg-white rounded-2xl p-6 border border-gray-200/80 shadow-sm"><h3 className="text-base font-bold text-gray-900 mb-2">{faq.question}</h3><p className="text-gray-600 text-sm leading-relaxed">{faq.answer}</p></div>)}</div></section>
 
         <section className="max-w-5xl mx-auto px-4"><div className="bg-[#111111] rounded-3xl p-8 sm:p-12 text-white text-center border-2 border-dashed border-zinc-800 shadow-2xl"><h2 className="text-3xl sm:text-4xl font-bold mb-3 font-[var(--font-inter-tight)]">{t("cta.heading")}</h2><p className="text-gray-300 text-sm sm:text-base max-w-xl mx-auto mb-8 leading-relaxed">{t("cta.description")}</p><Link href="/dashboard"><Button className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-8 pr-16 py-6 font-semibold text-base shadow-lg shadow-orange-500/20">{t("cta.button")}</Button></Link></div></section>
       </main>
       <Footer />
-      <MultipleStructuredData schemas={[{ id: "dating-webpage", data: makeWebPageJsonLd({ name: t("schema.name"), description: t("schema.description"), url: publicUrl("/use-case/dating-photos", locale), locale, breadcrumbs }) }, { id: "dating-breadcrumb", data: makeBreadcrumbJsonLd(breadcrumbs) }, { id: "dating-faq", data: makeFaqJsonLd(faqs) }]} />
+      <MultipleStructuredData schemas={[{ id: "dating-webpage", data: makeWebPageJsonLd({ name: t("schema.name"), description: t("schema.description"), url: publicUrl("/dating-photos", locale), locale, breadcrumbs }) }, { id: "dating-breadcrumb", data: makeBreadcrumbJsonLd(breadcrumbs) }, { id: "dating-faq", data: makeFaqJsonLd(faqs) }]} />
     </div>
   )
 }
-

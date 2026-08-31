@@ -3,7 +3,7 @@ const serverOrigin = (process.env.SEO_BASE_URL || "http://localhost:3200").repla
 let metadataOrigin = process.env.SEO_METADATA_ORIGIN?.replace(/\/$/, "") || ""
 
 const englishArticle = "/blog/7-common-dating-profile-photo-mistakes-and-how-ai-fixes-them"
-const frenchArticle = "/fr/blog/7-erreurs-frequentes-sur-les-photos-de-profil-de-rencontre-et-comment-lia-peut-les-corriger"
+const englishOnlyPages = ["/how-it-works", "/dating-photos/examples", "/realistic-ai-dating-photos", "/dating-photos/activity", "/dating-photos/tinder", "/dating-photos/hinge", "/dating-photos/bumble", "/contact"]
 
 function attribute(tag: string, name: string): string | undefined {
   return new RegExp(`${name}=["']([^"']+)["']`, "i").exec(tag)?.[1]
@@ -12,6 +12,10 @@ function attribute(tag: string, name: string): string | undefined {
 function canonical(html: string): string | undefined {
   const tag = html.match(/<link\b[^>]*\brel=["']canonical["'][^>]*>/i)?.[0]
   return tag ? attribute(tag, "href") : undefined
+}
+
+function normalizedUrl(value: string | undefined): string | undefined {
+  return value?.replace(/\/$/, "")
 }
 
 function alternates(html: string): Record<string, string> {
@@ -33,7 +37,11 @@ async function expectPage(pathname: string, language: string, canonicalPath = pa
   assert.equal(response.status, 200, `${pathname} should return 200`)
   const html = await response.text()
   assert.match(html, new RegExp(`<html[^>]+lang=["']${language}["']`, "i"), `${pathname} has wrong html lang`)
-  assert.equal(canonical(html), `${metadataOrigin}${canonicalPath}`, `${pathname} has wrong canonical`)
+  assert.equal(
+    normalizedUrl(canonical(html)),
+    normalizedUrl(`${metadataOrigin}${canonicalPath}`),
+    `${pathname} has wrong canonical`,
+  )
   assert.equal(html.includes("/fr/fr/"), false, `${pathname} contains a repeated French prefix`)
   return html
 }
@@ -50,12 +58,12 @@ async function main() {
   await expectPage("/", "en-US", "/")
   await expectPage("/fr", "fr-FR", "/fr")
   await expectPage("/es/pricing", "es-ES", "/es/pricing")
-  await expectPage("/de/use-case/dating-photos", "de-DE", "/de/use-case/dating-photos")
+  await expectPage("/de/dating-photos", "de-DE", "/de/dating-photos")
   await expectPage("/pt-br/about", "pt-BR", "/pt-br/about")
   await expectPage("/blog", "en-US", "/blog")
-  await expectPage("/fr/blog", "fr-FR", "/fr/blog")
+  for (const pathname of englishOnlyPages) await expectPage(pathname, "en-US", pathname)
 
-  for (const pathname of ["/es/blog", "/de/blog", "/pt-br/blog"]) {
+  for (const pathname of ["/fr/blog", "/es/blog", "/de/blog", "/pt-br/blog", "/fr/how-it-works", "/de/dating-photos/examples"]) {
     const response = await request(pathname)
     const html = await response.text()
     assert.equal(response.status, 404, `${pathname} must remain unpublished`)
@@ -67,15 +75,11 @@ async function main() {
   }
 
   const englishHtml = await expectPage(englishArticle, "en-US", englishArticle)
-  const frenchHtml = await expectPage(frenchArticle, "fr-FR", frenchArticle)
   const expectedEnglishUrl = `${metadataOrigin}${englishArticle}`
-  const expectedFrenchUrl = `${metadataOrigin}${frenchArticle}`
-  for (const html of [englishHtml, frenchHtml]) {
-    const links = alternates(html)
-    assert.equal(links.en, expectedEnglishUrl)
-    assert.equal(links.fr, expectedFrenchUrl)
-    assert.equal(links["x-default"], expectedEnglishUrl)
-  }
+  const links = alternates(englishHtml)
+  assert.equal(links.en, expectedEnglishUrl)
+  assert.equal(links.fr, undefined)
+  assert.equal(links["x-default"], expectedEnglishUrl)
 
   for (const [pathname, expectedLocation] of [["/en/about", "/about"], ["/pt-BR/about", "/pt-br/about"]] as const) {
     const response = await request(pathname, "manual")
@@ -87,20 +91,32 @@ async function main() {
     assert.equal((await request(asset)).status, 200, `${asset} is missing`)
   }
 
+  for (const [pathname, expectedLocation] of [["/use-case/dating-photos", "/dating-photos"], ["/fr/use-case/dating-photos", "/fr/dating-photos"], ["/ai-dating-photoshoot", "/"], ["/contact-us", "/contact"], ["/faqs", "/how-it-works"]] as const) {
+    const response = await request(pathname, "manual")
+    assert.equal(response.status, 308, `${pathname} should redirect permanently`)
+    assert.equal(new URL(response.headers.get("location")!, serverOrigin).pathname, expectedLocation)
+  }
+
+  for (const pathname of ["/professional-headshots", "/fr/linkedin-headshots", "/blog/best-ai-headshot-generators-in-2026"]) {
+    const response = await request(pathname, "manual")
+    assert.equal(response.status, 410, `${pathname} should return Gone`)
+    assert.match(response.headers.get("x-robots-tag") ?? "", /noindex, follow/)
+  }
+  assert.equal((await request("/this-url-never-existed", "manual")).status, 404)
+
   const jsonLdScripts = [...englishHtml.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)]
-  assert.ok(jsonLdScripts.length >= 3, "Article should include organization, website and article JSON-LD")
+  assert.ok(jsonLdScripts.length >= 2, "Article should include organization and article JSON-LD")
   for (const script of jsonLdScripts) JSON.parse(script[1])
 
   const sitemapResponse = await request("/sitemap.xml")
   assert.equal(sitemapResponse.status, 200)
   const sitemap = await sitemapResponse.text()
   assert.ok(sitemap.includes(`<loc>${metadataOrigin}/blog</loc>`), "English blog archive missing from sitemap")
-  assert.ok(sitemap.includes(`<loc>${metadataOrigin}/fr/blog</loc>`), "French blog archive missing from sitemap")
-  assert.ok(sitemap.includes(`<loc>${metadataOrigin}/es/blog</loc>`), "Spanish blog archive missing from sitemap")
-  assert.ok(sitemap.includes(`<loc>${metadataOrigin}/de/blog</loc>`), "German blog archive missing from sitemap")
-  assert.ok(sitemap.includes(`<loc>${metadataOrigin}/pt-br/blog</loc>`), "Portuguese blog archive missing from sitemap")
+  assert.equal(sitemap.includes(`/fr/blog`), false, "Unreviewed localized blog must not enter sitemap")
+  for (const pathname of englishOnlyPages) assert.ok(sitemap.includes(`<loc>${metadataOrigin}${pathname}</loc>`), `${pathname} missing from sitemap`)
   assert.ok(sitemap.includes(`<loc>${expectedEnglishUrl}</loc>`), "English article missing from sitemap")
-  assert.ok(sitemap.includes(`<loc>${expectedFrenchUrl}</loc>`), "French article missing from sitemap")
+  assert.equal(sitemap.includes("/use-case/dating-photos"), false)
+  assert.equal(sitemap.includes("/professional-headshots"), false)
 
   const sitemapUrls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1])
   for (const sitemapUrl of sitemapUrls) {
@@ -108,7 +124,7 @@ async function main() {
     const response = await request(`${parsed.pathname}${parsed.search}`)
     assert.equal(response.status, 200, `Sitemap URL does not return 200: ${sitemapUrl}`)
     const html = await response.text()
-    assert.equal(canonical(html), sitemapUrl, `Sitemap URL is not self-canonical: ${sitemapUrl}`)
+    assert.equal(normalizedUrl(canonical(html)), normalizedUrl(sitemapUrl), `Sitemap URL is not self-canonical: ${sitemapUrl}`)
   }
 
   console.log(`Production SEO smoke checks passed for ${sitemapUrls.length} sitemap URLs`)

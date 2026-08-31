@@ -27,7 +27,7 @@ function linkLastOccurrence(text: string, label: string) {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const locale = (await params).locale as PublishedPublicLocale
   const t = await getTranslations({ locale, namespace: 'Legal.terms' })
-  return getLocalizedMetadata({ locale, pathname: '/terms', title: t('meta.title'), description: t('meta.description'), keywords: t.raw('meta.keywords') as string[] })
+  return getLocalizedMetadata({ locale, pathname: '/terms', title: t('meta.title'), description: t('meta.description') })
 }
 
 export default async function TermsOfService({ params }: Params) {

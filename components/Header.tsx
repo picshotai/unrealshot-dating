@@ -27,6 +27,7 @@ interface NavItemsProps {
   items: {
     name: string
     link: string
+    englishOnly?: boolean
   }[]
   className?: string
   onItemClick?: () => void
@@ -79,20 +80,11 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
         className,
       )}
     >
-      {items.map((item, idx) => (
-        <PublicLink
-          onMouseEnter={() => setHovered(idx)}
-          onClick={onItemClick}
-          className="relative px-3 py-2 font-semibold transition-colors cursor-pointer"
-          key={`link-${idx}`}
-          href={item.link}
-        >
-          {hovered === idx && (
-            <motion.div layoutId="hovered" className="absolute inset-0 h-full w-full rounded-md bg-gray-100" />
-          )}
-          <span className="relative z-20">{item.name}</span>
-        </PublicLink>
-      ))}
+      {items.map((item, idx) => {
+        const content = <>{hovered === idx && <motion.div layoutId="hovered" className="absolute inset-0 h-full w-full rounded-md bg-gray-100" />}<span className="relative z-20">{item.name}</span></>
+        const props = { onMouseEnter: () => setHovered(idx), onClick: onItemClick, className: "relative px-3 py-2 font-semibold transition-colors cursor-pointer" }
+        return item.englishOnly ? <Link key={`link-${idx}`} href={item.link} {...props}>{content}</Link> : <PublicLink key={`link-${idx}`} href={item.link} {...props}>{content}</PublicLink>
+      })}
     </motion.div>
   )
 }
@@ -158,9 +150,11 @@ function Header({ localeSwitcher }: HeaderProps = {}) {
   const locale = useLocale()
 
   const navItems = [
-    { name: t("navigation.howItWorks"), link: "/#how-it-works" },
+    { name: "Dating Photos", link: "/dating-photos" },
+    { name: "Examples", link: "/dating-photos/examples", englishOnly: true },
+    { name: t("navigation.howItWorks"), link: "/how-it-works", englishOnly: true },
     { name: t("navigation.pricing"), link: "/pricing" },
-    ...(isPublishedBlogLocale(locale) ? [{ name: t("navigation.blog"), link: "/blog" }] : []),
+    ...(isPublishedBlogLocale(locale) ? [{ name: t("navigation.blog"), link: "/blog", englishOnly: true }] : []),
   ]
 
   return (
@@ -211,16 +205,10 @@ function Header({ localeSwitcher }: HeaderProps = {}) {
 
         <MobileNavMenu isOpen={isOpen} onClose={() => setIsOpen(false)}>
           <div className="flex flex-col items-center w-full">
-            {navItems.map((item, idx) => (
-              <PublicLink
-                key={idx}
-                href={item.link}
-                className="w-full px-2 py-2 text-gray-600 hover:text-black transition-colors cursor-pointer text-center"
-                onClick={() => setIsOpen(false)}
-              >
-                {item.name}
-              </PublicLink>
-            ))}
+            {navItems.map((item, idx) => {
+              const props = { className: "w-full px-2 py-2 text-gray-600 hover:text-black transition-colors cursor-pointer text-center", onClick: () => setIsOpen(false) }
+              return item.englishOnly ? <Link key={idx} href={item.link} {...props}>{item.name}</Link> : <PublicLink key={idx} href={item.link} {...props}>{item.name}</PublicLink>
+            })}
             <div className="flex flex-col gap-2 mt-4 w-full items-center">
               <Link href="/dashboard" className="w-full">
                 <Button

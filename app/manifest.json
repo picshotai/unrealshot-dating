@@ -1,7 +1,7 @@
 {
-  "name": "UnrealShot AI",
-  "short_name": "UnrealShot AI",
-  "description": "Hyper Realistic AI Photoshoots, Portraits, and Headshots",
+  "name": "UnrealShot — AI Dating Photos for Men",
+  "short_name": "UnrealShot",
+  "description": "Realistic AI dating photos for men, delivered as 15 coherent four-photo shoots.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -27,8 +27,7 @@
     }
   ],
   "categories": [
-    "business",
-    "productivity",
-    "utilities"
+    "photography",
+    "lifestyle"
   ]
 }

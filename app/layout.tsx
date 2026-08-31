@@ -5,14 +5,12 @@ import "./globals.css"
 import { Suspense } from "react"
 import Script from "next/script"
 import ErrorBoundary from "@/components/error-boundary"
-import { generateMetadata } from "@/lib/seo"
 import { StructuredData } from "@/components/seo/StructuredData"
-import { generateOrganizationJsonLd } from "@/lib/seo"
 import { Toaster } from "@/components/ui/sonner"
 import { Toaster as ShadcnToaster } from "@/components/ui/toaster"
-import { getLocale, getTranslations } from "next-intl/server"
+import { getLocale } from "next-intl/server"
 import { getHtmlLang, type PublishedPublicLocale } from "@/i18n/config"
-import { makeWebsiteJsonLd } from "@/lib/public-seo"
+import { defaultSEO, organizationSchema } from "@/config/seo"
 
 
 const inter = Inter({
@@ -42,7 +40,20 @@ const oxanium = Oxanium({
 })
 
 
-export const metadata: Metadata = generateMetadata()
+export const metadata: Metadata = {
+  metadataBase: new URL(defaultSEO.siteUrl),
+  title: defaultSEO.title,
+  description: defaultSEO.description,
+  authors: [{ name: defaultSEO.author, url: `${defaultSEO.siteUrl}/about` }],
+  creator: defaultSEO.author,
+  publisher: "UnrealShot",
+  alternates: { canonical: defaultSEO.siteUrl },
+  robots: { index: true, follow: true },
+  verification: {
+    google: defaultSEO.googleSiteVerification,
+    other: { "yandex-verification": defaultSEO.yandexVerification ?? "" },
+  },
+}
 
 export default async function RootLayout({
   children,
@@ -50,23 +61,10 @@ export default async function RootLayout({
   children: React.ReactNode
 }>) {
   const locale = await getLocale() as PublishedPublicLocale
-  const t = await getTranslations({ locale, namespace: "Home" })
-  const websiteSchema = makeWebsiteJsonLd({
-    name: t("meta.title"),
-    description: t("meta.description"),
-    locale,
-  })
 
   return (
     <html lang={getHtmlLang(locale)} className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${oxanium.variable} antialiased`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-        />
-
         {/* Favicon and App Icons */}
         <link rel="icon" href="/favicon.ico" sizes="32x32" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
@@ -95,16 +93,8 @@ export default async function RootLayout({
         {/* Organization Schema - Global */}
         <StructuredData
           id="organization-schema"
-          data={JSON.parse(generateOrganizationJsonLd())}
+          data={{ "@context": "https://schema.org", ...organizationSchema }}
         />
-        {/* Website Schema - Global */}
-        <StructuredData
-          id="website-schema"
-          data={websiteSchema}
-        />
-
-
-
       </head>
       <body className="font-sans antialiased public-headings">
         <ErrorBoundary>

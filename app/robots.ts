@@ -3,11 +3,18 @@ import { robotsConfig } from '@/config/seo'
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: {
-      userAgent: robotsConfig.rules.userAgent,
-      allow: robotsConfig.rules.allow,
-      disallow: robotsConfig.rules.disallow,
-    },
+    rules: [
+      {
+        userAgent: robotsConfig.rules.userAgent,
+        allow: robotsConfig.rules.allow,
+        disallow: robotsConfig.rules.disallow,
+      },
+      {
+        userAgent: 'OAI-SearchBot',
+        allow: '/',
+        disallow: robotsConfig.rules.disallow,
+      },
+    ],
     sitemap: robotsConfig.sitemap,
   }
 }

@@ -1,6 +1,7 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import createMiddleware from 'next-intl/middleware'
+import { gonePaths, permanentRedirects } from '@/config/legacy-urls'
 import {
   readStage,
   setStage,
@@ -12,6 +13,7 @@ import {
   isBlogPathname,
   isLocaleRoutedPublicPathname,
   isPublishedBlogLocale,
+  isPublishedPublicPathname,
   isPublishedPublicLocale,
   localizePublicPathname,
   splitLocalePathname,
@@ -19,6 +21,42 @@ import {
 import { routing } from '@/i18n/routing'
 
 const handleI18nRouting = createMiddleware(routing)
+
+function goneResponse() {
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,follow"><title>Page removed | UnrealShot</title></head><body style="margin:0;background:#070707;color:#f5f5f5;font-family:system-ui,sans-serif"><main style="max-width:720px;margin:0 auto;padding:12vh 24px"><a href="/" style="color:#f5f5f5;text-decoration:none;font-weight:700">UnrealShot</a><p style="margin-top:64px;color:#a3a3a3">410 Gone</p><h1 style="font-size:clamp(2.5rem,8vw,5rem);line-height:1;margin:.25em 0">This page has been retired.</h1><p style="font-size:1.2rem;line-height:1.7;color:#d4d4d4">UnrealShot now focuses on realistic AI dating photos for men. This old page has no equivalent replacement.</p><p><a href="/dating-photos" style="color:#ff805d">Explore dating profile photos</a> · <a href="/" style="color:#ff805d">Go home</a></p></main></body></html>`
+  return new NextResponse(html, {
+    status: 410,
+    headers: {
+      'content-type': 'text/html; charset=utf-8',
+      'x-robots-tag': 'noindex, follow',
+      'cache-control': 'public, max-age=0, s-maxage=86400',
+    },
+  })
+}
+
+function legacyResponse(request: NextRequest): NextResponse | undefined {
+  const localePath = splitLocalePathname(request.nextUrl.pathname)
+
+  if (gonePaths.has(localePath.pathname)) return goneResponse()
+
+  const replacement = permanentRedirects.get(localePath.pathname)
+  if (replacement) {
+    const target = request.nextUrl.clone()
+    target.pathname =
+      localePath.pathname === '/use-case/dating-photos'
+        ? localizePublicPathname(replacement, localePath.locale)
+        : replacement
+    target.search = ''
+    return NextResponse.redirect(target, 308)
+  }
+
+  if (localePath.pathname === '/blog' && request.nextUrl.searchParams.has('page')) {
+    const target = request.nextUrl.clone()
+    target.pathname = '/blog'
+    target.searchParams.delete('page')
+    return NextResponse.redirect(target, 308)
+  }
+}
 
 /** Signed-in users have no business here; they belong in the studio or onboarding. */
 const ENTRY_ROUTES = ['/login', '/dashboard']
@@ -40,6 +78,35 @@ const PROTECTED_ROUTES = [
 
 const ONBOARDING_ROUTE = '/models/create'
 const STUDIO_ROUTE = '/dating-shoot'
+
+/** Non-localized application and framework routes that are intentionally outside the public SEO registry. */
+const NON_LOCALIZED_ROUTE_PREFIXES = [
+  '/account',
+  '/api',
+  '/auth',
+  '/buy-credits',
+  '/dashboard',
+  '/dating-shoot',
+  '/error',
+  '/gallery',
+  '/login',
+  '/models',
+  '/new-landing',
+  '/payment-success',
+  '/photo-upload-guide',
+  '/preview',
+  '/prompt-lab',
+  '/settings',
+  '/superpanel',
+]
+
+const PUBLIC_FILE_PATHS = new Set([
+  '/llms.txt',
+  '/manifest.json',
+  '/robots.txt',
+  '/sitemap.xml',
+  '/browserconfig.xml',
+])
 
 function matches(pathname: string, routes: string[]) {
   return routes.some((route) => pathname === route || pathname.startsWith(`${route}/`))
@@ -224,12 +291,25 @@ function copyResponseCookies(source: NextResponse, target: NextResponse) {
   }
 }
 
+function notFoundResponse(request: NextRequest, authResponse: NextResponse) {
+  const notFoundUrl = request.nextUrl.clone()
+  notFoundUrl.pathname = '/_not-found'
+  notFoundUrl.search = ''
+  const response = NextResponse.rewrite(notFoundUrl, { status: 404 })
+  response.headers.set('x-robots-tag', 'noindex, nofollow')
+  copyResponseCookies(authResponse, response)
+  return response
+}
+
 /**
  * Compose locale routing with the existing Supabase session proxy. Auth owns
  * redirects and cookie rotation; next-intl owns only the explicitly public
  * route surface. Product, auth and API URLs therefore remain unprefixed.
  */
 export async function proxy(request: NextRequest) {
+  const migratedResponse = legacyResponse(request)
+  if (migratedResponse) return migratedResponse
+
   const authResponse = await runAuthProxy(request)
 
   if (isRedirectResponse(authResponse)) {
@@ -255,23 +335,23 @@ export async function proxy(request: NextRequest) {
   }
 
   if (!isLocaleRoutedPublicPathname(request.nextUrl.pathname)) {
-    return authResponse
+    if (
+      PUBLIC_FILE_PATHS.has(request.nextUrl.pathname) ||
+      matches(request.nextUrl.pathname, NON_LOCALIZED_ROUTE_PREFIXES)
+    ) {
+      return authResponse
+    }
+    return notFoundResponse(request, authResponse)
   }
 
   const localePath = splitLocalePathname(request.nextUrl.pathname)
 
   if (
     (localePath.hadLocalePrefix && !isPublishedPublicLocale(localePath.locale)) ||
-    (isBlogPathname(localePath.pathname) && !isPublishedBlogLocale(localePath.locale))
+    (isBlogPathname(localePath.pathname) && !isPublishedBlogLocale(localePath.locale)) ||
+    !isPublishedPublicPathname(localePath.pathname, localePath.locale)
   ) {
-    const notFoundUrl = request.nextUrl.clone()
-    notFoundUrl.pathname = '/_not-found'
-    notFoundUrl.search = ''
-
-    const notFoundResponse = NextResponse.rewrite(notFoundUrl, { status: 404 })
-    notFoundResponse.headers.set('x-robots-tag', 'noindex, nofollow')
-    copyResponseCookies(authResponse, notFoundResponse)
-    return notFoundResponse
+    return notFoundResponse(request, authResponse)
   }
 
   const i18nResponse = handleI18nRouting(request)

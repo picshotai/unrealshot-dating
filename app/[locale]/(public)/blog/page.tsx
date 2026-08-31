@@ -15,8 +15,10 @@ import {
   getPostsByLocale,
   type WordPressPost,
 } from "@/lib/wordpress-cms"
+import { editorialPosts } from "@/lib/editorial-content"
 import { getLocalizedMetadata } from "@/lib/public-seo"
 import { publicUrl } from "@/lib/public-seo"
+import { gonePaths } from "@/config/legacy-urls"
 import {
   isPublishedBlogLocale,
   localizePublicPathname,
@@ -48,7 +50,6 @@ export async function generateMetadata({ params, searchParams }: BlogPageProps):
     pathname: "/blog",
     title: t("meta.title"),
     description: t("meta.description"),
-    keywords: t.raw("meta.keywords") as string[],
     alternatePaths: Object.fromEntries(publishedBlogLocales.map((candidate) => [candidate, "/blog"])),
   })
 
@@ -81,12 +82,21 @@ function transformPost(post: WordPressPost, locale: PublishedBlogLocale, t: Retu
 async function BlogContent({ locale, after }: { locale: PublishedBlogLocale; after?: string }) {
   const t = await getTranslations({ locale, namespace: "Blog.archive" })
   const page = await getPostsByLocale(locale, { first: 12, after })
-  if (page.posts.length === 0) notFound()
+  const currentWordPressPosts = page.posts.filter((post) => !gonePaths.has(`/blog/${post.slug}`))
+  const posts = after
+    ? currentWordPressPosts
+    : [
+        ...editorialPosts,
+        ...currentWordPressPosts.filter(
+          (post) => !editorialPosts.some((editorial) => editorial.slug === post.slug),
+        ),
+      ]
+  if (posts.length === 0) notFound()
 
   return (
     <BlogPageContent
       locale={locale}
-      posts={page.posts.map((post) => transformPost(post, locale, t))}
+      posts={posts.map((post) => transformPost(post, locale, t))}
       hasNextPage={page.pageInfo.hasNextPage}
       nextCursor={page.pageInfo.endCursor}
       isPaginated={Boolean(after)}

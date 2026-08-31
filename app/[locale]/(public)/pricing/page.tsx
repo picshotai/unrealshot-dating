@@ -6,7 +6,7 @@ import PublicHeader from "@/components/Header"
 import Footer from "@/components/main-landing/Footer"
 import { Button } from "@/components/ui/button"
 import { MultipleStructuredData } from "@/components/seo/StructuredData"
-import { getLocalizedMetadata, makeBreadcrumbJsonLd, makeFaqJsonLd, makeProductJsonLd, makeWebPageJsonLd, publicUrl } from "@/lib/public-seo"
+import { getLocalizedMetadata, makeBreadcrumbJsonLd, makeFaqJsonLd, makeSoftwareApplicationJsonLd, makeWebPageJsonLd, publicUrl } from "@/lib/public-seo"
 import type { PublishedPublicLocale } from "@/i18n/config"
 
 type Params = { params: Promise<{ locale: string }> }
@@ -14,7 +14,7 @@ type Params = { params: Promise<{ locale: string }> }
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const locale = (await params).locale as PublishedPublicLocale
   const t = await getTranslations({ locale, namespace: "Pricing" })
-  return getLocalizedMetadata({ locale, pathname: "/pricing", title: t("meta.title"), description: t("meta.description"), keywords: t.raw("meta.keywords") as string[] })
+  return getLocalizedMetadata({ locale, pathname: "/pricing", title: t("meta.title"), description: t("meta.description") })
 }
 
 export default async function PricingPage({ params }: Params) {
@@ -23,8 +23,6 @@ export default async function PricingPage({ params }: Params) {
   const packageFeatures = t.raw("package.features") as string[]
   const checkoutFeatures = t.raw("package.checkoutFeatures") as string[]
   const stats = t.raw("package.stats") as Array<{ value: string; label: string }>
-  const comparisonHeaders = t.raw("comparison.headers") as string[]
-  const comparisonRows = t.raw("comparison.rows") as string[][]
   const workflowItems = t.raw("workflow.items") as string[][]
   const pricingFaqs = t.raw("faq.items") as Array<{ question: string; answer: string }>
   const breadcrumbs = [
@@ -65,8 +63,6 @@ export default async function PricingPage({ params }: Params) {
           </div>
         </section>
 
-        <section className="max-w-6xl mx-auto px-4 pb-20"><div className="text-center max-w-3xl mx-auto mb-12"><p className="text-xs font-mono font-bold uppercase tracking-wider text-[#ff6f00] mb-2">{t("comparison.eyebrow")}</p><h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight font-[var(--font-inter-tight)]">{t("comparison.heading")}</h2><p className="text-gray-600 text-sm sm:text-base mt-3">{t("comparison.description")}</p></div><div className="bg-white rounded-3xl border border-gray-200/80 shadow-sm overflow-hidden"><div className="overflow-x-auto"><table className="w-full text-left border-collapse"><thead><tr className="border-b border-gray-100 bg-gray-50/70">{comparisonHeaders.map((header, index) => <th key={header} className={`p-4 sm:p-6 text-xs font-bold uppercase tracking-wider ${index === 1 ? "text-[#ff6f00] bg-orange-500/5" : "text-gray-500"}`}>{header}</th>)}</tr></thead><tbody className="divide-y divide-gray-100 text-sm">{comparisonRows.map((row, rowIndex) => <tr key={rowIndex} className="hover:bg-gray-50/50 transition-colors"><td className="p-4 sm:p-6 font-semibold text-gray-900">{row[0]}</td><td className="p-4 sm:p-6 font-bold text-gray-900 bg-orange-500/5"><span className="inline-flex items-center gap-1.5"><Check className="w-4 h-4 text-[#ff6f00] flex-shrink-0" />{row[1]}</span></td><td className="p-4 sm:p-6 text-gray-600">{row[2]}</td><td className="p-4 sm:p-6 text-gray-600">{row[3]}</td></tr>)}</tbody></table></div></div></section>
-
         <section className="max-w-6xl mx-auto px-4 pb-20"><div className="text-center max-w-3xl mx-auto mb-12"><p className="text-xs font-mono font-bold uppercase tracking-wider text-[#ff6f00] mb-2">{t("workflow.eyebrow")}</p><h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight font-[var(--font-inter-tight)]">{t("workflow.heading")}</h2></div><div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">{workflowItems.map((item, index) => <div key={item[0]} className="bg-white rounded-2xl p-6 border border-gray-200/80 shadow-sm"><div className="w-10 h-10 rounded-xl bg-orange-50 text-[#ff6f00] flex items-center justify-center font-bold text-sm mb-4 border border-orange-100">{String(index + 1).padStart(2, "0")}</div><h3 className="font-bold text-gray-900 text-base mb-2">{item[0]}</h3><p className="text-gray-600 text-xs leading-relaxed">{item[1]}</p></div>)}</div></section>
 
         <section className="max-w-4xl mx-auto px-4 pb-20"><div className="text-center mb-12"><p className="text-xs font-mono font-bold uppercase tracking-wider text-[#ff6f00] mb-2">{t("faq.eyebrow")}</p><h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight font-[var(--font-inter-tight)]">{t("faq.heading")}</h2></div><div className="space-y-4">{pricingFaqs.map((faq) => <div key={faq.question} className="bg-white rounded-2xl p-6 border border-gray-200/80 shadow-sm hover:border-gray-300 transition-colors"><h3 className="text-base font-bold text-gray-900 mb-2.5 flex items-start gap-2.5"><HelpCircle className="w-4 h-4 text-[#ff6f00] mt-1 flex-shrink-0" /><span>{faq.question}</span></h3><p className="text-gray-600 text-sm leading-relaxed pl-6.5">{faq.answer}</p></div>)}</div></section>
@@ -74,7 +70,7 @@ export default async function PricingPage({ params }: Params) {
         <section className="max-w-5xl mx-auto px-4"><div className="bg-[#111111] rounded-3xl p-8 sm:p-12 text-white text-center border-2 border-dashed border-zinc-800 shadow-2xl"><h2 className="text-3xl sm:text-4xl font-bold mb-3 font-[var(--font-inter-tight)]">{t("cta.heading")}</h2><p className="text-gray-300 text-sm sm:text-base max-w-xl mx-auto mb-8 leading-relaxed">{t("cta.description")}</p><Link href="/dashboard"><Button className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-8 pr-16 py-6 font-semibold text-base shadow-lg shadow-orange-500/20">{t("cta.button")}</Button></Link></div></section>
       </main>
       <Footer />
-      <MultipleStructuredData schemas={[{ id: "pricing-webpage", data: makeWebPageJsonLd({ name: t("hero.title"), description: t("meta.description"), url: publicUrl("/pricing", locale), locale, breadcrumbs }) }, { id: "pricing-breadcrumb", data: makeBreadcrumbJsonLd(breadcrumbs) }, { id: "pricing-product", data: makeProductJsonLd({ name: t("schema.productName"), description: t("schema.description"), features: packageFeatures, url: publicUrl("/pricing", locale), locale }) }, { id: "pricing-faq", data: makeFaqJsonLd(pricingFaqs) }]} />
+      <MultipleStructuredData schemas={[{ id: "pricing-webpage", data: makeWebPageJsonLd({ name: t("hero.title"), description: t("meta.description"), url: publicUrl("/pricing", locale), locale, breadcrumbs }) }, { id: "pricing-breadcrumb", data: makeBreadcrumbJsonLd(breadcrumbs) }, { id: "pricing-application", data: makeSoftwareApplicationJsonLd({ description: t("schema.description"), url: publicUrl("/pricing", locale), locale, features: packageFeatures }) }, { id: "pricing-faq", data: makeFaqJsonLd(pricingFaqs) }]} />
     </div>
   )
 }

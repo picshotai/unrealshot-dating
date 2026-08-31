@@ -14,7 +14,7 @@ type Params = { params: Promise<{ locale: string }> }
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const locale = (await params).locale as PublishedPublicLocale
   const t = await getTranslations({ locale, namespace: "About" })
-  return getLocalizedMetadata({ locale, pathname: "/about", title: t("meta.title"), description: t("meta.description"), keywords: t.raw("meta.keywords") as string[] })
+  return getLocalizedMetadata({ locale, pathname: "/about", title: t("meta.title"), description: t("meta.description") })
 }
 
 export default async function AboutUs({ params }: Params) {
@@ -42,7 +42,7 @@ export default async function AboutUs({ params }: Params) {
 
         <section className="max-w-5xl mx-auto px-4 pb-16">
           <div className="bg-white rounded-3xl border border-gray-200/80 shadow-[0_12px_50px_-15px_rgba(0,0,0,0.08)] p-8 sm:p-12 space-y-10">
-            {narrative.map((section) => (
+            {narrative.filter((_, index) => index !== 1).map((section) => (
               <div key={section.label} className={section.label === narrative[0].label ? "" : "border-t border-gray-100 pt-8"}>
                 <span className="text-xs font-mono uppercase tracking-wider text-[#ff6f00] font-bold block mb-2">{section.label}</span>
                 <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-4">{section.heading}</h2>
@@ -52,10 +52,12 @@ export default async function AboutUs({ params }: Params) {
           </div>
         </section>
 
+        {locale === "en" && <section className="max-w-5xl mx-auto px-4 pb-16"><div className="rounded-3xl border border-gray-200 bg-white p-8 sm:p-12"><p className="text-xs font-bold uppercase tracking-wider text-[#ff6f00]">Founder and product direction</p><h2 className="mt-2 text-3xl font-bold">Built and reviewed by Harvansh Chaudhary</h2><p className="mt-4 text-lg leading-8 text-gray-600">UnrealShot began as a broader AI photoshoot product. Harvansh narrowed it to one problem: helping men build a varied, believable dating photo lineup without organizing 15 physical shoots. The coherent-shoot system was developed so four frames share one location, outfit and lighting story instead of arriving as disconnected images.</p><p className="mt-4 leading-7 text-gray-600">The system uses 4–6 selfies as generation references and does not train a custom model. It can miss likeness or composition in an individual frame, so each package includes 15 Photo Retakes. UnrealShot does not optimize for dating-app algorithms or guarantee matches, dates or verification.</p></div></section>}
+
         <section className="max-w-5xl mx-auto px-4 pb-16">
           <div className="text-center mb-10"><h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">{t("principlesHeading")}</h2></div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {principles.map((principle, index) => {
+            {principles.filter((_, index) => index > 1).map((principle, index) => {
               const Icon = icons[index]
               return <div key={principle.title} className="bg-white rounded-2xl p-6 sm:p-8 border border-gray-200/80 shadow-sm">
                 <div className="w-10 h-10 rounded-xl bg-[#ff6f00]/10 flex items-center justify-center mb-4 text-[#ff6f00]"><Icon className="w-5 h-5" /></div>
@@ -82,4 +84,3 @@ export default async function AboutUs({ params }: Params) {
     </div>
   )
 }
-

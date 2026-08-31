@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Check, ShieldCheck, Zap } from 'lucide-react';
 import DodoCheckoutButton from '@/components/dodopayments/DodoCheckoutButton';
-import { commonPageMetadata } from '@/lib/seo';
+import { commonPageMetadata } from '@/lib/private-metadata';
 import {
   CUSTOM_CREDITS_DEFAULT,
   FRAMES_PER_SHOOT,

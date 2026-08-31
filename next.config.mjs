@@ -53,46 +53,6 @@ const nextConfig = {
       },
     ];
   },
-  async redirects() {
-    // Old landing pages that should redirect to homepage (301 permanent)
-    const oldLandingPages = [
-      'ai-botanic-photoshoot',
-      'ai-chef-headshots',
-      'ai-christmas-photoshoot',
-      'ai-dating-photoshoot',
-      'ai-fantasy-photoshoot',
-      'ai-glamour-photoshoot',
-      'ai-halloween-photoshoot',
-      'ai-influencer-generator',
-      'ai-instagram-photoshoot',
-      'ai-maternity-photoshoot',
-      'ai-real-estate-headshots',
-      'ai-speaker-photoshoot',
-      'ai-yearbook',
-      'black-swan-photoshoot',
-      'corporate-headshots',
-      'denim-wear-photoshoot',
-      'doctor-headshots',
-      'founder-headshots',
-      'lawyer-headshots',
-      'linkedin-headshots',
-      'natural-looks-photoshoot',
-      'neutral-muse-photoshoot',
-      'office-outfit-photoshoot',
-      'personal-branding-photoshoot',
-      'professional-headshots',
-      'resume-headshots',
-      'street-style-photoshoot',
-      'stylish-ai-portraits',
-      'vintage-photoshoot',
-    ];
-
-    return oldLandingPages.map(page => ({
-      source: `/${page}`,
-      destination: '/',
-      permanent: true, // 301 redirect
-    }));
-  },
 }
 
 export default withNextIntl(nextConfig)

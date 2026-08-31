@@ -10,7 +10,7 @@ type Params = { params: Promise<{ locale: string }> }
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const locale = (await params).locale as PublishedPublicLocale
   const t = await getTranslations({ locale, namespace: "Legal.privacy" })
-  return getLocalizedMetadata({ locale, pathname: "/privacy-policy", title: t("meta.title"), description: t("meta.description"), keywords: t.raw("meta.keywords") as string[] })
+  return getLocalizedMetadata({ locale, pathname: "/privacy-policy", title: t("meta.title"), description: t("meta.description") })
 }
 
 export default async function PrivacyPolicy({ params }: Params) {

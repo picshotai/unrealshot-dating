@@ -6,34 +6,35 @@ import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import { isPublishedBlogLocale } from '@/i18n/config';
 
+type FooterLink = { href: string; label: string; englishOnly?: boolean; private?: boolean }
+
 export default function Footer() {
   const t = useTranslations('Common');
   const locale = useLocale();
 
-  const companyLinks = [
+  const companyLinks: FooterLink[] = [
     { href: '/about', label: t('footer.about') },
-    ...(isPublishedBlogLocale(locale) ? [{ href: '/blog', label: t('footer.datingPhotoGuides') }] : []),
+    ...(isPublishedBlogLocale(locale) ? [{ href: '/blog', label: t('footer.datingPhotoGuides'), englishOnly: true }] : []),
+    { href: '/contact', label: 'Contact', englishOnly: true },
     { href: '/pricing', label: t('navigation.pricing') },
     { href: '/privacy-policy', label: t('footer.privacyPolicy') },
     { href: '/terms', label: t('footer.terms') },
     { href: '/refund-policy', label: t('footer.refundPolicy') },
   ];
 
-  const datingFeatures = [
-    { href: '/use-case/dating-photos', label: t('footer.aiDatingPhotos'), public: true },
-    { href: '/#style-packs', label: t('footer.cohesiveShoots'), public: true },
-    { href: '/#pricing', label: t('footer.photoRetakes'), public: true },
-    { href: '/#how-it-works', label: t('navigation.howItWorks'), public: true },
-    { href: '/#faq', label: t('footer.datingPhotoFaqs'), public: true },
-    { href: '/dashboard', label: t('footer.startYourShoot'), public: false },
+  const datingFeatures: FooterLink[] = [
+    { href: '/dating-photos', label: 'Dating Photos' },
+    { href: '/dating-photos/examples', label: 'Examples', englishOnly: true },
+    { href: '/how-it-works', label: t('navigation.howItWorks'), englishOnly: true },
+    { href: '/realistic-ai-dating-photos', label: 'Realistic AI Dating Photos', englishOnly: true },
+    { href: '/dashboard', label: t('footer.startYourShoot'), private: true },
   ];
 
-  const datingApps = [
-    { href: '/use-case/dating-photos', label: t('footer.tinderProfilePhotos') },
-    { href: '/use-case/dating-photos', label: t('footer.hingeProfilePictures') },
-    { href: '/use-case/dating-photos', label: t('footer.bumblePhotoOptimization') },
-    { href: '/use-case/dating-photos', label: t('footer.naturalCandidShots') },
-    { href: '/use-case/dating-photos', label: t('footer.identityPreservation') },
+  const datingApps: FooterLink[] = [
+    { href: '/dating-photos/tinder', label: 'Tinder photo guide' },
+    { href: '/dating-photos/hinge', label: 'Hinge photo guide' },
+    { href: '/dating-photos/bumble', label: 'Bumble photo guide' },
+    { href: '/dating-photos/activity', label: 'Activity photos' },
   ];
 
   return (
@@ -93,10 +94,12 @@ export default function Footer() {
             <ul className="mt-4 space-y-2.5">
               {datingFeatures.map((link) => (
                 <li key={link.label}>
-                  {link.public ? (
-                    <PublicLink href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">{link.label}</PublicLink>
-                  ) : (
+                  {link.private ? (
                     <Link href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">{link.label}</Link>
+                  ) : link.englishOnly ? (
+                    <Link href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">{link.label}</Link>
+                  ) : (
+                    <PublicLink href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">{link.label}</PublicLink>
                   )}
                 </li>
               ))}
@@ -109,9 +112,9 @@ export default function Footer() {
             <ul className="mt-4 space-y-2.5">
               {datingApps.map((link) => (
                 <li key={link.label}>
-                  <PublicLink href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">
+                  <Link href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">
                     {link.label}
-                  </PublicLink>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -123,9 +126,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-2.5">
               {companyLinks.map((link) => (
                 <li key={link.href}>
-                  <PublicLink href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">
-                    {link.label}
-                  </PublicLink>
+                  {link.englishOnly ? <Link href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">{link.label}</Link> : <PublicLink href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">{link.label}</PublicLink>}
                 </li>
               ))}
             </ul>

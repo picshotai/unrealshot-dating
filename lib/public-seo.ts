@@ -71,7 +71,7 @@ export function getLocalizedMetadata({
   return {
     title,
     description,
-    keywords,
+    ...(keywords.length ? { keywords } : {}),
     authors: [{ name: defaultSEO.author }],
     creator: defaultSEO.author,
     publisher: defaultSEO.author,
@@ -213,9 +213,10 @@ export function makeBlogPostingJsonLd({
     datePublished,
     dateModified,
     author: {
-      "@type": "Organization",
+      "@type": "Person",
+      "@id": `${defaultSEO.siteUrl}/about#founder`,
       name: authorName,
-      url: defaultSEO.siteUrl,
+      url: `${defaultSEO.siteUrl}/about`,
     },
     publisher: organizationSchema,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
@@ -227,46 +228,12 @@ export function makeBlogPostingJsonLd({
   }
 }
 
-export function makeProductJsonLd({
-  name,
-  description,
-  features,
-  url,
-  locale,
-}: {
-  name: string
-  description: string
-  features: string[]
-  url: string
-  locale: PublishedPublicLocale
-}) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name,
-    description,
-    brand: { "@type": "Brand", name: organizationSchema.name },
-    url,
-    inLanguage: localeDefinitions[locale].htmlLang,
-    offers: {
-      "@type": "Offer",
-      price: "39.00",
-      priceCurrency: "USD",
-      availability: "https://schema.org/InStock",
-      url: `${defaultSEO.siteUrl}/login`,
-    },
-    additionalProperty: features.map((feature) => ({ "@type": "PropertyValue", name: "Feature", value: feature })),
-  }
-}
-
-export function makeWebApplicationJsonLd({
-  name,
+export function makeSoftwareApplicationJsonLd({
   description,
   url,
   locale,
   features,
 }: {
-  name: string
   description: string
   url: string
   locale: PublishedPublicLocale
@@ -274,12 +241,13 @@ export function makeWebApplicationJsonLd({
 }) {
   return {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
-    name,
+    "@type": "SoftwareApplication",
+    "@id": `${defaultSEO.siteUrl}/#software`,
+    name: "UnrealShot",
     description,
     url,
     inLanguage: localeDefinitions[locale].htmlLang,
-    applicationCategory: "BusinessApplication",
+    applicationCategory: "PhotographyApplication",
     operatingSystem: "Web Browser",
     featureList: features,
     author: organizationSchema,

@@ -10,8 +10,8 @@ import PricingCards from '@/components/main-landing/pricing-cards'
 import FAQSection from '@/components/main-landing/FAQSection'
 import { CTASection } from '@/components/main-landing/CTASection'
 import  Footer  from '@/components/main-landing/Footer'
-import TestimonialSection from "@/components/main-landing/Testimonial";
 import PrivacySection from "@/components/main-landing/PrivacySection";
+import AuthorityLinks from "@/components/main-landing/AuthorityLinks";
 
 export function UnrealLandingPage() {
   return (
@@ -34,7 +34,7 @@ export function UnrealLandingPage() {
         <PremiumComparison />
         <FeaturesSection />
         <NewHowItWorks />
-        <TestimonialSection />
+        <AuthorityLinks />
         <PrivacySection />
         <PricingCards />
         <FAQSection />

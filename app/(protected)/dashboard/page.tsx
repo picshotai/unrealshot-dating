@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import { commonPageMetadata } from '@/lib/seo';
+import { commonPageMetadata } from '@/lib/private-metadata';
 
 export const metadata: Metadata = commonPageMetadata.dashboard();
 

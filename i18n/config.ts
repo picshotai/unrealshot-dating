@@ -17,7 +17,7 @@ export type PublishedPublicLocale = (typeof publishedPublicLocales)[number]
  * Blog locales are promoted independently from the translated marketing site.
  * A locale belongs here only after its archive has reviewed, published posts.
  */
-export const publishedBlogLocales = ["en", "fr", "es", "de", "pt-BR"] as const satisfies readonly PublishedPublicLocale[]
+export const publishedBlogLocales = ["en"] as const satisfies readonly PublishedPublicLocale[]
 
 export type PublishedBlogLocale = (typeof publishedBlogLocales)[number]
 
@@ -79,28 +79,49 @@ export const localeDefinitions = {
   },
 } as const satisfies Record<AppLocale, LocaleDefinition>
 
-const publicExactPathnames = new Set([
-  "/",
-  "/about",
-  "/blog",
-  "/pricing",
-  "/privacy-policy",
-  "/refund-policy",
-  "/terms",
-  "/use-case/dating-photos",
-])
+export type PublicRouteDefinition = {
+  path: string
+  locales: readonly PublishedPublicLocale[]
+  indexable: boolean
+  sitemap: boolean
+}
+
+const englishOnly = ["en"] as const satisfies readonly PublishedPublicLocale[]
+
+/** The single source of truth for public pages, locale support and sitemap output. */
+export const publicRoutes = [
+  { path: "/", locales: publishedPublicLocales, indexable: true, sitemap: true },
+  { path: "/about", locales: publishedPublicLocales, indexable: true, sitemap: true },
+  { path: "/pricing", locales: publishedPublicLocales, indexable: true, sitemap: true },
+  { path: "/privacy-policy", locales: publishedPublicLocales, indexable: true, sitemap: true },
+  { path: "/refund-policy", locales: publishedPublicLocales, indexable: true, sitemap: true },
+  { path: "/terms", locales: publishedPublicLocales, indexable: true, sitemap: true },
+  { path: "/dating-photos", locales: publishedPublicLocales, indexable: true, sitemap: true },
+  { path: "/blog", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/how-it-works", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/realistic-ai-dating-photos", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/contact", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/dating-photos/examples", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/dating-photos/activity", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/dating-photos/tinder", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/dating-photos/hinge", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/dating-photos/bumble", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/dating-photos/shoots/gym-training", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/dating-photos/shoots/outdoor-coffee", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/dating-photos/shoots/dinner", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/dating-photos/shoots/city-walk", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/dating-photos/shoots/coastal-travel", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/dating-photos/shoots/home-cooking", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/dating-photos/shoots/rooftop", locales: englishOnly, indexable: true, sitemap: true },
+] as const satisfies readonly PublicRouteDefinition[]
+
+const publicExactPathnames = new Set<string>(publicRoutes.map((route) => route.path))
 
 const publicDynamicPathnamePrefixes = ["/blog/"] as const
 
-const phase2LocalizedExactPathnames = new Set([
-  "/",
-  "/about",
-  "/pricing",
-  "/privacy-policy",
-  "/refund-policy",
-  "/terms",
-  "/use-case/dating-photos",
-])
+const phase2LocalizedExactPathnames = new Set<string>(
+  publicRoutes.filter((route) => route.locales.length > 1).map((route) => route.path),
+)
 
 const acceptedLocalePrefixes = appLocales
   .map((locale) => {
@@ -177,6 +198,20 @@ export function isPublicPathname(pathname: string): boolean {
     publicExactPathnames.has(normalizedPathname) ||
     publicDynamicPathnamePrefixes.some((prefix) => normalizedPathname.startsWith(prefix))
   )
+}
+
+export function getPublicRoute(pathname: string): PublicRouteDefinition | undefined {
+  const normalizedPathname = normalizePathname(pathname)
+  return publicRoutes.find((route) => route.path === normalizedPathname)
+}
+
+export function isPublishedPublicPathname(pathname: string, locale: AppLocale): boolean {
+  const normalizedPathname = normalizePathname(pathname)
+  if (normalizedPathname === "/blog" || normalizedPathname.startsWith("/blog/")) {
+    return isPublishedBlogLocale(locale)
+  }
+  const route = getPublicRoute(normalizedPathname)
+  return Boolean(route && (route.locales as readonly string[]).includes(locale))
 }
 
 export function isLocaleRoutedPublicPathname(pathname: string): boolean {
