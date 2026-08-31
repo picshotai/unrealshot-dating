@@ -13,6 +13,7 @@ import {
   Sparkles,
   Layers,
   ShieldCheck,
+  RotateCw,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -37,6 +38,8 @@ type Model = {
 interface StudioIntakeViewProps {
   userId: string;
   hasPack: boolean;
+  isPaymentPendingSync?: boolean;
+  onRefreshPackStatus?: () => void;
   models: Model[];
   selectedModelId: number | null;
   onSelectModel: (id: number) => void;
@@ -68,6 +71,8 @@ interface StudioIntakeViewProps {
 export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
   userId,
   hasPack,
+  isPaymentPendingSync = false,
+  onRefreshPackStatus,
   models,
   selectedModelId,
   onSelectModel,
@@ -159,7 +164,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
   };
 
   const currentModel =
-    models.find((m) => m.id === selectedModelId) || models[0];
+    models.find((m) => m.id === selectedModelId) || null;
   const interestLimit = Math.min(6, shootsPerDelivery);
 
   // Close dropdown on click outside
@@ -236,7 +241,11 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                     setIsModelDropdownOpen(!isModelDropdownOpen)
                   }
                   disabled={step === 'confirm'}
-                  className="flex items-center gap-2.5 p-1.5 pr-3 rounded-lg border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800/80 hover:border-zinc-700 transition-all text-left disabled:opacity-80"
+                  className={`flex items-center gap-2.5 p-1.5 pr-3 rounded-lg border transition-all text-left disabled:opacity-80 ${
+                    selectedModelId
+                      ? 'border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800/80 hover:border-zinc-700'
+                      : 'border-amber-500/50 bg-amber-500/10 hover:bg-amber-500/20'
+                  }`}
                 >
                   <div className="w-9 h-9 rounded-full overflow-hidden bg-zinc-800 border border-zinc-700/80 shrink-0">
                     {currentModel?.samples?.[0]?.uri ? (
@@ -254,7 +263,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                   <div>
                     <div className="flex items-center gap-1">
                       <span className="text-xs sm:text-sm font-semibold text-white tracking-tight font-oxanium">
-                        {currentModel?.name || 'Select Model'}
+                        {currentModel?.name || 'Select Face Model'}
                       </span>
                       {step === 'configure' && (
                         <ChevronDown
@@ -266,7 +275,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                       )}
                     </div>
                     <p className="text-[11px] text-zinc-500 font-mono">
-                      {step === 'configure' ? 'Click to switch' : 'Active Model'}
+                      {step === 'configure' ? (selectedModelId ? 'Click to switch' : 'Click to select') : 'Active Model'}
                     </p>
                   </div>
                 </button>
@@ -324,12 +333,21 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                   </div>
                 )}
               </div>
-            ) : (
-              <div className="flex items-center gap-3">
+            ) : models.length === 1 ? (
+              <button
+                type="button"
+                onClick={() => step === 'configure' && onSelectModel(models[0].id)}
+                disabled={step === 'confirm'}
+                className={`flex items-center gap-3 p-1.5 pr-3 rounded-lg border transition-all text-left ${
+                  selectedModelId === models[0].id
+                    ? 'border-zinc-800 bg-zinc-900/40'
+                    : 'border-amber-500/50 bg-amber-500/10 hover:bg-amber-500/20 cursor-pointer animate-pulse'
+                }`}
+              >
                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden bg-zinc-800 border border-zinc-700/80 shrink-0">
-                  {currentModel?.samples?.[0]?.uri ? (
+                  {models[0]?.samples?.[0]?.uri ? (
                     <img
-                      src={currentModel.samples[0].uri}
+                      src={models[0].samples[0].uri}
                       alt=""
                       className="w-full h-full object-cover"
                     />
@@ -342,18 +360,22 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-xs sm:text-sm font-semibold text-white tracking-tight font-oxanium">
-                      {currentModel?.name || 'Trained Face Model'}
+                      {models[0]?.name || 'Trained Face Model'}
                     </span>
-                    <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-zinc-900 text-zinc-400 border border-zinc-800">
-                      Active
+                    <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded border ${
+                      selectedModelId === models[0].id
+                        ? 'bg-zinc-900 text-zinc-400 border-zinc-800'
+                        : 'bg-amber-500/20 text-amber-300 border-amber-500/30 font-bold'
+                    }`}>
+                      {selectedModelId === models[0].id ? 'Active' : 'Click to Select'}
                     </span>
                   </div>
                   <p className="text-[11px] text-zinc-500 font-mono">
-                    {currentModel?.samples?.length || 0} training samples
+                    {selectedModelId === models[0].id ? `${models[0]?.samples?.length || 0} training samples` : 'Select this model to continue'}
                   </p>
                 </div>
-              </div>
-            )}
+              </button>
+            ) : null}
           </div>
 
           {showCancel && (
@@ -361,7 +383,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
               onClick={onCancel}
               className="h-12 text-xs text-zinc-400 hover:text-white border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 font-oxanium"
             >
-             <X className="w-3.5 h-3.5" />
+              <X className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
@@ -523,234 +545,255 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
               </div>
             )}
 
-                      {/* Bottom Review Action Bar */}
-                      <div className="pt-4 border-t border-zinc-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <div className="text-xs font-mono text-zinc-400 text-center sm:text-left">
-                          Includes{' '}
-                          <span className="text-white font-semibold">
-                            {shootsPerDelivery} shoots · {totalPhotos} photos
-                          </span>{' '}
-                          + <span className="text-accent font-semibold">{CUSTOM_CREDITS_DEFAULT} Photo Retakes</span>
-                          {' '}· <span className="text-emerald-400 font-semibold">$39 (one-time)</span>
-                        </div>
+            {/* Bottom Review Action Bar */}
+            <div className="pt-4 border-t border-zinc-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-xs font-mono text-zinc-400 text-center sm:text-left">
+                Includes{' '}
+                <span className="text-white font-semibold">
+                  {shootsPerDelivery} shoots · {totalPhotos} photos
+                </span>{' '}
+                + <span className="text-accent font-semibold">{CUSTOM_CREDITS_DEFAULT} Photo Retakes</span>
+                {' '}· <span className="text-emerald-400 font-semibold">$39 (one-time)</span>
+              </div>
 
-                        <Button
-                          onClick={() => setStep('confirm')}
-                          disabled={!canProceed}
-                          className={`w-full sm:w-auto font-semibold text-xs sm:text-sm h-10 px-6 rounded-lg transition-all active:scale-95 flex items-center justify-center gap-2 font-oxanium ${
-                            canProceed
-                              ? 'bg-white text-black hover:bg-zinc-200 shadow-sm cursor-pointer'
-                              : 'bg-zinc-900 text-zinc-500 border border-zinc-800 cursor-not-allowed opacity-60'
-                          }`}
-                        >
-                          {!hasSelectedInterests ? (
-                            <>Select At Least 1 Activity</>
-                          ) : !selectedModelId ? (
-                            <>Select Face Model</>
-                          ) : (
-                            <>
-                              Review &amp; Confirm Setup
-                              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={2} />
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    /* STEP 2: INLINE SMOOTH EXPANDING CONFIRMATION BLUEPRINT */
-                    <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
-                      <div className="p-4 sm:p-6 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-6 shadow-2xl">
-                        {/* Review Header */}
-                        <div className="flex items-center gap-3 pb-4 border-b border-zinc-800/80">
-                          <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 text-white flex items-center justify-center">
-                            <Sparkles className="w-5 h-5 text-accent" strokeWidth={1.5} />
-                          </div>
-                          <div>
-                            <h2 className="text-base sm:text-lg font-bold text-white font-oxanium tracking-tight">
-                              Photoshoot Blueprint Confirmation
-                            </h2>
-                            <p className="text-xs text-zinc-400">
-                              Review your setup before we shoot {shootsPerDelivery} sessions for you.
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Grid: summary cards */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {/* Card A: Model */}
-                          <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80 space-y-3">
-                            <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 font-oxanium">
-                              Model &amp; context-aware wardrobe
-                            </span>
-                            <div className="flex items-center gap-3">
-                              <div className="w-12 h-12 rounded-lg overflow-hidden bg-zinc-800 border border-zinc-700 shrink-0">
-                                {currentModel?.samples?.[0]?.uri ? (
-                                  <img src={currentModel.samples[0].uri} alt="" className="w-full h-full object-cover" />
-                                ) : (
-                                  <ImageIcon className="w-4 h-4 m-4 text-zinc-500" />
-                                )}
-                              </div>
-                              <div>
-                                <div className="text-sm font-semibold text-white font-oxanium">
-                                  {currentModel?.name || 'Trained Model'}
-                                </div>
-                                <div className="text-[11px] text-zinc-500 mt-0.5 leading-relaxed">
-                                  Clothing is chosen separately for every real occasion, activity, weather and location.
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Card B: Lifestyle & Custom Hobbies */}
-                          <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80 space-y-3">
-                            <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 font-oxanium">
-                              Lifestyle &amp; Exclusions
-                            </span>
-                            <div className="space-y-1.5 text-xs">
-                              <div className="flex flex-wrap gap-1">
-                                {interests.map((id) => {
-                                  const chip = INTEREST_CHIPS.find((c) => c.id === id);
-                                  return (
-                                    <span
-                                      key={id}
-                                      className="px-2 py-0.5 rounded bg-zinc-800 text-zinc-200 text-[11px]"
-                                    >
-                                      {chip?.emoji} {chip?.label}
-                                    </span>
-                                  );
-                                })}
-                                {includeSimpleCandids && (
-                                  <span className="px-2 py-0.5 rounded bg-white/10 text-zinc-200 text-[11px]">
-                                    ✨ Simple candids · at least 2 shoots
-                                  </span>
-                                )}
-                              </div>
-                              {excludeTags.length > 0 && (
-                                <div className="text-[11px] text-red-400 font-mono pt-1">
-                                  Excluding: {excludeTags.join(', ')}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Card C: Delivery breakdown */}
-                        <div className="p-4 rounded-xl bg-zinc-900/40 border border-zinc-800/60 space-y-2.5">
-                          <div className="flex items-center justify-between text-xs font-oxanium font-medium text-zinc-300">
-                            <span className="flex items-center gap-1.5">
-                              <Layers className="w-3.5 h-3.5 text-zinc-400" />
-                              {shootsPerDelivery} shoots · {totalPhotos} photos
-                            </span>
-                            <span className="text-white font-mono">
-                              {FRAMES_PER_SHOOT} frames each
-                            </span>
-                          </div>
-                          <p className="text-[11px] text-zinc-500 leading-relaxed">
-                            Each shoot is one location, one outfit and one light, shot {FRAMES_PER_SHOOT} times during one believable occasion. The moment decides each expression, body position and crop.
-                          </p>
-                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs pt-1">
-                            {[
-                              { label: 'One occasion', hint: 'A life moment' },
-                              { label: 'One place', hint: 'Stable world' },
-                              { label: 'One outfit', hint: 'Context correct' },
-                              { label: 'Four moments', hint: 'Scene led' },
-                            ].map((frame) => (
-                              <div
-                                key={frame.label}
-                                className="p-2 rounded-lg bg-zinc-950 border border-zinc-800/80"
-                              >
-                                <div className="text-white font-bold font-oxanium text-sm">
-                                  {frame.label}
-                                </div>
-                                <div className="text-[10px] text-zinc-400">{frame.hint}</div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Ready to start / Recovery Card */}
-                        {needsPurchase && (
-                          <div className="p-4 rounded-xl bg-zinc-900/90 border border-emerald-500/30 text-zinc-200 shadow-lg">
-                            <div className="flex items-center justify-between gap-2">
-                              <div className="flex items-center gap-2 text-emerald-400 font-semibold font-oxanium text-sm">
-                                <Sparkles className="w-4 h-4 text-emerald-400" />
-                                Your {shootsPerDelivery} shoots are ready to start
-                              </div>
-                              <span className="text-xs font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                                $39 one-time
-                              </span>
-                            </div>
-                            <p className="text-xs text-zinc-400 mt-1">
-                              {shootsPerDelivery} shoots · {totalPhotos} photos · {CUSTOM_CREDITS_DEFAULT} Photo Retakes included. Your shoot starts instantly after checkout.
-                            </p>
-                          </div>
-                        )}
-
-                        {checkoutError && (
-                          <div className="p-3.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-start gap-2.5 text-xs">
-                            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                            <div>
-                              <p className="font-semibold font-oxanium">Checkout Error</p>
-                              <p className="opacity-90 mt-0.5">{checkoutError}</p>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Dual Action Confirmation Row */}
-                        <div className="pt-4 border-t border-zinc-800/80 flex flex-col-reverse sm:flex-row items-center justify-between gap-3">
-                          <Button
-                            variant="outline"
-                            onClick={() => setStep('configure')}
-                            disabled={isLoading || isCheckingOut}
-                            className="w-full sm:w-auto border-zinc-700 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium text-xs sm:text-sm h-11 px-5 rounded-lg font-oxanium flex items-center justify-center gap-2 cursor-pointer"
-                          >
-                            <ArrowLeft className="w-3.5 h-3.5" />
-                            Edit Parameters
-                          </Button>
-
-                          {!needsPurchase ? (
-                            <Button
-                              onClick={handleFinalSubmit}
-                              disabled={isLoading || isCheckingOut}
-                              className="w-full sm:w-auto bg-white text-black hover:bg-zinc-200 font-bold text-xs sm:text-sm h-11 px-7 rounded-lg shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 font-oxanium cursor-pointer"
-                            >
-                              {isLoading ? (
-                                <>
-                                  <Loader2 className="w-4 h-4 animate-spin" />
-                                  Booking your shoots...
-                                </>
-                              ) : (
-                                <>
-                                  <ShieldCheck className="w-4 h-4 text-black" strokeWidth={2.5} />
-                                  Confirm &amp; start {shootsPerDelivery} shoots (1 Pack Available)
-                                  <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} />
-                                </>
-                              )}
-                            </Button>
-                          ) : (
-                            <Button
-                              onClick={handleUnlockAndCheckout}
-                              disabled={isLoading || isCheckingOut}
-                              className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs sm:text-sm h-11 px-7 rounded-lg shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 font-oxanium cursor-pointer"
-                            >
-                              {isCheckingOut ? (
-                                <>
-                                  <Loader2 className="w-4 h-4 animate-spin" />
-                                  Launching checkout...
-                                </>
-                              ) : (
-                                <>
-                                  <Sparkles className="w-4 h-4" />
-                                  Unlock &amp; start {shootsPerDelivery} shoots — $39 →
-                                </>
-                              )}
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  )}
+              <Button
+                onClick={() => setStep('confirm')}
+                disabled={!canProceed}
+                className={`w-full sm:w-auto font-semibold text-xs sm:text-sm h-10 px-6 rounded-lg transition-all active:scale-95 flex items-center justify-center gap-2 font-oxanium ${
+                  canProceed
+                    ? 'bg-white text-black hover:bg-zinc-200 shadow-sm cursor-pointer'
+                    : 'bg-zinc-900 text-zinc-500 border border-zinc-800 cursor-not-allowed opacity-60'
+                }`}
+              >
+                {!hasSelectedInterests ? (
+                  <>Select At Least 1 Activity</>
+                ) : !selectedModelId ? (
+                  <>Select Face Model</>
+                ) : (
+                  <>
+                    Review &amp; Confirm Setup
+                    <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={2} />
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        ) : (
+          /* STEP 2: INLINE SMOOTH EXPANDING CONFIRMATION BLUEPRINT */
+          <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
+            <div className="p-4 sm:p-6 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-6 shadow-2xl">
+              {/* Review Header */}
+              <div className="flex items-center gap-3 pb-4 border-b border-zinc-800/80">
+                <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 text-white flex items-center justify-center">
+                  <Sparkles className="w-5 h-5 text-accent" strokeWidth={1.5} />
+                </div>
+                <div>
+                  <h2 className="text-base sm:text-lg font-bold text-white font-oxanium tracking-tight">
+                    Photoshoot Blueprint Confirmation
+                  </h2>
+                  <p className="text-xs text-zinc-400">
+                    Review your setup before we shoot {shootsPerDelivery} sessions for you.
+                  </p>
                 </div>
               </div>
-          );
-        };
+
+              {/* Grid: summary cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Card A: Model */}
+                <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80 space-y-3">
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 font-oxanium">
+                    Model &amp; context-aware wardrobe
+                  </span>
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-zinc-800 border border-zinc-700 shrink-0">
+                      {currentModel?.samples?.[0]?.uri ? (
+                        <img src={currentModel.samples[0].uri} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <ImageIcon className="w-4 h-4 m-4 text-zinc-500" />
+                      )}
+                    </div>
+                    <div>
+                      <div className="text-sm font-semibold text-white font-oxanium">
+                        {currentModel?.name || 'Trained Model'}
+                      </div>
+                      <div className="text-[11px] text-zinc-500 mt-0.5 leading-relaxed">
+                        Clothing is chosen separately for every real occasion, activity, weather and location.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card B: Lifestyle & Custom Hobbies */}
+                <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80 space-y-3">
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 font-oxanium">
+                    Lifestyle &amp; Exclusions
+                  </span>
+                  <div className="space-y-1.5 text-xs">
+                    <div className="flex flex-wrap gap-1">
+                      {interests.map((id) => {
+                        const chip = INTEREST_CHIPS.find((c) => c.id === id);
+                        return (
+                          <span
+                            key={id}
+                            className="px-2 py-0.5 rounded bg-zinc-800 text-zinc-200 text-[11px]"
+                          >
+                            {chip?.emoji} {chip?.label}
+                          </span>
+                        );
+                      })}
+                      {includeSimpleCandids && (
+                        <span className="px-2 py-0.5 rounded bg-white/10 text-zinc-200 text-[11px]">
+                          ✨ Simple candids · at least 2 shoots
+                        </span>
+                      )}
+                    </div>
+                    {excludeTags.length > 0 && (
+                      <div className="text-[11px] text-red-400 font-mono pt-1">
+                        Excluding: {excludeTags.join(', ')}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Card C: Delivery breakdown */}
+              <div className="p-4 rounded-xl bg-zinc-900/40 border border-zinc-800/60 space-y-2.5">
+                <div className="flex items-center justify-between text-xs font-oxanium font-medium text-zinc-300">
+                  <span className="flex items-center gap-1.5">
+                    <Layers className="w-3.5 h-3.5 text-zinc-400" />
+                    {shootsPerDelivery} shoots · {totalPhotos} photos
+                  </span>
+                  <span className="text-white font-mono">
+                    {FRAMES_PER_SHOOT} frames each
+                  </span>
+                </div>
+                <p className="text-[11px] text-zinc-500 leading-relaxed">
+                  Each shoot is one location, one outfit and one light, shot {FRAMES_PER_SHOOT} times during one believable occasion. The moment decides each expression, body position and crop.
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs pt-1">
+                  {[
+                    { label: 'One occasion', hint: 'A life moment' },
+                    { label: 'One place', hint: 'Stable world' },
+                    { label: 'One outfit', hint: 'Context correct' },
+                    { label: 'Four moments', hint: 'Scene led' },
+                  ].map((frame) => (
+                    <div
+                      key={frame.label}
+                      className="p-2 rounded-lg bg-zinc-950 border border-zinc-800/80"
+                    >
+                      <div className="text-white font-bold font-oxanium text-sm">
+                        {frame.label}
+                      </div>
+                      <div className="text-[10px] text-zinc-400">{frame.hint}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Ready to start / Recovery Card */}
+              {isPaymentPendingSync ? (
+                <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 shadow-lg space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 text-amber-300 font-semibold font-oxanium text-sm">
+                      <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
+                      Payment received. Synchronizing your photoshoot pack…
+                    </div>
+                  </div>
+                  <p className="text-xs text-zinc-300">
+                    Your payment was successful and your wallet credits are syncing with our server. Please wait a moment or click &quot;Check Sync Status&quot;.
+                  </p>
+                </div>
+              ) : needsPurchase ? (
+                <div className="p-4 rounded-xl bg-zinc-900/90 border border-emerald-500/30 text-zinc-200 shadow-lg">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 text-emerald-400 font-semibold font-oxanium text-sm">
+                      <Sparkles className="w-4 h-4 text-emerald-400" />
+                      Your {shootsPerDelivery} shoots are ready to start
+                    </div>
+                    <span className="text-xs font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      $39 one-time
+                    </span>
+                  </div>
+                  <p className="text-xs text-zinc-400 mt-1">
+                    {shootsPerDelivery} shoots · {totalPhotos} photos · {CUSTOM_CREDITS_DEFAULT} Photo Retakes included. Your shoot starts instantly after checkout.
+                  </p>
+                </div>
+              ) : null}
+
+              {checkoutError && (
+                <div className="p-3.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-start gap-2.5 text-xs">
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-semibold font-oxanium">Checkout Error</p>
+                    <p className="opacity-90 mt-0.5">{checkoutError}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Dual Action Confirmation Row */}
+              <div className="pt-4 border-t border-zinc-800/80 flex flex-col-reverse sm:flex-row items-center justify-between gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setStep('configure')}
+                  disabled={isLoading || isCheckingOut}
+                  className="w-full sm:w-auto border-zinc-700 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium text-xs sm:text-sm h-11 px-5 rounded-lg font-oxanium flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  Edit Parameters
+                </Button>
+
+                {isPaymentPendingSync ? (
+                  <Button
+                    onClick={onRefreshPackStatus}
+                    disabled={isLoading}
+                    className="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs sm:text-sm h-11 px-7 rounded-lg shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 font-oxanium cursor-pointer"
+                  >
+                    <RotateCw className="w-4 h-4" />
+                    Check Sync Status
+                  </Button>
+                ) : !needsPurchase ? (
+                  <Button
+                    onClick={handleFinalSubmit}
+                    disabled={isLoading || isCheckingOut}
+                    className="w-full sm:w-auto bg-white text-black hover:bg-zinc-200 font-bold text-xs sm:text-sm h-11 px-7 rounded-lg shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 font-oxanium cursor-pointer"
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Booking your shoots...
+                      </>
+                    ) : (
+                      <>
+                        <ShieldCheck className="w-4 h-4 text-black" strokeWidth={2.5} />
+                        Confirm &amp; start {shootsPerDelivery} shoots (1 Pack Available)
+                        <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} />
+                      </>
+                    )}
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleUnlockAndCheckout}
+                    disabled={isLoading || isCheckingOut}
+                    className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs sm:text-sm h-11 px-7 rounded-lg shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 font-oxanium cursor-pointer"
+                  >
+                    {isCheckingOut ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Launching checkout...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4" />
+                        Unlock &amp; start {shootsPerDelivery} shoots — $39 →
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

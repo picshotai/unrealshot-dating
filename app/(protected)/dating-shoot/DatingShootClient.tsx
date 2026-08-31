@@ -154,13 +154,18 @@ export function DatingShootClient({
 
   // Pack status state synchronized with backend
   const [hasPackState, setHasPackState] = useState<boolean>(hasPack);
+  const [isPaymentPendingSync, setIsPaymentPendingSync] = useState<boolean>(false);
 
   const refreshPackStatus = useCallback(async () => {
     try {
       const res = await fetch('/api/dating-shoot/pack-status', { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
-        setHasPackState(Boolean(data.hasPack));
+        const hasValidPack = Boolean(data.hasPack);
+        setHasPackState(hasValidPack);
+        if (hasValidPack) {
+          setIsPaymentPendingSync(false);
+        }
       }
     } catch (e) {
       console.warn('Failed to refresh pack status:', e);
@@ -266,6 +271,18 @@ export function DatingShootClient({
     return () => clearInterval(interval);
   }, [activeOrderId, fetchStatus, regenLoadingId, status?.order.status]);
 
+  // Helper to clean up draft from sessionStorage and clear resume query
+  const cleanupPendingShootResume = useCallback(() => {
+    try {
+      sessionStorage.removeItem('unrealshot_pending_shoot');
+      if (typeof window !== 'undefined' && window.location.search.includes('resume=')) {
+        window.history.replaceState({}, '', '/dating-shoot');
+      }
+    } catch (e) {
+      console.warn('Failed to clean up pending shoot draft:', e);
+    }
+  }, []);
+
   // Launch New Shoot
   const handleLaunchShoot = async (params: {
     modelId: number;
@@ -304,6 +321,8 @@ export function DatingShootClient({
           await fetchStatus(data.orderId);
           setIsIntakeOpen(false);
           launchRequestId.current = null;
+          cleanupPendingShootResume();
+          refreshPackStatus();
           return true;
         }
         throw new Error(data.error || 'Failed to start photoshoot');
@@ -315,15 +334,7 @@ export function DatingShootClient({
       launchRequestId.current = null;
 
       // Clean up saved draft & query parameters after ANY successful launch
-      try {
-        sessionStorage.removeItem('unrealshot_pending_shoot');
-        if (typeof window !== 'undefined' && window.location.search.includes('resume=')) {
-          window.history.replaceState({}, '', '/dating-shoot');
-        }
-      } catch (e) {
-        console.warn('Failed to clean up pending shoot draft:', e);
-      }
-
+      cleanupPendingShootResume();
       refreshPackStatus();
       return true;
     } catch (e) {
@@ -363,8 +374,8 @@ export function DatingShootClient({
             };
 
             if (!targetModel) {
-              // Never silently switch model! Restore settings to configure step and ask user to choose
-              setModelId(models[0]?.id || null);
+              // Never silently switch model! Require conscious selection:
+              setModelId(null);
               setRestoredIntake({
                 ...draftData,
                 step: 'configure',
@@ -406,7 +417,7 @@ export function DatingShootClient({
         console.warn('Failed to parse pending shoot config:', e);
       }
     }
-  }, [models, refreshPackStatus]);
+  }, [models, refreshPackStatus, cleanupPendingShootResume]);
 
   // Retry Failed
   const handleRetryFailed = async () => {
@@ -625,6 +636,8 @@ export function DatingShootClient({
       <StudioIntakeView
         userId={userId}
         hasPack={hasPackState}
+        isPaymentPendingSync={isPaymentPendingSync && !hasPackState}
+        onRefreshPackStatus={refreshPackStatus}
         models={models}
         selectedModelId={modelId}
         onSelectModel={setModelId}

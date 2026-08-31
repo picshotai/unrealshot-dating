@@ -47,7 +47,7 @@ const legacyCheckoutSchema = z.object({
     returnUrl: z.string().url("Return URL must be a valid URL").optional(),
 });
 
-// Fetch active pricing plan from database or fallback to single Dating Shoot plan
+// Fetch active pricing plan from database
 async function getPricingPlan(supabase: any) {
   const envProductId = process.env.DODO_PRODUCT_ID || process.env.DODO_DATING_PRODUCT_ID;
 
@@ -57,28 +57,17 @@ async function getPricingPlan(supabase: any) {
     .eq('is_active', true)
     .maybeSingle();
 
-  if (plan) {
-    return {
-      id: plan.id,
-      name: plan.name,
-      price: parseFloat(plan.price),
-      credits: plan.credits,
-      productId: envProductId || plan.dodo_product_id,
-      currency: plan.currency || 'USD'
-    };
+  if (!plan) {
+    return null;
   }
 
-  // Fallback default for the Complete Dating Shoot ($39).
-  // Credits must cover SHOOT_CREDIT_COST or the buyer cannot start the shoot
-  // they just paid for. The 15 free Photo Retakes are granted separately on the
-  // order row and do not come out of this balance.
   return {
-    id: null,
-    name: `${TOTAL_PHOTOS} Photo Dating Pack`,
-    price: 39,
-    credits: SHOOT_CREDIT_COST,
-    productId: envProductId || 'p_dating_39',
-    currency: 'USD'
+    id: plan.id,
+    name: plan.name,
+    price: parseFloat(plan.price),
+    credits: plan.credits,
+    productId: envProductId || plan.dodo_product_id,
+    currency: plan.currency || 'USD'
   };
 }
 
@@ -133,6 +122,12 @@ export async function POST(request: NextRequest) {
 
             // Fetch server-owned active plan
             const plan = await getPricingPlan(supabase);
+            if (!plan) {
+                return NextResponse.json(
+                    { message: "Purchase configuration unavailable. Please contact support." },
+                    { status: 503 }
+                );
+            }
             const finalPrice = plan.price;
             const finalReturnUrl = returnUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`;
 
