@@ -5,7 +5,7 @@ import { PainSection } from '@/components/main-landing/PainSection'
 import NewHowItWorks from '@/components/main-landing/NewHowItWorks'
 import { FeaturesSection } from '@/components/main-landing/FeaturesSection'
 import PremiumComparison from "@/components/main-landing/Comparison";
-import StylePacks from '@/components/main-landing/StylePacks';
+import ShootsShowcase from '@/components/main-landing/ShootsShowcase';
 import PricingCards from '@/components/main-landing/pricing-cards'
 import FAQSection from '@/components/main-landing/FAQSection'
 import { CTASection } from '@/components/main-landing/CTASection'
@@ -30,10 +30,11 @@ export function UnrealLandingPage() {
       <main>
         <HeroSection />
         <PainSection />
-        <StylePacks />
+        <ShootsShowcase />
         <PremiumComparison />
         <FeaturesSection />
         <NewHowItWorks />
+        <AuthorityLinks />
         <PrivacySection />
         <PricingCards />
         <FAQSection />
