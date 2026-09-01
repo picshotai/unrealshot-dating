@@ -27,7 +27,7 @@ export default function ShootsShowcase() {
   const rows = 5;
 
   return (
-    <section id="style-packs" className="relative w-full h-[65vh] min-h-[450px] max-h-[800px] bg-[#111111] overflow-hidden flex items-center justify-center">
+    <section id="style-packs" className="relative w-full h-[100vh] min-h-[700px] max-h-[1200px] bg-[#111111] overflow-hidden flex items-center justify-center">
       
       {/* 
         To maintain portrait aspect ratios without squashing, we rely on flex heights.
@@ -35,26 +35,26 @@ export default function ShootsShowcase() {
         Width is unconstrained so columns just keep stacking horizontally.
         Centered absolutely so it overflows evenly on both sides on smaller screens.
       */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-2 sm:gap-3 h-[115%]">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-3 sm:gap-4 h-[120%]">
         {[...Array(columns)].map((_, colIndex) => {
           const columnImages = allImages.slice(colIndex * rows, (colIndex + 1) * rows);
           
           return (
             <div 
               key={colIndex} 
-              className={`flex flex-col gap-2 sm:gap-3 h-full transition-transform duration-500 ${colIndex % 2 === 0 ? 'translate-y-[4%]' : '-translate-y-[4%]'}`}
+              className={`flex flex-col gap-3 sm:gap-4 h-full transition-transform duration-500 ${colIndex % 2 === 0 ? 'translate-y-[5%]' : '-translate-y-[5%]'}`}
             >
               {columnImages.map((img, i) => (
                 <div 
                   key={i} 
-                  className="relative flex-1 aspect-[3/4] rounded-lg sm:rounded-xl overflow-hidden opacity-60 hover:opacity-100 transition-opacity duration-300 shadow-lg shrink-0"
+                  className="relative flex-1 aspect-[3/4] rounded-lg sm:rounded-2xl overflow-hidden opacity-60 hover:opacity-100 transition-opacity duration-300 shadow-lg shrink-0"
                 >
                   <Image 
                     src={img} 
                     alt="UnrealShot AI Photo Gallery" 
                     fill 
                     className="object-cover"
-                    sizes="(max-width: 640px) 200px, 250px"
+                    sizes="(max-width: 640px) 300px, 400px"
                   />
                 </div>
               ))}
