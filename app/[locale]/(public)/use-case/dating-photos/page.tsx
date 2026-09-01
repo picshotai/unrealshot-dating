@@ -6,6 +6,7 @@ import PublicHeader from "@/components/Header"
 import Footer from "@/components/main-landing/Footer"
 import { Button } from "@/components/ui/button"
 import { MultipleStructuredData } from "@/components/seo/StructuredData"
+import DatingPhotosHubPage from "@/components/seo/DatingPhotosHubPage"
 import { getLocalizedMetadata, makeBreadcrumbJsonLd, makeFaqJsonLd, makeWebPageJsonLd, publicUrl } from "@/lib/public-seo"
 import type { PublishedPublicLocale } from "@/i18n/config"
 
@@ -19,6 +20,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function DatingPhotosPage({ params }: Params) {
   const locale = (await params).locale as PublishedPublicLocale
+  if (locale === "en") return <DatingPhotosHubPage />
+
   const t = await getTranslations({ locale, namespace: "DatingPhotos" })
   const proof = t.raw("hero.proof") as string[]
   const failItems = t.raw("comparison.failItems") as string[]
@@ -48,8 +51,6 @@ export default async function DatingPhotosPage({ params }: Params) {
         </div></section>
 
         <section className="max-w-6xl mx-auto px-4 pb-20"><div className="text-center max-w-3xl mx-auto mb-12"><p className="text-xs font-mono font-bold uppercase tracking-wider text-[#ff6f00] mb-2">{t("slots.eyebrow")}</p><h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight font-[var(--font-inter-tight)]">{t("slots.heading")}</h2><p className="text-gray-600 text-sm sm:text-base mt-3">{t("slots.description")}</p></div><div className="grid grid-cols-1 md:grid-cols-2 gap-6">{photoTypes.map((item) => <div key={item.title} className="bg-white rounded-3xl p-8 border border-gray-200/80 shadow-sm flex flex-col justify-between"><div><div className="flex items-center justify-between mb-4"><span className="text-xs font-bold text-[#ff6f00] uppercase tracking-wider">{item.tag}</span><span className="text-xs font-semibold px-2.5 py-1 bg-gray-100 text-gray-600 rounded-full">{item.vibe}</span></div><h3 className="text-xl font-bold text-gray-900 mb-2 font-[var(--font-inter-tight)]">{item.title}</h3><p className="text-gray-600 text-sm leading-relaxed">{item.description}</p></div></div>)}</div></section>
-
-        {locale === "en" && <section className="max-w-6xl mx-auto px-4 pb-20"><div className="rounded-3xl border border-gray-200 bg-white p-8 sm:p-10"><h2 className="text-3xl font-bold">Choose the product page for your dating app</h2><p className="mt-4 max-w-3xl leading-7 text-gray-600">Each app page explains the specific photo problem UnrealShot solves, the relevant lineup roles and the product’s honest policy boundaries. Separate editorial guides cover ordering, crops and profile review in depth.</p><div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[{ href: "/dating-photos/tinder", label: "AI Tinder Photos" }, { href: "/dating-photos/hinge", label: "AI Hinge Photos" }, { href: "/dating-photos/bumble", label: "AI Bumble Photos" }, { href: "/dating-photos/activity", label: "Real-interest photos" }].map((item) => <Link key={item.href} href={item.href} className="rounded-2xl border border-gray-200 p-5 font-semibold text-[#c94e24] hover:border-[#ff805d]">{item.label} →</Link>)}</div><div className="mt-6 flex flex-wrap gap-5 text-sm"><Link className="underline underline-offset-4" href="/guides/tinder-photos">Tinder photo guide</Link><Link className="underline underline-offset-4" href="/guides/hinge-photos">Hinge photo guide</Link><Link className="underline underline-offset-4" href="/guides/bumble-photos">Bumble photo guide</Link><Link className="underline underline-offset-4" href="/dating-photos/examples">See seven complete examples</Link></div></div></section>}
 
         <section className="max-w-4xl mx-auto px-4 pb-20"><div className="text-center mb-12"><p className="text-xs font-mono font-bold uppercase tracking-wider text-[#ff6f00] mb-2">{t("faq.eyebrow")}</p><h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight font-[var(--font-inter-tight)]">{t("faq.heading")}</h2></div><div className="space-y-4">{faqs.map((faq) => <div key={faq.question} className="bg-white rounded-2xl p-6 border border-gray-200/80 shadow-sm"><h3 className="text-base font-bold text-gray-900 mb-2">{faq.question}</h3><p className="text-gray-600 text-sm leading-relaxed">{faq.answer}</p></div>)}</div></section>
 

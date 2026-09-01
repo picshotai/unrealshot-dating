@@ -19,6 +19,8 @@
     "check:i18n": "tsx scripts/check-i18n.ts",
     "check:seo": "tsx scripts/check-seo-contract.ts",
     "check:platform-pages": "tsx scripts/check-platform-pages.ts",
+    "check:dating-hub": "tsx scripts/check-dating-hub.ts",
+    "check:shoot-landings": "tsx scripts/check-shoot-landings.ts",
     "check:seo:production": "tsx scripts/check-production-seo.ts",
     "check:wordpress-plugin": "tsx scripts/check-wordpress-plugin.ts",
     "test:anchor": "tsx scripts/test-anchor-chain.ts"

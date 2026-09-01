@@ -21,7 +21,7 @@ export type PlatformLandingContent = {
   problems: Array<{ title: string; body: string }>
   solutionIntro: string
   differentiators: Array<{ title: string; body: string }>
-  lineup: Array<{ slot: string; role: string; explanation: string; shootSlug?: string }>
+  lineup: Array<{ role: string; explanation: string }>
   sections: PlatformSection[]
   exampleSlugs: string[]
   policy: string[]

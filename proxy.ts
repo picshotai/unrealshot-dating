@@ -59,14 +59,13 @@ function legacyResponse(request: NextRequest): NextResponse | undefined {
 }
 
 /** Signed-in users have no business here; they belong in the studio or onboarding. */
-const ENTRY_ROUTES = ['/login', '/dashboard']
+const ENTRY_ROUTES = ['/login']
 
 /** Requires a usable model. */
 const STUDIO_ROUTES = ['/dating-shoot', '/gallery']
 
 /** Requires a session, whatever stage the user is at. */
 const PROTECTED_ROUTES = [
-  '/dashboard',
   '/account',
   '/settings',
   '/models',
@@ -85,7 +84,6 @@ const NON_LOCALIZED_ROUTE_PREFIXES = [
   '/api',
   '/auth',
   '/buy-credits',
-  '/dashboard',
   '/dating-shoot',
   '/error',
   '/gallery',

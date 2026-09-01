@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFileSync } from "node:fs"
 import { platformGuides, platformLandings } from "../lib/platform-pages"
 
 function collectText(value: unknown): string[] {
@@ -27,11 +28,23 @@ for (const page of landingPages) {
   assert.ok(page.problems.length >= 3, `${page.path} needs three problem statements`)
   assert.ok(page.differentiators.length >= 4, `${page.path} needs four product differentiators`)
   assert.ok(page.lineup.length >= 6, `${page.path} needs a complete lineup`)
+  for (const item of page.lineup) {
+    assert.doesNotMatch(item.explanation, /^(?:choose|add|use|show|start|finish)\b/i, `${page.path} delivery benefits must not read like scene-selection instructions`)
+  }
   assert.ok(page.exampleSlugs.length >= 4, `${page.path} needs four product examples`)
   assert.ok(page.faqs.length >= 6, `${page.path} needs six visible FAQs`)
   assert.ok(page.sources.length >= 3, `${page.path} needs three first-party sources`)
   assert.equal(page.guidePath, `/guides/${page.app.toLowerCase()}-photos`)
+  assert.match(`${page.answer} ${page.solutionIntro}`, /(?:not|do not|rather than).*(?:fixed|preset|catalog|select)/i, `${page.path} must explain that shoot ideas are not selectable presets`)
 }
+
+const landingCopy = collectText(landingPages).join(" ")
+assert.doesNotMatch(landingCopy, /22 supported interests/i, "Platform landings must not frame interests as a finite shoot catalog")
+const landingTemplate = readFileSync("components/seo/PlatformLandingPage.tsx", "utf8")
+assert.doesNotMatch(landingTemplate, /See this shoot type/i, "Profile roles must not link to fixed shoot types")
+assert.doesNotMatch(landingTemplate, /A working lineup|Six different jobs/i, "Product delivery section must not use abstract guide-style framing")
+assert.match(landingTemplate, /Inside your 60-photo delivery/i, "Product delivery section must clearly identify what it explains")
+assert.match(landingTemplate, /examples illustrate the range rather than choices in an order form/i, "Example grid must explain that concepts are illustrative rather than orderable")
 
 for (const page of guidePages) {
   assert.ok(wordCount(page) >= 1_300, `${page.path} is below 1,300 words`)

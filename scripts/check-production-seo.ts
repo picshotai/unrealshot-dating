@@ -59,6 +59,11 @@ async function main() {
   await expectPage("/fr", "fr-FR", "/fr")
   await expectPage("/es/pricing", "es-ES", "/es/pricing")
   await expectPage("/de/dating-photos", "de-DE", "/de/dating-photos")
+  const datingHubHtml = await expectPage("/dating-photos", "en-US", "/dating-photos")
+  assert.match(datingHubHtml, /Dating profile photos for men that look like one real life/i)
+  for (const spoke of ["/dating-photos/tinder", "/dating-photos/hinge", "/dating-photos/bumble", "/dating-photos/activity", "/dating-photos/examples", "/realistic-ai-dating-photos"]) {
+    assert.ok(datingHubHtml.includes(`href="${spoke}"`), `Dating hub is missing spoke: ${spoke}`)
+  }
   await expectPage("/pt-br/about", "pt-BR", "/pt-br/about")
   await expectPage("/blog", "en-US", "/blog")
   for (const pathname of englishOnlyPages) await expectPage(pathname, "en-US", pathname)

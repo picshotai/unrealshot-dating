@@ -290,10 +290,10 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentSucces
                 </Button>
               </Link>
               
-              <Link href="/dashboard">
+              <Link href="/models/create">
                 <Button variant="outline" className="w-full sm:w-auto cursor-pointer border-zinc-700 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 hover:text-white">
                   <Home className="h-4 w-4 mr-2" />
-                  Go to Dashboard
+                  Create a Model
                 </Button>
               </Link>
             </>

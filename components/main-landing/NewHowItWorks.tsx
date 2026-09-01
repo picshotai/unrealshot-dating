@@ -6,8 +6,8 @@ import Carousal from "@/components/Carousal"
 import { useTranslations } from "next-intl"
 
 // Using your specific image requests
-const womanInputImages = ["/images/demo1.jpg", "/images/demo2.jpg", "/images/demo3.jpg", "/images/demo4.jpg", "/images/demo9.jpg", "/images/demo10.jpg"];
-const manInputImages = ["/images/demo7.jpg", "/images/demo5.jpg", "/images/demo11.jpg", "/images/demo12.jpg", "/images/demo13.jpg", "/images/demo14.jpg"];
+const leftInputImages = ["/images/demo1.jpg", "/images/demo2.jpg", "/images/demo3.jpg"];
+const rightInputImages = ["/images/demo7.jpg", "/images/demo5.jpg", "/images/demo11.jpg"];
 const womanOutputImages = ["/images/aimodel1.jpg", "/images/aimodel2.jpg", "/images/aimodel3.jpg", "/images/aimodel4.jpg"];
 const manOutputImages = ["/images/aimodel5.jpg", "/images/aimodel6.jpg", "/images/aimodel7.jpg", "/images/aimodel8.jpg"];
 
@@ -65,7 +65,7 @@ export default function HowItWorksShowcase() {
                    <div className="hidden lg:flex gap-6">
                      <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
                        <Image 
-                         src={womanInputImages[0]} 
+                         src={leftInputImages[0]}
                          width={105} 
                          height={140} 
                          className="w-full h-full object-cover"
@@ -74,7 +74,7 @@ export default function HowItWorksShowcase() {
                      </div>
                      <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
                        <Image 
-                         src={womanInputImages[1]} 
+                         src={leftInputImages[1]}
                          width={105} 
                          height={140} 
                          className="w-full h-full object-cover"
@@ -83,7 +83,7 @@ export default function HowItWorksShowcase() {
                      </div>
                      <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
                        <Image 
-                         src={womanInputImages[2]} 
+                         src={leftInputImages[2]}
                          width={105} 
                          height={140} 
                          className="w-full h-full object-cover"
@@ -117,7 +117,7 @@ export default function HowItWorksShowcase() {
                         
                         {/* File list - realistic display like TrainModelZone */}
                         <div className="space-y-2 flex-1 overflow-y-auto">
-                          {womanInputImages.slice(0, 4).map((src, i) => (
+                          {leftInputImages.slice(0, 4).map((src, i) => (
                             <div key={i} className="bg-white flex items-center justify-between gap-2 rounded-lg border border-gray-200 p-2">
                               <div className="flex items-center gap-2 overflow-hidden">
                                 <div className="bg-gray-100 aspect-square shrink-0 rounded w-8 h-8">
@@ -162,7 +162,7 @@ export default function HowItWorksShowcase() {
                    <div className="hidden lg:flex gap-6">
                      <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
                        <Image 
-                         src={manInputImages[0]} 
+                         src={rightInputImages[0]}
                          width={105} 
                          height={140} 
                          className="w-full h-full object-cover"
@@ -171,7 +171,7 @@ export default function HowItWorksShowcase() {
                      </div>
                      <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
                        <Image 
-                         src={manInputImages[1]} 
+                         src={rightInputImages[1]}
                          width={105} 
                          height={140} 
                          className="w-full h-full object-cover"
@@ -180,7 +180,7 @@ export default function HowItWorksShowcase() {
                      </div>
                      <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
                        <Image 
-                         src={manInputImages[2]} 
+                         src={rightInputImages[2]}
                          width={105} 
                          height={140} 
                          className="w-full h-full object-cover"

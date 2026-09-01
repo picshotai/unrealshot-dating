@@ -12,7 +12,7 @@ export const tinderLanding: PlatformLandingContent = {
   eyebrow: "AI Tinder photo product for men",
   title: "AI Tinder photos that build a complete, believable lineup",
   description: "Create 60 realistic AI Tinder photos across 15 coherent shoots from 4–6 selfies. Four related frames per scene, 15 retakes and delivery within 30 minutes for $39.",
-  answer: "UnrealShot turns 4–6 current selfies into 15 coherent four-photo shoots for men building a Tinder profile. Instead of giving you disconnected portraits, each shoot keeps one outfit, location and lighting story while changing crop, posture and expression. You receive 60 photos, 15 individual Photo Retakes and delivery within 30 minutes for a one-time $39 payment.",
+  answer: "UnrealShot turns 4–6 current selfies into 15 coherent four-photo shoots for men building a Tinder profile. The shoot ideas are created for your delivery rather than selected from a fixed preset catalog. Each result keeps one outfit, location and lighting story while changing crop, posture and expression. You receive 60 photos, 15 individual Photo Retakes and delivery within 30 minutes for a one-time $39 payment.",
   reviewed: "August 31, 2026",
   heroBullets: [
     "15 complete shoots and 60 photos",
@@ -26,27 +26,27 @@ export const tinderLanding: PlatformLandingContent = {
     { title: "Every photo repeats the same information", body: "Six close selfies do not become a varied profile merely because the background changes. A useful lineup needs changes in distance, clothing, setting and activity while your current appearance remains recognizable." },
     { title: "Generic AI images feel assembled", body: "When every image has a different face, body, wardrobe and visual finish, the profile reads like a folder of separate prompts. UnrealShot’s four-frame unit keeps each scene internally coherent and gives you multiple crops from one believable moment." },
   ],
-  solutionIntro: "UnrealShot is built around the missing lineup—not around a claim that one magic portrait can produce matches. The package creates enough coherent scenes to choose photos with different jobs, then gives you individual retakes when a useful scene contains one weak frame.",
+  solutionIntro: "UnrealShot is built around the missing lineup—not around one magic portrait or a small menu of named scenes. Your intake guides a varied set of ideas for that delivery. Each idea becomes four related frames, and individual Photo Retakes give you a correction path when one frame misses.",
   differentiators: [
     { title: "One scene becomes four useful choices", body: "Every shoot includes a close or opener frame, a half-body frame, a full-length frame and a candid or expressive frame. You can choose the crop that works best on your profile without generating an unrelated scene from scratch." },
-    { title: "Fifteen shoots create real range", body: "The complete delivery covers everyday, dressed-up, activity, indoor and outdoor contexts. That breadth helps you avoid building a Tinder profile out of five versions of the same portrait." },
-    { title: "Real interests select plausible scenes", body: "Choose from 22 supported interests. A selected interest influences a complete shoot, and any one interest is capped at two shoots so it cannot dominate your set. UnrealShot currently excludes alcohol, dogs, bicycles and team sports." },
+    { title: "Fifteen generated ideas create real range", body: "The delivery is designed to vary setting, wardrobe, activity, framing and mood. It is not restricted to the example concepts shown on this site or a fixed list of ten or twenty shoot templates." },
+    { title: "Your intake guides—not orders—the ideas", body: "Your real interests and preferred direction help shape the generation, but they do not work like an exact scene picker. UnrealShot creates the final shoot ideas for the delivery and currently avoids alcohol, dogs, bicycles and team sports." },
     { title: "References guide likeness", body: "Your 4–6 recent selfies guide appearance across the generation. UnrealShot does not train a custom model and does not promise every frame will be perfect, which is why the package includes 15 individual Photo Retakes." },
   ],
   lineup: [
-    { slot: "Photo 1", role: "Clear solo opener", explanation: "Choose a close or chest-up frame with visible eyes, ordinary light and no competing subject. It should look recognizably like you now before it tries to communicate lifestyle.", shootSlug: "outdoor-coffee" },
-    { slot: "Photo 2", role: "Full-length context", explanation: "Add a wider image that shows your normal proportions and everyday style. A walking frame usually feels less rigid than standing square to the camera.", shootSlug: "city-walk" },
-    { slot: "Photo 3", role: "Genuine activity", explanation: "Show one interest you actually practice. The purpose is to reveal something discussable, not to borrow an impressive hobby for the photograph.", shootSlug: "gym-training" },
-    { slot: "Photo 4", role: "Dressed-up contrast", explanation: "Use a smart-casual evening image to add a different wardrobe and social setting. Keep it grounded by placing it after clearer daylight photos.", shootSlug: "dinner" },
-    { slot: "Photo 5", role: "Relaxed expression", explanation: "A candid frame gives the lineup warmth and reduces the repeated posed-camera look. It should still be sharp enough that your expression reads on a phone." },
-    { slot: "Photo 6", role: "Real camera-roll evidence", explanation: "Finish with a recent non-generated photo—a genuine trip, social moment or ordinary day—to keep the profile anchored in your real life." },
+    { role: "Clear close-up options", explanation: "Every generated idea includes a closer frame, creating multiple opportunities for a visible face, natural expression and recognizable current likeness." },
+    { role: "Full-length options", explanation: "The wider frame from each idea adds posture, proportions, clothing and environmental context that repeated face crops cannot provide." },
+    { role: "Different settings", explanation: "The 15 generated ideas vary their visual direction, giving the delivery more range than a folder built around one room, one background or one afternoon." },
+    { role: "Wardrobe and mood variety", explanation: "Changes in clothing, light and atmosphere help the final pool cover both relaxed everyday moments and more polished social contexts." },
+    { role: "Candid expressions", explanation: "Candid or expressive frames introduce movement and warmth, reducing the stiff direct-to-camera feeling common in selfie-heavy profiles." },
+    { role: "Four coherent alternatives", explanation: "Each idea arrives as four related frames with the same setting, outfit and lighting, making it easier to compare crops and expressions without losing visual consistency." },
   ],
   sections: [
     {
       heading: "Why coherent shoots matter on a Tinder profile",
       paragraphs: [
         "A dating profile is read as one package. If the person in photo one looks noticeably older, younger or differently built in photo three, the issue is not whether either picture is attractive in isolation. The issue is that the set creates uncertainty. UnrealShot treats the shoot as the smallest unit: four photos share a place, outfit and lighting direction, then vary the framing and expression.",
-        "You do not need to upload all four frames from the same shoot. Their first job is to give you a useful choice. The café close frame may become the opener while the city-walk full-length frame fills the second slot. The coherence system makes those choices easier to compare because each shoot contains consistent alternatives rather than four unrelated concepts.",
+        "You do not need to upload all four frames from the same shoot. Their first job is to give you a useful choice. One generated idea may provide the opener while a different idea supplies the full-length frame. The examples on this site illustrate that structure; they are not presets you select during checkout.",
       ],
     },
     {
@@ -59,7 +59,7 @@ export const tinderLanding: PlatformLandingContent = {
     {
       heading: "What you receive after uploading your selfies",
       paragraphs: [
-        "Start with 4–6 recent, unfiltered selfies that show your face from more than one angle. Answer three short intake questions about the look you want and interests that are genuinely yours. UnrealShot then returns 15 shoots with four related frames each—60 images in total—within 30 minutes.",
+        "Start with 4–6 recent, unfiltered selfies that show your face from more than one angle. Answer three short intake questions about the look you want and interests that are genuinely yours. Those answers guide varied shoot ideas rather than selecting exact presets. UnrealShot returns 15 shoots with four related frames each—60 images in total—within 30 minutes.",
         "If a strong scene contains a weak likeness, expression or composition, use one of the 15 included Photo Retakes on that individual frame. Retakes are there because reference-guided image generation can miss. They are not presented as a promise of perfect likeness in every output.",
       ],
       bullets: ["One-time price: $39", "No subscription", "15 coherent shoots", "60 total photos", "15 individual Photo Retakes"],
@@ -73,7 +73,8 @@ export const tinderLanding: PlatformLandingContent = {
   ],
   sources: tinderSources,
   faqs: [
-    { question: "What are AI Tinder photos?", answer: "They are generated profile-photo options created from reference selfies. UnrealShot produces them as coherent four-frame shoots so each scene offers a close, half-body, full-length and candid choice rather than one isolated portrait." },
+    { question: "What are AI Tinder photos?", answer: "They are generated profile-photo options created from reference selfies. UnrealShot creates varied shoot ideas for your delivery, then produces four related frames from each idea so you can compare crops and expressions." },
+    { question: "Can I choose the exact Tinder shoot ideas?", answer: "No. Your intake guides the direction, but the final shoot ideas are generated for the delivery. The examples on this site are not a selectable preset catalog." },
     { question: "How many Tinder photos does UnrealShot create?", answer: "One $39 package includes 15 shoots with four related frames each, for 60 photos total. It also includes 15 individual Photo Retakes." },
     { question: "Does UnrealShot optimize photos for Tinder’s algorithm?", answer: "No. UnrealShot does not access or claim to understand Tinder’s private ranking systems. It creates useful profile-photo roles and leaves selection and ordering to you." },
     { question: "Will AI photos pass Tinder Photo Verification?", answer: "There is no guarantee. Tinder controls verification and compares profile photos with a video selfie. Use only accurate images that clearly resemble you and consult Tinder’s current requirements." },
