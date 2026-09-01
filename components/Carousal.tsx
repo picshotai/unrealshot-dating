@@ -7,13 +7,14 @@ interface CarouselProps {
   images: string[]; // Add an images prop to accept an array of image URLs
   imageAlt?: string;
   overlayLabel?: string;
+  fromColor?: string;
 }
 
-const Carousal: React.FC<CarouselProps> = ({ reverse = false, images, imageAlt = "Image", overlayLabel }) => {
+const Carousal: React.FC<CarouselProps> = ({ reverse = false, images, imageAlt = "Image", overlayLabel, fromColor = "from-[#F7F5F3]" }) => {
   return (
     <div className="pb-2 mb-4 mt-0 relative overflow-hidden">
-      <div className="absolute top-0 left-0 z-10 h-full w-16 bg-gradient-to-r from-[#F7F5F3] to-transparent pointer-events-none" />
-      <div className="absolute top-0 right-0 z-10 h-full w-16 bg-gradient-to-l from-[#F7F5F3] to-transparent pointer-events-none" />
+      <div className={`absolute top-0 left-0 z-10 h-full w-16 bg-gradient-to-r ${fromColor} to-transparent pointer-events-none`} />
+      <div className={`absolute top-0 right-0 z-10 h-full w-16 bg-gradient-to-l ${fromColor} to-transparent pointer-events-none`} />
 
       <div
         className={`flex gap-4 will-change-transform ${
