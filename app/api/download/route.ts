@@ -44,24 +44,47 @@ export async function GET(request: Request) {
 
   // order_photos RLS permits reads only when the parent order belongs to this
   // authenticated user, so another customer's id behaves like a missing photo.
-  const { data: photo, error: photoError } = await supabase
+  const { data: photo } = await supabase
     .from("order_photos")
     .select("id, status, image_url")
     .eq("id", photoId)
     .single();
 
-  if (photoError || !photo) {
-    return NextResponse.json({ error: "Photo not found" }, { status: 404 });
+  let targetImageUrl: string | null = null;
+
+  if (photo && photo.status === "completed" && photo.image_url) {
+    targetImageUrl = photo.image_url;
+  } else {
+    // Fallback: check images table for model-generated images
+    const idNum = Number(photoId);
+    if (!isNaN(idNum)) {
+      const { data: imgRow } = await supabase
+        .from("images")
+        .select("id, uri, modelId")
+        .eq("id", idNum)
+        .single();
+
+      if (imgRow?.uri) {
+        const { data: modelRow } = await supabase
+          .from("models")
+          .select("id")
+          .eq("id", imgRow.modelId)
+          .eq("user_id", user.id)
+          .single();
+
+        if (modelRow) {
+          targetImageUrl = imgRow.uri;
+        }
+      }
+    }
   }
-  if (photo.status !== "completed" || !photo.image_url) {
-    return NextResponse.json(
-      { error: "Photo is not ready to download" },
-      { status: 409 }
-    );
+
+  if (!targetImageUrl) {
+    return NextResponse.json({ error: "Photo not found or not ready" }, { status: 404 });
   }
 
   try {
-    const upstream = await fetch(photo.image_url, { cache: "no-store" });
+    const upstream = await fetch(targetImageUrl, { cache: "no-store" });
     if (!upstream.ok || !upstream.body) {
       console.error("photo download: upstream failed", {
         photoId,

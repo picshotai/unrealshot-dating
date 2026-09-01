@@ -2,12 +2,10 @@ import { Metadata } from "next";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { GalleryClient } from "./GalleryClient";
-import { shootTitle } from "@/lib/dating/shoots";
-import { lineupRoleFor, LINEUP_LABELS, LINEUP_HINTS } from "@/lib/dating/roles";
 
 export const metadata: Metadata = {
   title: "My Gallery | Unrealshot AI",
-  description: "Browse and download all your AI-generated dating photos.",
+  description: "Browse and download all your AI-generated photos.",
 };
 
 export default async function GalleryPage() {
@@ -18,83 +16,79 @@ export default async function GalleryPage() {
 
   if (!user) redirect("/login");
 
-  // Fetch all completed orders for this user
+  // 1. Fetch completed photos from dating shoot orders
   const { data: orders } = await supabase
     .from("user_shoot_orders")
-    .select("id, status, model_id, custom_credits_remaining, created_at, ready_at")
-    .eq("user_id", user.id)
-    .in("status", ["ready", "developing", "partial_failed", "failed_components_present"])
-    .order("created_at", { ascending: false });
+    .select("id")
+    .eq("user_id", user.id);
 
-  if (!orders || orders.length === 0) {
-    return <GalleryClient orders={[]} />;
+  const orderIds = (orders ?? []).map((o) => o.id);
+
+  let shootPhotos: Array<{
+    id: string;
+    imageUrl: string;
+    imageWidth?: number | null;
+    imageHeight?: number | null;
+    createdAt: string;
+  }> = [];
+
+  if (orderIds.length > 0) {
+    const { data: photos } = await supabase
+      .from("order_photos")
+      .select("id, image_url, image_width, image_height, created_at")
+      .in("order_id", orderIds)
+      .eq("status", "completed")
+      .not("image_url", "is", null)
+      .order("created_at", { ascending: false });
+
+    shootPhotos = (photos ?? [])
+      .filter((p) => Boolean(p.image_url))
+      .map((p) => ({
+        id: String(p.id),
+        imageUrl: p.image_url!,
+        imageWidth: p.image_width,
+        imageHeight: p.image_height,
+        createdAt: p.created_at || new Date().toISOString(),
+      }));
   }
 
-  // Fetch all completed photos across all orders in one query
-  const orderIds = orders.map((o) => o.id);
-  const { data: photos } = await supabase
-    .from("order_photos")
-    .select(
-      "id, order_id, shoot_id, frame_index, is_anchor, status, image_url, image_width, image_height"
-    )
-    .in("order_id", orderIds)
-    .eq("status", "completed")
-    .order("shoot_id")
-    .order("frame_index");
+  // 2. Fetch images from images table for user's models
+  const { data: userModels } = await supabase
+    .from("models")
+    .select("id")
+    .eq("user_id", user.id);
 
-  // Shape photo data for the client, grouped by order
-  const orderMap = new Map(
-    orders.map((o) => [
-      o.id,
-      {
-        orderId: o.id,
-        createdAt: o.created_at,
-        readyAt: o.ready_at,
-        customCreditsRemaining: o.custom_credits_remaining,
-        photos: [] as Array<{
-          id: string;
-          shootId: string;
-          shootTitle: string;
-          frameIndex: number;
-          isAnchor: boolean;
-          imageUrl: string | null;
-          imageWidth: number | null;
-          imageHeight: number | null;
-          role: string;
-          roleLabel: string;
-          roleHint: string;
-        }>,
-      },
-    ])
-  );
+  const modelIds = (userModels ?? []).map((m) => m.id);
 
-  for (const photo of photos ?? []) {
-    const entry = orderMap.get(photo.order_id);
-    if (!entry) continue;
+  let generalPhotos: Array<{
+    id: string;
+    imageUrl: string;
+    imageWidth?: number | null;
+    imageHeight?: number | null;
+    createdAt: string;
+  }> = [];
 
-    const role = lineupRoleFor({
-      shootId: photo.shoot_id,
-      frameIndex: photo.frame_index,
-    });
+  if (modelIds.length > 0) {
+    const { data: genImages } = await supabase
+      .from("images")
+      .select("id, uri, created_at")
+      .in("modelId", modelIds)
+      .not("uri", "is", null)
+      .order("created_at", { ascending: false });
 
-    entry.photos.push({
-      id: photo.id,
-      shootId: photo.shoot_id,
-      shootTitle: shootTitle(photo.shoot_id),
-      frameIndex: photo.frame_index,
-      isAnchor: photo.is_anchor ?? false,
-      imageUrl: photo.image_url,
-      imageWidth: photo.image_width,
-      imageHeight: photo.image_height,
-      role,
-      roleLabel: LINEUP_LABELS[role] ?? "Dating Photo",
-      roleHint: LINEUP_HINTS[role] ?? "A context-led dating profile photo.",
-    });
+    generalPhotos = (genImages ?? [])
+      .filter((img) => Boolean(img.uri))
+      .map((img) => ({
+        id: String(img.id),
+        imageUrl: img.uri,
+        createdAt: img.created_at || new Date().toISOString(),
+      }));
   }
 
-  const ordersWithPhotos = Array.from(orderMap.values()).filter(
-    (o) => o.photos.length > 0
+  // 3. Combine and sort newest first
+  const allPhotos = [...shootPhotos, ...generalPhotos].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 
-  return <GalleryClient orders={ordersWithPhotos} />;
+  return <GalleryClient photos={allPhotos} />;
 }
