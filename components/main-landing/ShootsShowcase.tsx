@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 
-const allImages = [
+const baseImages = [
   '/images/demo14.jpg', '/images/aimodel2.jpg', '/images/aimodel5.jpg', '/images/aimodel8.jpg',
   '/new-landing/mountain-layby-motorcycle_2.png', '/images/demo3.jpg', '/images/demo10.jpg', '/images/demo11.jpg',
   '/images/demo12.jpg', '/images/demo13.jpg', '/images/full-body-photo.webp', '/images/candid-solo.webp',
@@ -19,39 +19,54 @@ const allImages = [
   '/images/demo7.jpg', '/images/demo9.jpg'
 ];
 
+// Duplicate the array to ensure we have enough images for ultra-wide screens (100 images)
+const allImages = [...baseImages, ...baseImages];
+
 export default function ShootsShowcase() {
+  const columns = 20;
+  const rows = 5;
+
   return (
     <section id="style-packs" className="relative w-full h-[65vh] min-h-[450px] max-h-[800px] bg-[#111111] overflow-hidden flex items-center justify-center">
       
       {/* 
-        Fixed viewport grid. 
-        4 columns on mobile, 6 on tablet, 10 on desktop.
-        Since we have exactly 50 images, desktop will display 5 perfect rows (10x5=50).
-        Staggered vertically using alternating translate-y.
+        To maintain portrait aspect ratios without squashing, we rely on flex heights.
+        Container height is slightly taller than the section to allow for staggered vertical offsets.
+        Width is unconstrained so columns just keep stacking horizontally.
+        Centered absolutely so it overflows evenly on both sides on smaller screens.
       */}
-      <div className="absolute w-[110%] h-[120%] -ml-[5%] -mt-[5%] grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-10 grid-rows-5 gap-2 sm:gap-3">
-        {allImages.map((img, i) => (
-          <div 
-            key={i} 
-            className={`
-              relative w-full h-full rounded-lg sm:rounded-xl overflow-hidden opacity-60 hover:opacity-100 transition-all duration-300
-              ${i % 2 === 0 ? 'translate-y-3 sm:translate-y-5' : '-translate-y-3 sm:-translate-y-5'} 
-            `}
-          >
-            <Image 
-              src={img} 
-              alt="UnrealShot AI Photo Gallery" 
-              fill 
-              className="object-cover"
-              sizes="(max-width: 640px) 25vw, (max-width: 1024px) 16vw, 10vw"
-            />
-          </div>
-        ))}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-2 sm:gap-3 h-[115%]">
+        {[...Array(columns)].map((_, colIndex) => {
+          const columnImages = allImages.slice(colIndex * rows, (colIndex + 1) * rows);
+          
+          return (
+            <div 
+              key={colIndex} 
+              className={`flex flex-col gap-2 sm:gap-3 h-full transition-transform duration-500 ${colIndex % 2 === 0 ? 'translate-y-[4%]' : '-translate-y-[4%]'}`}
+            >
+              {columnImages.map((img, i) => (
+                <div 
+                  key={i} 
+                  className="relative flex-1 aspect-[3/4] rounded-lg sm:rounded-xl overflow-hidden opacity-60 hover:opacity-100 transition-opacity duration-300 shadow-lg shrink-0"
+                >
+                  <Image 
+                    src={img} 
+                    alt="UnrealShot AI Photo Gallery" 
+                    fill 
+                    className="object-cover"
+                    sizes="(max-width: 640px) 200px, 250px"
+                  />
+                </div>
+              ))}
+            </div>
+          );
+        })}
       </div>
 
       {/* Deep vignette overlay to blend edges seamlessly into the #111111 background */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,#111111_90%)] pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#111111] via-transparent to-[#111111] pointer-events-none opacity-90" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#111111] via-transparent to-[#111111] pointer-events-none opacity-95" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#111111] via-transparent to-[#111111] pointer-events-none opacity-90" />
       
     </section>
   );
