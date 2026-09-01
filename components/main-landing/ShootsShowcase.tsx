@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, CheckCircle2, Focus, Layers, Sparkles } from 'lucide-react';
+import { CheckCircle2, Focus, Layers, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
@@ -86,7 +86,7 @@ export default function ShootsShowcase() {
           </h2>
           <p className="text-gray-400 text-lg sm:text-xl leading-relaxed">
             Competitors generate random, disconnected AI faces. UnrealShot engineers 
-            <strong className="text-white font-semibold"> 15 cohesive shoots</strong>—giving you perfect continuity across every required slot on Hinge and Tinder.
+            <strong className="text-white font-semibold"> 15 cohesive shoots</strong> - giving you perfect continuity across every required slot on Hinge and Tinder.
           </p>
         </div>
 
@@ -101,11 +101,11 @@ export default function ShootsShowcase() {
                 <button
                   key={shoot.id}
                   onClick={() => setActiveShootId(shoot.id)}
-                  className={\`px-4 sm:px-6 py-2.5 sm:py-3 rounded-full text-sm sm:text-base font-semibold transition-all duration-300 \${
+                  className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-full text-sm sm:text-base font-semibold transition-all duration-300 ${
                     isActive 
                       ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' 
                       : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10 hover:text-white'
-                  }\`}
+                  }`}
                 >
                   {shoot.label}
                 </button>
@@ -206,7 +206,7 @@ export default function ShootsShowcase() {
           </div>
           <Link href="/dashboard">
             <Button className="bg-[#ff6f00] hover:bg-orange-500 text-black font-bold text-base h-12 px-8 rounded-full transition-transform hover:scale-105 active:scale-95 whitespace-nowrap">
-              Build My Lineup — $39
+              Build My Lineup - $39
             </Button>
           </Link>
         </div>
