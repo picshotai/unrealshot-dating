@@ -1,9 +1,6 @@
 'use client';
 
 import React from 'react';
-import { Layers, Sparkles, Check } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import Carousal from '@/components/Carousal';
 
 const row1Images = [
@@ -12,9 +9,7 @@ const row1Images = [
   '/images/aimodel5.jpg',
   '/images/aimodel8.jpg',
   '/new-landing/mountain-layby-motorcycle_2.png',
-  '/new-landing/mountain-layby-motorcycle_4.png',
   '/images/demo3.jpg',
-  '/images/demo4.jpg',
   '/images/demo10.jpg',
   '/images/demo11.jpg',
   '/images/demo12.jpg',
@@ -35,72 +30,73 @@ const row2Images = [
   '/images/aimodel7.jpg',
   '/images/hero4.webp',
   '/images/cinematic-photo.webp',
-  '/images/golden-photo.webp',
-  '/images/gritty-photo.webp',
-  '/images/vintage-roll.webp'
+  '/images/golden-photo.webp'
+];
+
+const row3Images = [
+  '/new-landing/01616e3c4bb24641b1f623e80cea9e12.jpg',
+  '/new-landing/29ecda7f13764ee595abe3c9be049ddb.jpg',
+  '/new-landing/2ba004de6cf9475b82150b7bd1ff4807.jpg',
+  '/new-landing/4436e4eadfa843ab94ad12db98a8664b.jpg',
+  '/new-landing/49f810cc6e4344b480aadb5df98f6d7d.jpg',
+  '/new-landing/519170ac2c004900af87f015bf5a1771.jpg',
+  '/new-landing/7545cc16b7a94c059fb42bba5aa0ec03.jpg',
+  '/new-landing/758bff1bb9d64242badcae3db5b9da54.jpg',
+  '/new-landing/8cf00013ec6f459f986d903e2c55b6bd.jpg',
+  '/new-landing/98d351a9c32544b6a6cf67f849b3709d.jpg',
+  '/new-landing/9f8c395288d14566a2082aa1f97f1a8d.jpg',
+  '/new-landing/b0e37df119704fc3a10d49b8eb3d3e05.jpg'
+];
+
+const row4Images = [
+  '/new-landing/d46441e7fade4496ac0415207e1bd999.jpg',
+  '/new-landing/d8800712954d45639eb5caa2ab54f3e4.jpg',
+  '/new-landing/e6dc622a63504a7bab9846e0c904750b.jpg',
+  '/new-landing/ed0d2abb04e84ccca0af74ac8c4b4838.jpg',
+  '/new-landing/fa9c4cc3f3a3413c8ae0e898869f1f49.jpg',
+  '/new-landing/jzimL01q4n-HYR3LGOpNd_edd9c15406384b23a4881168a98275d2.jpg',
+  '/new-landing/mountain-layby-motorcycle_4.png',
+  '/new-landing/qypjwusLmXPBiDK6QDNwN_185eda5c96bc4c2ba32d238a42ba51a9.jpg',
+  '/new-landing/SHnKUu0hqzogDc12-W8eP_24713af628db4f8b95aba0dc06caf9a6.jpg',
+  '/images/demo1.jpg',
+  '/images/demo2.jpg',
+  '/images/demo5.jpg'
 ];
 
 export default function ShootsShowcase() {
   return (
     <section id="style-packs" className="py-20 md:py-28 bg-[#111111] relative overflow-hidden">
       
-      {/* Header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-16 text-center">
-        <p className="text-[#ff6f00] font-bold uppercase tracking-wider text-xs sm:text-sm mb-4 block font-mono">
-          UnrealShot Lineup Blueprint
-        </p>
-        <h2 className="text-4xl sm:text-5xl md:text-6xl text-white font-bold tracking-tight leading-[1.08] font-[family-name:var(--font-inter-tight)] mb-6 max-w-4xl mx-auto">
-          A dating profile doesn&apos;t need more photos. <br className="hidden md:block" />
-          <span className="text-[#ff6f00]">It needs the right photos.</span>
-        </h2>
-        <p className="text-gray-400 text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto">
-          We don&apos;t just generate random faces. We engineer <strong className="text-white">15 highly cohesive shoots</strong>. Same face, same outfit, different angles—perfect continuity for Tinder and Hinge.
-        </p>
-      </div>
-
       {/* Marquee Gallery - Full Width */}
-      <div className="w-full">
+      <div className="w-full space-y-4">
         <Carousal 
           images={row1Images} 
-          imageAlt="UnrealShot Example Shoot" 
+          imageAlt="UnrealShot AI Photo Gallery" 
           overlayLabel="Exact Face Identity"
           fromColor="from-[#111111]"
         />
         <Carousal 
           images={row2Images} 
           reverse={true} 
-          imageAlt="UnrealShot Example Shoot" 
+          imageAlt="UnrealShot AI Photo Gallery" 
           overlayLabel="Natural Micro-texture"
+          fromColor="from-[#111111]"
+        />
+        <Carousal 
+          images={row3Images} 
+          imageAlt="UnrealShot AI Photo Gallery" 
+          overlayLabel="Perfect Composition"
+          fromColor="from-[#111111]"
+        />
+        <Carousal 
+          images={row4Images} 
+          reverse={true} 
+          imageAlt="UnrealShot AI Photo Gallery" 
+          overlayLabel="Consistent Wardrobe"
           fromColor="from-[#111111]"
         />
       </div>
 
-      {/* Global Footer CTA */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="mt-16 max-w-4xl mx-auto bg-[#1a1a1a] rounded-3xl p-8 md:p-12 border border-white/10 text-center shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-             <Layers className="w-32 h-32 text-[#ff6f00]" />
-          </div>
-          
-          <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4 relative z-10 font-[family-name:var(--font-inter-tight)]">
-            Get 15 complete shoots. 60 distinct photos.
-          </h3>
-          <p className="text-gray-400 mb-8 max-w-2xl mx-auto relative z-10 text-sm sm:text-base">
-            Skip the disjointed AI generator look. UnrealShot gives you a full arsenal of natural, highly-coordinated shoots so you can rotate photos without breaking the illusion.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
-            <Link href="/dashboard">
-              <Button className="w-full sm:w-auto bg-[#ff6f00] hover:bg-orange-500 text-black font-bold text-base h-14 px-8 rounded-xl transition-all duration-300 shadow-[0_10px_30px_rgba(255,111,0,0.3)]">
-                Create Your Profile — $39
-              </Button>
-            </Link>
-            <div className="flex items-center gap-2 text-sm text-gray-400">
-              <Check className="w-4 h-4 text-green-500" /> One-time payment
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
   );
 }
