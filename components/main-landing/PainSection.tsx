@@ -37,7 +37,7 @@ export function PainSection() {
       <div className="px-4 md:px-0 py-16 sm:py-24 max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 text-center leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white font-bold mb-4 tracking-tight leading-[1.08]">
             {t("title")}
             <span className="block mt-2 text-[#ff6f00]">
               {t("titleAccent")}

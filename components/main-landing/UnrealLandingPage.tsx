@@ -34,7 +34,6 @@ export function UnrealLandingPage() {
         <PremiumComparison />
         <FeaturesSection />
         <NewHowItWorks />
-        <AuthorityLinks />
         <PrivacySection />
         <PricingCards />
         <FAQSection />
