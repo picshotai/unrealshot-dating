@@ -131,6 +131,7 @@ const platformLandingPaths = new Set([
   "/dating-photos/tinder",
   "/dating-photos/hinge",
   "/dating-photos/bumble",
+  "/dating-photos/activity",
 ])
 
 export const authorityPages = Object.fromEntries(

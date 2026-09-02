@@ -1,10 +1,12 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import AuthorityContentPage from "@/components/seo/AuthorityContentPage"
+import DatingActivityPage from "@/components/seo/DatingActivityPage"
 import DatingPhotoExamplesPage from "@/components/seo/DatingPhotoExamplesPage"
 import ShootPage from "@/components/seo/ShootPage"
 import PlatformLandingPage from "@/components/seo/PlatformLandingPage"
 import PlatformGuidePage from "@/components/seo/PlatformGuidePage"
+import { activityPageData } from "@/lib/dating-activity-content"
 import { authorityPages } from "@/lib/dating-authority-content"
 import { datingShoots, getDatingShoot } from "@/lib/dating-shoot-content"
 import { getShootLandingContent } from "@/lib/dating-shoot-landing-content"
@@ -22,6 +24,7 @@ export function generateStaticParams() {
     ...Object.keys(authorityPages),
     ...Object.keys(platformLandings),
     ...Object.keys(platformGuides),
+    "/dating-photos/activity",
     "/dating-photos/examples",
     ...datingShoots.map((shoot) => `/dating-photos/shoots/${shoot.slug}`),
   ])
@@ -32,6 +35,15 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { locale, seo } = await params
   if (locale !== "en") return { robots: { index: false, follow: false } }
   const path = getPath(seo)
+  if (path === "/dating-photos/activity") {
+    return getLocalizedMetadata({
+      locale: "en",
+      pathname: path,
+      title: activityPageData.title,
+      description: activityPageData.description,
+      alternatePaths: { en: path },
+    })
+  }
   const platformLanding = platformLandings[path]
   const platformGuide = platformGuides[path]
   const content = authorityPages[path]
@@ -43,11 +55,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return getLocalizedMetadata({ locale: "en", pathname: path, title, description, alternatePaths: { en: path } })
 }
 
-
 export default async function SeoPage({ params }: Params) {
   const { locale, seo } = await params
   if (locale !== "en") notFound()
   const path = getPath(seo)
+  if (path === "/dating-photos/activity") return <DatingActivityPage />
   if (path === "/dating-photos/examples") return <DatingPhotoExamplesPage />
   const platformLanding = platformLandings[path]
   if (platformLanding) return <PlatformLandingPage content={platformLanding} />

@@ -17,9 +17,9 @@ export const datingHubSpokes = [
   { title: "AI Tinder Photos", href: "/dating-photos/tinder", shoot: "dinner", description: "Build a clear opener, full-length context, genuine activity and dressed-up contrast for a fast-to-read Tinder lineup." },
   { title: "AI Hinge Photos", href: "/dating-photos/hinge", shoot: "home-cooking", description: "Create photo roles that support truthful prompts and give someone a specific, believable detail to respond to." },
   { title: "AI Bumble Photos", href: "/dating-photos/bumble", shoot: "outdoor-coffee", description: "Fill a four-to-six-photo profile with a visible current face, real interests, varied clothing and recent-life context." },
-  { title: "Real-Interest Activity Photos", href: "/dating-photos/activity", shoot: "gym-training", description: "See how truthful intake signals can guide varied activity ideas without turning interests into a fixed catalog of selectable shoots." },
-  { title: "Illustrative Dating Photo Results", href: "/dating-photos/examples", shoot: "city-walk", description: "See possible creative directions and how each generated idea becomes four related framing options. Examples are not selectable presets." },
-  { title: "Realistic AI Dating Photos", href: "/realistic-ai-dating-photos", shoot: "coastal-travel", description: "See how reference guidance, ordinary camera language, coherent scenes and retakes support a friend-taken look." },
+  { title: "Activity & Hobby Photos", href: "/dating-photos/activity", shoot: "gym-training", description: "Learn which lifestyle and hobby photos spark genuine conversations, and see how to showcase real interests naturally." },
+  { title: "Dating Photo Examples", href: "/dating-photos/examples", shoot: "city-walk", description: "Explore realistic sample shoots and see how 4 varied angles and crops bring each setting to life." },
+  { title: "Realistic AI Dating Photos", href: "/realistic-ai-dating-photos", shoot: "coastal-travel", description: "Discover how reference-guided generation and natural lighting deliver believable, friend-taken photos." },
 ]
 
 export const datingHubRoles = [
