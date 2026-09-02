@@ -40,11 +40,13 @@ for (const page of landingPages) {
 
 const landingCopy = collectText(landingPages).join(" ")
 assert.doesNotMatch(landingCopy, /22 supported interests/i, "Platform landings must not frame interests as a finite shoot catalog")
+assert.doesNotMatch(landingCopy, /algorithm|match-rate|not affiliated|verification outcome|cannot guarantee verification/i, "Platform landings must stay focused on product quality instead of defensive outcome language")
 const landingTemplate = readFileSync("components/seo/PlatformLandingPage.tsx", "utf8")
 assert.doesNotMatch(landingTemplate, /See this shoot type/i, "Profile roles must not link to fixed shoot types")
 assert.doesNotMatch(landingTemplate, /A working lineup|Six different jobs/i, "Product delivery section must not use abstract guide-style framing")
 assert.match(landingTemplate, /Inside your 60-photo delivery/i, "Product delivery section must clearly identify what it explains")
-assert.match(landingTemplate, /examples illustrate the range rather than choices in an order form/i, "Example grid must explain that concepts are illustrative rather than orderable")
+assert.match(landingTemplate, /Open a complete four-photo shoot/i, "Example grid must explain the complete four-frame evidence it links to")
+assert.doesNotMatch(landingTemplate, /not affiliated|No match|verification outcome|Illustrative AI-generated result|See the range your dating-photo delivery can cover/i, "Platform template must not lead with defensive trust language")
 
 for (const page of guidePages) {
   assert.ok(wordCount(page) >= 1_300, `${page.path} is below 1,300 words`)

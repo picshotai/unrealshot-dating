@@ -33,13 +33,12 @@ export default function PlatformLandingPage({ content }: { content: PlatformLand
               <Link href="/dashboard" className={ctaClass}>Create my {content.app} photos</Link>
               <Link href="/dating-photos/examples" className="font-bold text-zinc-700 underline decoration-zinc-300 underline-offset-4">See example results</Link>
             </div>
-            <p className="mt-4 text-xs leading-5 text-zinc-500">UnrealShot is independent and is not affiliated with {content.app}. No match, ranking or verification outcome is promised.</p>
           </div>
           <div className="grid grid-cols-2 gap-3 rounded-[2rem] bg-zinc-950 p-3 shadow-2xl">
             {examples.slice(0, 4).map((shoot, index) => shoot && (
               <figure key={shoot.slug} className={`relative overflow-hidden rounded-2xl bg-zinc-800 ${index % 2 ? "translate-y-5" : "-translate-y-1"}`}>
                 <div className="relative aspect-[4/5]"><Image src={shoot.frames[index % shoot.frames.length].src} alt={shoot.frames[index % shoot.frames.length].alt} fill priority={index < 2} sizes="(max-width: 1024px) 50vw, 25vw" className="object-cover" /></div>
-                <figcaption className="absolute inset-x-2 bottom-2 rounded-lg bg-black/70 px-2 py-1.5 text-[10px] font-bold uppercase tracking-wide text-white backdrop-blur">Illustrative AI-generated result</figcaption>
+                <figcaption className="absolute inset-x-2 bottom-2 rounded-lg bg-black/70 px-2 py-1.5 text-[10px] font-bold uppercase tracking-wide text-white backdrop-blur">Generated with UnrealShot AI</figcaption>
               </figure>
             ))}
           </div>
@@ -75,7 +74,7 @@ export default function PlatformLandingPage({ content }: { content: PlatformLand
         </section>
 
         <section className="border-y border-zinc-200 bg-white py-20">
-          <div className="mx-auto max-w-7xl px-5"><h2 className="text-3xl font-black tracking-tight sm:text-5xl">See the range your dating-photo delivery can cover</h2><p className="mt-5 max-w-3xl text-lg leading-8 text-zinc-600">These AI-generated examples show possible creative directions and the four-frame consistency UnrealShot can produce. Your exact ideas are generated from your references and intake, so the examples illustrate the range rather than choices in an order form.</p><div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{examples.map((shoot) => shoot && <Link href={`/dating-photos/shoots/${shoot.slug}`} key={shoot.slug} className="group overflow-hidden rounded-3xl border border-zinc-200 bg-[#f7f5f3]"><div className="relative aspect-[4/5]"><Image src={shoot.frames[0].src} alt={shoot.frames[0].alt} fill sizes="(max-width: 640px) 100vw, 25vw" className="object-cover transition duration-300 group-hover:scale-[1.02]" /></div><div className="p-5"><p className="text-xs font-bold uppercase text-[#ff6f00]">Illustrative output · 4 related frames</p><h3 className="mt-2 text-xl font-black">{shoot.name} example</h3><span className="mt-3 inline-block font-semibold">See how this example is structured →</span></div></Link>)}</div></div>
+          <div className="mx-auto max-w-7xl px-5"><h2 className="text-3xl font-black tracking-tight sm:text-5xl">Open a complete four-photo shoot</h2><p className="mt-5 max-w-3xl text-lg leading-8 text-zinc-600">Each example opens to the close, half-body, full-length and candid frames generated from one idea. The setting, outfit and lighting stay connected while the camera distance and expression change.</p><div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{examples.map((shoot) => shoot && <Link href={`/dating-photos/shoots/${shoot.slug}`} key={shoot.slug} className="group overflow-hidden rounded-3xl border border-zinc-200 bg-[#f7f5f3]"><div className="relative aspect-[4/5]"><Image src={shoot.frames[0].src} alt={shoot.frames[0].alt} fill sizes="(max-width: 640px) 100vw, 25vw" className="object-cover transition duration-300 group-hover:scale-[1.02]" /></div><div className="p-5"><p className="text-xs font-bold uppercase text-[#ff6f00]">UnrealShot AI result · 4 related frames</p><h3 className="mt-2 text-xl font-black">{shoot.name} example</h3><span className="mt-3 inline-block font-semibold">View all four frames →</span></div></Link>)}</div></div>
         </section>
 
         <section className="mx-auto grid max-w-6xl gap-8 px-5 py-20 lg:grid-cols-[1fr_.75fr]">
