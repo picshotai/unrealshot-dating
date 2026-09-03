@@ -4,14 +4,14 @@ import { Link as PublicLink } from "@/i18n/navigation"
 import PublicHeader from "@/components/Header"
 import Footer from "@/components/main-landing/Footer"
 import { MultipleStructuredData } from "@/components/seo/StructuredData"
-import { getDatingShoot } from "@/lib/dating-shoot-content"
+import { getLocalizedShootPage } from "@/lib/dating-shoot-pages"
 import type { PlatformLandingContent } from "@/lib/platform-pages"
 import { makeBreadcrumbJsonLd, makeFaqJsonLd, makeWebPageJsonLd, publicUrl } from "@/lib/public-seo"
 
 const ctaClass = "inline-flex items-center justify-center rounded-xl bg-[#ff6f00] px-6 py-3.5 font-bold text-white shadow-lg shadow-orange-500/20 transition hover:bg-[#e96500]"
 
 export default function PlatformLandingPage({ content, locale }: { content: PlatformLandingContent; locale: "en" | "fr" | "es" | "de" | "pt-BR" }) {
-  const examples = content.exampleSlugs.map(getDatingShoot).filter(Boolean)
+  const examples = content.exampleSlugs.map((slug) => getLocalizedShootPage(slug, locale)?.shoot).filter(Boolean)
   const copy = content.copy.landing
   const breadcrumbs = [
     { name: copy.home, url: publicUrl("/", locale) },
@@ -82,7 +82,7 @@ export default function PlatformLandingPage({ content, locale }: { content: Plat
         </section>
 
         <section className="border-y border-zinc-200 bg-white py-20">
-          <div className="mx-auto max-w-7xl px-5"><h2 className="text-3xl font-black tracking-tight sm:text-5xl">{copy.examplesHeading}</h2><p className="mt-5 max-w-3xl text-lg leading-8 text-zinc-600">{copy.examplesDescription}</p><div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{examples.map((shoot) => shoot && <PublicLink href={`/dating-photos/shoots/${shoot.slug}`} key={shoot.slug} className="group overflow-hidden rounded-3xl border border-zinc-200 bg-[#f7f5f3]"><div className="relative aspect-[4/5]"><Image src={shoot.frames[0].src} alt={shoot.frames[0].alt} fill sizes="(max-width: 640px) 100vw, 25vw" className="object-cover transition duration-300 group-hover:scale-[1.02]" /></div><div className="p-5"><p className="text-xs font-bold uppercase text-[#ff6f00]">{copy.generatedLabel}</p><h3 className="mt-2 text-xl font-black">{shoot.name} example</h3><span className="mt-3 inline-block font-semibold">{copy.exploreExample}</span></div></PublicLink>)}</div></div>
+          <div className="mx-auto max-w-7xl px-5"><h2 className="text-3xl font-black tracking-tight sm:text-5xl">{copy.examplesHeading}</h2><p className="mt-5 max-w-3xl text-lg leading-8 text-zinc-600">{copy.examplesDescription}</p><div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{examples.map((shoot) => shoot && <PublicLink href={`/dating-photos/shoots/${shoot.slug}`} key={shoot.slug} className="group overflow-hidden rounded-3xl border border-zinc-200 bg-[#f7f5f3]"><div className="relative aspect-[4/5]"><Image src={shoot.frames[0].src} alt={shoot.frames[0].alt} fill sizes="(max-width: 640px) 100vw, 25vw" className="object-cover transition duration-300 group-hover:scale-[1.02]" /></div><div className="p-5"><p className="text-xs font-bold uppercase text-[#ff6f00]">{copy.generatedLabel}</p><h3 className="mt-2 text-xl font-black">{shoot.name}</h3><span className="mt-3 inline-block font-semibold">{copy.exploreExample}</span></div></PublicLink>)}</div></div>
         </section>
 
         <section className="mx-auto grid max-w-6xl gap-8 px-5 py-20 lg:grid-cols-[1fr_.75fr]">

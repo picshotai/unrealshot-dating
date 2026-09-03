@@ -150,8 +150,8 @@ function Header({ localeSwitcher }: HeaderProps = {}) {
   const locale = useLocale()
 
   const navItems = [
-    { name: "Dating Photos", link: "/dating-photos" },
-    { name: "Examples", link: "/dating-photos/examples", englishOnly: true },
+    { name: t("navigation.datingPhotos"), link: "/dating-photos" },
+    { name: t("navigation.examples"), link: "/dating-photos/examples", englishOnly: true },
     { name: t("navigation.howItWorks"), link: "/how-it-works", englishOnly: true },
     { name: t("navigation.pricing"), link: "/pricing" },
     ...(isPublishedBlogLocale(locale) ? [{ name: t("navigation.blog"), link: "/blog", englishOnly: true }] : []),

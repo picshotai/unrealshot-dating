@@ -3,8 +3,9 @@ import Link from "next/link"
 import { ArrowRight, Check } from "lucide-react"
 import type { DatingShoot } from "@/lib/dating-shoot-content"
 import type { ShootLandingCopy } from "@/lib/dating-shoot-landing-content"
+import type { ShootPageUiCopy } from "@/lib/dating-shoot-localized"
 
-export default function ShootLandingHero({ shoot, copy }: { shoot: DatingShoot; copy: ShootLandingCopy }) {
+export default function ShootLandingHero({ shoot, copy, ui }: { shoot: DatingShoot; copy: ShootLandingCopy; ui: ShootPageUiCopy }) {
   const [primary, secondary, tertiary] = copy.gallery
 
   return (
@@ -20,11 +21,11 @@ export default function ShootLandingHero({ shoot, copy }: { shoot: DatingShoot; 
           </h1>
           <p className="mt-7 max-w-2xl text-lg leading-8 text-zinc-600">{copy.heroDescription}</p>
           <div className="mt-8 grid gap-3 text-sm font-semibold text-zinc-700 sm:grid-cols-2">
-            {["15 original photoshoot ideas", "Four connected photos per idea", "Delivered within 30 minutes", "$39 once · no subscription"].map((item) => <span key={item} className="flex items-center gap-2"><span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#ff6f00]/10"><Check className="h-3.5 w-3.5 text-[#ff6f00]" /></span>{item}</span>)}
+            {ui.heroBullets.map((item) => <span key={item} className="flex items-center gap-2"><span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#ff6f00]/10"><Check className="h-3.5 w-3.5 text-[#ff6f00]" /></span>{item}</span>)}
           </div>
           <div className="mt-9 flex flex-wrap items-center gap-4">
-            <Link href="/dashboard" className="inline-flex items-center gap-2 rounded-md bg-[#ff6f00] px-7 py-4 font-bold text-white shadow-[0_4px_25px_-5px_rgba(255,111,0,.45)] transition hover:bg-[#e96500]">Create my dating photos <ArrowRight className="h-4 w-4" /></Link>
-            <a href="#photos" className="font-bold text-zinc-950 underline decoration-[#ff6f00] decoration-2 underline-offset-4">See photo examples</a>
+            <Link href="/dashboard" className="inline-flex items-center gap-2 rounded-md bg-[#ff6f00] px-7 py-4 font-bold text-white shadow-[0_4px_25px_-5px_rgba(255,111,0,.45)] transition hover:bg-[#e96500]">{ui.createPhotos} <ArrowRight className="h-4 w-4" /></Link>
+            <a href="#photos" className="font-bold text-zinc-950 underline decoration-[#ff6f00] decoration-2 underline-offset-4">{ui.seeExamples}</a>
           </div>
         </div>
 
@@ -35,8 +36,8 @@ export default function ShootLandingHero({ shoot, copy }: { shoot: DatingShoot; 
             {tertiary && <figure className="relative overflow-hidden rounded-2xl bg-zinc-100"><div className="relative aspect-[4/5]"><Image src={tertiary.src} alt={tertiary.alt} fill sizes="(max-width: 1024px) 38vw, 22vw" className="object-cover" /></div></figure>}
           </div>
           <div className="absolute -bottom-1 left-4 right-4 rounded-2xl bg-zinc-950 px-5 py-4 text-white shadow-xl sm:left-8 sm:right-8">
-            <p className="text-xs font-black uppercase tracking-[.16em] text-[#ff6f00]">AI dating photos created with UnrealShot</p>
-            <p className="mt-1 text-sm text-zinc-300">{shoot.name} shows one part of the range your full delivery can cover.</p>
+            <p className="text-xs font-black uppercase tracking-[.16em] text-[#ff6f00]">{ui.heroPanelLabel}</p>
+            <p className="mt-1 text-sm text-zinc-300">{ui.heroPanelDescription(shoot.name)}</p>
           </div>
         </div>
       </div>

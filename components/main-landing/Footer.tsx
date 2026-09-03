@@ -23,8 +23,8 @@ export default function Footer() {
   ];
 
   const datingFeatures: FooterLink[] = [
-    { href: '/dating-photos', label: 'Dating Photos' },
-    { href: '/dating-photos/examples', label: 'Examples', englishOnly: true },
+    { href: '/dating-photos', label: t('navigation.datingPhotos') },
+    { href: '/dating-photos/examples', label: t('navigation.examples'), englishOnly: true },
     { href: '/how-it-works', label: t('navigation.howItWorks'), englishOnly: true },
     { href: '/realistic-ai-dating-photos', label: 'Realistic AI Dating Photos', englishOnly: true },
     { href: '/dashboard', label: t('footer.startYourShoot'), private: true },

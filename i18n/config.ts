@@ -109,13 +109,13 @@ export const publicRoutes = [
   { path: "/guides/tinder-photos", locales: publishedPublicLocales, indexable: true, sitemap: true },
   { path: "/guides/hinge-photos", locales: publishedPublicLocales, indexable: true, sitemap: true },
   { path: "/guides/bumble-photos", locales: publishedPublicLocales, indexable: true, sitemap: true },
-  { path: "/dating-photos/shoots/gym-training", locales: englishOnly, indexable: true, sitemap: true },
-  { path: "/dating-photos/shoots/outdoor-coffee", locales: englishOnly, indexable: true, sitemap: true },
-  { path: "/dating-photos/shoots/dinner", locales: englishOnly, indexable: true, sitemap: true },
-  { path: "/dating-photos/shoots/city-walk", locales: englishOnly, indexable: true, sitemap: true },
-  { path: "/dating-photos/shoots/coastal-travel", locales: englishOnly, indexable: true, sitemap: true },
-  { path: "/dating-photos/shoots/home-cooking", locales: englishOnly, indexable: true, sitemap: true },
-  { path: "/dating-photos/shoots/rooftop", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/dating-photos/shoots/gym-training", locales: publishedPublicLocales, indexable: true, sitemap: true },
+  { path: "/dating-photos/shoots/outdoor-coffee", locales: publishedPublicLocales, indexable: true, sitemap: true },
+  { path: "/dating-photos/shoots/dinner", locales: publishedPublicLocales, indexable: true, sitemap: true },
+  { path: "/dating-photos/shoots/city-walk", locales: publishedPublicLocales, indexable: true, sitemap: true },
+  { path: "/dating-photos/shoots/coastal-travel", locales: publishedPublicLocales, indexable: true, sitemap: true },
+  { path: "/dating-photos/shoots/home-cooking", locales: publishedPublicLocales, indexable: true, sitemap: true },
+  { path: "/dating-photos/shoots/rooftop", locales: publishedPublicLocales, indexable: true, sitemap: true },
 ] as const satisfies readonly PublicRouteDefinition[]
 
 const publicExactPathnames = new Set<string>(publicRoutes.map((route) => route.path))

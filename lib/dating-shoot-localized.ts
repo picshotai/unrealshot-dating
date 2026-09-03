@@ -162,7 +162,13 @@ export function getLocalizedShootPage(slug: string, locale: PublishedPublicLocal
   const pack = packs[locale]
   const topic = pack?.topics[slug]
   if (!pack || !topic) return base
-  return { shoot: { ...base.shoot, name: topic.name }, copy: pack.buildCopy(base.copy, topic), ui: pack.ui, commonFaqs: pack.commonFaqs }
+  const copy = pack.buildCopy(base.copy, topic)
+  const frames = base.shoot.frames.map((frame, index) => ({
+    ...frame,
+    alt: copy.gallery[index % copy.gallery.length].alt,
+    caption: copy.gallery[index % copy.gallery.length].caption,
+  })) as DatingShoot["frames"]
+  return { shoot: { ...base.shoot, name: topic.name, frames }, copy, ui: pack.ui, commonFaqs: pack.commonFaqs }
 }
 
 export function getLocalizedShootLandingContent(slug: string, locale: PublishedPublicLocale) {

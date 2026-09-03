@@ -44,13 +44,14 @@ const templateFiles = [
   "components/seo/shoot-landing/ShootConversionSections.tsx",
 ]
 const templateSource = templateFiles.map((path) => readFileSync(path, "utf8")).join("\n")
+const localizedSource = readFileSync("lib/dating-shoot-localized.ts", "utf8")
 const heroSource = readFileSync("components/seo/shoot-landing/ShootLandingHero.tsx", "utf8")
 const shootPageSource = readFileSync("components/seo/ShootPage.tsx", "utf8")
 assert.match(templateSource, /bg-\[#ff6f00\]/, "Commercial template must use the brand orange")
-assert.match(templateSource, /Create my dating photos/, "Commercial template needs a direct product CTA")
-assert.match(templateSource, /\$39/, "Commercial template must show the real package price")
-assert.match(templateSource, /60 photos/, "Commercial template must explain the complete delivery")
-assert.match(templateSource, /Photo Retakes/, "Commercial template must explain the correction path")
+assert.match(localizedSource, /Create my dating photos/, "Shoot copy needs a direct product CTA")
+assert.match(localizedSource, /\$39/, "Shoot copy must show the real package price")
+assert.match(localizedSource, /60 photos/, "Shoot copy must explain the complete delivery")
+assert.match(localizedSource, /Photo Retakes/, "Shoot copy must explain the correction path")
 assert.doesNotMatch(heroSource, /bg-black|text-white sm:pb/, "Shoot hero must use the light landing-page treatment")
 assert.doesNotMatch(heroSource, /shoot\.frames/, "Hero must not present the old mismatched frame registry")
 assert.doesNotMatch(templateSource, /Illustrative AI-generated|illustrative results|one coherent scene/, "Public copy must not use defensive or false proof labels")
