@@ -25,7 +25,7 @@ export default function ShootPage({ shoot }: { shoot: DatingShoot }) {
   return (
     <div className="min-h-screen bg-white font-[family-name:var(--font-inter)] text-zinc-950">
       <PublicHeader />
-      <main className="pt-24">
+      <main>
         <ShootLandingHero shoot={shoot} copy={copy} />
         <ShootPainSolution shoot={shoot} copy={copy} />
         <ShootResultsShowcase shoot={shoot} copy={copy} />
