@@ -118,6 +118,11 @@ export default async function RootLayout({
             gtag('config', 'G-XGFT46LL3J');
           `}
         </Script>
+        <Script
+          src="https://cloud.umami.is/script.js"
+          data-website-id="84ff2e6c-dd01-4e1b-9a97-7418745d4fef"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   )

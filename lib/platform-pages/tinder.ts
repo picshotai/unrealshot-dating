@@ -1,4 +1,5 @@
 import type { PlatformGuideContent, PlatformLandingContent } from "./types"
+import { getPlatformPageCopy } from "./copy"
 
 const tinderSources = [
   { label: "Tinder: Photo Verification", href: "https://www.help.tinder.com/hc/en-us/articles/360034941812-Photo-Verification" },
@@ -8,6 +9,7 @@ const tinderSources = [
 
 export const tinderLanding: PlatformLandingContent = {
   app: "Tinder",
+  copy: getPlatformPageCopy("en", "Tinder"),
   path: "/dating-photos/tinder",
   eyebrow: "AI Tinder photo product for men",
   title: "AI Tinder photos that build a complete, believable lineup",
@@ -84,6 +86,7 @@ export const tinderLanding: PlatformLandingContent = {
 
 export const tinderGuide: PlatformGuideContent = {
   app: "Tinder",
+  copy: getPlatformPageCopy("en", "Tinder"),
   path: "/guides/tinder-photos",
   eyebrow: "Tinder photo guide for men",
   title: "Tinder photos for men: how to build a clear, varied lineup",

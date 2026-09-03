@@ -1,4 +1,5 @@
 import type { PlatformGuideContent, PlatformLandingContent } from "./types"
+import { getPlatformPageCopy } from "./copy"
 
 const bumbleSources = [
   { label: "Bumble: Uploading profile photos and videos", href: "https://support.bumble.com/hc/en-us/articles/28523708029341-Uploading-profile-photos-and-videos" },
@@ -8,6 +9,7 @@ const bumbleSources = [
 
 export const bumbleLanding: PlatformLandingContent = {
   app: "Bumble",
+  copy: getPlatformPageCopy("en", "Bumble"),
   path: "/dating-photos/bumble",
   eyebrow: "AI Bumble photo product for men",
   title: "AI Bumble photos for a varied profile that still looks like you",
@@ -60,6 +62,7 @@ export const bumbleLanding: PlatformLandingContent = {
 
 export const bumbleGuide: PlatformGuideContent = {
   app: "Bumble",
+  copy: getPlatformPageCopy("en", "Bumble"),
   path: "/guides/bumble-photos",
   eyebrow: "Bumble photo guide for men",
   title: "Bumble photos for men: a practical four-to-six-photo lineup",

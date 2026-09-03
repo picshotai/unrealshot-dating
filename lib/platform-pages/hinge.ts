@@ -1,4 +1,5 @@
 import type { PlatformGuideContent, PlatformLandingContent } from "./types"
+import { getPlatformPageCopy } from "./copy"
 
 const hingeSources = [
   { label: "Hinge: How to edit your profile", href: "https://help.hinge.co/hc/en-us/articles/360011053094-How-do-I-edit-my-profile" },
@@ -8,6 +9,7 @@ const hingeSources = [
 
 export const hingeLanding: PlatformLandingContent = {
   app: "Hinge",
+  copy: getPlatformPageCopy("en", "Hinge"),
   path: "/dating-photos/hinge",
   eyebrow: "AI Hinge photo product for men",
   title: "AI Hinge photos that give your prompts a believable visual story",
@@ -61,6 +63,7 @@ export const hingeLanding: PlatformLandingContent = {
 
 export const hingeGuide: PlatformGuideContent = {
   app: "Hinge",
+  copy: getPlatformPageCopy("en", "Hinge"),
   path: "/guides/hinge-photos",
   eyebrow: "Hinge photo guide for men",
   title: "Hinge photos for men: build a profile people can respond to",
