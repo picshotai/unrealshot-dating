@@ -142,7 +142,7 @@
       "signIn": "Se connecter avec Google",
       "floatingNote": "4 à 6 selfies suffisent. Nous faisons le reste.",
       "userPhotoAlt": "Photo de profil d’un client UnrealShot",
-      "proof": "15 shoots",
+      "proof": "15 séances",
       "summary": "60 photos · 15 séances crédibles · 15 reprises photo · 39 $ une seule fois",
       "showcaseAlt": "Exemple de photo de profil de rencontre UnrealShot",
       "photoCount": "4 PHOTOS"
@@ -444,7 +444,7 @@
         }
       ],
       "instant": "Les photos sont livrées dans votre tableau de bord sécurisé sous 30 minutes après l’envoi de selfies valides.",
-      "price": "$39",
+      "price": "39 $",
       "priceSuffix": "USD / une fois",
       "priceNote": "Pas de frais récurrents · Aucun crédit caché · Accès numérique instantané",
       "checkoutFeatures": [
@@ -750,7 +750,15 @@
     ],
     "ctaHeading": "Prêt à améliorer votre galerie de rencontre ?",
     "ctaDescription": "Recevez 15 séances complètes, 60 photos haute résolution et 15 reprises en 30 minutes.",
-    "cta": "Améliorer mon profil — 39 $"
+    "cta": "Améliorer mon profil — 39 $",
+    "founder": {
+      "eyebrow": "Fondateur et direction du produit",
+      "heading": "Créé et relu par Harvansh Chaudhary",
+      "paragraphs": [
+        "UnrealShot était au départ un produit d’IA plus généraliste pour les séances photo. Harvansh l’a recentré sur un problème : aider les hommes à construire une sélection de photos de rencontre variée et crédible sans organiser 15 séances physiques. Le système de séances cohérentes permet aux quatre images de partager un lieu, une tenue et une lumière, au lieu d’arriver comme des photos sans lien.",
+        "Le système utilise 4 à 6 selfies comme références de génération et n’entraîne pas de modèle personnalisé. La ressemblance ou la composition peuvent parfois manquer sur une image ; chaque forfait comprend donc 15 reprises photo. UnrealShot n’optimise pas les photos pour les algorithmes des applications et ne garantit ni rencontres, ni rendez-vous, ni vérification."
+      ]
+    }
   },
   "Legal": {
     "privacy": {

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 const baseImages = [
   '/images/demo14.jpg', '/images/aimodel2.jpg', '/images/aimodel5.jpg', '/images/aimodel8.jpg',
@@ -23,6 +24,7 @@ const baseImages = [
 const allImages = [...baseImages, ...baseImages];
 
 export default function ShootsShowcase() {
+  const t = useTranslations('Home.hero');
   const columns = 25; // increased columns slightly to ensure we still fill wide screens since photos are fewer
   const rows = 4;
 
@@ -49,7 +51,7 @@ export default function ShootsShowcase() {
                 >
                   <Image 
                     src={img} 
-                    alt="UnrealShot AI Photo Gallery" 
+                    alt={t('showcaseAlt')}
                     fill 
                     className="object-cover"
                     sizes="(max-width: 640px) 250px, 400px"

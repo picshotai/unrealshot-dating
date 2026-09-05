@@ -25,7 +25,7 @@ export default function ShootPage({ slug, locale }: { slug: string; locale: Publ
   const breadcrumbs = [
     { name: breadcrumbLabels[0], url: publicUrl("/", locale) },
     { name: breadcrumbLabels[1], url: publicUrl("/dating-photos", locale) },
-    { name: breadcrumbLabels[2], url: publicUrl("/dating-photos/examples", "en") },
+    { name: breadcrumbLabels[2], url: publicUrl("/dating-photos/examples", locale) },
     { name: shoot.name, url: publicUrl(path, locale) },
   ]
   const faqs = [...copy.faqs, ...commonFaqs]

@@ -750,7 +750,15 @@
     ],
     "ctaHeading": "Ready to fix your dating camera roll?",
     "ctaDescription": "Get 15 complete shoots (60 high-resolution photos) and 15 Photo Retakes delivered in 30 minutes.",
-    "cta": "Build My Dating Profile — $39"
+    "cta": "Build My Dating Profile — $39",
+    "founder": {
+      "eyebrow": "Founder and product direction",
+      "heading": "Built and reviewed by Harvansh Chaudhary",
+      "paragraphs": [
+        "UnrealShot began as a broader AI photoshoot product. Harvansh narrowed it to one problem: helping men build a varied, believable dating photo lineup without organizing 15 physical shoots. The coherent-shoot system was developed so four frames share one location, outfit and lighting story instead of arriving as disconnected images.",
+        "The system uses 4–6 selfies as generation references and does not train a custom model. It can miss likeness or composition in an individual frame, so each package includes 15 Photo Retakes. UnrealShot does not optimize for dating-app algorithms or guarantee matches, dates or verification."
+      ]
+    }
   },
   "Legal": {
     "privacy": {

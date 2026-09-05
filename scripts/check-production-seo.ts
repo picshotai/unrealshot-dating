@@ -3,8 +3,7 @@ const serverOrigin = (process.env.SEO_BASE_URL || "http://localhost:3200").repla
 let metadataOrigin = process.env.SEO_METADATA_ORIGIN?.replace(/\/$/, "") || ""
 
 const englishArticle = "/blog/7-common-dating-profile-photo-mistakes-and-how-ai-fixes-them"
-const englishOnlyPages = ["/how-it-works", "/dating-photos/examples", "/realistic-ai-dating-photos", "/dating-photos/activity", "/contact"]
-const localizedPages = ["/dating-photos/tinder", "/dating-photos/hinge", "/dating-photos/bumble", "/guides/tinder-photos", "/guides/hinge-photos", "/guides/bumble-photos", "/dating-photos/shoots/gym-training", "/dating-photos/shoots/outdoor-coffee", "/dating-photos/shoots/dinner", "/dating-photos/shoots/city-walk", "/dating-photos/shoots/coastal-travel", "/dating-photos/shoots/home-cooking", "/dating-photos/shoots/rooftop"]
+const localizedPages = ["/how-it-works", "/dating-photos/examples", "/realistic-ai-dating-photos", "/dating-photos/activity", "/contact", "/dating-photos/tinder", "/dating-photos/hinge", "/dating-photos/bumble", "/guides/tinder-photos", "/guides/hinge-photos", "/guides/bumble-photos", "/dating-photos/shoots/gym-training", "/dating-photos/shoots/outdoor-coffee", "/dating-photos/shoots/dinner", "/dating-photos/shoots/city-walk", "/dating-photos/shoots/coastal-travel", "/dating-photos/shoots/home-cooking", "/dating-photos/shoots/rooftop"]
 
 function attribute(tag: string, name: string): string | undefined {
   return new RegExp(`${name}=["']([^"']+)["']`, "i").exec(tag)?.[1]
@@ -67,12 +66,12 @@ async function main() {
   }
   await expectPage("/pt-br/about", "pt-BR", "/pt-br/about")
   await expectPage("/blog", "en-US", "/blog")
-  for (const pathname of englishOnlyPages) await expectPage(pathname, "en-US", pathname)
+  for (const pathname of localizedPages) await expectPage(pathname, "en-US", pathname)
   for (const [prefix, language] of [["/fr", "fr-FR"], ["/es", "es-ES"], ["/de", "de-DE"], ["/pt-br", "pt-BR"]] as const) {
     for (const pathname of localizedPages) await expectPage(`${prefix}${pathname}`, language, `${prefix}${pathname}`)
   }
 
-  for (const pathname of ["/fr/blog", "/es/blog", "/de/blog", "/pt-br/blog", "/fr/how-it-works", "/de/dating-photos/examples"]) {
+  for (const pathname of ["/fr/blog", "/es/blog", "/de/blog", "/pt-br/blog"]) {
     const response = await request(pathname)
     const html = await response.text()
     assert.equal(response.status, 404, `${pathname} must remain unpublished`)
@@ -122,9 +121,11 @@ async function main() {
   const sitemap = await sitemapResponse.text()
   assert.ok(sitemap.includes(`<loc>${metadataOrigin}/blog</loc>`), "English blog archive missing from sitemap")
   assert.equal(sitemap.includes(`/fr/blog`), false, "Unreviewed localized blog must not enter sitemap")
-  for (const pathname of englishOnlyPages) assert.ok(sitemap.includes(`<loc>${metadataOrigin}${pathname}</loc>`), `${pathname} missing from sitemap`)
-  for (const prefix of ["/fr", "/es", "/de", "/pt-br"]) {
-    for (const pathname of localizedPages) assert.ok(sitemap.includes(`<loc>${metadataOrigin}${prefix}${pathname}</loc>`), `${prefix}${pathname} missing from sitemap`)
+  for (const pathname of localizedPages) {
+    assert.ok(sitemap.includes(`<loc>${metadataOrigin}${pathname}</loc>`), `${pathname} missing from sitemap`)
+    for (const prefix of ["/fr", "/es", "/de", "/pt-br"]) {
+      assert.ok(sitemap.includes(`<loc>${metadataOrigin}${prefix}${pathname}</loc>`), `${prefix}${pathname} missing from sitemap`)
+    }
   }
   assert.ok(sitemap.includes(`<loc>${expectedEnglishUrl}</loc>`), "English article missing from sitemap")
   assert.equal(sitemap.includes("/use-case/dating-photos"), false)

@@ -22,6 +22,7 @@ export default async function AboutUs({ params }: Params) {
   const t = await getTranslations({ locale, namespace: "About" })
   const narrative = t.raw("narrative") as Array<{ label: string; heading: string; paragraphs: string[] }>
   const principles = t.raw("principles") as Array<{ title: string; description: string }>
+  const founder = t.raw("founder") as { eyebrow: string; heading: string; paragraphs: string[] }
   const icons = [Camera, Sparkles, RotateCcw, ShieldCheck]
   const breadcrumbs = [
     { name: t("breadcrumbHome"), url: publicUrl("/", locale) },
@@ -52,7 +53,7 @@ export default async function AboutUs({ params }: Params) {
           </div>
         </section>
 
-        {locale === "en" && <section className="max-w-5xl mx-auto px-4 pb-16"><div className="rounded-3xl border border-gray-200 bg-white p-8 sm:p-12"><p className="text-xs font-bold uppercase tracking-wider text-[#ff6f00]">Founder and product direction</p><h2 className="mt-2 text-3xl font-bold">Built and reviewed by Harvansh Chaudhary</h2><p className="mt-4 text-lg leading-8 text-gray-600">UnrealShot began as a broader AI photoshoot product. Harvansh narrowed it to one problem: helping men build a varied, believable dating photo lineup without organizing 15 physical shoots. The coherent-shoot system was developed so four frames share one location, outfit and lighting story instead of arriving as disconnected images.</p><p className="mt-4 leading-7 text-gray-600">The system uses 4–6 selfies as generation references and does not train a custom model. It can miss likeness or composition in an individual frame, so each package includes 15 Photo Retakes. UnrealShot does not optimize for dating-app algorithms or guarantee matches, dates or verification.</p></div></section>}
+        <section className="max-w-5xl mx-auto px-4 pb-16"><div className="rounded-3xl border border-gray-200 bg-white p-8 sm:p-12"><p className="text-xs font-bold uppercase tracking-wider text-[#ff6f00]">{founder.eyebrow}</p><h2 className="mt-2 text-3xl font-bold">{founder.heading}</h2>{founder.paragraphs.map((paragraph) => <p key={paragraph} className="mt-4 leading-7 text-gray-600">{paragraph}</p>)}</div></section>
 
         <section className="max-w-5xl mx-auto px-4 pb-16">
           <div className="text-center mb-10"><h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">{t("principlesHeading")}</h2></div>

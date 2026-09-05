@@ -142,7 +142,7 @@
       "signIn": "Mit Google anmelden",
       "floatingNote": "Nur 4–6 Selfies. Wir erledigen den Rest.",
       "userPhotoAlt": "Profilfoto eines UnrealShot-Kunden",
-      "proof": "15 shoots",
+      "proof": "15 Shootings",
       "summary": "60 Fotos · 15 glaubwürdige Shootings · 15 Neuanfertigungen · Einmalig 39 $",
       "showcaseAlt": "Beispiel für ein UnrealShot-Datingprofilfoto",
       "photoCount": "4 FOTOS"
@@ -444,7 +444,7 @@
         }
       ],
       "instant": "Die Fotos werden innerhalb von 30 Minuten nach dem Hochladen gültiger Selfies in dein sicheres Dashboard geliefert.",
-      "price": "$39",
+      "price": "39 $",
       "priceSuffix": "USD / einmalig",
       "priceNote": "Keine laufenden Gebühren · Keine versteckten Credits · Sofortiger digitaler Zugriff",
       "checkoutFeatures": [
@@ -750,7 +750,15 @@
     ],
     "ctaHeading": "Bereit, deine Dating-Galerie zu verbessern?",
     "ctaDescription": "Erhalte 15 vollständige Shootings, 60 hochauflösende Fotos und 15 Neuanfertigungen in 30 Minuten.",
-    "cta": "Mein Dating-Profil verbessern — 39 $"
+    "cta": "Mein Dating-Profil verbessern — 39 $",
+    "founder": {
+      "eyebrow": "Gründer und Produktentwicklung",
+      "heading": "Entwickelt und geprüft von Harvansh Chaudhary",
+      "paragraphs": [
+        "UnrealShot begann als breiteres KI-Fotoshooting-Produkt. Harvansh konzentrierte es auf ein Problem: Männern eine abwechslungsreiche, glaubwürdige Dating-Fotoauswahl zu ermöglichen, ohne 15 echte Shootings zu organisieren. Das System für zusammenhängende Shootings wurde entwickelt, damit vier Aufnahmen denselben Ort, dasselbe Outfit und dieselbe Lichtgeschichte teilen, statt als unverbundene Bilder anzukommen.",
+        "Das System verwendet 4–6 Selfies als Referenzen und trainiert kein eigenes Modell. Bei einem einzelnen Bild können Ähnlichkeit oder Komposition danebenliegen; deshalb enthält jedes Paket 15 Foto-Neuerstellungen. UnrealShot optimiert nicht für Dating-App-Algorithmen und garantiert weder Matches, Dates noch Verifizierung."
+      ]
+    }
   },
   "Legal": {
     "privacy": {

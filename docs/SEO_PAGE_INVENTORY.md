@@ -1,21 +1,20 @@
 # UnrealShot SEO Page Inventory
 
-Last updated: August 31, 2026
+Last updated: September 5, 2026
 
 Production origin: `https://www.unrealshot.com`
 
-This is the canonical inventory for the AI dating-photo SEO/AEO release. It lists indexable pages, language availability, permanent redirects and legacy URLs that intentionally return `410 Gone`.
+This is the canonical inventory for the AI dating-photo SEO/AEO release. It lists indexable app pages, language availability, permanent redirects and legacy URLs that intentionally return `410 Gone`. WordPress blog pages are intentionally excluded from the app localization scope below.
 
 ## Totals
 
 | Group | Unique production URLs |
 |---|---:|
-| Localized core pages | 35 |
-| English-only authority, product, guide and shoot pages | 19 |
-| English editorial articles maintained in the repo | 9 |
-| **Total indexable URLs built in the repo** | **63** |
+| Localized non-blog marketing pages | 125 |
+| English-only WordPress blog archive | 1 |
+| **Total app-registered indexable URLs** | **126** |
 
-The total excludes additional current English WordPress articles, which are added dynamically only when published and not present in the Gone registry.
+The total excludes WordPress articles, which are served by WordPress and are not part of this localization audit or implementation.
 
 ## Localized core pages
 
@@ -31,20 +30,23 @@ These seven page types are available in English, French, Spanish, German and Bra
 | Refund Policy | https://www.unrealshot.com/refund-policy | https://www.unrealshot.com/fr/refund-policy | https://www.unrealshot.com/es/refund-policy | https://www.unrealshot.com/de/refund-policy | https://www.unrealshot.com/pt-br/refund-policy |
 | Terms | https://www.unrealshot.com/terms | https://www.unrealshot.com/fr/terms | https://www.unrealshot.com/es/terms | https://www.unrealshot.com/de/terms | https://www.unrealshot.com/pt-br/terms |
 
-## English-only authority and trust pages
+## Localized authority and trust pages
 
-| Page | Production URL |
+These non-blog pages are now available in English, French, Spanish, German and Brazilian Portuguese. Their content, page chrome, internal links, metadata and structured data use the active locale.
+
+| Page | English production URL |
 |---|---|
-| Blog archive | https://www.unrealshot.com/blog |
 | How It Works | https://www.unrealshot.com/how-it-works |
 | Realistic AI Dating Photos methodology | https://www.unrealshot.com/realistic-ai-dating-photos |
 | Dating Photo Examples | https://www.unrealshot.com/dating-photos/examples |
 | Activity Dating Photos | https://www.unrealshot.com/dating-photos/activity |
 | Contact | https://www.unrealshot.com/contact |
 
+The WordPress blog archive remains intentionally English-only at `https://www.unrealshot.com/blog`; blog posts and blog content are outside this work.
+
 ## Platform-specific product landing pages
 
-These are commercial problem/solution pages describing how the real UnrealShot product serves each platform-specific photo need.
+These are commercial problem/solution pages describing how the real UnrealShot product serves each platform-specific photo need. Each is available in all five published app locales.
 
 | Page | Production URL |
 |---|---|
@@ -54,7 +56,7 @@ These are commercial problem/solution pages describing how the real UnrealShot p
 
 ## Platform-specific informational guides
 
-These own the informational intent and link to the corresponding product landing page.
+These own the informational intent and link to the corresponding product landing page. Each is available in all five published app locales.
 
 | Guide | Production URL |
 |---|---|
@@ -62,7 +64,9 @@ These own the informational intent and link to the corresponding product landing
 | Hinge Photos for Men | https://www.unrealshot.com/guides/hinge-photos |
 | Bumble Photos for Men | https://www.unrealshot.com/guides/bumble-photos |
 
-## Complete shoot library
+## Complete localized shoot library
+
+All seven shoots are available in all five published app locales, including localized shoot copy, frame labels, metadata and links.
 
 | Shoot | Production URL |
 |---|---|
@@ -74,7 +78,9 @@ These own the informational intent and link to the corresponding product landing
 | Home Cooking | https://www.unrealshot.com/dating-photos/shoots/home-cooking |
 | Rooftop | https://www.unrealshot.com/dating-photos/shoots/rooftop |
 
-## English editorial articles maintained in the repo
+## WordPress editorial pages (excluded)
+
+These pages are served by WordPress. They are listed for reference only and were not modified or included in the app localization audit.
 
 | Article | Production URL |
 |---|---|
@@ -173,7 +179,7 @@ These URLs intentionally have no replacement. Every exact path below also return
 
 ## Non-indexable application routes
 
-Authenticated product routes such as `/dashboard`, `/dating-shoot`, `/models`, `/account`, `/buy-credits`, checkout flows, APIs and generated-user content are intentionally not part of this SEO inventory or sitemap.
+The unpublished `/new-landing` design preview is explicitly `noindex` and is not part of the published localization surface. Authenticated product routes such as `/dashboard`, `/dating-shoot`, `/models`, `/account`, `/buy-credits`, checkout flows, APIs and generated-user content are also intentionally not part of this SEO inventory or sitemap.
 
 ## Maintenance rule
 

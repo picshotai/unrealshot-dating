@@ -142,7 +142,7 @@
       "signIn": "Entrar com o Google",
       "floatingNote": "Apenas 4–6 selfies. Nós fazemos o resto.",
       "userPhotoAlt": "Foto de perfil de um cliente UnrealShot",
-      "proof": "15 shoots",
+      "proof": "15 sessões",
       "summary": "60 fotos · 15 sessões convincentes · 15 refações · US$ 39 uma vez",
       "showcaseAlt": "Exemplo de foto de perfil de namoro UnrealShot",
       "photoCount": "4 FOTOS"
@@ -750,7 +750,15 @@
     ],
     "ctaHeading": "Pronto para melhorar sua galeria de namoro?",
     "ctaDescription": "Receba 15 sessões completas, 60 fotos em alta resolução e 15 refações em 30 minutos.",
-    "cta": "Melhorar meu perfil — US$ 39"
+    "cta": "Melhorar meu perfil — US$ 39",
+    "founder": {
+      "eyebrow": "Fundador e direção do produto",
+      "heading": "Criado e revisado por Harvansh Chaudhary",
+      "paragraphs": [
+        "A UnrealShot começou como um produto mais amplo de ensaios fotográficos com IA. Harvansh a concentrou em um problema: ajudar homens a montar um conjunto variado e convincente de fotos para namoro sem organizar 15 ensaios presenciais. O sistema de ensaios coerentes faz com que quatro imagens compartilhem local, roupa e história de iluminação, em vez de chegarem desconectadas.",
+        "O sistema usa 4–6 selfies como referências de geração e não treina um modelo personalizado. Uma imagem individual pode falhar em semelhança ou composição, por isso cada pacote inclui 15 refações. A UnrealShot não otimiza fotos para algoritmos de aplicativos de namoro nem garante matches, encontros ou verificação."
+      ]
+    }
   },
   "Legal": {
     "privacy": {

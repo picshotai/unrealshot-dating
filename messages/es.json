@@ -142,7 +142,7 @@
       "signIn": "Iniciar sesión con Google",
       "floatingNote": "Solo necesitas 4–6 selfies. Nosotros hacemos el resto.",
       "userPhotoAlt": "Foto de perfil de un cliente de UnrealShot",
-      "proof": "15 shoots",
+      "proof": "15 sesiones",
       "summary": "60 fotos · 15 sesiones creíbles · 15 repeticiones · 39 $ una sola vez",
       "showcaseAlt": "Ejemplo de foto de perfil de citas de UnrealShot",
       "photoCount": "4 FOTOS"
@@ -444,7 +444,7 @@
         }
       ],
       "instant": "Las fotos se entregan en tu panel seguro en un máximo de 30 minutos tras enviar selfies válidos.",
-      "price": "$39",
+      "price": "39 $",
       "priceSuffix": "USD / una vez",
       "priceNote": "Sin cargos recurrentes · Sin créditos ocultos · Acceso digital instantáneo",
       "checkoutFeatures": [
@@ -750,7 +750,15 @@
     ],
     "ctaHeading": "¿Listo para mejorar tu galería de citas?",
     "ctaDescription": "Recibe 15 sesiones completas, 60 fotos en alta resolución y 15 repeticiones en 30 minutos.",
-    "cta": "Mejorar mi perfil — 39 $"
+    "cta": "Mejorar mi perfil — 39 $",
+    "founder": {
+      "eyebrow": "Fundador y dirección del producto",
+      "heading": "Creado y revisado por Harvansh Chaudhary",
+      "paragraphs": [
+        "UnrealShot comenzó como un producto de sesiones fotográficas con IA más amplio. Harvansh lo centró en un problema: ayudar a los hombres a crear una selección variada y creíble de fotos para citas sin organizar 15 sesiones físicas. El sistema de sesiones coherentes hace que cuatro encuadres compartan lugar, ropa e iluminación, en vez de llegar como imágenes desconectadas.",
+        "El sistema usa 4–6 selfies como referencias de generación y no entrena un modelo personalizado. Una imagen concreta puede fallar en parecido o composición, por eso cada paquete incluye 15 repeticiones. UnrealShot no optimiza las fotos para los algoritmos de las aplicaciones ni garantiza matches, citas o verificación."
+      ]
+    }
   },
   "Legal": {
     "privacy": {

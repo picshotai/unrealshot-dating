@@ -36,6 +36,7 @@ export type ShootPageUiCopy = {
   packageDescription: string
   packageBullets: [string, string, string, string, string, string]
   paymentEyebrow: string
+  paymentPrice: string
   paymentSubtext: string
   startCta: string
   secureText: string
@@ -107,7 +108,7 @@ export const englishShootUi: ShootPageUiCopy = {
   detailsEyebrow: "Built from details about you", detailsHeading: "Your interests give every delivery a different starting point", detailsDescription: "Tell UnrealShot what genuinely belongs in your life and it can influence the ideas created for your delivery.", detailsBullets: ["4–6 current selfies guide your appearance", "Real interests influence the creative direction", "Your preferences add useful context", "15 varied ideas create range across the order"], detailsLink: "See how interests shape your photos",
   processEyebrow: "From selfies to finished photos", processHeading: "No photographer, scheduling or location setup", processDescription: "Complete one short intake from home. UnrealShot uses your references and real-interest choices to build a varied dating-photo delivery.", processSteps: [["Upload 4–6 current selfies", "Use clear solo photos from different angles so your current face, hair and facial hair are visible."], ["Tell us what fits your life", "Your interests and preferences give the creative system useful context for building ideas that feel personal rather than generic."], ["Receive your complete lineup", "Get 15 different shoots, 60 photos and 15 individual Photo Retakes within 30 minutes."]],
   packageBadge: "Complete dating photo package", packageHeading: "One order gives you a complete set—not one isolated image", packageDescription: "UnrealShot creates enough visual range to cover more than one side of your life. You receive indoor, outdoor, activity, casual, polished and candid possibilities shaped by the information you provide.", packageBullets: ["15 original photoshoot ideas", "Four connected photos per idea", "60 photos in total", "15 individual Photo Retakes", "Delivered within 30 minutes", "No subscription"],
-  paymentEyebrow: "One-time payment", paymentSubtext: "Complete package · no recurring charge", startCta: "Start my dating shoot", secureText: "Secure checkout · delivery within 30 minutes",
+  paymentEyebrow: "One-time payment", paymentPrice: "$39", paymentSubtext: "Complete package · no recurring charge", startCta: "Start my dating shoot", secureText: "Secure checkout · delivery within 30 minutes",
   moreEyebrow: "More camera-roll problems UnrealShot can solve", moreHeading: "See more ways your delivery can create range", moreDescription: "Each page focuses on a different gap men commonly have in their existing photos. Together they show only part of what 15 original photoshoot ideas can cover.", relatedLabel: "AI dating photos created with UnrealShot", exploreRelated: "Explore this result", moreLink: "See more dating photo examples →",
   faqEyebrow: "Questions before you start", faqTitle: (name) => `${name} photo questions`, finalEyebrow: "Fill the gaps in your camera roll", finalHeading: "Create a complete dating-photo lineup", finalDescription: "15 different shoots · 60 photos · 15 Photo Retakes · delivered within 30 minutes · $39 once.", finalCta: "Create my dating photos",
 }
@@ -119,6 +120,13 @@ function getEnglishPage(slug: string): LocalizedShootPage | undefined {
 }
 
 const packs: Partial<Record<Exclude<PublishedPublicLocale, "en">, ShootLocalePack>> = {}
+
+const localizedFrameRoles: Record<Exclude<PublishedPublicLocale, "en">, Record<string, string>> = {
+  fr: { "Close / opener": "Rapprochée / ouverture", "Half-body": "Buste", "Full-length": "Plein pied", "Candid / expression": "Spontanée / expression" },
+  es: { "Close / opener": "Cercano / apertura", "Half-body": "Medio cuerpo", "Full-length": "Cuerpo entero", "Candid / expression": "Espontánea / expresión" },
+  de: { "Close / opener": "Nah / Opener", "Half-body": "Halbfigur", "Full-length": "Ganzkörper", "Candid / expression": "Spontan / Ausdruck" },
+  "pt-BR": { "Close / opener": "Próxima / abertura", "Half-body": "Meio corpo", "Full-length": "Corpo inteiro", "Candid / expression": "Espontânea / expressão" },
+}
 
 export function buildLocalizedShootCopy(base: ShootLandingCopy, topic: ShootTopic, voice: ShootCopyVoice): ShootLandingCopy {
   const [seoTitle, seoDescription] = voice.seo(topic)
@@ -165,6 +173,7 @@ export function getLocalizedShootPage(slug: string, locale: PublishedPublicLocal
   const copy = pack.buildCopy(base.copy, topic)
   const frames = base.shoot.frames.map((frame, index) => ({
     ...frame,
+    role: localizedFrameRoles[pack.locale][frame.role] ?? frame.role,
     alt: copy.gallery[index % copy.gallery.length].alt,
     caption: copy.gallery[index % copy.gallery.length].caption,
   })) as DatingShoot["frames"]

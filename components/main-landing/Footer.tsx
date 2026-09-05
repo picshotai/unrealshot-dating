@@ -5,17 +5,19 @@ import { Link as PublicLink } from '@/i18n/navigation';
 import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import { isPublishedBlogLocale } from '@/i18n/config';
+import { publicNavigationCopy } from '@/lib/public-navigation-copy';
 
 type FooterLink = { href: string; label: string; englishOnly?: boolean; private?: boolean }
 
 export default function Footer() {
   const t = useTranslations('Common');
   const locale = useLocale();
+  const copy = publicNavigationCopy[locale as keyof typeof publicNavigationCopy] || publicNavigationCopy.en;
 
   const companyLinks: FooterLink[] = [
     { href: '/about', label: t('footer.about') },
     ...(isPublishedBlogLocale(locale) ? [{ href: '/blog', label: t('footer.datingPhotoGuides'), englishOnly: true }] : []),
-    { href: '/contact', label: 'Contact', englishOnly: true },
+    { href: '/contact', label: copy.contact },
     { href: '/pricing', label: t('navigation.pricing') },
     { href: '/privacy-policy', label: t('footer.privacyPolicy') },
     { href: '/terms', label: t('footer.terms') },
@@ -24,20 +26,20 @@ export default function Footer() {
 
   const datingFeatures: FooterLink[] = [
     { href: '/dating-photos', label: t('navigation.datingPhotos') },
-    { href: '/dating-photos/examples', label: t('navigation.examples'), englishOnly: true },
-    { href: '/how-it-works', label: t('navigation.howItWorks'), englishOnly: true },
-    { href: '/realistic-ai-dating-photos', label: 'Realistic AI Dating Photos', englishOnly: true },
+    { href: '/dating-photos/examples', label: t('navigation.examples') },
+    { href: '/how-it-works', label: t('navigation.howItWorks') },
+    { href: '/realistic-ai-dating-photos', label: copy.realisticDatingPhotos },
     { href: '/dashboard', label: t('footer.startYourShoot'), private: true },
   ];
 
   const datingApps: FooterLink[] = [
-    { href: '/dating-photos/tinder', label: 'AI Tinder Photos' },
-    { href: '/dating-photos/hinge', label: 'AI Hinge Photos' },
-    { href: '/dating-photos/bumble', label: 'AI Bumble Photos' },
-    { href: '/guides/tinder-photos', label: 'Tinder Photo Guide' },
-    { href: '/guides/hinge-photos', label: 'Hinge Photo Guide' },
-    { href: '/guides/bumble-photos', label: 'Bumble Photo Guide' },
-    { href: '/dating-photos/activity', label: 'Activity photos' },
+    { href: '/dating-photos/tinder', label: copy.aiTinderPhotos },
+    { href: '/dating-photos/hinge', label: copy.aiHingePhotos },
+    { href: '/dating-photos/bumble', label: copy.aiBumblePhotos },
+    { href: '/guides/tinder-photos', label: copy.tinderGuide },
+    { href: '/guides/hinge-photos', label: copy.hingeGuide },
+    { href: '/guides/bumble-photos', label: copy.bumbleGuide },
+    { href: '/dating-photos/activity', label: copy.activityPhotos },
   ];
 
   return (
@@ -115,9 +117,9 @@ export default function Footer() {
             <ul className="mt-4 space-y-2.5">
               {datingApps.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">
+                  <PublicLink href={link.href} className="text-gray-600 hover:text-[#ff6f00] transition-colors text-sm">
                     {link.label}
-                  </Link>
+                  </PublicLink>
                 </li>
               ))}
             </ul>
