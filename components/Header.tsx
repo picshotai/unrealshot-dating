@@ -173,7 +173,7 @@ function Header({ localeSwitcher }: HeaderProps = {}) {
         {/* CTA & Language Switcher */}
         <div className="flex items-center gap-3 shrink-0">
           <LocaleSwitcher {...localeSwitcher} />
-          <Link href="/dashboard" className="shrink-0">
+          <Link href="/login" className="shrink-0">
             <Button
               className="text-sm py-5 group relative bg-[#ff6f00] text-white rounded-md overflow-hidden cursor-pointer pr-10 whitespace-nowrap"
             >
@@ -210,7 +210,7 @@ function Header({ localeSwitcher }: HeaderProps = {}) {
               return item.englishOnly ? <Link key={idx} href={item.link} {...props}>{item.name}</Link> : <PublicLink key={idx} href={item.link} {...props}>{item.name}</PublicLink>
             })}
             <div className="flex flex-col gap-2 mt-4 w-full items-center">
-              <Link href="/dashboard" className="w-full">
+              <Link href="/login" className="w-full">
                 <Button
                   className="text-md py-6 group relative bg-[#ff6f00] text-white rounded-md overflow-hidden cursor-pointer pr-12 w-full"
                 >

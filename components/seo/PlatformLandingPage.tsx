@@ -32,7 +32,7 @@ export default function PlatformLandingPage({ content, locale }: { content: Plat
               {content.heroBullets.map((item) => <li key={item} className="flex gap-2"><span aria-hidden="true" className="text-[#ff6f00]">✓</span>{item}</li>)}
             </ul>
             <div className="mt-9 flex flex-wrap items-center gap-4">
-              <Link href="/dashboard" className={ctaClass}>{copy.createPhotos}</Link>
+              <Link href="/login" className={ctaClass}>{copy.createPhotos}</Link>
               <PublicLink href="/dating-photos/examples" className="font-bold text-zinc-700 underline decoration-zinc-300 underline-offset-4">{copy.seeExamples}</PublicLink>
             </div>
           </div>
@@ -92,7 +92,7 @@ export default function PlatformLandingPage({ content, locale }: { content: Plat
 
         <section className="bg-white py-20"><div className="mx-auto max-w-4xl px-5"><h2 className="text-3xl font-black tracking-tight sm:text-4xl">{copy.faqHeading}</h2><div className="mt-8 divide-y divide-zinc-200 border-y border-zinc-200">{content.faqs.map((faq) => <article key={faq.question} className="py-7"><h3 className="text-xl font-black">{faq.question}</h3><p className="mt-3 leading-7 text-zinc-600">{faq.answer}</p></article>)}</div></div></section>
 
-        <section className="mx-auto max-w-5xl px-5 py-20 text-center"><div className="rounded-[2rem] bg-zinc-950 px-6 py-14 text-white sm:px-12"><p className="text-xs font-black uppercase tracking-[.2em] text-[#ff6f00]">{copy.ctaEyebrow}</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">{copy.ctaHeading}</h2><p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-zinc-300">{copy.ctaDescription}</p><Link href="/dashboard" className={ctaClass + " mt-8"}>{copy.createPhotos}</Link></div></section>
+        <section className="mx-auto max-w-5xl px-5 py-20 text-center"><div className="rounded-[2rem] bg-zinc-950 px-6 py-14 text-white sm:px-12"><p className="text-xs font-black uppercase tracking-[.2em] text-[#ff6f00]">{copy.ctaEyebrow}</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">{copy.ctaHeading}</h2><p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-zinc-300">{copy.ctaDescription}</p><Link href="/login" className={ctaClass + " mt-8"}>{copy.createPhotos}</Link></div></section>
       </main>
       <Footer />
       <MultipleStructuredData schemas={[

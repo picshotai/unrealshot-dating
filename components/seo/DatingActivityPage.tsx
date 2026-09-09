@@ -64,7 +64,7 @@ export default function DatingActivityPage({ locale }: { locale: PublishedPublic
             </ul>
 
             <div className="mt-9 flex flex-wrap items-center gap-4">
-              <Link href="/dashboard" className={ctaClass}>{ui.createPhotos} <ArrowRight className="h-4 w-4" /></Link>
+              <Link href="/login" className={ctaClass}>{ui.createPhotos} <ArrowRight className="h-4 w-4" /></Link>
               <a href="#categories" className="font-bold text-zinc-700 underline decoration-zinc-300 underline-offset-4 hover:text-[#ff6f00]">{ui.exploreStyles}</a>
             </div>
             <p className="mt-4 text-xs leading-5 text-zinc-500">
@@ -335,7 +335,7 @@ export default function DatingActivityPage({ locale }: { locale: PublishedPublic
             <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-zinc-300">
               {ui.finalDescription}
             </p>
-            <Link href="/dashboard" className={`${ctaClass} mt-8 px-8 py-4 text-lg`}>
+            <Link href="/login" className={`${ctaClass} mt-8 px-8 py-4 text-lg`}>
               {ui.createPhotos} <ArrowRight className="h-5 w-5" />
             </Link>
           </div>

@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
                 );
             }
             const finalPrice = plan.price;
-            const finalReturnUrl = returnUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`;
+            const finalReturnUrl = returnUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/login`;
 
             // Create checkout session
             const session = await createCheckoutSession({

@@ -24,7 +24,7 @@ export default function ShootLandingHero({ shoot, copy, ui }: { shoot: DatingSho
             {ui.heroBullets.map((item) => <span key={item} className="flex items-center gap-2"><span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#ff6f00]/10"><Check className="h-3.5 w-3.5 text-[#ff6f00]" /></span>{item}</span>)}
           </div>
           <div className="mt-9 flex flex-wrap items-center gap-4">
-            <Link href="/dashboard" className="inline-flex items-center gap-2 rounded-md bg-[#ff6f00] px-7 py-4 font-bold text-white shadow-[0_4px_25px_-5px_rgba(255,111,0,.45)] transition hover:bg-[#e96500]">{ui.createPhotos} <ArrowRight className="h-4 w-4" /></Link>
+            <Link href="/login" className="inline-flex items-center gap-2 rounded-md bg-[#ff6f00] px-7 py-4 font-bold text-white shadow-[0_4px_25px_-5px_rgba(255,111,0,.45)] transition hover:bg-[#e96500]">{ui.createPhotos} <ArrowRight className="h-4 w-4" /></Link>
             <a href="#photos" className="font-bold text-zinc-950 underline decoration-[#ff6f00] decoration-2 underline-offset-4">{ui.seeExamples}</a>
           </div>
         </div>

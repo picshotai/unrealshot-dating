@@ -247,7 +247,7 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentSucces
               </Button>
             </Link>
             
-            <Link href="/dashboard">
+            <Link href="/dating-shoot">
               <Button variant="outline" className="w-full sm:w-auto">
                 <Home className="h-4 w-4 mr-2" />
                 Go to Dashboard
@@ -256,7 +256,7 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentSucces
           </>
         ) : (
           <>
-            <Link href="/dashboard">
+            <Link href="/dating-shoot">
               <Button className="w-full sm:w-auto">
                 <Home className="h-4 w-4 mr-2" />
                 Go to Dashboard

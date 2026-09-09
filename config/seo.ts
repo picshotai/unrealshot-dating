@@ -127,8 +127,6 @@ export const robotsConfig = {
     allow: '/',
     disallow: [
       '/api/',
-      '/dashboard',
-      '/dashboard/',
       '/account',
       '/account/',
       '/settings',

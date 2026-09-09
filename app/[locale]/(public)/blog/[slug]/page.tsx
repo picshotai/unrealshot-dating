@@ -218,7 +218,7 @@ function BlogPostContent({
           <div className="bg-[#111111] rounded-3xl p-8 sm:p-12 text-white text-center border-2 border-dashed border-zinc-800 shadow-2xl">
             <h2 className="text-2xl sm:text-3xl font-bold mb-3 font-[var(--font-inter-tight)]">{t("cta.heading")}</h2>
             <p className="text-gray-300 text-sm sm:text-base max-w-md mx-auto mb-6">{t("cta.description")}</p>
-            <Link href="/dashboard"><Button className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-8 pr-16 py-6 font-semibold text-base shadow-lg shadow-orange-500/20">
+            <Link href="/login"><Button className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-8 pr-16 py-6 font-semibold text-base shadow-lg shadow-orange-500/20">
               {t("cta.button")}<span className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2"><img src="/arrow.svg" alt="" className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" /></span>
             </Button></Link>
           </div>

@@ -252,7 +252,7 @@ export const robotsConfig = {
     allow: '/',
     disallow: [
       '/api/',
-      '/dashboard/',
+      '/dating-shoot/',
       '/account/',
       '/admin/',
     ],

@@ -29,7 +29,7 @@ export default function Footer() {
     { href: '/dating-photos/examples', label: t('navigation.examples') },
     { href: '/how-it-works', label: t('navigation.howItWorks') },
     { href: '/realistic-ai-dating-photos', label: copy.realisticDatingPhotos },
-    { href: '/dashboard', label: t('footer.startYourShoot'), private: true },
+    { href: '/login', label: t('footer.startYourShoot'), private: true },
   ];
 
   const datingApps: FooterLink[] = [

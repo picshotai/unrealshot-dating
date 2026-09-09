@@ -73,7 +73,7 @@ export default async function AboutUs({ params }: Params) {
           <div className="bg-[#111111] rounded-3xl p-8 sm:p-12 text-white border-2 border-dashed border-zinc-800 shadow-2xl">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4 font-[var(--font-inter-tight)]">{t("ctaHeading")}</h2>
             <p className="text-gray-300 text-base sm:text-lg max-w-xl mx-auto mb-8">{t("ctaDescription")}</p>
-            <Link href="/dashboard"><Button className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-8 pr-16 py-6 font-semibold text-base shadow-lg shadow-orange-500/20">{t("cta")}</Button></Link>
+            <Link href="/login"><Button className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-8 pr-16 py-6 font-semibold text-base shadow-lg shadow-orange-500/20">{t("cta")}</Button></Link>
           </div>
         </section>
       </main>

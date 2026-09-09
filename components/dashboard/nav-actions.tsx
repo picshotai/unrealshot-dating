@@ -49,13 +49,13 @@ export function NavActions() {
         <DropdownMenuContent align="end" className="w-56">
           <DropdownMenuLabel className="truncate">Your Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <Link href="/dashboard" prefetch={false} className="w-full">
+          <Link href="/dating-shoot" prefetch={false} className="w-full">
             <DropdownMenuItem className="cursor-pointer">
               <LayoutDashboard className="mr-2 h-4 w-4" />
-              <span>Dashboard</span>
+              <span>Dating shoot</span>
             </DropdownMenuItem>
           </Link>
-          <Link href="/dashboard/settings" prefetch={false} className="w-full">
+          <Link href="/account" prefetch={false} className="w-full">
             <DropdownMenuItem className="cursor-pointer">
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>

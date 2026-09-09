@@ -12,7 +12,6 @@ import {
 
 // Map of routes to display names
 const routeDisplayNames: Record<string, string> = {
-  dashboard: "Dashboard",
   "demo-tool": "Demo Tool",
   reports: "Reports",
   settings: "Settings",
@@ -56,7 +55,7 @@ export function DynamicBreadcrumb() {
       <BreadcrumbList>
         {/* Home link */}
         <BreadcrumbItem className="hidden md:block text-xs md:text-sm">
-          <BreadcrumbLink href="/dashboard">
+          <BreadcrumbLink href="/dating-shoot">
             Home
           </BreadcrumbLink>
         </BreadcrumbItem>

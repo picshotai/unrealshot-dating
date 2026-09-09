@@ -64,7 +64,7 @@ export default function PrivacySection() {
       
       <div className="text-center relative">
         <div className="inline-block relative">
-          <Link href="/dashboard">
+          <Link href="/login">
             <Button className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-6 pr-16 py-6 font-semibold text-base shadow-[0_4px_20px_-5px_rgba(0,0,0,0.2)]">
             {t('cta')}
             <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">

@@ -82,7 +82,7 @@ export default function DatingPhotoExamplesPage({ locale }: { locale: PublishedP
             <p className="text-xs font-black uppercase tracking-[.2em] text-[#ff6f00]">{copy.beforeEyebrow}</p>
             <h2 className="mt-3 text-3xl font-black">{copy.beforeHeading}</h2>
             <p className="mt-5 max-w-3xl text-lg leading-8 text-zinc-300">{copy.beforeDescription}</p>
-            <div className="mt-8 flex flex-wrap gap-4"><PublicLink href="/how-it-works" className="rounded-xl border border-zinc-700 px-5 py-3 font-bold">{copy.howGenerationWorks}</PublicLink><Link href="/dashboard" className="rounded-xl bg-[#ff6f00] px-5 py-3 font-bold">{copy.createPhotos}</Link></div>
+            <div className="mt-8 flex flex-wrap gap-4"><PublicLink href="/how-it-works" className="rounded-xl border border-zinc-700 px-5 py-3 font-bold">{copy.howGenerationWorks}</PublicLink><Link href="/login" className="rounded-xl bg-[#ff6f00] px-5 py-3 font-bold">{copy.createPhotos}</Link></div>
           </div>
         </section>
       </main>

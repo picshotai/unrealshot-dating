@@ -299,7 +299,7 @@ export function HeroSection() {
           </div>
           <div className="flex sm:flex-row gap-2 justify-center items-center w-full relative">
 
-            <Link href="/dashboard">
+            <Link href="/login">
               <Button
                 className="text-sm sm:text-md font-semibold py-5 sm:py-6 group relative bg-white hover:bg-white/90 text-black rounded-md overflow-hidden cursor-pointer pr-12"
               >

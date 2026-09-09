@@ -52,7 +52,7 @@ Create a production-safe multilingual foundation while preserving every current 
 - `/en` and `/en/about` normalize to `/` and `/about`.
 - Non-English public routes do not return indexable English pages.
 - `/login` is not rewritten to `/en/login`.
-- `/dashboard` retains its unauthenticated redirect to `/login`.
+- `/dating-shoot` retains its unauthenticated redirect to `/login`.
 - API routes are not locale-rewritten.
 - Locale mappings are unique and the Portuguese mapping remains `pt-BR` → `/pt-br` → WordPress `PT`.
 - Production build completes without route collisions.

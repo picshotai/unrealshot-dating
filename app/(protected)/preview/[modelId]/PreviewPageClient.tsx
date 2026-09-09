@@ -121,7 +121,7 @@ export default function PreviewPageClient({
                         Something went wrong generating your preview. Don't worry - this is on us.
                     </p>
                     <button
-                        onClick={() => router.push('/dashboard')}
+                        onClick={() => router.push('/dating-shoot')}
                         className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
                     >
                         Go to Dashboard

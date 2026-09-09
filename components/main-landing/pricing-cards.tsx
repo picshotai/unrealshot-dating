@@ -135,7 +135,7 @@ export default function PricingCards() {
               </div>
 
               <div className="space-y-4">
-                <Link href="/dashboard" className="w-full block">
+                <Link href="/login" className="w-full block">
                   <Button className="w-full group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer pr-12 py-6 font-semibold text-base shadow-[0_4px_20px_-5px_rgba(0,0,0,0.2)]">
                     {t("cta")}
                     <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">

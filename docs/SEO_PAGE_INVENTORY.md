@@ -179,7 +179,7 @@ These URLs intentionally have no replacement. Every exact path below also return
 
 ## Non-indexable application routes
 
-The unpublished `/new-landing` design preview is explicitly `noindex` and is not part of the published localization surface. Authenticated product routes such as `/dashboard`, `/dating-shoot`, `/models`, `/account`, `/buy-credits`, checkout flows, APIs and generated-user content are also intentionally not part of this SEO inventory or sitemap.
+The unpublished `/new-landing` design preview is explicitly `noindex` and is not part of the published localization surface. Authenticated product routes such as `/dating-shoot`, `/models`, `/account`, `/buy-credits`, checkout flows, APIs and generated-user content are also intentionally not part of this SEO inventory or sitemap.
 
 ## Maintenance rule
 

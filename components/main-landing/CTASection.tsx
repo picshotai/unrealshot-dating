@@ -26,7 +26,7 @@ export function CTASection() {
 
             {/* The Primary Call to Action Button */}
             <div className="inline-block relative">
-              <Link href="/dashboard">
+              <Link href="/login">
                 <Button className="text-base sm:text-lg px-8 pr-16 py-6 group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer font-semibold shadow-[0_4px_25px_-5px_rgba(255,111,0,0.3)]">
                   {t("button")}
                   <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">

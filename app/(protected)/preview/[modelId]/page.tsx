@@ -27,7 +27,7 @@ export default async function PreviewPage({ params }: PageProps) {
         .single();
 
     if (modelError || !model || model.user_id !== user.id) {
-        redirect('/dashboard');
+        redirect('/dating-shoot');
     }
 
     // Check if user has already paid (if so, redirect to dashboard)
@@ -51,7 +51,7 @@ export default async function PreviewPage({ params }: PageProps) {
 
     // If user has paid or has credits, they should be on the dashboard
     if (hasPaymentHistory || hasCredits) {
-        redirect('/dashboard');
+        redirect('/dating-shoot');
     }
 
     // Fetch pricing plans for payment cards

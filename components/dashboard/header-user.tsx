@@ -89,9 +89,9 @@ export function HeaderUser({ user, initialCreditBalance }: HeaderUserProps) {
 
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Link href="/dashboard" prefetch={false} className="flex items-center">
+              <Link href="/dating-shoot" prefetch={false} className="flex items-center">
                 <Home className="mr-2 h-4 w-4" />
-                Dashboard
+                Dating shoot
               </Link>
             </DropdownMenuItem>
 

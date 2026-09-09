@@ -94,7 +94,7 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem className="cursor-pointer hover:bg-white/10 focus:bg-white/10">
                 <Home className="mr-2 h-4 w-4" />
-                <Link href="/dashboard" prefetch={false}>Dashboard</Link>
+                <Link href="/dating-shoot" prefetch={false}>Dating shoot</Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer hover:bg-white/10 focus:bg-white/10">
                 <BadgeCheck className="mr-2 h-4 w-4" />

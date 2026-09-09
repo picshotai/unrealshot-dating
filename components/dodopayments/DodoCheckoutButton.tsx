@@ -125,7 +125,7 @@ export function DodoInlineCheckout({
         body: JSON.stringify({
           planId,
           userId,
-          returnUrl: `${window.location.origin}/dashboard?payment=success`
+          returnUrl: `${window.location.origin}/dating-shoot?payment=success`
         }),
       });
 

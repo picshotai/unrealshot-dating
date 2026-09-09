@@ -37,6 +37,16 @@ function goneResponse() {
 function legacyResponse(request: NextRequest): NextResponse | undefined {
   const localePath = splitLocalePathname(request.nextUrl.pathname)
 
+  if (
+    localePath.pathname === '/dashboard' ||
+    localePath.pathname.startsWith('/dashboard/')
+  ) {
+    const target = request.nextUrl.clone()
+    target.pathname = '/login'
+    target.search = ''
+    return NextResponse.redirect(target, 308)
+  }
+
   if (gonePaths.has(localePath.pathname)) return goneResponse()
 
   const replacement = permanentRedirects.get(localePath.pathname)

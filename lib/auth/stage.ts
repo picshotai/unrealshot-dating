@@ -5,8 +5,8 @@ import type { NextRequest, NextResponse } from "next/server";
  *
  * Gating used to live in page-level server components: the browser committed a
  * navigation, the page ran a query, and only then redirected. That is visible as
- * a flash and a wasted round trip, and it stacked — login went to /dashboard,
- * which redirected again.
+ * a flash and a wasted round trip, and it stacked — login used to go through
+ * an obsolete intermediate route before reaching the studio.
  *
  * The proxy needs the answer before any page renders, but it should not pay for
  * a database round trip on every request. So the answer is cached in a cookie

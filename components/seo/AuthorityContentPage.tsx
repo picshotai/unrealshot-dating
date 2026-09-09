@@ -50,7 +50,7 @@ export default function AuthorityContentPage({ content, locale, ui }: { content:
             <nav aria-label={ui.relatedPages} className="rounded-3xl bg-zinc-950 p-8 text-white">
               <h2 className="text-2xl font-bold">{ui.continueExploring}</h2>
               <div className="mt-5 flex flex-wrap gap-3">{content.related.map((item) => <PublicLink key={item.href} href={item.href} className="rounded-full border border-zinc-700 px-4 py-2 text-sm hover:border-[#ff805d]">{item.label}</PublicLink>)}</div>
-              <Link href="/dashboard" className="mt-8 inline-block rounded-lg bg-[#ff6f00] px-6 py-3 font-semibold text-white">{ui.createCta}</Link>
+              <Link href="/login" className="mt-8 inline-block rounded-lg bg-[#ff6f00] px-6 py-3 font-semibold text-white">{ui.createCta}</Link>
             </nav>
           </div>
         </article>
