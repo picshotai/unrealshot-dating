@@ -222,7 +222,7 @@ export function getPlatformPageCopy(locale: AppLocale, app: PlatformPageCopyApp)
       faqHeading: "Frequently asked questions",
       officialSources: "Official sources",
       sourceDescription: "Platform guidance changes. These first-party sources were checked on",
-      ctaHeading: "Missing the photo roles this guide describes?",
+      ctaHeading: "Missing the photo variety this guide describes?",
       ctaDescription: "UnrealShot creates 15 coherent shoots and 60 photos from 4–6 selfies, with 15 individual Photo Retakes and delivery within 30 minutes.",
     },
   }

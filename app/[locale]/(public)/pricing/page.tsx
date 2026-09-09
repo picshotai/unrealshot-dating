@@ -6,7 +6,7 @@ import PublicHeader from "@/components/Header"
 import Footer from "@/components/main-landing/Footer"
 import { Button } from "@/components/ui/button"
 import { MultipleStructuredData } from "@/components/seo/StructuredData"
-import { getLocalizedMetadata, makeBreadcrumbJsonLd, makeFaqJsonLd, makeSoftwareApplicationJsonLd, makeWebPageJsonLd, publicUrl } from "@/lib/public-seo"
+import { getLocalizedMetadata, makeBreadcrumbJsonLd, makeFaqJsonLd, makeWebApplicationJsonLd, makeWebPageJsonLd, publicUrl } from "@/lib/public-seo"
 import type { PublishedPublicLocale } from "@/i18n/config"
 
 type Params = { params: Promise<{ locale: string }> }
@@ -70,7 +70,7 @@ export default async function PricingPage({ params }: Params) {
         <section className="max-w-5xl mx-auto px-4"><div className="bg-[#111111] rounded-3xl p-8 sm:p-12 text-white text-center border-2 border-dashed border-zinc-800 shadow-2xl"><h2 className="text-3xl sm:text-4xl font-bold mb-3 font-[var(--font-inter-tight)]">{t("cta.heading")}</h2><p className="text-gray-300 text-sm sm:text-base max-w-xl mx-auto mb-8 leading-relaxed">{t("cta.description")}</p><Link href="/dashboard"><Button className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-8 pr-16 py-6 font-semibold text-base shadow-lg shadow-orange-500/20">{t("cta.button")}</Button></Link></div></section>
       </main>
       <Footer />
-      <MultipleStructuredData schemas={[{ id: "pricing-webpage", data: makeWebPageJsonLd({ name: t("hero.title"), description: t("meta.description"), url: publicUrl("/pricing", locale), locale, breadcrumbs }) }, { id: "pricing-breadcrumb", data: makeBreadcrumbJsonLd(breadcrumbs) }, { id: "pricing-application", data: makeSoftwareApplicationJsonLd({ description: t("schema.description"), url: publicUrl("/pricing", locale), locale, features: packageFeatures }) }, { id: "pricing-faq", data: makeFaqJsonLd(pricingFaqs) }]} />
+      <MultipleStructuredData schemas={[{ id: "pricing-webpage", data: makeWebPageJsonLd({ name: t("hero.title"), description: t("meta.description"), url: publicUrl("/pricing", locale), locale, breadcrumbs }) }, { id: "pricing-breadcrumb", data: makeBreadcrumbJsonLd(breadcrumbs) }, { id: "pricing-web-application", data: makeWebApplicationJsonLd({ description: t("schema.description"), url: publicUrl("/pricing", locale), locale, features: packageFeatures }) }, { id: "pricing-faq", data: makeFaqJsonLd(pricingFaqs) }]} />
     </div>
   )
 }

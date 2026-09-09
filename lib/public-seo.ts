@@ -228,7 +228,7 @@ export function makeBlogPostingJsonLd({
   }
 }
 
-export function makeSoftwareApplicationJsonLd({
+export function makeWebApplicationJsonLd({
   description,
   url,
   locale,
@@ -241,14 +241,15 @@ export function makeSoftwareApplicationJsonLd({
 }) {
   return {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "@id": `${defaultSEO.siteUrl}/#software`,
+    "@type": "WebApplication",
+    "@id": `${defaultSEO.siteUrl}/#webapp`,
     name: "UnrealShot",
     description,
     url,
     inLanguage: localeDefinitions[locale].htmlLang,
     applicationCategory: "PhotographyApplication",
-    operatingSystem: "Web Browser",
+    browserRequirements: "Requires JavaScript. Requires HTML5.",
+    operatingSystem: "All",
     featureList: features,
     author: organizationSchema,
     publisher: organizationSchema,
@@ -262,3 +263,6 @@ export function makeSoftwareApplicationJsonLd({
     },
   }
 }
+
+export const makeSoftwareApplicationJsonLd = makeWebApplicationJsonLd
+

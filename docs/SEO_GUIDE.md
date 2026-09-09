@@ -168,7 +168,7 @@ export default function BlogPost({ post }) {
 
 - `generateOrganizationSchema()` - Organization info
 - `generateWebsiteSchema()` - Website info
-- `generateSoftwareApplicationSchema()` - App info
+- `makeWebApplicationJsonLd()` - WebApplication info (SaaS product schema)
 - `generateBreadcrumbSchema()` - Navigation breadcrumbs
 - `generateFAQSchema()` - FAQ sections
 - `generateProductSchema()` - Product/service pages

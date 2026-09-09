@@ -44,13 +44,15 @@ assert.doesNotMatch(landingCopy, /algorithm|match-rate|not affiliated|verificati
 assert.doesNotMatch(landingCopy, /fixed (?:preset|list|menu|output)|small (?:menu|list)|ten or twenty|photo roles|scene picker|selectable preset|custom model|not flawless|not presented as a promise/i, "Platform landings must describe capabilities directly instead of exposing internal or defensive framing")
 assert.doesNotMatch(landingCopy, /\b(?:four|six) (?:types|roles|kinds)\b/i, "Platform landings must not imply a finite set of shoot categories")
 const landingTemplate = readFileSync("components/seo/PlatformLandingPage.tsx", "utf8")
+const platformCopy = readFileSync("lib/platform-pages/copy.ts", "utf8")
+const combinedTemplateAndCopy = landingTemplate + "\n" + platformCopy
 assert.doesNotMatch(landingTemplate, /See this shoot type/i, "Profile roles must not link to fixed shoot types")
 assert.doesNotMatch(landingTemplate, /A working lineup|Six different jobs/i, "Product delivery section must not use abstract guide-style framing")
-assert.match(landingTemplate, /How your delivery is created/i, "Product delivery section must clearly identify what it explains")
-assert.match(landingTemplate, /Sample AI dating photos generated with UnrealShot/i, "Hero collage must be labeled as sample product output")
+assert.match(combinedTemplateAndCopy, /How your delivery is created/i, "Product delivery section must clearly identify what it explains")
+assert.match(combinedTemplateAndCopy, /Sample AI dating photos generated with UnrealShot/i, "Hero collage must be labeled as sample product output")
 assert.doesNotMatch(landingTemplate, /One AI-generated UnrealShot shoot/i, "Placeholder imagery must not be presented as one coherent shoot")
-assert.match(landingTemplate, /See more UnrealShot dating photo examples/i, "Example grid must be framed as a sample of possible creative directions")
-assert.doesNotMatch(landingTemplate, /not affiliated|No match|verification outcome|Illustrative AI-generated result|See the range your dating-photo delivery can cover/i, "Platform template must not lead with defensive trust language")
+assert.match(combinedTemplateAndCopy, /See more UnrealShot dating photo examples/i, "Example grid must be framed as a sample of possible creative directions")
+assert.doesNotMatch(combinedTemplateAndCopy, /not affiliated|No match|verification outcome|Illustrative AI-generated result|See the range your dating-photo delivery can cover/i, "Platform template must not lead with defensive trust language")
 
 for (const page of guidePages) {
   assert.ok(wordCount(page) >= 1_300, `${page.path} is below 1,300 words`)

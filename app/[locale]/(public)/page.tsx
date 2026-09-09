@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { UnrealLandingPage } from "@/components/main-landing/UnrealLandingPage";
 import { MultipleStructuredData } from "@/components/seo/StructuredData";
-import { getLocalizedMetadata, makeFaqJsonLd, makeSoftwareApplicationJsonLd, makeWebsiteJsonLd, publicUrl } from "@/lib/public-seo";
+import { getLocalizedMetadata, makeFaqJsonLd, makeWebApplicationJsonLd, makeWebsiteJsonLd, publicUrl } from "@/lib/public-seo";
 import type { PublishedPublicLocale } from "@/i18n/config";
 
 type Params = { params: Promise<{ locale: string }> };
@@ -31,8 +31,8 @@ export default async function Home({ params }: Params) {
         schemas={[
           { id: "dating-profile-faq", data: makeFaqJsonLd(faqs) },
           {
-            id: "dating-profile-software-application",
-            data: makeSoftwareApplicationJsonLd({
+            id: "dating-profile-web-application",
+            data: makeWebApplicationJsonLd({
               description: t("meta.description"),
               url: publicUrl("/", locale),
               locale,

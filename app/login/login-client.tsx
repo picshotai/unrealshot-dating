@@ -10,8 +10,7 @@ import { signInWithMagicLink, signInWithGoogle } from "./actions"
 import { CSRFProvider, CSRFInput } from "@/components/csrf-provider"
 import Image from "next/image"
 import Link from "next/link"
-import PublicHeader from "@/components/Header"
-import Footer from "@/components/main-landing/Footer"
+import { FolioLogo } from "@/components/icons/FolioLogo"
 
 type AuthState = {
   error?: string
@@ -88,7 +87,19 @@ function LoginFormWithSearchParams() {
   return (
     <CSRFProvider>
       <div className="min-h-screen bg-[#F7F5F3] flex flex-col font-[family-name:var(--font-inter)] text-gray-900 selection:bg-[#ff6f00]/20 selection:text-gray-900">
-        <PublicHeader />
+        <header className="w-full border-b border-gray-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2">
+              <FolioLogo className="w-32 h-8" />
+            </Link>
+            <Link
+              href="/"
+              className="text-xs sm:text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              ← Back to home
+            </Link>
+          </div>
+        </header>
 
         <main className="flex-1 flex items-center justify-center pt-24 pb-16 px-4 sm:px-6">
           <div className="w-full max-w-5xl grid md:grid-cols-12 bg-white rounded-3xl border border-gray-200/80 shadow-[0_12px_50px_-15px_rgba(0,0,0,0.08)] overflow-hidden">
@@ -208,7 +219,17 @@ function LoginFormWithSearchParams() {
           </div>
         </main>
 
-        <Footer />
+        <footer className="w-full border-t border-gray-200/80 bg-white/60 py-6 text-center text-xs text-gray-500">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p>© {new Date().getFullYear()} UnrealShot. All rights reserved.</p>
+            <div className="flex items-center gap-4 text-gray-600">
+              <Link href="/terms" className="hover:text-[#ff6f00] transition-colors">Terms</Link>
+              <Link href="/privacy-policy" className="hover:text-[#ff6f00] transition-colors">Privacy Policy</Link>
+              <Link href="/refund-policy" className="hover:text-[#ff6f00] transition-colors">Refund Policy</Link>
+              <Link href="/contact" className="hover:text-[#ff6f00] transition-colors">Contact</Link>
+            </div>
+          </div>
+        </footer>
       </div>
     </CSRFProvider>
   )
