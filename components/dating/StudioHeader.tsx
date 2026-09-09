@@ -116,7 +116,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
                       : isFailed
                       ? status.stageLabel || 'Shoot stopped'
                       : isDeveloping
-                      ? status.stageLabel || `${status.progressPercent}%`
+                      ? 'Shoot in progress'
                       : status.orderStatus}
                   </span>
                 </div>
@@ -124,7 +124,9 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
             </div>
 
             <p className="text-[11px] text-zinc-500 font-mono mt-0.5">
-              {status ? (
+              {status && isDeveloping && status.completed === 0 ? (
+                'Your photos will appear here as they’re ready'
+              ) : status ? (
                 <>
                   {status.completed} / {status.total} photos ·{' '}
                   <span className="text-white/60">

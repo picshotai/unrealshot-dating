@@ -13,6 +13,18 @@
 
 import { getSiteUrl } from '@/lib/site-url';
 
+const OPEN_ANALYTICS_TRACKING_KEY = 'oa_pk_k1j2WPtzPgJye7wIeOfXmvydcUwpAG0u';
+const OPEN_ANALYTICS_COLLECTOR_URL = 'https://c.ecompin.com';
+
+export const analyticsConfig = {
+  openAnalytics: {
+    trackingKey:
+      process.env.NEXT_PUBLIC_OA_TRACKING_KEY || OPEN_ANALYTICS_TRACKING_KEY,
+    collectorUrl:
+      process.env.NEXT_PUBLIC_OA_COLLECTOR_URL || OPEN_ANALYTICS_COLLECTOR_URL,
+  },
+} as const;
+
 export interface SEOConfig {
   title: string;
   description: string;

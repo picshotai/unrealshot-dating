@@ -89,64 +89,6 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentSucces
   const displayPlanName = paymentDetails?.dodo_pricing_plans?.name || planName
   const isPaymentCompleted = normalizedStatus === 'completed'
   const isPaymentFailed = normalizedStatus === 'failed'
-  const isPaymentPending = normalizedStatus === 'pending'
-  const requiresCustomerAction = normalizedStatus === 'requires_customer_action'
-
-  // Client-side purchase tracking script
-  const TrackingScript = () => (
-    <script dangerouslySetInnerHTML={{
-      __html: `
-        (function(){
-          try {
-            var completed = ${isPaymentCompleted ? 'true' : 'false'};
-            var failed = ${isPaymentFailed ? 'true' : 'false'};
-            var pending = ${isPaymentPending ? 'true' : 'false'};
-            var sessionId = ${JSON.stringify(sessionId || '')};
-            var paymentId = ${JSON.stringify(paymentId || '')};
-            var amount = ${JSON.stringify(displayAmount)};
-            var credits = ${JSON.stringify(displayCredits)};
-            var planName = ${JSON.stringify(displayPlanName)};
-            var currency = 'USD';
-            if (typeof gtag === 'function') {
-              if (completed) {
-                gtag('event', 'purchase', {
-                  transaction_id: paymentId || sessionId,
-                  value: amount,
-                  currency: currency,
-                  items: [{ id: planName, name: planName, quantity: 1, price: amount }],
-                  credits: credits,
-                  plan_name: planName
-                });
-                try {
-                  localStorage.setItem('dodo_last_purchase_session', paymentId || sessionId || '');
-                  localStorage.removeItem('dodo_last_checkout_session');
-                  localStorage.removeItem('dodo_last_checkout_payload');
-                } catch(_) {}
-              } else if (failed) {
-                gtag('event', 'purchase_failed', {
-                  transaction_id: paymentId || sessionId,
-                  value: amount,
-                  currency: currency,
-                  items: [{ id: planName, name: planName, quantity: 1, price: amount }],
-                  credits: credits,
-                  plan_name: planName
-                });
-              } else if (pending) {
-                gtag('event', 'purchase_pending', {
-                  transaction_id: paymentId || sessionId,
-                  value: amount,
-                  currency: currency,
-                  items: [{ id: planName, name: planName, quantity: 1, price: amount }],
-                  credits: credits,
-                  plan_name: planName
-                });
-              }
-            }
-          } catch (e) { /* ignore */ }
-        })();
-      `
-    }} />
-  )
 
   const isDatingShootResume =
     params.resume === 'dating-shoot' ||
@@ -156,7 +98,6 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentSucces
   if (isDatingShootResume) {
     return (
       <div className="container max-w-lg mx-auto py-16 px-4 min-h-[70vh] flex items-center justify-center">
-        <TrackingScript />
         <Card className="w-full border-zinc-800 bg-zinc-950 text-white shadow-2xl rounded-2xl overflow-hidden">
           <CardHeader className="text-center pb-2 pt-8">
             <div className="mx-auto w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4">
@@ -179,7 +120,6 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentSucces
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
-      <TrackingScript />
       <div className="text-center mb-8">
         <div className="flex justify-center mb-4">
           <div className={`rounded-full p-3 ${
@@ -337,7 +277,7 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentSucces
           <h3 className="text-lg font-semibold mb-2">Need Help?</h3>
           <p className="text-sm text-muted-foreground mb-4">
             If you have any questions about your purchase or need assistance, 
-            please don't hesitate to contact our support team.
+            please don&apos;t hesitate to contact our support team.
           </p>
         </div>
       </div>

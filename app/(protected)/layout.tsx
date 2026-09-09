@@ -12,7 +12,6 @@ import { NavigationProgress } from "@/components/navigation-progress"
 import { createClient } from "@/utils/supabase/server"
 import { creditService } from "@/lib/credits"
 import { redirect } from "next/navigation"
-import Script from "next/script"
 import ClarityInit from "@/components/ClarityInit"
 import { isAdminEmail } from "@/lib/auth/admin-access"
 
@@ -39,48 +38,6 @@ export default async function DashboardLayout({
     <div className="protected-scope dark bg-background text-foreground">
       <NavigationProgress />
       <ClarityInit projectId={process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID || ""} userId={user.id} />
-      {/* Checkout return tracking script moved here from root layout to scope it to protected pages */}
-      <Script id="ga-checkout-return" strategy="afterInteractive">
-        {`
-          (function(){
-            try {
-              if (typeof window === 'undefined') return;
-              var sid = localStorage.getItem('dodo_last_checkout_session');
-              var purchasedSid = localStorage.getItem('dodo_last_purchase_session');
-              var payloadStr = localStorage.getItem('dodo_last_checkout_payload');
-              if (sid && sid !== purchasedSid && typeof gtag === 'function') {
-                fetch('/api/dodopayments/checkout?session_id=' + sid)
-                  .then(function(r){ return r.json(); })
-                  .then(function(d){
-                    var status = d && d.status;
-                    var payload = {};
-                    try { payload = payloadStr ? JSON.parse(payloadStr) : {}; } catch(_) {}
-                    if (status === 'failed') {
-                      gtag('event', 'purchase_failed', Object.assign({ session_id: sid }, payload));
-                      try {
-                        localStorage.removeItem('dodo_last_checkout_session');
-                        localStorage.removeItem('dodo_last_checkout_payload');
-                      } catch(_) {}
-                    } else if (status === 'pending') {
-                      gtag('event', 'checkout_abandoned', Object.assign({ session_id: sid }, payload));
-                      try {
-                        localStorage.removeItem('dodo_last_checkout_session');
-                        localStorage.removeItem('dodo_last_checkout_payload');
-                      } catch(_) {}
-                    } else if (status === 'completed') {
-                      try {
-                        localStorage.setItem('dodo_last_purchase_session', sid);
-                        localStorage.removeItem('dodo_last_checkout_session');
-                        localStorage.removeItem('dodo_last_checkout_payload');
-                      } catch(_) {}
-                    }
-                  })
-                  .catch(function(_){ /* ignore */ });
-              }
-            } catch (e) { /* ignore */ }
-          })();
-        `}
-      </Script>
       <SidebarProvider>
         <AppSidebar
           showPromptLab={isAdminEmail(user.email)}

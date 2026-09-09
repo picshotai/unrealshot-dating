@@ -700,7 +700,7 @@ export function DatingShootClient({
         />
 
         {/* 2. Lineup Role Filter Tabs */}
-        {status && status.order.status !== 'failed' && (
+        {status && status.order.status !== 'failed' && shootSections.length > 0 && (
           <RoleFilterNav
             activeTab={activeTab}
             onTabChange={setActiveTab}
@@ -767,14 +767,16 @@ export function DatingShootClient({
               ))}
             </div>
           )
+        ) : !status && activeOrderId ? (
+          <PortfolioProgressPanel
+            loading
+            blocked={false}
+            paused={false}
+          />
         ) : isDeveloping || status?.order.status === 'failed' ? (
           <PortfolioProgressPanel
-            stageLabel={status?.stageLabel}
-            promptCounts={status?.promptCounts}
-            shootTarget={status?.order.shoots_target ?? deliveryConfig.shoots}
-            sample={(status?.promptCounts?.mock ?? 0) > 0
-              ? { realShoots: status?.promptCounts?.realTarget ?? 0 }
-              : null}
+            stage={status?.stage}
+            progressPercent={status?.progressPercent}
             blocked={Boolean(status?.order.provider_blocked)}
             paused={
               status?.order.pipeline_stage === 'attention_required' &&

@@ -2,6 +2,12 @@ import createNextIntlPlugin from 'next-intl/plugin'
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts')
 
+const contentSecurityPolicy = [
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://c.ecompin.com https://*.ecompin.com https://www.clarity.ms https://*.clarity.ms https://challenges.cloudflare.com",
+  "script-src-elem 'self' 'unsafe-inline' https://c.ecompin.com https://*.ecompin.com https://www.clarity.ms https://*.clarity.ms https://challenges.cloudflare.com",
+  "connect-src 'self' https://c.ecompin.com https://*.ecompin.com https://www.clarity.ms https://*.clarity.ms https://challenges.cloudflare.com https://*.supabase.co wss://*.supabase.co https://*.fal.ai https://*.fal.media https://*.dodopayments.com",
+].join('; ')
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   agentRules: false,
@@ -38,6 +44,12 @@ const nextConfig = {
   },
   async headers() {
     return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "Content-Security-Policy", value: contentSecurityPolicy },
+        ],
+      },
       {
         source: "/api/:path*",
         headers: [

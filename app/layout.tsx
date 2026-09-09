@@ -10,7 +10,7 @@ import { Toaster } from "@/components/ui/sonner"
 import { Toaster as ShadcnToaster } from "@/components/ui/toaster"
 import { getLocale } from "next-intl/server"
 import { getHtmlLang, type PublishedPublicLocale } from "@/i18n/config"
-import { defaultSEO, organizationSchema } from "@/config/seo"
+import { analyticsConfig, defaultSEO, organizationSchema } from "@/config/seo"
 
 
 const inter = Inter({
@@ -105,22 +105,10 @@ export default async function RootLayout({
         <Toaster richColors closeButton />
         <ShadcnToaster />
 
-        {/* Google Analytics */}
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-XGFT46LL3J"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-XGFT46LL3J');
-          `}
-        </Script>
-        <Script
-          src="https://cloud.umami.is/script.js"
-          data-website-id="84ff2e6c-dd01-4e1b-9a97-7418745d4fef"
+          src={`${analyticsConfig.openAnalytics.collectorUrl}/oa.js`}
+          data-key={analyticsConfig.openAnalytics.trackingKey}
+          data-collector={analyticsConfig.openAnalytics.collectorUrl}
           strategy="afterInteractive"
         />
       </body>
