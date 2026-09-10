@@ -17,6 +17,10 @@ import {
   Camera,
 } from 'lucide-react';
 import { POSE_GUIDES } from '@/components/dating/PoseGuides';
+import {
+  trackConversionOnce,
+  trackEvent,
+} from '@/lib/analytics/open-analytics';
 
 const MAX_FILE_SIZE = 8 * 1024 * 1024;
 const MIN_PHOTOS = 4;
@@ -130,6 +134,7 @@ export function CreateModelClient() {
       return;
     }
 
+    trackEvent('model_creation_started', { photo_count: images.length });
     setIsLoading(true);
     setError('');
     setUploadProgress({
@@ -138,6 +143,7 @@ export function CreateModelClient() {
       errors: images.map(() => null),
     });
 
+    let failureStage = 'create_record';
     try {
       // 1. Create model in Supabase
       const createRes = await fetch('/api/models', {
@@ -154,6 +160,7 @@ export function CreateModelClient() {
       const modelId = createData.model.id;
 
       // 2. Upload images in parallel
+      failureStage = 'upload_photos';
       const uploadPromises = images.map(async (file, i) => {
         const formData = new FormData();
         formData.append('file', file);
@@ -223,16 +230,22 @@ export function CreateModelClient() {
       }
 
       // Mark model ready
+      failureStage = 'mark_ready';
       await fetch(`/api/models/${modelId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'ready' }),
       }).catch(() => null);
 
+      trackConversionOnce('model_created', String(modelId), {
+        photo_count: images.length,
+      });
+
       // Route directly to the Dating Studio
       router.push(`/dating-shoot?modelId=${modelId}`);
     } catch (err) {
       console.error('Error creating model:', err);
+      trackEvent('model_creation_failed', { failure_stage: failureStage });
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setIsLoading(false);

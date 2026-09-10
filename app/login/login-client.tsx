@@ -4,13 +4,13 @@ import { useActionState } from "react"
 import { useFormStatus } from "react-dom"
 import { Suspense } from "react"
 import { useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Loader2, Sparkles, CheckCircle2 } from "lucide-react"
 import { signInWithMagicLink, signInWithGoogle } from "./actions"
 import { CSRFProvider, CSRFInput } from "@/components/csrf-provider"
-import Image from "next/image"
 import Link from "next/link"
 import { FolioLogo } from "@/components/icons/FolioLogo"
+import { trackEvent } from "@/lib/analytics/open-analytics"
 
 type AuthState = {
   error?: string
@@ -70,17 +70,24 @@ function GoogleSignInButton() {
 function LoginFormWithSearchParams() {
   const [state, formAction] = useActionState<AuthState, FormData>(signInWithMagicLink, {} as AuthState)
   const searchParams = useSearchParams()
-  const [urlError, setUrlError] = useState<string | null>(null)
+  const [urlError] = useState<string | null>(() => searchParams.get('error'))
+  const trackedSuccess = useRef<string | null>(null)
 
   useEffect(() => {
     const error = searchParams.get('error')
     if (error) {
-      setUrlError(error)
       const url = new URL(window.location.href)
       url.searchParams.delete('error')
       window.history.replaceState({}, '', url.toString())
     }
   }, [searchParams])
+
+  useEffect(() => {
+    if (state?.success && trackedSuccess.current !== state.success) {
+      trackedSuccess.current = state.success
+      trackEvent('auth_link_sent', { method: 'magic_link' })
+    }
+  }, [state?.success])
 
   const displayError = state?.error || urlError
 
@@ -138,7 +145,12 @@ function LoginFormWithSearchParams() {
               )}
 
               {/* Google sign-in */}
-              <form action={signInWithGoogle} className="mb-6">
+              <form
+                action={signInWithGoogle}
+                className="mb-6"
+                data-oa-event="auth_started"
+                data-oa-prop-method="google"
+              >
                 <CSRFInput />
                 <GoogleSignInButton />
               </form>
@@ -153,7 +165,12 @@ function LoginFormWithSearchParams() {
               </div>
 
               {/* Magic link form */}
-              <form action={formAction} className="space-y-4">
+              <form
+                action={formAction}
+                className="space-y-4"
+                data-oa-event="auth_started"
+                data-oa-prop-method="magic_link"
+              >
                 <CSRFInput />
                 <div className="space-y-1.5">
                   <label htmlFor="email" className="block text-xs font-semibold text-gray-700 uppercase tracking-wider">

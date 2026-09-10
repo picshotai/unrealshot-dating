@@ -11,6 +11,7 @@ import { Toaster as ShadcnToaster } from "@/components/ui/toaster"
 import { getLocale } from "next-intl/server"
 import { getHtmlLang, type PublishedPublicLocale } from "@/i18n/config"
 import { analyticsConfig, defaultSEO, organizationSchema } from "@/config/seo"
+import { OpenAnalyticsBridge } from "@/components/analytics/OpenAnalyticsBridge"
 
 
 const inter = Inter({
@@ -97,6 +98,7 @@ export default async function RootLayout({
         />
       </head>
       <body className="font-sans antialiased public-headings">
+        <OpenAnalyticsBridge />
         <ErrorBoundary>
           <Suspense fallback={null}>
             {children}

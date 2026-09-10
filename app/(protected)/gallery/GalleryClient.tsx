@@ -5,6 +5,7 @@ import { Download, Loader2, ImageIcon, ChevronLeft, ChevronRight, X } from 'luci
 import { Button } from '@/components/ui/button';
 import { downloadPhoto } from '@/lib/dating/download';
 import Link from 'next/link';
+import { trackEvent } from '@/lib/analytics/open-analytics';
 
 type Photo = {
   id: string;
@@ -116,6 +117,10 @@ export function GalleryClient({ photos }: GalleryClientProps) {
     try {
       const filename = `unrealshot-photo-${String(index + 1).padStart(3, '0')}.png`;
       await downloadPhoto(photo.id, photo.imageUrl, filename);
+      trackEvent('photos_downloaded', {
+        download_type: 'single_photo',
+        photo_count: 1,
+      });
     } catch (err) {
       console.error('Download failed:', err);
     } finally {
@@ -177,6 +182,10 @@ export function GalleryClient({ photos }: GalleryClientProps) {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(downloadUrl);
+      trackEvent('photos_downloaded', {
+        download_type: 'gallery_zip',
+        photo_count: totalToDownload,
+      });
     } catch (err) {
       console.error('ZIP generation failed:', err);
     } finally {

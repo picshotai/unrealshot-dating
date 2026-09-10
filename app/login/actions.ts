@@ -35,11 +35,11 @@ export async function signInWithMagicLink(
   try {
     const supabase = await createClient()
     const captchaToken = formData.get('cf-turnstile-response') as string | null
-    const { data, error } = await supabase.auth.signInWithOtp({
+    const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
         shouldCreateUser: true,
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/dating-shoot`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/dating-shoot&auth_method=magic_link`,
         ...(captchaToken ? { captchaToken } : {}),
       },
     })
@@ -78,7 +78,7 @@ export async function signInWithGoogle(formData: FormData): Promise<void> {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/dating-shoot`,
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/dating-shoot&auth_method=google`,
     },
   })
 

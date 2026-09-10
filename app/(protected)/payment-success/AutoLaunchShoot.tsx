@@ -2,10 +2,21 @@
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Sparkles, ArrowRight, Loader2, CheckCircle2, RotateCw } from 'lucide-react';
+import { Sparkles, Loader2, CheckCircle2, RotateCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { trackConversionOnce } from '@/lib/analytics/open-analytics';
 
-export function AutoLaunchShoot() {
+export function AutoLaunchShoot({
+  transactionReference,
+  amount = 0,
+  credits = 0,
+  plan = 'dating_shoot_pack',
+}: {
+  transactionReference?: string;
+  amount?: number;
+  credits?: number;
+  plan?: string;
+}) {
   const router = useRouter();
   const [isRedirecting, setIsRedirecting] = useState(false);
   const [isDelayed, setIsDelayed] = useState(false);
@@ -24,6 +35,14 @@ export function AutoLaunchShoot() {
       if (res.ok) {
         const data = await res.json();
         if (data.hasPack && !isNavigating.current) {
+          if (transactionReference) {
+            trackConversionOnce('purchase_completed', transactionReference, {
+              order_id: transactionReference,
+              amount,
+              credits,
+              plan,
+            });
+          }
           isNavigating.current = true;
           setIsRedirecting(true);
           router.push('/dating-shoot?resume=auto-start');
@@ -38,7 +57,7 @@ export function AutoLaunchShoot() {
       setIsDelayed(true);
     }
     return false;
-  }, [router]);
+  }, [amount, credits, plan, router, transactionReference]);
 
   useEffect(() => {
     let isMounted = true;
@@ -134,4 +153,3 @@ export function AutoLaunchShoot() {
     </div>
   );
 }
-

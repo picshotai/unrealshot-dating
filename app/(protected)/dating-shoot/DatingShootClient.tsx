@@ -32,6 +32,11 @@ import {
   ImageGeneration,
   type ImageGenerationStatus,
 } from '@/components/dating/ImageGeneration';
+import {
+  trackConversionOnce,
+  trackEvent,
+  trackEventOnce,
+} from '@/lib/analytics/open-analytics';
 
 type Model = {
   id: number;
@@ -209,6 +214,17 @@ export function DatingShootClient({
       const data = (await res.json()) as StatusResponse;
       setStatus(data);
 
+      if (data.order.status === 'ready') {
+        trackConversionOnce('shoot_completed', orderId, {
+          photo_count: data.counts.completed,
+          shoot_count: data.shoots.length,
+        });
+      } else if (data.order.status === 'failed') {
+        trackEventOnce('shoot_failed', orderId, {
+          failure_phase: data.failure?.phase || 'unknown',
+        });
+      }
+
       // The inspector stores the selected object, not just its id. Keep that
       // object synchronized so a completed reshoot appears without closing or
       // refreshing the modal.
@@ -317,6 +333,11 @@ export function DatingShootClient({
           return false;
         }
         if (data.code === 'order_in_progress' && data.orderId) {
+          trackEventOnce('shoot_started', data.orderId, {
+            interest_count: params.interests.length,
+            excluded_tag_count: params.excludeTags.length,
+            simple_candids: params.includeSimpleCandids,
+          });
           setActiveOrderId(data.orderId);
           await fetchStatus(data.orderId);
           setIsIntakeOpen(false);
@@ -329,6 +350,11 @@ export function DatingShootClient({
       }
 
       setActiveOrderId(data.orderId);
+      trackEventOnce('shoot_started', data.orderId, {
+        interest_count: params.interests.length,
+        excluded_tag_count: params.excludeTags.length,
+        simple_candids: params.includeSimpleCandids,
+      });
       await fetchStatus(data.orderId);
       setIsIntakeOpen(false);
       launchRequestId.current = null;
@@ -443,6 +469,7 @@ export function DatingShootClient({
         }
         throw new Error(result.error || 'Could not retry this shoot.');
       }
+      trackEvent('shoot_retry_requested');
       await fetchStatus(activeOrderId);
     } catch (retryError) {
       setError(retryError instanceof Error ? retryError.message : 'Could not retry this shoot.');
@@ -483,6 +510,9 @@ export function DatingShootClient({
       if (regenerationAttempt.current?.photoId === photoId) {
         regenerationAttempt.current.accepted = true;
       }
+      trackEvent('photo_retake_requested', {
+        feedback_provided: Boolean(feedback?.trim()),
+      });
       await fetchStatus(activeOrderId);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Regenerate failed');
@@ -620,6 +650,10 @@ export function DatingShootClient({
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(downloadUrl);
+      trackEvent('photos_downloaded', {
+        download_type: 'portfolio_zip',
+        photo_count: totalToDownload,
+      });
     } catch (err) {
       console.error('ZIP generation failed:', err);
       setError(

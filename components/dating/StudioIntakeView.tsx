@@ -27,6 +27,7 @@ import {
   FRAMES_PER_SHOOT,
   type ExcludableTag,
 } from '@/lib/dating/types';
+import { trackEvent } from '@/lib/analytics/open-analytics';
 
 type Model = {
   id: number;
@@ -69,7 +70,6 @@ interface StudioIntakeViewProps {
 }
 
 export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
-  userId,
   hasPack,
   isPaymentPendingSync = false,
   onRefreshPackStatus,
@@ -155,9 +155,20 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
         throw new Error(data.message || data.error || 'Failed to initiate checkout session');
       }
 
+      trackEvent('checkout_started', {
+        plan: 'dating_shoot_pack',
+        checkout_type: 'redirect',
+        interest_count: interests.length,
+        excluded_tag_count: excludeTags.length,
+        simple_candids: includeSimpleCandids,
+      });
       window.location.href = data.checkout_url;
     } catch (err) {
       console.error('Checkout error:', err);
+      trackEvent('checkout_failed', {
+        plan: 'dating_shoot_pack',
+        checkout_type: 'redirect',
+      });
       setCheckoutError(err instanceof Error ? err.message : 'Could not launch checkout');
       setIsCheckingOut(false);
     }

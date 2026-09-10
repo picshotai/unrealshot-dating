@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/use-toast';
+import { trackEvent } from '@/lib/analytics/open-analytics';
 
 interface DodoCheckoutButtonProps {
   planId: string;
@@ -60,6 +61,12 @@ export default function DodoCheckoutButton({
       }
 
       if (data.success && data.checkout_url) {
+        trackEvent('checkout_started', {
+          plan: planName || 'credit_package',
+          amount,
+          credits,
+          checkout_type: 'redirect',
+        });
         // Redirect to dodopayments checkout
         window.location.href = data.checkout_url;
       } else {
@@ -68,6 +75,10 @@ export default function DodoCheckoutButton({
 
     } catch (error) {
       console.error('Checkout error:', error);
+      trackEvent('checkout_failed', {
+        plan: planName || 'credit_package',
+        checkout_type: 'redirect',
+      });
       toast({
         title: 'Checkout Error',
         description: error instanceof Error ? error.message : 'Failed to start checkout process',
@@ -136,6 +147,10 @@ export function DodoInlineCheckout({
       }
 
       if (data.success && data.checkout_url) {
+        trackEvent('checkout_started', {
+          plan: planId,
+          checkout_type: 'embedded',
+        });
         setCheckoutUrl(data.checkout_url);
         onSuccess?.(data.session_id);
       } else {
@@ -144,6 +159,10 @@ export function DodoInlineCheckout({
 
     } catch (error) {
       console.error('Checkout error:', error);
+      trackEvent('checkout_failed', {
+        plan: planId,
+        checkout_type: 'embedded',
+      });
       const errorMessage = error instanceof Error ? error.message : 'Failed to create checkout session';
       onError?.(errorMessage);
     } finally {

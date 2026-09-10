@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { RefreshButton } from './RefreshButton'
 import { AutoLaunchShoot } from './AutoLaunchShoot'
 import { formatPrice, formatCredits } from '@/lib/pricing-plans'
+import { PaymentAnalytics } from '@/components/analytics/PaymentAnalytics'
 
 interface PaymentSuccessPageProps {
   searchParams: Promise<{
@@ -98,6 +99,13 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentSucces
   if (isDatingShootResume) {
     return (
       <div className="container max-w-lg mx-auto py-16 px-4 min-h-[70vh] flex items-center justify-center">
+        <PaymentAnalytics
+          status={normalizedStatus}
+          transactionReference={lookupId}
+          amount={displayAmount}
+          credits={displayCredits}
+          plan={displayPlanName}
+        />
         <Card className="w-full border-zinc-800 bg-zinc-950 text-white shadow-2xl rounded-2xl overflow-hidden">
           <CardHeader className="text-center pb-2 pt-8">
             <div className="mx-auto w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4">
@@ -111,7 +119,12 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentSucces
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6 px-6 pb-8">
-            <AutoLaunchShoot />
+            <AutoLaunchShoot
+              transactionReference={lookupId}
+              amount={displayAmount}
+              credits={displayCredits}
+              plan={displayPlanName}
+            />
           </CardContent>
         </Card>
       </div>
@@ -120,6 +133,13 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentSucces
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
+      <PaymentAnalytics
+        status={normalizedStatus}
+        transactionReference={lookupId}
+        amount={displayAmount}
+        credits={displayCredits}
+        plan={displayPlanName}
+      />
       <div className="text-center mb-8">
         <div className="flex justify-center mb-4">
           <div className={`rounded-full p-3 ${
