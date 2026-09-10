@@ -1,14 +1,13 @@
 "use client"
 
-import { useActionState } from "react"
+import { Suspense, useActionState, useEffect, useRef, useState } from "react"
 import { useFormStatus } from "react-dom"
-import { Suspense } from "react"
 import { useSearchParams } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
-import { Loader2, Sparkles, CheckCircle2 } from "lucide-react"
-import { signInWithMagicLink, signInWithGoogle } from "./actions"
-import { CSRFProvider, CSRFInput } from "@/components/csrf-provider"
 import Link from "next/link"
+import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, LockKeyhole } from "lucide-react"
+import { signInWithMagicLink, signInWithGoogle } from "./actions"
+import { LoginShowcase } from "./LoginShowcase"
+import { CSRFProvider, CSRFInput } from "@/components/csrf-provider"
 import { FolioLogo } from "@/components/icons/FolioLogo"
 import { trackEvent } from "@/lib/analytics/open-analytics"
 
@@ -19,45 +18,43 @@ type AuthState = {
 
 function MagicLinkSubmit() {
   const { pending } = useFormStatus()
+
   return (
     <button
       type="submit"
       disabled={pending}
-      className="cursor-pointer w-full font-semibold text-sm py-3.5 px-4 bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-xl transition-all duration-200 shadow-md shadow-orange-500/20 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      className="group flex h-13 w-full cursor-pointer items-center justify-between rounded-[14px] bg-[#ff6f00] p-1.5 pl-5 text-sm font-semibold text-white transition-[background-color,transform] duration-200 hover:bg-[#e86400] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-55"
     >
-      {pending ? (
-        <>
-          <Loader2 className="h-4 w-4 animate-spin" />
-          Sending Magic Link...
-        </>
-      ) : (
-        "Send Magic Link →"
-      )}
+      <span>{pending ? "Sending your link…" : "Email me a sign-in link"}</span>
+      <span className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-white text-[#e86400] transition-transform duration-200 group-hover:translate-x-0.5">
+        {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
+      </span>
     </button>
   )
 }
 
 function GoogleSignInButton() {
   const { pending } = useFormStatus()
+
   return (
     <button
       type="submit"
       disabled={pending}
-      className="cursor-pointer w-full text-sm font-semibold py-3.5 px-4 border border-gray-200 bg-white hover:bg-gray-50 text-gray-800 rounded-xl transition-all duration-200 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-sm"
+      className="flex h-13 w-full cursor-pointer items-center justify-center gap-3 rounded-[14px] border border-[#dedbd7] bg-white px-4 text-sm font-semibold text-[#242220] transition-[background-color,border-color,transform] duration-200 hover:border-[#c9c4bf] hover:bg-[#faf9f8] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-55"
     >
       {pending ? (
         <>
           <Loader2 className="h-4 w-4 animate-spin" />
-          Signing in...
+          Connecting…
         </>
       ) : (
         <>
-          <svg className="h-5 w-5" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+          <svg className="h-[18px] w-[18px]" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <g fill="none" fillRule="evenodd">
-              <path d="M9.82727273,24 C9.82727273,22.4757333 10.0804318,21.0144 10.5322727,19.6437333 L2.62345455,13.6042667 C1.08206818,16.7338667 0.213636364,20.2602667 0.213636364,24 C0.213636364,27.7365333 1.081,31.2608 2.62025,34.3882667 L10.5247955,28.3370667 C10.0772273,26.9728 9.82727273,25.5168 9.82727273,24" fill="#FBBC05" />
-              <path d="M23.7136364,10.1333333 C27.025,10.1333333 30.0159091,11.3066667 32.3659091,13.2266667 L39.2022727,6.4 C35.0363636,2.77333333 29.6954545,0.533333333 23.7136364,0.533333333 C14.4268636,0.533333333 6.44540909,5.84426667 2.62345455,13.6042667 L10.5322727,19.6437333 C12.3545909,14.112 17.5491591,10.1333333 23.7136364,10.1333333" fill="#EB4335" />
-              <path d="M23.7136364,37.8666667 C17.5491591,37.8666667 12.3545909,33.888 10.5322727,28.3562667 L2.62345455,34.3946667 C6.44540909,42.1557333 14.4268636,47.4666667 23.7136364,47.4666667 C29.4455,47.4666667 34.9177955,45.4314667 39.0249545,41.6181333 L31.5177727,35.8144 C29.3995682,37.1488 26.7323182,37.8666667 23.7136364,37.8666667" fill="#34A853" />
-              <path d="M46.1454545,24 C46.1454545,22.6133333 45.9318182,21.12 45.6113636,19.7333333 L23.7136364,19.7333333 L23.7136364,28.8 L36.3181818,28.8 C35.6879545,31.8912 33.9724545,34.2677333 31.5177727,35.8144 L39.0249545,41.6181333 C43.3393409,37.6138667 46.1454545,31.6490667 46.1454545,24" fill="#4285F4" />
+              <path d="M9.827 24c0-1.524.253-2.986.705-4.356l-7.909-6.04A23.404 23.404 0 0 0 .214 24c0 3.737.867 7.26 2.406 10.388l7.905-6.051A13.85 13.85 0 0 1 9.827 24" fill="#FBBC05" />
+              <path d="M23.714 10.133c3.311 0 6.302 1.174 8.652 3.094L39.202 6.4C35.036 2.773 29.695.533 23.714.533c-9.287 0-17.269 5.311-21.091 13.071l7.909 6.04c1.823-5.532 7.017-9.511 13.182-9.511" fill="#EB4335" />
+              <path d="M23.714 37.867c-6.165 0-11.36-3.979-13.182-9.51l-7.909 6.038c3.822 7.761 11.804 13.072 21.091 13.072 5.731 0 11.204-2.036 15.311-5.849l-7.507-5.804c-2.118 1.335-4.786 2.053-7.804 2.053" fill="#34A853" />
+              <path d="M46.145 24c0-1.387-.213-2.88-.534-4.267H23.714V28.8h12.604c-.63 3.091-2.346 5.468-4.8 7.014l7.507 5.804C43.34 37.614 46.145 31.65 46.145 24" fill="#4285F4" />
             </g>
           </svg>
           Continue with Google
@@ -70,22 +67,22 @@ function GoogleSignInButton() {
 function LoginFormWithSearchParams() {
   const [state, formAction] = useActionState<AuthState, FormData>(signInWithMagicLink, {} as AuthState)
   const searchParams = useSearchParams()
-  const [urlError] = useState<string | null>(() => searchParams.get('error'))
+  const [urlError] = useState<string | null>(() => searchParams.get("error"))
   const trackedSuccess = useRef<string | null>(null)
 
   useEffect(() => {
-    const error = searchParams.get('error')
+    const error = searchParams.get("error")
     if (error) {
       const url = new URL(window.location.href)
-      url.searchParams.delete('error')
-      window.history.replaceState({}, '', url.toString())
+      url.searchParams.delete("error")
+      window.history.replaceState({}, "", url.toString())
     }
   }, [searchParams])
 
   useEffect(() => {
     if (state?.success && trackedSuccess.current !== state.success) {
       trackedSuccess.current = state.success
-      trackEvent('auth_link_sent', { method: 'magic_link' })
+      trackEvent("auth_link_sent", { method: "magic_link" })
     }
   }, [state?.success])
 
@@ -93,159 +90,118 @@ function LoginFormWithSearchParams() {
 
   return (
     <CSRFProvider>
-      <div className="min-h-screen bg-[#F7F5F3] flex flex-col font-[family-name:var(--font-inter)] text-gray-900 selection:bg-[#ff6f00]/20 selection:text-gray-900">
-        <header className="w-full border-b border-gray-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
-              <FolioLogo className="w-32 h-8" />
-            </Link>
-            <Link
-              href="/"
-              className="text-xs sm:text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              ← Back to home
-            </Link>
-          </div>
+      <div className="relative flex min-h-screen flex-col overflow-hidden bg-[#f5f3f0] font-[family-name:var(--font-inter)] text-[#1b1a19] selection:bg-[#ff6f00]/20">
+        <div className="pointer-events-none absolute -left-40 -top-48 h-[480px] w-[480px] rounded-full bg-[#ff6f00]/[0.055] blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-64 -right-32 h-[520px] w-[520px] rounded-full bg-white/80 blur-3xl" />
+
+        <header className="relative z-10 mx-auto flex h-18 w-full max-w-[1240px] items-center justify-between px-5 sm:px-8">
+          <Link href="/" aria-label="UnrealShot home" className="rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff6f00] focus-visible:ring-offset-4">
+            <FolioLogo className="h-8 w-32" />
+          </Link>
+          <Link
+            href="/"
+            className="group inline-flex items-center gap-2 text-xs font-semibold text-[#77716b] transition-colors hover:text-[#1b1a19] sm:text-sm"
+          >
+            <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
+            Back to home
+          </Link>
         </header>
 
-        <main className="flex-1 flex items-center justify-center pt-24 pb-16 px-4 sm:px-6">
-          <div className="w-full max-w-5xl grid md:grid-cols-12 bg-white rounded-3xl border border-gray-200/80 shadow-[0_12px_50px_-15px_rgba(0,0,0,0.08)] overflow-hidden">
-            {/* Left: Form Section */}
-            <div className="md:col-span-6 lg:col-span-6 flex flex-col justify-center p-8 sm:p-12">
-              <div className="mb-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 text-[#ff6f00] text-xs font-semibold mb-4 border border-orange-100">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Dating Photoshoot Platform</span>
+        <main className="relative z-10 flex flex-1 items-center justify-center px-4 py-5 sm:px-8 sm:py-8">
+          <div className="grid w-full max-w-[1080px] overflow-hidden rounded-[28px] border border-black/[0.07] bg-white md:grid-cols-[0.95fr_1.05fr]">
+            <section className="flex min-h-[560px] flex-col justify-center px-7 py-10 sm:px-12 lg:px-16" aria-labelledby="login-title">
+              <div className="mx-auto w-full max-w-[390px]">
+                <div className="mb-8">
+                  <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.18em] text-[#e86400]">
+                    Your studio is waiting
+                  </p>
+                  <h1 id="login-title" className="font-[family-name:var(--font-space-grotesk)] text-[2.15rem] font-semibold leading-[1.05] tracking-[-0.045em] text-[#191817] sm:text-[2.55rem]">
+                    Welcome back.
+                  </h1>
+                  <p className="mt-3 text-[15px] leading-6 text-[#706b66]">
+                    Sign in to create, manage, and download your dating shoots.
+                  </p>
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl font-bold font-[var(--font-inter-tight)] tracking-tight text-gray-900 mb-2">
-                  Welcome to UnrealShot
-                </h1>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Sign in or create your account to access your 15 cohesive dating shoots and 15 Photo Retakes.
+                {displayError && (
+                  <div role="alert" className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs leading-5 text-red-700">
+                    {displayError}
+                    {displayError.includes("expired") && <p className="mt-1 text-red-600">Request a fresh sign-in link below.</p>}
+                  </div>
+                )}
+
+                {state?.success && (
+                  <div role="status" className="mb-5 flex items-start gap-2.5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-xs leading-5 text-emerald-800">
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                    <span>{state.success}</span>
+                  </div>
+                )}
+
+                <form
+                  action={formAction}
+                  className="space-y-4"
+                  data-oa-event="auth_started"
+                  data-oa-prop-method="magic_link"
+                >
+                  <CSRFInput />
+                  <div>
+                    <label htmlFor="email" className="mb-2 block text-xs font-semibold text-[#4f4b47]">
+                      Email address
+                    </label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      inputMode="email"
+                      autoComplete="email"
+                      placeholder="you@example.com"
+                      required
+                      className="h-13 w-full rounded-[14px] border border-[#dedbd7] bg-[#fbfaf9] px-4 text-sm text-[#1b1a19] outline-none transition-[background-color,border-color,box-shadow] placeholder:text-[#aaa49e] hover:border-[#cbc6c1] focus:border-[#ff6f00] focus:bg-white focus:ring-4 focus:ring-[#ff6f00]/10"
+                    />
+                  </div>
+                  <MagicLinkSubmit />
+                </form>
+
+                <div className="my-5 flex items-center gap-3" aria-hidden="true">
+                  <div className="h-px flex-1 bg-[#e8e4e0]" />
+                  <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-[#aaa39c]">or</span>
+                  <div className="h-px flex-1 bg-[#e8e4e0]" />
+                </div>
+
+                <form
+                  action={signInWithGoogle}
+                  data-oa-event="auth_started"
+                  data-oa-prop-method="google"
+                >
+                  <CSRFInput />
+                  <GoogleSignInButton />
+                </form>
+
+                <div className="mt-5 flex items-center justify-center gap-2 text-[11px] text-[#928c86]">
+                  <LockKeyhole className="h-3.5 w-3.5 text-[#aaa49e]" />
+                  Password-free and securely encrypted
+                </div>
+
+                <p className="mt-7 text-center text-[11px] leading-5 text-[#918b85]">
+                  By continuing, you agree to our{" "}
+                  <Link href="/terms" className="font-medium text-[#57524d] underline decoration-[#c8c2bc] underline-offset-2 transition-colors hover:text-[#e86400]">Terms</Link>
+                  {" "}and{" "}
+                  <Link href="/privacy-policy" className="font-medium text-[#57524d] underline decoration-[#c8c2bc] underline-offset-2 transition-colors hover:text-[#e86400]">Privacy Policy</Link>.
                 </p>
               </div>
+            </section>
 
-              {/* Error & success messages */}
-              {displayError && (
-                <div className="mb-6 px-4 py-3 border border-red-200 bg-red-50 text-red-700 text-xs rounded-xl">
-                  {displayError}
-                  {displayError.includes('expired') && (
-                    <p className="mt-1 text-red-600">
-                      Request a new authentication link below.
-                    </p>
-                  )}
-                </div>
-              )}
-              {state?.success && (
-                <div className="mb-6 px-4 py-3 border border-green-200 bg-green-50 text-green-700 text-xs rounded-xl flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
-                  <span>{state.success}</span>
-                </div>
-              )}
-
-              {/* Google sign-in */}
-              <form
-                action={signInWithGoogle}
-                className="mb-6"
-                data-oa-event="auth_started"
-                data-oa-prop-method="google"
-              >
-                <CSRFInput />
-                <GoogleSignInButton />
-              </form>
-
-              <div className="relative mb-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200" />
-                </div>
-                <div className="relative flex justify-center">
-                  <span className="bg-white px-4 text-xs text-gray-400 font-medium">Or continue with email</span>
-                </div>
-              </div>
-
-              {/* Magic link form */}
-              <form
-                action={formAction}
-                className="space-y-4"
-                data-oa-event="auth_started"
-                data-oa-prop-method="magic_link"
-              >
-                <CSRFInput />
-                <div className="space-y-1.5">
-                  <label htmlFor="email" className="block text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                    Email Address
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    required
-                    className="w-full bg-gray-50 border border-gray-200 text-gray-900 placeholder:text-gray-400 px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#ff6f00] focus:border-transparent transition-all"
-                  />
-                </div>
-
-                <MagicLinkSubmit />
-              </form>
-
-              {/* Terms */}
-              <p className="mt-8 text-xs text-gray-500 text-center leading-relaxed">
-                By continuing, you agree to our{' '}
-                <Link href="/terms" className="text-gray-700 font-medium hover:text-[#ff6f00] transition-colors underline">Terms</Link>
-                {' '}and{' '}
-                <Link href="/privacy-policy" className="text-gray-700 font-medium hover:text-[#ff6f00] transition-colors underline">Privacy Policy</Link>.
-              </p>
-            </div>
-
-            {/* Right: Visual Section */}
-            <div className="hidden md:flex md:col-span-6 lg:col-span-6 bg-gradient-to-br from-[#111111] to-[#1a1a1a] p-8 sm:p-12 flex-col justify-between text-white relative">
-              <div>
-                <div className="inline-block px-3 py-1 bg-white/10 rounded-full text-xs font-semibold text-orange-400 mb-6">
-                  ✨ What You Get
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-bold font-[var(--font-inter-tight)] tracking-tight mb-4">
-                  15 Believable Shoots. <br />
-                  60 Candid Photos.
-                </h2>
-                <ul className="space-y-3 text-sm text-gray-300">
-                  <li className="flex items-center gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-[#ff6f00] flex-shrink-0" />
-                    <span>4 unique angles &amp; expressions per setting</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-[#ff6f00] flex-shrink-0" />
-                    <span>15 individual Photo Retakes included</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-[#ff6f00] flex-shrink-0" />
-                    <span>Engineered for Tinder, Hinge &amp; Bumble</span>
-                  </li>
-                  <li className="flex items-center gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-[#ff6f00] flex-shrink-0" />
-                    <span>100% private with permanent deletion control</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="mt-8 pt-6 border-t border-zinc-800 flex items-center justify-between text-xs text-gray-400">
-                <span>One-time purchase · No subscription</span>
-                <span className="text-white font-bold">$39 USD</span>
-              </div>
-            </div>
+            <LoginShowcase />
           </div>
         </main>
 
-        <footer className="w-full border-t border-gray-200/80 bg-white/60 py-6 text-center text-xs text-gray-500">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p>© {new Date().getFullYear()} UnrealShot. All rights reserved.</p>
-            <div className="flex items-center gap-4 text-gray-600">
-              <Link href="/terms" className="hover:text-[#ff6f00] transition-colors">Terms</Link>
-              <Link href="/privacy-policy" className="hover:text-[#ff6f00] transition-colors">Privacy Policy</Link>
-              <Link href="/refund-policy" className="hover:text-[#ff6f00] transition-colors">Refund Policy</Link>
-              <Link href="/contact" className="hover:text-[#ff6f00] transition-colors">Contact</Link>
-            </div>
-          </div>
+        <footer className="relative z-10 mx-auto flex w-full max-w-[1240px] flex-wrap items-center justify-center gap-x-5 gap-y-2 px-5 py-5 text-[11px] text-[#8c8680] sm:justify-between sm:px-8">
+          <p>© {new Date().getFullYear()} UnrealShot</p>
+          <nav aria-label="Legal" className="flex items-center gap-4">
+            <Link href="/privacy-policy" className="transition-colors hover:text-[#292623]">Privacy</Link>
+            <Link href="/terms" className="transition-colors hover:text-[#292623]">Terms</Link>
+            <Link href="/contact" className="transition-colors hover:text-[#292623]">Contact</Link>
+          </nav>
         </footer>
       </div>
     </CSRFProvider>
@@ -254,14 +210,13 @@ function LoginFormWithSearchParams() {
 
 export default function LoginClient() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-[#F7F5F3] flex items-center justify-center font-[family-name:var(--font-inter)]">
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 animate-spin text-[#ff6f00]" />
-          <span className="text-sm font-medium text-gray-600">Loading...</span>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-[#f5f3f0] font-[family-name:var(--font-inter)]">
+          <Loader2 className="h-6 w-6 animate-spin text-[#ff6f00]" aria-label="Loading sign in" />
         </div>
-      </div>
-    }>
+      }
+    >
       <LoginFormWithSearchParams />
     </Suspense>
   )
