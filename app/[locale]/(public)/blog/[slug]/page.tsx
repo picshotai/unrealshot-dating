@@ -23,7 +23,6 @@ import {
 import { getPublicAlternates, publicUrl, makeBlogPostingJsonLd } from "@/lib/public-seo"
 import { serializeJsonLd } from "@/lib/json-ld"
 import { defaultSEO } from "@/config/seo"
-import { editorialPosts, getEditorialArticle } from "@/lib/editorial-content"
 import {
   isPublishedBlogLocale,
   localizePublicPathname,
@@ -37,8 +36,9 @@ export const revalidate = 600
 type ArticlePageProps = { params: Promise<{ locale: string; slug: string }> }
 
 export async function generateStaticParams(): Promise<Array<{ locale: PublishedBlogLocale; slug: string }>> {
-  const wordpress = (await getAllPublishedPostPaths()).map(({ locale, slug }) => ({ locale, slug }))
-  return [...editorialPosts.map((post) => ({ locale: "en" as const, slug: post.slug })), ...wordpress.filter((path) => !getEditorialArticle(path.slug))]
+  return (await getAllPublishedPostPaths())
+    .filter((path) => !gonePaths.has(`/blog/${path.slug}`))
+    .map(({ locale, slug }) => ({ locale, slug }))
 }
 
 function articlePaths(post: WordPressPost): PublishedPostPath[] {
@@ -69,7 +69,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   if (!isPublishedBlogLocale(routeLocale)) return { robots: { index: false, follow: false } }
   const locale = routeLocale as PublishedBlogLocale
   const t = await getTranslations({ locale, namespace: "Blog.article" })
-  const post = getEditorialArticle(slug) ?? await getPostBySlugAndLocale(slug, locale)
+  const post = await getPostBySlugAndLocale(slug, locale)
 
   if (!post) {
     return {
@@ -123,7 +123,7 @@ export default async function BlogArticlePage({ params }: ArticlePageProps) {
   const canonicalSlug = slug.replace(/[\s,]+$/g, "")
   if (canonicalSlug !== slug) redirect(localizePublicPathname(`/blog/${canonicalSlug}`, locale))
 
-  const post = getEditorialArticle(canonicalSlug) ?? await getPostBySlugAndLocale(canonicalSlug, locale)
+  const post = await getPostBySlugAndLocale(canonicalSlug, locale)
   if (!post) notFound()
 
   const t = await getTranslations({ locale, namespace: "Blog.article" })

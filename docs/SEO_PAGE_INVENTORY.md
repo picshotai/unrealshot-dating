@@ -11,8 +11,8 @@ This is the canonical inventory for the AI dating-photo SEO/AEO release. It list
 | Group | Unique production URLs |
 |---|---:|
 | Localized non-blog marketing pages | 125 |
-| English-only WordPress blog archive | 1 |
-| **Total app-registered indexable URLs** | **126** |
+| WordPress blog archive (English and French) | 2 |
+| **Total app-registered indexable URLs** | **127** |
 
 The total excludes WordPress articles, which are served by WordPress and are not part of this localization audit or implementation.
 
@@ -42,7 +42,7 @@ These non-blog pages are now available in English, French, Spanish, German and B
 | Activity Dating Photos | https://www.unrealshot.com/dating-photos/activity |
 | Contact | https://www.unrealshot.com/contact |
 
-The WordPress blog archive remains intentionally English-only at `https://www.unrealshot.com/blog`; blog posts and blog content are outside this work.
+The WordPress blog archive is available at `https://www.unrealshot.com/blog` and `/fr/blog` when that locale has published WordPress posts. Blog posts and article content are fetched dynamically from WordPress.
 
 ## Platform-specific product landing pages
 
@@ -78,21 +78,9 @@ All seven shoots are available in all five published app locales, including loca
 | Home Cooking | https://www.unrealshot.com/dating-photos/shoots/home-cooking |
 | Rooftop | https://www.unrealshot.com/dating-photos/shoots/rooftop |
 
-## WordPress editorial pages (excluded)
+## WordPress editorial pages (dynamic)
 
-These pages are served by WordPress. They are listed for reference only and were not modified or included in the app localization audit.
-
-| Article | Production URL |
-|---|---|
-| 7 Common Dating Profile Photo Mistakes—and What AI Can Actually Fix | https://www.unrealshot.com/blog/7-common-dating-profile-photo-mistakes-and-how-ai-fixes-them |
-| What Should Your First Dating Profile Photo Be? | https://www.unrealshot.com/blog/what-should-your-first-dating-profile-photo-be |
-| Dating Profile Photo Order: How to Build a Complete Lineup | https://www.unrealshot.com/blog/dating-profile-photo-order |
-| How Many Photos Should You Use on a Dating Profile? | https://www.unrealshot.com/blog/how-many-photos-should-you-use-on-a-dating-profile |
-| Candid vs Posed Dating Photos for Men | https://www.unrealshot.com/blog/candid-vs-posed-dating-photos-for-men |
-| How to Mix AI Dating Photos With Real Camera-Roll Photos | https://www.unrealshot.com/blog/how-to-mix-ai-dating-photos-with-real-photos |
-| How Reference Selfies Affect AI Dating-Photo Likeness | https://www.unrealshot.com/blog/how-reference-selfies-affect-ai-dating-photo-likeness |
-| AI Dating Photos, App Rules and Photo Verification | https://www.unrealshot.com/blog/ai-dating-photos-app-rules-and-photo-verification |
-| How to Tell When an AI Dating Photo Looks Fake | https://www.unrealshot.com/blog/how-to-tell-when-an-ai-dating-photo-looks-fake |
+Blog articles are fetched from the published WordPress GraphQL feed at build/request time. There are no local or dummy article fallbacks in the app. The archive, article pages, static params and sitemap all use the same published WordPress source, while URLs listed in `config/legacy-urls.ts` remain intentionally excluded.
 
 ## Permanent redirects
 

@@ -17,7 +17,7 @@ export type PublishedPublicLocale = (typeof publishedPublicLocales)[number]
  * Blog locales are promoted independently from the translated marketing site.
  * A locale belongs here only after its archive has reviewed, published posts.
  */
-export const publishedBlogLocales = ["en"] as const satisfies readonly PublishedPublicLocale[]
+export const publishedBlogLocales = ["en", "fr"] as const satisfies readonly PublishedPublicLocale[]
 
 export type PublishedBlogLocale = (typeof publishedBlogLocales)[number]
 
@@ -86,8 +86,6 @@ export type PublicRouteDefinition = {
   sitemap: boolean
 }
 
-const englishOnly = ["en"] as const satisfies readonly PublishedPublicLocale[]
-
 /** The single source of truth for public pages, locale support and sitemap output. */
 export const publicRoutes = [
   { path: "/", locales: publishedPublicLocales, indexable: true, sitemap: true },
@@ -97,7 +95,7 @@ export const publicRoutes = [
   { path: "/refund-policy", locales: publishedPublicLocales, indexable: true, sitemap: true },
   { path: "/terms", locales: publishedPublicLocales, indexable: true, sitemap: true },
   { path: "/dating-photos", locales: publishedPublicLocales, indexable: true, sitemap: true },
-  { path: "/blog", locales: englishOnly, indexable: true, sitemap: true },
+  { path: "/blog", locales: publishedBlogLocales, indexable: true, sitemap: true },
   { path: "/how-it-works", locales: publishedPublicLocales, indexable: true, sitemap: true },
   { path: "/realistic-ai-dating-photos", locales: publishedPublicLocales, indexable: true, sitemap: true },
   { path: "/contact", locales: publishedPublicLocales, indexable: true, sitemap: true },

@@ -29,7 +29,7 @@ import { authorityLinksCopy } from "../lib/authority-links-copy"
 
 assert.deepEqual(appLocales, ["en", "fr", "es", "de", "pt-BR"])
 assert.deepEqual(publishedPublicLocales, ["en", "fr", "es", "de", "pt-BR"])
-assert.deepEqual(publishedBlogLocales, ["en"])
+assert.deepEqual(publishedBlogLocales, ["en", "fr"])
 assert.equal(
   new Set(publicRoutes.map((route) => route.path)).size,
   publicRoutes.length,
@@ -40,13 +40,13 @@ assert.equal(isAppLocale("pt-BR"), true)
 assert.equal(isAppLocale("pt-br"), false)
 assert.equal(isPublishedPublicLocale("en"), true)
 assert.equal(isPublishedPublicLocale("fr"), true)
-assert.equal(isPublishedBlogLocale("fr"), false)
+assert.equal(isPublishedBlogLocale("fr"), true)
 assert.equal(isPublishedBlogLocale("es"), false)
 assert.equal(isPublishedBlogLocale("de"), false)
 assert.equal(isPublishedBlogLocale("pt-BR"), false)
 assert.equal(localeDefinitions["pt-BR"].wordpressCode, "PT")
 assert.equal(localeDefinitions["pt-BR"].pathnamePrefix, "/pt-br")
-assert.equal(getLocaleForWordPressCode("FR"), undefined)
+assert.equal(getLocaleForWordPressCode("FR"), "fr")
 assert.equal(getLocaleForWordPressCode("ES"), undefined)
 assert.equal(getLocaleForWordPressCode("DE"), undefined)
 assert.equal(getLocaleForWordPressCode("PT"), undefined)
@@ -86,7 +86,7 @@ assert.equal(isPublishedPublicPathname("/dating-photos/shoots/gym-training", "fr
 assert.equal(isPublishedPublicPathname("/dating-photos/shoots/rooftop", "pt-BR"), true)
 assert.equal(isPublishedPublicPathname("/dating-photos/activity", "de"), true)
 assert.equal(isPublishedPublicPathname("/dating-photos/examples", "pt-BR"), true)
-assert.equal(isPublishedPublicPathname("/blog", "fr"), false)
+assert.equal(isPublishedPublicPathname("/blog", "fr"), true)
 assert.equal(isPhase2LocalizedPathname("/de/blog/a-post"), false)
 assert.equal(isLocaleRoutedPublicPathname("/login"), false)
 assert.equal(isLocaleRoutedPublicPathname("/fr/login"), false)
@@ -143,8 +143,8 @@ for (const [locale, expectedProof] of Object.entries(localizedHeroProof)) {
   assert.equal(catalogs[locale].Home.hero.proof, expectedProof, `${locale} homepage proof badge is not localized`)
 }
 
-// WordPress blog routes are intentionally excluded from this app localization audit.
-assert.deepEqual(publicRoutes.find((route) => route.path === "/blog")?.locales, ["en"])
+// WordPress blog routes are enabled for locales with published CMS content.
+assert.deepEqual(publicRoutes.find((route) => route.path === "/blog")?.locales, ["en", "fr"])
 assert.equal(isBlogArchivePathname("/fr/blog"), true)
 
 const localizedMarketingPaths = publicRoutes

@@ -19,7 +19,7 @@ const alternates = getPublicAlternates(paths.en, paths, publishedBlogLocales)
 const languages = alternates.languages as Record<string, string>
 assert.equal(alternates.canonical, publicUrl(paths.en, "en"))
 assert.equal(languages.en, publicUrl(paths.en, "en"))
-assert.equal(languages.fr, undefined)
+assert.equal(languages.fr, publicUrl(paths.fr, "fr"))
 assert.equal(languages["x-default"], publicUrl(paths.en, "en"))
 assert.equal(localeDefinitions.fr.hrefLang, "fr")
 assert.equal(localeDefinitions["pt-BR"].hrefLang, "pt-BR")

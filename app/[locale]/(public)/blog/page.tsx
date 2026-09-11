@@ -15,7 +15,6 @@ import {
   getPostsByLocale,
   type WordPressPost,
 } from "@/lib/wordpress-cms"
-import { editorialPosts } from "@/lib/editorial-content"
 import { getLocalizedMetadata } from "@/lib/public-seo"
 import { publicUrl } from "@/lib/public-seo"
 import { gonePaths } from "@/config/legacy-urls"
@@ -83,14 +82,7 @@ async function BlogContent({ locale, after }: { locale: PublishedBlogLocale; aft
   const t = await getTranslations({ locale, namespace: "Blog.archive" })
   const page = await getPostsByLocale(locale, { first: 12, after })
   const currentWordPressPosts = page.posts.filter((post) => !gonePaths.has(`/blog/${post.slug}`))
-  const posts = after
-    ? currentWordPressPosts
-    : [
-        ...editorialPosts,
-        ...currentWordPressPosts.filter(
-          (post) => !editorialPosts.some((editorial) => editorial.slug === post.slug),
-        ),
-      ]
+  const posts = currentWordPressPosts
   if (posts.length === 0) notFound()
 
   return (

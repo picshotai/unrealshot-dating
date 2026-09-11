@@ -4,11 +4,11 @@ import {
   localizePublicPathname,
   localeDefinitions,
   publicRoutes,
+  type PublishedBlogLocale,
   type PublishedPublicLocale,
 } from "@/i18n/config"
 import { getAllPublishedPostPaths } from "@/lib/wordpress-cms"
 import { publicUrl } from "@/lib/public-seo"
-import { editorialPosts } from "@/lib/editorial-content"
 import { gonePaths } from "@/config/legacy-urls"
 
 export const revalidate = 600
@@ -48,23 +48,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .flatMap((route) => route.locales.map((locale) => publicEntry(route.path, locale, route.locales)))
 
   const blogPaths = await getAllPublishedPostPaths()
-  const localBlogEntries: MetadataRoute.Sitemap = editorialPosts.map((post) => ({
-    url: publicUrl(`/blog/${post.slug}`, "en"),
-    lastModified: safeDate(post.modified),
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }))
-  const localSlugs = new Set(editorialPosts.map((post) => post.slug))
   const blogEntries: MetadataRoute.Sitemap = blogPaths
-    .filter((path) => path.locale === "en")
-    .filter((path) => !localSlugs.has(path.slug))
     .filter((path) => !gonePaths.has(`/blog/${path.slug}`))
-    .map((path) => ({
-      url: publicUrl(`/blog/${path.slug}`, "en"),
-      lastModified: safeDate(path.modified),
-      changeFrequency: "weekly" as const,
-      priority: 0.6,
-    }))
+    .map((path) => {
+      const languages = Object.fromEntries(
+        Object.entries(path.alternatePaths ?? {}).map(([locale, pathname]) => {
+          const typedLocale = locale as PublishedBlogLocale
+          return [localeDefinitions[typedLocale].hrefLang, publicUrl(pathname, typedLocale)]
+        }),
+      )
+      return {
+        url: publicUrl(`/blog/${path.slug}`, path.locale),
+        lastModified: safeDate(path.modified),
+        changeFrequency: "weekly" as const,
+        priority: 0.6,
+        ...(Object.keys(languages).length ? { alternates: { languages } } : {}),
+      }
+    })
 
-  return [...staticEntries, ...localBlogEntries, ...blogEntries]
+  return [...staticEntries, ...blogEntries]
 }
