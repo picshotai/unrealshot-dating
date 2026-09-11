@@ -77,7 +77,7 @@ const authorityPageCandidates: Record<string, AuthorityPageContent> = {
       { heading: "Verification and accurate representation", paragraphs: ["Tinder’s current safety and verification information should be checked before publishing. Photo verification is Tinder’s decision; UnrealShot cannot guarantee approval. Do not use a generated frame that materially changes your age, body, face or lifestyle."], bullets: ["Use current reference selfies.", "Mix in recent camera-roll photos.", "Replace any frame that overstates where you have been or what you do."] },
     ],
     sources: [{ label: "Tinder Photo Verification", href: "https://www.help.tinder.com/hc/en-us/articles/4422771431309-Photo-Verification" }, { label: "Tinder Community Guidelines", href: "https://policies.tinder.com/community-guidelines/intl/en/" }],
-    related: [{ label: "Dating photo pillar", href: "/dating-photos" }, { label: "City walk example", href: "/dating-photos/shoots/city-walk" }, { label: "AI photos and app rules", href: "/blog/ai-dating-photos-app-rules-and-photo-verification" }],
+    related: [{ label: "Dating photo pillar", href: "/dating-photos" }, { label: "City walk example", href: "/dating-photos/shoots/city-walk" }, { label: "AI dating photo guide", href: "/blog/7-common-dating-profile-photo-mistakes-and-how-ai-fixes-them" }],
   },
   "/dating-photos/hinge": {
     path: "/dating-photos/hinge",
