@@ -50,12 +50,6 @@ function legacyResponse(request: NextRequest): NextResponse | undefined {
     return NextResponse.redirect(target, 308)
   }
 
-  if (localePath.pathname === '/blog' && request.nextUrl.searchParams.has('page')) {
-    const target = request.nextUrl.clone()
-    target.pathname = '/blog'
-    target.searchParams.delete('page')
-    return NextResponse.redirect(target, 308)
-  }
 }
 
 /** Signed-in users have no business here; they belong in the studio or onboarding. */

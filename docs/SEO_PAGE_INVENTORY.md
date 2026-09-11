@@ -80,7 +80,7 @@ All seven shoots are available in all five published app locales, including loca
 
 ## WordPress editorial pages (dynamic)
 
-Blog articles are fetched from the published WordPress GraphQL feed at build/request time. There are no local or dummy article fallbacks in the app. The archive, article pages, static params and sitemap all use the same published WordPress source, while URLs listed in `config/legacy-urls.ts` remain intentionally excluded.
+Blog articles are fetched from the published WordPress GraphQL feed at build/request time. There are no local or dummy article fallbacks in the app. The archive, article pages, static params and sitemap all use the same published WordPress source. Every published WordPress article is eligible to render and index; WordPress is the source of truth for blog availability.
 
 ## Permanent redirects
 
@@ -90,10 +90,8 @@ These return one-hop HTTP `308` responses. They do not appear in the sitemap.
 |---|---|
 | https://www.unrealshot.com/use-case/dating-photos | https://www.unrealshot.com/dating-photos |
 | https://www.unrealshot.com/ai-dating-photoshoot | https://www.unrealshot.com/ |
-| https://www.unrealshot.com/blog/how-to-get-ai-photoshoots-that-look-like-you | https://www.unrealshot.com/realistic-ai-dating-photos |
 | https://www.unrealshot.com/contact-us | https://www.unrealshot.com/contact |
 | https://www.unrealshot.com/faqs | https://www.unrealshot.com/how-it-works |
-| `https://www.unrealshot.com/blog?page=*` | https://www.unrealshot.com/blog |
 
 The `/use-case/dating-photos` redirect preserves the existing `/fr`, `/es`, `/de` or `/pt-br` locale prefix.
 
@@ -148,22 +146,6 @@ These URLs intentionally have no replacement. Every exact path below also return
 - https://www.unrealshot.com/linkedin-bio-generator
 - https://www.unrealshot.com/linkedin-headline-generator
 - https://www.unrealshot.com/linkedin-post-generator
-
-### Deleted legacy blog articles
-
-- https://www.unrealshot.com/blog/ai-headshots-vs-professional-photographer-pros-and-cons
-- https://www.unrealshot.com/blog/how-to-use-ai-headshots-to-level-up-your-resume
-- https://www.unrealshot.com/blog/the-best-ai-headshot-generators-of-2026
-- https://www.unrealshot.com/blog/best-ai-headshot-generators-in-2026
-- https://www.unrealshot.com/blog/best-aragon-ai-alternatives-in-2025
-- https://www.unrealshot.com/blog/how-to-create-a-professional-ai-headshot-in-2025
-- https://www.unrealshot.com/blog/create-professional-ai-headshots-with-unrealshot-ai
-- https://www.unrealshot.com/blog/the-best-15-ai-headshot-generators-in-2025-for-stunning-profiles
-- https://www.unrealshot.com/blog/creative-christmas-photo-ideas-to-create-with-ai
-- https://www.unrealshot.com/blog/creative-christmas-photo-ideas-with-ai
-- https://www.unrealshot.com/blog/remaker-ai-face-swap-uses-features
-- https://www.unrealshot.com/blog/how-to-use-saze-ai-text-to-speech
-- https://www.unrealshot.com/blog/26-january-ai-photo-editing-republic-day-image-prompts
 
 ## Non-indexable application routes
 

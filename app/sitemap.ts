@@ -9,7 +9,6 @@ import {
 } from "@/i18n/config"
 import { getAllPublishedPostPaths } from "@/lib/wordpress-cms"
 import { publicUrl } from "@/lib/public-seo"
-import { gonePaths } from "@/config/legacy-urls"
 
 export const revalidate = 600
 
@@ -49,7 +48,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const blogPaths = await getAllPublishedPostPaths()
   const blogEntries: MetadataRoute.Sitemap = blogPaths
-    .filter((path) => !gonePaths.has(`/blog/${path.slug}`))
     .map((path) => {
       const languages = Object.fromEntries(
         Object.entries(path.alternatePaths ?? {}).map(([locale, pathname]) => {

@@ -17,7 +17,6 @@ import {
 } from "@/lib/wordpress-cms"
 import { getLocalizedMetadata } from "@/lib/public-seo"
 import { publicUrl } from "@/lib/public-seo"
-import { gonePaths } from "@/config/legacy-urls"
 import {
   isPublishedBlogLocale,
   localizePublicPathname,
@@ -81,7 +80,7 @@ function transformPost(post: WordPressPost, locale: PublishedBlogLocale, t: Retu
 async function BlogContent({ locale, after }: { locale: PublishedBlogLocale; after?: string }) {
   const t = await getTranslations({ locale, namespace: "Blog.archive" })
   const page = await getPostsByLocale(locale, { first: 12, after })
-  const currentWordPressPosts = page.posts.filter((post) => !gonePaths.has(`/blog/${post.slug}`))
+  const currentWordPressPosts = page.posts
   const posts = currentWordPressPosts
   if (posts.length === 0) notFound()
 

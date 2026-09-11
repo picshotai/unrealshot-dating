@@ -37,7 +37,6 @@ type ArticlePageProps = { params: Promise<{ locale: string; slug: string }> }
 
 export async function generateStaticParams(): Promise<Array<{ locale: PublishedBlogLocale; slug: string }>> {
   return (await getAllPublishedPostPaths())
-    .filter((path) => !gonePaths.has(`/blog/${path.slug}`))
     .map(({ locale, slug }) => ({ locale, slug }))
 }
 

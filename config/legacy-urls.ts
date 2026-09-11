@@ -1,7 +1,6 @@
 export const permanentRedirects = new Map<string, string>([
   ["/use-case/dating-photos", "/dating-photos"],
   ["/ai-dating-photoshoot", "/"],
-  ["/blog/how-to-get-ai-photoshoots-that-look-like-you", "/realistic-ai-dating-photos"],
   ["/contact-us", "/contact"],
   ["/faqs", "/how-it-works"],
 ])
@@ -52,17 +51,4 @@ export const gonePaths = new Set([
   "/linkedin-bio-generator",
   "/linkedin-headline-generator",
   "/linkedin-post-generator",
-  "/blog/ai-headshots-vs-professional-photographer-pros-and-cons",
-  "/blog/how-to-use-ai-headshots-to-level-up-your-resume",
-  "/blog/the-best-ai-headshot-generators-of-2026",
-  "/blog/best-ai-headshot-generators-in-2026",
-  "/blog/best-aragon-ai-alternatives-in-2025",
-  "/blog/how-to-create-a-professional-ai-headshot-in-2025",
-  "/blog/create-professional-ai-headshots-with-unrealshot-ai",
-  "/blog/the-best-15-ai-headshot-generators-in-2025-for-stunning-profiles",
-  "/blog/creative-christmas-photo-ideas-to-create-with-ai",
-  "/blog/creative-christmas-photo-ideas-with-ai",
-  "/blog/remaker-ai-face-swap-uses-features",
-  "/blog/how-to-use-saze-ai-text-to-speech",
-  "/blog/26-january-ai-photo-editing-republic-day-image-prompts",
 ])
