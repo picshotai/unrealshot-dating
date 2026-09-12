@@ -84,7 +84,7 @@ export const shootWriterFrameSchema = z.object({
   height: z.number().int().positive(),
   isAnchor: z.boolean(),
   isProfileCandidate: z.boolean(),
-  /** Private mechanical reasoning. Removed before persistence and rendering. */
+  /** Intentionally shallow free text; never expand this into per-joint fields. */
   physicalPlan: text(40, 1_000),
   capturePrompt: z.string().trim().min(1).max(CAPTURE_PROMPT_MAX_CHARS),
 }).strict();
@@ -92,7 +92,7 @@ export const shootWriterFrameSchema = z.object({
 /** Provider output: private physical planning plus capture instructions. */
 export const shootWriterOutputSchema = z.object({
   title: text(3, 80),
-  /** Private shared scene mechanics. Removed before persistence and rendering. */
+  /** Intentionally shallow free text; removed before persistence and rendering. */
   physicalScene: text(60, 1_200),
   frames: z.array(shootWriterFrameSchema).length(4),
 }).strict();

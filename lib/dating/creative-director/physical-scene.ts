@@ -6,9 +6,13 @@
  */
 export const PHYSICAL_SCENE_REASONING_INSTRUCTION = `
 PHYSICAL SCENE PASS — SOLVE THIS BEFORE WRITING CAPTURE PROSE:
-Return physicalScene as a concise private working model shared by all four frames. Establish the orientation and usable extent of the nearby surfaces, which contacts can genuinely bear weight, the direction of gravity, and the behavior of any active equipment. Resolve ambiguity in the brief into one mechanically coherent scene rather than treating an activity label as a pose.
+Match the depth of planning to the mechanical difficulty; apply the checks silently rather than narrating every one:
+- For an ordinary, stable standing or seated moment with obvious support and no meaningful motion, tension or object handling, keep physicalScene to one brief sentence and each physicalPlan to one brief sentence. Name only the primary support, body orientation and visible consequence that matter.
+- For a moving, elevated, sloped, load-bearing, tensioned or object-manipulation moment, use two to four compact sentences as needed. Resolve only the surfaces, contacts, forces and body responses that affect the visible photograph.
 
-For each frame, return physicalPlan as a concise private account of the exact captured instant. Work from cause to visible consequence:
+Return physicalScene as the private working model shared by all four frames. Resolve ambiguity in the brief into one mechanically coherent scene rather than treating an activity label as a pose. Never manufacture complexity to make the plan sound rigorous.
+
+For each frame, return physicalPlan as the private account of the exact captured instant. Use the following checks only where relevant, working from cause to visible consequence:
 - Place the instant inside a real action sequence: what has just happened, what he is doing now, and where the motion or rest would naturally go next.
 - Keep that instant inside the brief's centralMoment and fourFrameOpportunity; together they are the allowed action boundary, not loose inspiration. When the central action is already visually strong, preserve it across more than one camera view or adjacent phase instead of manufacturing secondary business for variety. Keep wearables, clothing, equipment and nearby objects passive unless centralMoment or fourFrameOpportunity explicitly calls for an interaction; never infer device-checking, grooming or adjustment business merely from their presence.
 - Close the load path. Identify the contacts carrying his weight, the forces that matter, and where his center of mass sits relative to his base of support. Account for momentum, friction, tension or counterbalance only when present.

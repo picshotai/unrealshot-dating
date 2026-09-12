@@ -160,9 +160,18 @@ async function main() {
   assert.match(PHYSICAL_SCENE_REASONING_INSTRUCTION, /Keep wearables.*passive/i);
   assert.match(PHYSICAL_SCENE_REASONING_INSTRUCTION, /unrelated one/i);
   assert.match(PHYSICAL_SCENE_REASONING_INSTRUCTION, /preserve it across more than one camera view/i);
+  assert.match(PHYSICAL_SCENE_REASONING_INSTRUCTION, /ordinary, stable standing or seated moment/i);
+  assert.match(PHYSICAL_SCENE_REASONING_INSTRUCTION, /one brief sentence/i);
+  assert.match(PHYSICAL_SCENE_REASONING_INSTRUCTION, /two to four compact sentences/i);
+  assert.match(PHYSICAL_SCENE_REASONING_INSTRUCTION, /Never manufacture complexity/i);
   assert.equal(CAPTURE_PROMPT_MAX_CHARS, 1_800);
   assert.equal(COMPILED_PROMPT_MAX_CHARS, 2_600);
   assert.deepEqual(SHOOT_OUTPUT_JSON_SCHEMA.required, ["title", "physicalScene", "frames"]);
+  assert.equal(SHOOT_OUTPUT_JSON_SCHEMA.properties.physicalScene.type, "string");
+  assert.equal(
+    SHOOT_OUTPUT_JSON_SCHEMA.properties.frames.items.properties.physicalPlan.type,
+    "string"
+  );
   assert(
     SHOOT_OUTPUT_JSON_SCHEMA.properties.frames.items.required.includes("physicalPlan")
   );
