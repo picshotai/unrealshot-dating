@@ -5,15 +5,13 @@ import {
   type CreativeModelCall,
 } from "./model";
 import { formatCraftReferences, selectCraftReferences } from "./craft-references";
+import { PHYSICAL_SCENE_REASONING_INSTRUCTION } from "./physical-scene";
 import {
-  ANCHOR_EXPRESSION_SENTENCE,
   ANCHOR_REFERENCE_SENTENCE,
   IDENTITY_SENTENCE,
-  NEUTRAL_FOLLOWER_EXPRESSION_SENTENCE,
   OUTFIT_SENTENCE_PREFIX,
   PHYSICAL_COHERENCE_SENTENCE,
   SINGLE_VISIBLE_IDENTITY_SENTENCE,
-  WARM_FOLLOWER_EXPRESSION_SENTENCE,
   compileShootOutput,
   getDeterministicExpressionSentence,
 } from "./prompt-compiler";
@@ -42,7 +40,7 @@ export {
 export const SHOOT_WRITER_SYSTEM_INSTRUCTION = `
 You write four photographic capture events for one approved men's dating-profile shoot.
 
-The four images must feel like they were naturally taken during the same real occasion by the person named in the brief. Describe how each photograph happened: the cause of the body position and gaze/action, camera position, crop, light behavior and the few textures that matter. Do not write an inventory of everything in the scene.
+The four images must feel like they were naturally taken during the same real occasion by the person named in the brief. Describe how each photograph happened: the cause of the body position and gaze/action, camera position, crop, light behavior and the few textures that matter. Treat centralMoment and fourFrameOpportunity as the locked action boundary; never invent a filler action outside them simply to make a frame different. Do not write an inventory of everything in the scene.
 
 EXPRESSION ALLOCATION POLICY:
 Human variation comes from gaze direction, posture, physical task, head turn, listening, and focus of attention—never from forced smiles or facial gymnastics. Candid does NOT mean smiling.
@@ -56,11 +54,13 @@ The referenced man must be the only visible person in all four photographs. The 
 
 The server inserts the brief's complete locked outfit verbatim into every final prompt. Do not replace it with vague continuity language such as "the same denim", "the same shirt" or "the same outfit", and do not introduce a different garment. Mention clothing in capturePrompt only when its physical movement is essential to that exact moment.
 
-Before returning, silently account for both hands, whether they are visible or cropped out; do not force hands into the composition. Give each visible hand at most one job at the captured instant. A hand cannot brace on furniture while also holding something. If he pours, the bottle uses one hand and the receiving glass must be explicitly resting on a stable surface or held by the other free hand. Nothing floats. Prefer one clear primary action over simultaneous gestures.
+${PHYSICAL_SCENE_REASONING_INSTRUCTION}
 
-Choose exactly one anchor. It renders first and must also be a profile candidate with a clear face at close, chest-up or waist-up distance. A three-quarter, full-body, wide or environmental frame cannot be the anchor. The anchor should establish enough of the nearby location, outfit and light to guide later images without becoming an object catalogue.
+Choose exactly one anchor. It renders first and must also be a profile candidate with a clear face at close, chest-up or waist-up distance. A three-quarter, full-body, wide or environmental frame cannot be the anchor. The anchor should establish enough of the nearby location, outfit and light to guide later images without becoming an object catalogue. Never suspend the occasion to manufacture an upright anchor portrait. When centralMoment supplies a visually legible action, the anchor must show that action itself or its immediate mechanically connected transition from a face-clear camera view.
 
-capturePrompt contains creative photographic instructions only. Do not write identity-reference, anchor-reference, or expression boilerplate; the server adds them. Aim for 450–750 efficient characters, but prioritize photographic clarity over a character target.
+physicalScene and physicalPlan are private reasoning fields. The server discards them before persistence and rendering, so never rely on the image model seeing them.
+
+capturePrompt contains creative photographic instructions only. Do not write identity-reference, anchor-reference, expression boilerplate or the private plan; the server adds the fixed clauses. Aim for 450–750 efficient characters for simple frames. When action, balance, load or object mechanics need more visible detail, use up to 950 characters—roughly 20–30 additional words—rather than compressing away the causal pose.
 
 3:4 is the normal dating-photo default. Use 4:3 only when meaningful horizontal context improves that exact photograph. Use 9:16 exceptionally when real vertical travel or scale improves it. There is no required ratio distribution. State exactly one ratio in every capturePrompt and use its approved dimensions.
 
@@ -254,7 +254,7 @@ export function validateShootOutput(args: {
     if (!frame.prompt.includes(expectedExpressionSentence)) {
       problems.push(`${frame.frameId} was not compiled with the deterministic expression sentence.`);
     }
-    if (frame.capturePrompt.length > 1_000) {
+    if (frame.capturePrompt.length > 1_200) {
       warnings.push(`${frame.frameId} is longer than the authored-efficiency target.`);
     }
   }
@@ -308,4 +308,3 @@ export async function generateShootCandidate(args: {
     ...creativeCost(response.usage),
   };
 }
-

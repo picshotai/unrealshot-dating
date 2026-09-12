@@ -15,6 +15,10 @@ export const OUTFIT_SENTENCE_PREFIX =
   "His complete outfit remains exactly:";
 
 export const PHYSICAL_COHERENCE_SENTENCE =
+  "Render the stated contacts, weight distribution, balance, tension and gravity exactly; keep every body part, garment and object mechanically consistent.";
+
+/** Retained only so customer retakes can read prompts saved before this change. */
+export const LEGACY_PHYSICAL_COHERENCE_SENTENCE =
   "Keep all body and object mechanics physically executable: no limb performs conflicting actions, and every manipulated object is supported rather than floating.";
 
 export const ANCHOR_REFERENCE_SENTENCE =
@@ -60,20 +64,40 @@ export function compileCapturePrompt(
   ].filter(Boolean).join(" ");
 }
 
+export function extractCompiledOutfit(prompt: string): string | null {
+  const prefix = `${OUTFIT_SENTENCE_PREFIX} `;
+  const start = prompt.indexOf(prefix);
+  if (start < 0) return null;
+  const outfitStart = start + prefix.length;
+  const markerIndexes = [
+    PHYSICAL_COHERENCE_SENTENCE,
+    LEGACY_PHYSICAL_COHERENCE_SENTENCE,
+  ]
+    .map((marker) => prompt.indexOf(marker, outfitStart))
+    .filter((index) => index >= 0);
+  if (!markerIndexes.length) return null;
+  const outfit = prompt.slice(outfitStart, Math.min(...markerIndexes)).trim();
+  return outfit || null;
+}
+
 export function compileShootOutput(
   output: ShootWriterOutput,
   brief: DatingShootIntent
 ): DatingShootOutput {
   return {
     title: brief.title,
-    frames: output.frames.map((frame) => ({
-      ...frame,
-      prompt: compileCapturePrompt(
-        frame.capturePrompt,
-        frame.isAnchor,
-        brief.outfit,
-        frame.expressionType
-      ),
-    })),
+    frames: output.frames.map((frame) => {
+      const { physicalPlan, ...persistedFrame } = frame;
+      void physicalPlan;
+      return {
+        ...persistedFrame,
+        prompt: compileCapturePrompt(
+          frame.capturePrompt,
+          frame.isAnchor,
+          brief.outfit,
+          frame.expressionType
+        ),
+      };
+    }),
   };
 }

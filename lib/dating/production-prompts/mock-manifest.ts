@@ -11,6 +11,7 @@ import {
 export function createLocalMockShoot(brief: DatingShootIntent) {
   return datingShootOutputSchema.parse(compileShootOutput({
     title: brief.title,
+    physicalScene: "Local sample geometry has a stable base and mechanically consistent surfaces; this private placeholder is discarded before the dashboard output is stored.",
     frames: [
       ["mock-anchor", "Scene preview", "The companion first notices the moment.", "chest-up", true, true],
       ["mock-observation", "In the moment", "He continues the real occasion.", "waist-up", false, false],
@@ -26,6 +27,7 @@ export function createLocalMockShoot(brief: DatingShootIntent) {
       height: 2304,
       isAnchor: Boolean(isAnchor),
       isProfileCandidate: Boolean(isProfileCandidate),
+      physicalPlan: "The sample subject keeps a stable base of support, coherent weight distribution and compatible hand positions at this captured instant.",
       capturePrompt: `Local sample placeholder for ${brief.title}. A 3:4 preview; never send this text to an image provider.`,
     })),
   }, brief));

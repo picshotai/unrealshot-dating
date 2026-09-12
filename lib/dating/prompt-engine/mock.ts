@@ -22,6 +22,7 @@ export function mockProductionModelCall(brief: DatingShootIntent): CreativeModel
   return async () => ({
     text: JSON.stringify({
       title: brief.title,
+      physicalScene: `The compact zone at ${brief.location} has stable ground and only the established load-bearing surfaces. Gravity, clothing and any activity equipment behave consistently across all four camera positions.`,
       frames: [
         {
           frameId: "off-camera-notice",
@@ -33,6 +34,7 @@ export function mockProductionModelCall(brief: DatingShootIntent): CreativeModel
           height: 2304,
           isAnchor: true,
           isProfileCandidate: true,
+          physicalPlan: "An interruption catches him between actions with his weight still carried by a stable base. His shoulders and head turn in sequence while both hands retain one relaxed, compatible state.",
           capturePrompt: `During ${brief.occasion}, an off-camera remark catches him just after ${brief.centralMoment}; the turn of his shoulders follows the interruption instead of a pose, his mouth is relaxed and his face is clear. ${brief.light} falls naturally across real skin texture while ${brief.location} remains softly legible nearby. A 3:4 candid dating photograph with credible anatomy and unretouched fabric.`,
         },
         {
@@ -45,6 +47,7 @@ export function mockProductionModelCall(brief: DatingShootIntent): CreativeModel
           height: 2304,
           isAnchor: false,
           isProfileCandidate: false,
+          physicalPlan: "He resumes the primary action with his center of mass over the contacts that carry him. His gaze, torso and weight shift follow the task while the hands remain mechanically compatible.",
           capturePrompt: `He has returned to ${brief.whyHeIsThere}, so his weight and gaze follow the real action rather than the camera. The camera has moved a few steps to the side at waist-up distance; the changed angle comes from moving around him, not rebuilding the scene. Preserve natural skin, fabric tension and ${brief.light}. A 3:4 observational photograph.`,
         },
         {
@@ -57,6 +60,7 @@ export function mockProductionModelCall(brief: DatingShootIntent): CreativeModel
           height: 2304,
           isAnchor: false,
           isProfileCandidate: false,
+          physicalPlan: "The photograph catches the transfer between two stable positions. One side accepts more weight, creating a small hip and shoulder offset, while the next contact is being prepared.",
           capturePrompt: `In a quiet transition inside ${brief.shootingZone}, he shifts naturally before the next part of the occasion as the camera steps back to include more of his body. His posture follows that movement and his expression stays neutral, with no clothing adjustment or performance for the lens. Keep the existing light and grounded textures. A 3:4 three-quarter candid photograph.`,
         },
         {
@@ -69,6 +73,7 @@ export function mockProductionModelCall(brief: DatingShootIntent): CreativeModel
           height: 2304,
           isAnchor: false,
           isProfileCandidate: true,
+          physicalPlan: "His attention returns before the rest of his body, so the eyes and head lead while the shoulders stay aligned with the prior action. The close crop excludes mechanics that cannot be seen.",
           capturePrompt: `An off-camera comment brings his attention back for a brief close photograph, giving subtle understated warmth to his eyes. His eyes respond first while his shoulders remain connected to what he was doing. Let ${brief.light} retain pores, fine hair and the real fabric weave. A 3:4 close dating photograph.`,
         },
       ],

@@ -5,11 +5,16 @@ import { resolve } from "node:path";
 import {
   ANCHOR_EXPRESSION_SENTENCE,
   ANCHOR_REFERENCE_SENTENCE,
+  CAPTURE_PROMPT_MAX_CHARS,
+  COMPILED_PROMPT_MAX_CHARS,
   CRAFT_REFERENCE_MANIFEST,
   IDENTITY_SENTENCE,
+  LEGACY_PHYSICAL_COHERENCE_SENTENCE,
   NEUTRAL_FOLLOWER_EXPRESSION_SENTENCE,
   OUTFIT_SENTENCE_PREFIX,
   PHYSICAL_COHERENCE_SENTENCE,
+  PHYSICAL_SCENE_REASONING_INSTRUCTION,
+  SHOOT_OUTPUT_JSON_SCHEMA,
   SHOOT_WRITER_SYSTEM_INSTRUCTION,
   SINGLE_VISIBLE_IDENTITY_SENTENCE,
   WARM_FOLLOWER_EXPRESSION_SENTENCE,
@@ -19,6 +24,7 @@ import {
   classifyCreativeProviderError,
   customerCreativeInputSchema,
   extractDatingInteractionResponse,
+  extractCompiledOutfit,
   generatePortfolioCandidate,
   generateShootCandidate,
   noveltyIdeaKey,
@@ -27,6 +33,7 @@ import {
   portfolioJsonSchema,
   refinePromptForRetake,
   selectCraftReferences,
+  shootWriterOutputSchema,
   validatePortfolioCandidate,
   validateShootOutput,
   type DatingShootIntent,
@@ -142,9 +149,23 @@ async function main() {
   assert.match(subjectLedWriterRequest, /Do not introduce a held or operated prop/);
   assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /only visible person/i);
   assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /account for both hands/i);
-  assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /do not force hands/i);
-  assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /receiving glass.*stable surface/i);
+  assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /center of mass.*base of support/i);
+  assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /what has just happened.*doing now.*next/i);
+  assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /20.?30 additional words/i);
+  assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /Never suspend the occasion/i);
+  assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /locked action boundary/i);
   assert.match(SHOOT_WRITER_SYSTEM_INSTRUCTION, /complete locked outfit verbatim/i);
+  assert.match(PHYSICAL_SCENE_REASONING_INSTRUCTION, /close the load path/i);
+  assert.match(PHYSICAL_SCENE_REASONING_INSTRUCTION, /task-caused asymmetry/i);
+  assert.match(PHYSICAL_SCENE_REASONING_INSTRUCTION, /Keep wearables.*passive/i);
+  assert.match(PHYSICAL_SCENE_REASONING_INSTRUCTION, /unrelated one/i);
+  assert.match(PHYSICAL_SCENE_REASONING_INSTRUCTION, /preserve it across more than one camera view/i);
+  assert.equal(CAPTURE_PROMPT_MAX_CHARS, 1_800);
+  assert.equal(COMPILED_PROMPT_MAX_CHARS, 2_600);
+  assert.deepEqual(SHOOT_OUTPUT_JSON_SCHEMA.required, ["title", "physicalScene", "frames"]);
+  assert(
+    SHOOT_OUTPUT_JSON_SCHEMA.properties.frames.items.required.includes("physicalPlan")
+  );
 
   const shoot = await generateShootCandidate({
     brief: first,
@@ -154,6 +175,17 @@ async function main() {
   assert(shoot.output);
   assert(shoot.validation.passed, shoot.validation.problems.join("\n"));
   assert.equal(shoot.output.frames.length, 4);
+  assert(!("physicalScene" in shoot.output));
+  assert(shoot.output.frames.every((frame) => !("physicalPlan" in frame)));
+  const providerOutputWithoutPhysics = {
+    title: shoot.output.title,
+    frames: shoot.output.frames.map((frame) => {
+      const providerFrame: Record<string, unknown> = { ...frame };
+      delete providerFrame.prompt;
+      return providerFrame;
+    }),
+  };
+  assert(!shootWriterOutputSchema.safeParse(providerOutputWithoutPhysics).success);
   const anchor = shoot.output.frames.find((frame) => frame.isAnchor)!;
   assert(anchor.isProfileCandidate);
   assert(["close", "chest-up", "waist-up"].includes(anchor.cameraDistance));
@@ -177,6 +209,14 @@ async function main() {
     }
   }
   assert(shoot.output.frames.every((frame) => frame.prompt.length < 1_200));
+  assert.equal(extractCompiledOutfit(anchor.prompt), first.outfit);
+  assert.equal(
+    extractCompiledOutfit(anchor.prompt.replace(
+      PHYSICAL_COHERENCE_SENTENCE,
+      LEGACY_PHYSICAL_COHERENCE_SENTENCE
+    )),
+    first.outfit
+  );
 
   // Verify craft references are stripped of smile/laugh/expression cues
   for (const ref of CRAFT_REFERENCE_MANIFEST) {

@@ -7,3 +7,4 @@ export * from "./errors";
 export * from "./craft-references";
 export * from "./prompt-compiler";
 export * from "./retake-refiner";
+export * from "./physical-scene";

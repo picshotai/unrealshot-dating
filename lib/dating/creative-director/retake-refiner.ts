@@ -5,6 +5,7 @@ import {
 } from "./model";
 import {
   compileCapturePrompt,
+  extractCompiledOutfit,
 } from "./prompt-compiler";
 import {
   DATING_CREATIVE_MODEL,
@@ -116,14 +117,13 @@ export async function refinePromptForRetake(args: {
       );
     }
 
-    // If outfit not separately supplied, extract from originalPrompt:
-    // "His complete outfit remains exactly: <outfit> Keep all body..."
-    const outfitMatch = args.originalPrompt.match(/His complete outfit remains exactly:\s*([^\.]+?\.)\s*Keep all body/i);
-    if (outfitMatch && outfitMatch[1]) {
+    // Retakes remain compatible with both current and previously saved prompts.
+    const compiledOutfit = extractCompiledOutfit(args.originalPrompt);
+    if (compiledOutfit) {
       return compileCapturePrompt(
         revisedCapture,
         Boolean(args.isAnchor),
-        outfitMatch[1],
+        compiledOutfit,
         args.expressionType ?? (args.isAnchor ? "neutral" : undefined)
       );
     }

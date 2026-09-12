@@ -7,6 +7,9 @@ export const DATING_CREATIVE_THINKING_LEVEL = "low" as const;
 export const PORTFOLIO_SYSTEM_VERSION = "dating-portfolio-director-v3" as const;
 export const SHOOT_WRITER_SYSTEM_VERSION = "dating-shoot-writer-v7" as const;
 
+export const CAPTURE_PROMPT_MAX_CHARS = 1_800 as const;
+export const COMPILED_PROMPT_MAX_CHARS = 2_600 as const;
+
 const text = (minimum: number, maximum: number) =>
   z.string().trim().min(minimum).max(maximum);
 
@@ -81,20 +84,24 @@ export const shootWriterFrameSchema = z.object({
   height: z.number().int().positive(),
   isAnchor: z.boolean(),
   isProfileCandidate: z.boolean(),
-  capturePrompt: z.string().trim().min(1).max(1_600),
+  /** Private mechanical reasoning. Removed before persistence and rendering. */
+  physicalPlan: text(40, 1_000),
+  capturePrompt: z.string().trim().min(1).max(CAPTURE_PROMPT_MAX_CHARS),
 }).strict();
 
-/** Provider output: capture instructions only, without repeated boilerplate. */
+/** Provider output: private physical planning plus capture instructions. */
 export const shootWriterOutputSchema = z.object({
   title: text(3, 80),
+  /** Private shared scene mechanics. Removed before persistence and rendering. */
+  physicalScene: text(60, 1_200),
   frames: z.array(shootWriterFrameSchema).length(4),
 }).strict();
 
 /** Persisted output consumed by photo materialization and Fal. */
 export const datingShootOutputSchema = z.object({
   title: text(3, 80),
-  frames: z.array(shootWriterFrameSchema.extend({
-    prompt: z.string().trim().min(1).max(2_400),
+  frames: z.array(shootWriterFrameSchema.omit({ physicalPlan: true }).extend({
+    prompt: z.string().trim().min(1).max(COMPILED_PROMPT_MAX_CHARS),
   }).strict()).length(4),
 }).strict();
 
@@ -183,16 +190,17 @@ export function portfolioCandidateToTransport(output: PortfolioCandidate) {
 }
 
 export const SHOOT_OUTPUT_JSON_SCHEMA = {
-  type: "object", additionalProperties: false, required: ["title", "frames"],
+  type: "object", additionalProperties: false, required: ["title", "physicalScene", "frames"],
   properties: {
     title: { type: "string" },
+    physicalScene: { type: "string" },
     frames: {
       type: "array", minItems: 4, maxItems: 4,
       items: {
         type: "object", additionalProperties: false,
         required: [
           "frameId", "roleLabel", "moment", "cameraDistance", "expressionType", "width", "height",
-          "isAnchor", "isProfileCandidate", "capturePrompt",
+          "isAnchor", "isProfileCandidate", "physicalPlan", "capturePrompt",
         ],
         properties: {
           frameId: { type: "string" }, roleLabel: { type: "string" },
@@ -207,6 +215,7 @@ export const SHOOT_OUTPUT_JSON_SCHEMA = {
           },
           width: { type: "integer" }, height: { type: "integer" },
           isAnchor: { type: "boolean" }, isProfileCandidate: { type: "boolean" },
+          physicalPlan: { type: "string" },
           capturePrompt: { type: "string" },
         },
       },
