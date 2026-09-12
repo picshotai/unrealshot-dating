@@ -27,6 +27,8 @@ interface LoadingProviderProps {
 export function LoadingProvider({ children }: LoadingProviderProps) {
   const [isLoading, setIsLoading] = useState(true)
   const pathname = usePathname()
+  const renderImmediately =
+    pathname === '/dating-shoot' || pathname.startsWith('/dating-shoot/')
 
   // Auto-hide loading after initial page load
   useEffect(() => {
@@ -59,7 +61,7 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
 
   return (
     <LoadingContext.Provider value={{ isLoading, setLoading, startPageTransition }}>
-      {isLoading ? (
+      {isLoading && !renderImmediately ? (
         <div className="animate-pulse">
           {getSkeletonForPage()}
         </div>

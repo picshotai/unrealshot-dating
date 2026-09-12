@@ -155,6 +155,7 @@ export function DatingShootClient({
     initialOrderId || orders[0]?.id || null
   );
   const [status, setStatus] = useState<StatusResponse | null>(null);
+  const [resolvedOrderId, setResolvedOrderId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<RoleFilter>('all');
 
   // Pack status state synchronized with backend
@@ -210,9 +211,13 @@ export function DatingShootClient({
   const fetchStatus = useCallback(async (orderId: string) => {
     try {
       const res = await fetch(`/api/dating-shoot/run-status?orderId=${orderId}`);
-      if (!res.ok) return;
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error(body?.error || 'Could not load this shoot');
+      }
       const data = (await res.json()) as StatusResponse;
       setStatus(data);
+      setResolvedOrderId(orderId);
 
       if (data.order.status === 'ready') {
         trackConversionOnce('shoot_completed', orderId, {
@@ -338,6 +343,8 @@ export function DatingShootClient({
             excluded_tag_count: params.excludeTags.length,
             simple_candids: params.includeSimpleCandids,
           });
+          setStatus(null);
+          setResolvedOrderId(null);
           setActiveOrderId(data.orderId);
           await fetchStatus(data.orderId);
           setIsIntakeOpen(false);
@@ -349,6 +356,8 @@ export function DatingShootClient({
         throw new Error(data.error || 'Failed to start photoshoot');
       }
 
+      setStatus(null);
+      setResolvedOrderId(null);
       setActiveOrderId(data.orderId);
       trackEventOnce('shoot_started', data.orderId, {
         interest_count: params.interests.length,
@@ -694,6 +703,13 @@ export function DatingShootClient({
     );
   }
 
+  // The order list arrives with the page, while its photos and live state are
+  // loaded together. Avoid painting a partial header and replacing the rest of
+  // the screen a moment later.
+  if (activeOrderId && resolvedOrderId !== activeOrderId) {
+    return <div className="min-h-[calc(100vh-8rem)]" aria-busy="true" />;
+  }
+
   // Otherwise, render the main Studio dashboard
   return (
     <div className="min-h-screen bg-background text-foreground pb-20">
@@ -801,12 +817,6 @@ export function DatingShootClient({
               ))}
             </div>
           )
-        ) : !status && activeOrderId ? (
-          <PortfolioProgressPanel
-            loading
-            blocked={false}
-            paused={false}
-          />
         ) : isDeveloping || status?.order.status === 'failed' ? (
           <PortfolioProgressPanel
             stage={status?.stage}

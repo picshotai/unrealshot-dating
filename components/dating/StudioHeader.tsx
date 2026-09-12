@@ -73,6 +73,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
   const isPaused = Boolean(status?.needsAttention);
   const isRetrying = Boolean(status?.retryScheduled);
   const isFailed = Boolean(status?.failed);
+  const showHeaderStatus = Boolean(status && (!isDeveloping || status.completed > 0));
 
   const avatarUrl = currentModel?.samples?.[0]?.uri || '/placeholder-user.jpg';
 
@@ -99,7 +100,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
                 {currentModel?.name || 'My Dating Shoot'}
               </h1>
               {/* Sleek Status Indicator */}
-              {status && (
+              {showHeaderStatus && status && (
                 <div className="flex items-center gap-1.5">
                   {isReady ? (
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" strokeWidth={2.5} />
@@ -125,7 +126,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
 
             <p className="text-[11px] text-zinc-500 font-mono mt-0.5">
               {status && isDeveloping && status.completed === 0 ? (
-                'Your photos will appear here as they’re ready'
+                'Profile model'
               ) : status ? (
                 <>
                   {status.completed} / {status.total} photos ·{' '}
@@ -171,7 +172,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
               size="sm"
               onClick={onDownloadZip}
               disabled={isZipLoading}
-              className="flex-1 sm:flex-none bg-white text-black hover:bg-zinc-200 font-semibold text-xs h-9 px-4 rounded-lg shadow-sm transition-all active:scale-95"
+              className="flex-1 sm:flex-none bg-white text-black hover:bg-zinc-200 font-semibold text-xs h-9 px-4 rounded-lg"
             >
               {isZipLoading ? (
                 <>
@@ -211,7 +212,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
       </div>
 
       {/* Real-Time Progress Bar when developing */}
-      {status && isDeveloping && (
+      {status && isDeveloping && status.completed > 0 && (
         <div className="mt-4 w-full h-1 bg-zinc-900 rounded-full overflow-hidden">
           <div
             className="h-full bg-accent transition-all duration-500 rounded-full"
