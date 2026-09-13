@@ -3,6 +3,11 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import {
+  DATING_IMAGE_MODEL,
+  buildDatingImageInput,
+} from "../lib/dating/image-provider";
+
+import {
   ANCHOR_EXPRESSION_SENTENCE,
   ANCHOR_REFERENCE_SENTENCE,
   CAPTURE_PROMPT_MAX_CHARS,
@@ -424,6 +429,25 @@ async function main() {
   assert.match(shootOrchestration, /completeLocalMockPhotos/);
   assert.match(shootOrchestration, /row\.render_mode === "mock"/);
   assert.match(shootOrchestration, /\[\.\.\.referenceImageUrls, anchorImageUrl as string\]/);
+  assert.match(shootOrchestration, /fal\.subscribe\(\s*DATING_IMAGE_MODEL/);
+  assert.doesNotMatch(shootOrchestration, /fal-ai\/bytedance\/seedream/);
+  assert.equal(DATING_IMAGE_MODEL, "openai/gpt-image-2.5/sunburst/edit");
+  assert.deepEqual(
+    buildDatingImageInput({
+      prompt: "provider contract",
+      imageUrls: ["https://example.com/reference.png"],
+      imageSize: { width: 1728, height: 2304 },
+    }),
+    {
+      prompt: "provider contract",
+      image_urls: ["https://example.com/reference.png"],
+      image_size: { width: 1728, height: 2304 },
+      background: "auto",
+      quality: "high",
+      num_images: 1,
+      output_format: "png",
+    }
+  );
 
   const createOrder = readFileSync(resolve(process.cwd(), "lib/dating/create-order.ts"), "utf8");
   assert.match(createOrder, /testMode: productConfig\.testMode/);

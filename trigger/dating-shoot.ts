@@ -13,6 +13,10 @@ import {
 } from "@/lib/dating/aspect-ratio";
 import { getServiceDb } from "@/lib/dating/db";
 import {
+  DATING_IMAGE_MODEL,
+  buildDatingImageInput,
+} from "@/lib/dating/image-provider";
+import {
   makeDeterministicPhotoId,
   makePhotoStorageKey,
 } from "@/lib/dating/deterministic-id";
@@ -269,15 +273,13 @@ export const generateSingleDatingImage = task({
       });
 
       const result = await fal.subscribe(
-        "fal-ai/bytedance/seedream/v4.5/edit",
+        DATING_IMAGE_MODEL,
         {
-          input: {
+          input: buildDatingImageInput({
             prompt,
-            image_urls: imageUrls,
-            image_size: imageSize,
-            num_images: 1,
-            enable_safety_checker: true,
-          },
+            imageUrls,
+            imageSize,
+          }),
           logs: false,
         }
       );

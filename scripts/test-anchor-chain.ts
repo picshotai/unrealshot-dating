@@ -26,6 +26,10 @@ import { mkdir, writeFile, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fal } from "@fal-ai/client";
 import { createClient } from "@supabase/supabase-js";
+import {
+  DATING_IMAGE_MODEL,
+  buildDatingImageInput,
+} from "../lib/dating/image-provider";
 
 /**
  * tsx does not read .env.local the way `next dev` does, and asking a person to
@@ -58,7 +62,6 @@ async function selfiesForModel(modelId: number): Promise<string[]> {
   return uris;
 }
 
-const MODEL = "fal-ai/bytedance/seedream/v4.5/edit";
 const OUT = resolve(process.cwd(), "docs/generated/anchor-test");
 
 /** Shoot C, which scored 4/5 and is the strongest configuration found so far. */
@@ -100,14 +103,12 @@ const SHOOT = {
 };
 
 async function generate(prompt: string, imageUrls: string[]) {
-  const result: any = await fal.subscribe(MODEL, {
-    input: {
+  const result: any = await fal.subscribe(DATING_IMAGE_MODEL, {
+    input: buildDatingImageInput({
       prompt,
-      image_urls: imageUrls,
-      image_size: SHOOT.size,
-      num_images: 1,
-      enable_safety_checker: true,
-    },
+      imageUrls,
+      imageSize: SHOOT.size,
+    }),
     logs: false,
   });
   const url = result?.data?.images?.[0]?.url ?? result?.images?.[0]?.url;
