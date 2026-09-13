@@ -5,6 +5,7 @@ import { resolve } from "node:path";
 import {
   DATING_IMAGE_MODEL,
   buildDatingImageInput,
+  resolveDatingProviderImageDimensions,
 } from "../lib/dating/image-provider";
 
 import {
@@ -441,12 +442,20 @@ async function main() {
     {
       prompt: "provider contract",
       image_urls: ["https://example.com/reference.png"],
-      image_size: { width: 1728, height: 2304 },
+      image_size: { width: 1024, height: 1536 },
       background: "auto",
-      quality: "high",
+      quality: "medium",
       num_images: 1,
       output_format: "png",
     }
+  );
+  assert.deepEqual(
+    resolveDatingProviderImageDimensions({ width: 1512, height: 2688 }),
+    { width: 864, height: 1536 }
+  );
+  assert.deepEqual(
+    resolveDatingProviderImageDimensions({ width: 2304, height: 1728 }),
+    { width: 1536, height: 1024 }
   );
 
   const createOrder = readFileSync(resolve(process.cwd(), "lib/dating/create-order.ts"), "utf8");
