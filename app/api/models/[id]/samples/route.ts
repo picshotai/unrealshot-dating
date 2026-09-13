@@ -92,8 +92,8 @@ export async function POST(
         const r2BaseUrl = process.env.R2_PUBLIC_URL || "";
         const uri = `${r2BaseUrl}/${key}`;
 
-        // Save to samples table
-        const { data: sample, error: sampleError } = await supabase
+        // Save to samples table with retry for transient timeouts
+        let { data: sample, error: sampleError } = await supabase
             .from("samples")
             .insert({
                 uri,
@@ -102,6 +102,22 @@ export async function POST(
             })
             .select()
             .single();
+
+        if (sampleError && (sampleError.message?.includes("Timeout") || sampleError.message?.includes("fetch failed"))) {
+            console.warn("Supabase sample insert timed out; retrying after 1s...", sampleError);
+            await new Promise((r) => setTimeout(r, 1000));
+            const retry = await supabase
+                .from("samples")
+                .insert({
+                    uri,
+                    modelId: parseInt(modelId),
+                    reference_sanitized: true,
+                })
+                .select()
+                .single();
+            sample = retry.data;
+            sampleError = retry.error;
+        }
 
         if (sampleError) {
             console.error("Error saving sample to DB:", sampleError);
@@ -114,9 +130,6 @@ export async function POST(
             .select("*", { count: "exact", head: true })
             .eq("modelId", parseInt(modelId));
 
-        // A model is only 'ready' once it has enough samples to actually shoot
-        // with. This threshold used to be 3 while createDatingShootOrder demanded
-        // 4, so a 3-sample user was routed into the studio and then refused.
         const isReady = Boolean(count && count >= REQUIRED_SAMPLES);
         if (isReady) {
             await supabase

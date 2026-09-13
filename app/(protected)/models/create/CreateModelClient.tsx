@@ -91,7 +91,7 @@ const GUIDE_RULES = [
   'Face clearly visible — no sunglasses, no hats covering forehead or eyes',
   'Good natural lighting — well-lit room or daylight, no harsh dark shadows',
   'Solo shots only — no other people, group shots, or pets in frame',
-  'Recent & realistic — taken within the last 2 years matching your current appearance',
+  'Recent & realistic — taken within past few months matching your current appearance',
   'Clean & unedited — no heavy beauty filters, stickers, or "Shot on…" watermarks',
 ];
 
@@ -218,9 +218,10 @@ export function CreateModelClient() {
 
       const modelId = createData.model.id;
 
-      // 2. Upload images in parallel
+      // 2. Upload images sequentially with retry
       failureStage = 'upload_photos';
-      const uploadPromises = validFiles.map(async (file, i) => {
+      for (let i = 0; i < validFiles.length; i++) {
+        const file = validFiles[i];
         const formData = new FormData();
         formData.append('file', file);
         formData.append('filename', file.name);
@@ -232,60 +233,67 @@ export function CreateModelClient() {
           return { ...prev, statuses };
         });
 
-        try {
-          const result = await uploadWithProgress(
-            `/api/models/${modelId}/samples`,
-            formData,
-            (percent) => {
-              setUploadProgress((prev) => {
-                if (!prev) return null;
-                const percentages = [...prev.percentages];
-                percentages[i] = percent;
-                return { ...prev, percentages };
-              });
+        let uploadSuccess = false;
+        let lastError = 'Upload failed';
+
+        // Up to 2 attempts per file to overcome transient network/gateway blips
+        for (let attempt = 1; attempt <= 2; attempt++) {
+          try {
+            const result = await uploadWithProgress(
+              `/api/models/${modelId}/samples`,
+              formData,
+              (percent) => {
+                setUploadProgress((prev) => {
+                  if (!prev) return null;
+                  const percentages = [...prev.percentages];
+                  percentages[i] = percent;
+                  return { ...prev, percentages };
+                });
+              }
+            );
+
+            if (!result.ok) {
+              throw new Error(result.error || 'Upload failed');
             }
-          );
 
-          if (!result.ok) {
-            throw new Error(result.error || 'Upload failed');
+            uploadSuccess = true;
+            break;
+          } catch (uploadErr) {
+            lastError = uploadErr instanceof Error ? uploadErr.message : 'Upload failed';
+            if (attempt < 2) {
+              // Wait 1 second before retry
+              await new Promise((r) => setTimeout(r, 1000));
+            }
           }
+        }
 
-          setUploadProgress((prev) => {
-            if (!prev) return null;
-            const statuses = [...prev.statuses];
-            const percentages = [...prev.percentages];
-            statuses[i] = 'success';
-            percentages[i] = 100;
-            return { ...prev, statuses, percentages };
-          });
-        } catch (uploadErr) {
-          const msg =
-            uploadErr instanceof Error ? uploadErr.message : 'Upload failed';
+        if (!uploadSuccess) {
           setUploadProgress((prev) => {
             if (!prev) return null;
             const statuses = [...prev.statuses];
             const errors = [...prev.errors];
             statuses[i] = 'failed';
-            errors[i] = msg;
+            errors[i] = lastError;
             return { ...prev, statuses, errors };
           });
-          throw uploadErr;
-        }
-      });
 
-      const results = await Promise.allSettled(uploadPromises);
-      const hasFailure = results.some((r) => r.status === 'rejected');
-      const firstError = results.find(
-        (r): r is PromiseRejectedResult => r.status === 'rejected'
-      )?.reason?.message;
-
-      if (hasFailure) {
-        try {
-          await fetch(`/api/models/${modelId}`, { method: 'DELETE' });
-        } catch {
-          /* ignore */
+          // Clean up model on fatal failure
+          try {
+            await fetch(`/api/models/${modelId}`, { method: 'DELETE' });
+          } catch {
+            /* ignore */
+          }
+          throw new Error(`Photo ${i + 1} (${POSE_GUIDES[i]?.label || 'reference'}) failed: ${lastError}`);
         }
-        throw new Error(firstError || 'Some images failed to upload');
+
+        setUploadProgress((prev) => {
+          if (!prev) return null;
+          const statuses = [...prev.statuses];
+          const percentages = [...prev.percentages];
+          statuses[i] = 'success';
+          percentages[i] = 100;
+          return { ...prev, statuses, percentages };
+        });
       }
 
       // Mark model ready
@@ -397,23 +405,7 @@ export function CreateModelClient() {
               </p>
             </div>
 
-            {/* 3 Required Photos Cards */}
-            <div className="grid grid-cols-3 gap-2">
-              {REQUIRED_SHOTS.map((shot) => (
-                <div
-                  key={shot.title}
-                  className="bg-zinc-900/60 border border-zinc-800 rounded-lg p-2.5 flex flex-col items-center text-center"
-                >
-                  <shot.Icon className="w-7 h-7 text-accent shrink-0 mb-1.5" />
-                  <span className="text-[11px] font-semibold text-white font-oxanium">
-                    {shot.title.replace(/^\d+\.\s*/, '')}
-                  </span>
-                  <span className="text-[9px] text-zinc-400 mt-0.5 leading-snug">
-                    {shot.desc}
-                  </span>
-                </div>
-              ))}
-            </div>
+           
 
             {/* Guide Rules Checklist */}
             <ul className="space-y-2 bg-zinc-900/40 border border-zinc-800/80 rounded-lg p-3.5">

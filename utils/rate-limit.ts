@@ -53,6 +53,8 @@ export function getClientIP(request: Request): string {
   return 'unknown'
 }
 
+let circuitOpenUntil = 0;
+
 // Helper function to check rate limit and return appropriate response
 export async function checkRateLimit(
   identifier: string,
@@ -60,15 +62,33 @@ export async function checkRateLimit(
 ): Promise<{ success: boolean; limit?: number; remaining?: number; reset?: number }> {
   // If rate limiting is disabled or rateLimit is null, allow all requests
   if (!isRateLimitingEnabled() || !rateLimit) {
-    return { success: true }
+    return { success: true };
+  }
+
+  // Circuit breaker: If Redis recently failed (e.g. DNS failure/timeout), fail open immediately
+  if (Date.now() < circuitOpenUntil) {
+    return { success: true };
   }
 
   try {
-    const { success, limit, remaining, reset } = await rateLimit.limit(identifier)
-    return { success, limit, remaining, reset }
+    // Enforce 1s max timeout on rate limit checks so broken Redis never blocks user requests
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('Rate limit check timed out (1s exceeded)')), 1000)
+    );
+
+    const result = await Promise.race([
+      rateLimit.limit(identifier),
+      timeoutPromise,
+    ]);
+
+    return result;
   } catch (error) {
-    console.error('Rate limit check failed:', error)
-    // If rate limiting fails, allow the request to proceed
-    return { success: true }
+    console.warn(
+      'Rate limit check failed (failing open for 60s):',
+      error instanceof Error ? error.message : error
+    );
+    // Trip circuit breaker for 60 seconds to avoid repeating DNS/network delay on subsequent requests
+    circuitOpenUntil = Date.now() + 60_000;
+    return { success: true };
   }
 }
