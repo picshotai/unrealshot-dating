@@ -123,7 +123,7 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
   const samples = ((model as any).samples || []) as StoredDatingReference[];
   let referenceImageUrls: string[];
   try {
-    referenceImageUrls = verifiedDatingReferenceUrls(samples, 4);
+    referenceImageUrls = verifiedDatingReferenceUrls(samples, 3);
   } catch (error) {
     throw new DatingOrderError(
       error instanceof Error ? error.message : "Re-upload your reference photos",

@@ -22,7 +22,7 @@ const STROKE = {
 };
 
 /** Head-and-shoulders, squared to camera. */
-function FrontPose({ className }: PoseGuideProps) {
+export function FrontPose({ className }: PoseGuideProps) {
   return (
     <svg viewBox="0 0 48 64" className={className} aria-hidden="true">
       <g {...STROKE}>
@@ -62,7 +62,7 @@ function ThreeQuarterPose({
 }
 
 /** Waist-up, arms readable. */
-function HalfBodyPose({ className }: PoseGuideProps) {
+export function HalfBodyPose({ className }: PoseGuideProps) {
   return (
     <svg viewBox="0 0 48 64" className={className} aria-hidden="true">
       <g {...STROKE}>
@@ -77,7 +77,7 @@ function HalfBodyPose({ className }: PoseGuideProps) {
 }
 
 /** Standing, head to feet, with space around him. */
-function FullBodyPose({ className }: PoseGuideProps) {
+export function FullBodyPose({ className }: PoseGuideProps) {
   return (
     <svg viewBox="0 0 48 64" className={className} aria-hidden="true">
       <g {...STROKE}>
@@ -102,32 +102,20 @@ export type PoseGuide = {
 export const POSE_GUIDES: PoseGuide[] = [
   {
     key: 'front',
-    label: 'Front',
+    label: 'Facing Front',
     hint: 'Straight to camera',
     Icon: FrontPose,
-  },
-  {
-    key: 'angle-left',
-    label: '45° left',
-    hint: 'Turned, still both eyes',
-    Icon: (props) => <ThreeQuarterPose {...props} />,
-  },
-  {
-    key: 'angle-right',
-    label: '45° right',
-    hint: 'Turned, still both eyes',
-    Icon: (props) => <ThreeQuarterPose {...props} flip />,
-  },
-  {
-    key: 'half-body',
-    label: 'Half body',
-    hint: 'Waist up, arms visible',
-    Icon: HalfBodyPose,
   },
   {
     key: 'full-body',
     label: 'Full body',
     hint: 'Head to feet',
     Icon: FullBodyPose,
+  },
+  {
+    key: 'half-body',
+    label: 'Half body',
+    hint: 'Waist up, arms visible',
+    Icon: HalfBodyPose,
   },
 ];

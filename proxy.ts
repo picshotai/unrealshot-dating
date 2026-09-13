@@ -229,11 +229,11 @@ async function runAuthProxy(request: NextRequest) {
     // Sample count decides this, not models.status.
     //
     // The query used to require status === 'ready', which is set only by the
-    // sample upload route when the fourth file lands. A model created before
+    // sample upload route when the third file lands. A model created before
     // that logic shipped — or by any other path — keeps status 'processing'
     // forever, so a user with a perfectly good model was classed as new.
-    // createDatingShootOrder itself requires four samples and never looks at
-    // status, so four samples is the honest test.
+    // createDatingShootOrder itself requires three samples and never looks at
+    // status, so three samples is the honest test.
     const hasUsableModel = (models ?? []).some(
       (model) => ((model as { samples?: unknown[] }).samples?.length ?? 0) >= REQUIRED_SAMPLES
     )

@@ -20,7 +20,7 @@ export const STAGE_COOKIE = "us_stage";
 export type OnboardingStage = "new" | "ready";
 
 /** Samples required before a model can be shot with. */
-export const REQUIRED_SAMPLES = 4;
+export const REQUIRED_SAMPLES = 3;
 
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 180;
 

@@ -1,32 +1,36 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   CheckCircle,
   Camera,
   Info,
   User,
   PersonStanding,
-  SplitSquareVertical,
   UserIcon as UserStanding,
-} from "lucide-react"
+  Sun,
+  ShieldAlert,
+  Sparkles,
+} from "lucide-react";
+import {
+  FrontPose,
+  FullBodyPose,
+  HalfBodyPose,
+} from "@/components/dating/PoseGuides";
 
 export interface ImageUploadGuideProps {
-  className?: string
+  className?: string;
 }
 
 export default function ImageUploadGuide({ className }: ImageUploadGuideProps) {
-  const [activeTab, setActiveTab] = useState("overview")
+  const [activeTab, setActiveTab] = useState("overview");
 
   return (
-    <div className={`w-full overflow-x-hidden ${className}`}>
-      
-
+    <div className={`w-full overflow-x-hidden ${className ?? ""}`}>
       <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
         <ScrollArea className="w-full mb-6">
           <TabsList className="mb-3 flex justify-center flex-wrap gap-2 bg-transparent h-auto items-center rounded-md p-1 w-full">
@@ -38,98 +42,82 @@ export default function ImageUploadGuide({ className }: ImageUploadGuideProps) {
               Overview
             </TabsTrigger>
             <TabsTrigger
-              value="facial"
+              value="front"
               className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
             >
               <User className="-ms-0.5 me-1.5 opacity-60" size={16} strokeWidth={2} aria-hidden="true" />
-              Facial Expressions
-            </TabsTrigger>
-            <TabsTrigger
-              value="half-body"
-              className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
-            >
-              <UserStanding className="-ms-0.5 me-1.5 opacity-60" size={16} strokeWidth={2} aria-hidden="true" />
-              Half-Body
-            </TabsTrigger>
-            <TabsTrigger
-              value="profile"
-              className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
-            >
-              <SplitSquareVertical className="-ms-0.5 me-1.5 opacity-60" size={16} strokeWidth={2} aria-hidden="true" />
-              Profile
+              1. Front Portrait
             </TabsTrigger>
             <TabsTrigger
               value="full-body"
               className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
             >
               <PersonStanding className="-ms-0.5 me-1.5 opacity-60" size={16} strokeWidth={2} aria-hidden="true" />
-              Full-Body
+              2. Full-Body
+            </TabsTrigger>
+            <TabsTrigger
+              value="half-body"
+              className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
+            >
+              <UserStanding className="-ms-0.5 me-1.5 opacity-60" size={16} strokeWidth={2} aria-hidden="true" />
+              3. Half-Body
             </TabsTrigger>
           </TabsList>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
 
+        {/* OVERVIEW */}
         <TabsContent value="overview" className="mt-2">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <Card>
               <CardHeader>
-                <CardTitle>The Magic Number: 10 Images</CardTitle>
-                <CardDescription>You'll need to upload exactly 10 images to train the AI effectively</CardDescription>
+                <CardTitle className="text-xl">Exactly 3 Photos Required</CardTitle>
+                <CardDescription>
+                  Our AI likeness engine specifically requires 3 precise angles to capture your facial features and body proportions
+                </CardDescription>
               </CardHeader>
-              <CardContent className="overflow-x-auto">
-                <div className="grid grid-cols-5 gap-2 mb-6">
+              <CardContent>
+                <div className="grid grid-cols-3 gap-3 mb-6">
                   <div className="flex flex-col items-center">
-                    <div className="relative w-full aspect-square mb-2 bg-gray-100 rounded-lg overflow-hidden">
-                      <Image src="/content/selfie2.jpg" alt="Face expressions" fill className="object-cover" />
-                      <Badge className="absolute bottom-1 left-1 bg-blue-500">5</Badge>
+                    <div className="relative w-full aspect-[3/4] mb-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg flex items-center justify-center p-3 border border-zinc-200 dark:border-zinc-700">
+                      <FrontPose className="w-12 h-16 text-zinc-700 dark:text-zinc-300" />
+                      <Badge className="absolute top-1.5 left-1.5 bg-blue-600 text-[10px] px-1.5 py-0">1</Badge>
                     </div>
-                    <span className="text-xs text-gray-600">Face</span>
+                    <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">Front Portrait</span>
+                    <span className="text-[10px] text-zinc-500 text-center">Head &amp; shoulders</span>
                   </div>
+
                   <div className="flex flex-col items-center">
-                    <div className="relative w-full aspect-square mb-2 bg-gray-100 rounded-lg overflow-hidden">
-                      <Image src="/content/vishnuselfie.jpg" alt="Half body" fill className="object-cover" />
-                      <Badge className="absolute bottom-1 left-1 bg-blue-500">2</Badge>
+                    <div className="relative w-full aspect-[3/4] mb-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg flex items-center justify-center p-3 border border-zinc-200 dark:border-zinc-700">
+                      <FullBodyPose className="w-12 h-16 text-zinc-700 dark:text-zinc-300" />
+                      <Badge className="absolute top-1.5 left-1.5 bg-blue-600 text-[10px] px-1.5 py-0">2</Badge>
                     </div>
-                    <span className="text-xs text-gray-600">Half</span>
+                    <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">Full-Body</span>
+                    <span className="text-[10px] text-zinc-500 text-center">Head to toe</span>
                   </div>
+
                   <div className="flex flex-col items-center">
-                    <div className="relative w-full aspect-square mb-2 bg-gray-100 rounded-lg overflow-hidden">
-                      <Image src="/content/you-man.jpg" alt="Left profile" fill className="object-cover" />
-                      <Badge className="absolute bottom-1 left-1 bg-blue-500">1</Badge>
+                    <div className="relative w-full aspect-[3/4] mb-2 bg-zinc-100 dark:bg-zinc-800 rounded-lg flex items-center justify-center p-3 border border-zinc-200 dark:border-zinc-700">
+                      <HalfBodyPose className="w-12 h-16 text-zinc-700 dark:text-zinc-300" />
+                      <Badge className="absolute top-1.5 left-1.5 bg-blue-600 text-[10px] px-1.5 py-0">3</Badge>
                     </div>
-                    <span className="text-xs text-gray-600">Left</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="relative w-full aspect-square mb-2 bg-gray-100 rounded-lg overflow-hidden">
-                      <Image src="/content/right-profile.jpg" alt="Right profile" fill className="object-cover" />
-                      <Badge className="absolute bottom-1 left-1 bg-blue-500">1</Badge>
-                    </div>
-                    <span className="text-xs text-gray-600">Right</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="relative w-full aspect-square mb-2 bg-gray-100 rounded-lg overflow-hidden">
-                      <Image src="/content/full-body.jpg" alt="Full body" fill className="object-cover" />
-                      <Badge className="absolute bottom-1 left-1 bg-blue-500">1</Badge>
-                    </div>
-                    <span className="text-xs text-gray-600">Full</span>
+                    <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">Half-Body</span>
+                    <span className="text-[10px] text-zinc-500 text-center">Waist up</span>
                   </div>
                 </div>
-                <ul className="space-y-2">
+
+                <ul className="space-y-2.5 text-sm text-zinc-700 dark:text-zinc-300">
                   <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                    <span>5 facial images with different expressions</span>
+                    <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" />
+                    <span><strong>1 Front Shot:</strong> Straight to camera close-up with both eyes clearly visible.</span>
                   </li>
                   <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                    <span>2 half-body shots showing your upper body</span>
+                    <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" />
+                    <span><strong>1 Full-Body Shot:</strong> Standing head to feet to capture your posture and physique.</span>
                   </li>
                   <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                    <span>1 left-side profile and 1 right-side profile</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                    <span>1 full-body image showing your entire physique</span>
+                    <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" />
+                    <span><strong>1 Half-Body Shot:</strong> Waist-up shot showing shoulders, chest, and arms.</span>
                   </li>
                 </ul>
               </CardContent>
@@ -137,58 +125,39 @@ export default function ImageUploadGuide({ className }: ImageUploadGuideProps) {
 
             <Card>
               <CardHeader>
-                <CardTitle>Image Quality Tips for Best Results</CardTitle>
-                <CardDescription>Follow these guidelines to ensure optimal AI training</CardDescription>
+                <CardTitle className="text-xl">Quality Checklist</CardTitle>
+                <CardDescription>Strictly follow these rules for realistic dating photos</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="flex flex-col items-center">
-                    <div className="relative w-full aspect-square mb-2 bg-gray-100 rounded-lg overflow-hidden">
-                      <Image
-                        src="/content/good-lighting.png"
-                        alt="Good lighting example"
-                        fill
-                        className="object-cover"
-                      />
-                      <div className="absolute top-2 left-2  flex items-center justify-center bg-green-500/10">
-                        <CheckCircle className="h-8 w-8 text-green-500" />
-                      </div>
-                    </div>
-                    <span className="text-sm text-gray-600">Good lighting</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="relative w-full aspect-square mb-2 bg-gray-100 rounded-lg overflow-hidden">
-                      <Image src="/content/clean-bg.jpg" alt="Clear background example" fill className="object-cover" />
-                      <div className="absolute top-2 left-2  flex items-center justify-center bg-green-500/10">
-                        <CheckCircle className="h-8 w-8 text-green-500" />
-                      </div>
-                    </div>
-                    <span className="text-sm text-gray-600">Clear background</span>
-                  </div>
-                </div>
-                <ul className="space-y-3">
+                <ul className="space-y-3 text-sm text-zinc-700 dark:text-zinc-300">
                   <li className="flex items-start">
-                    <Info className="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                    <Sun className="h-4 w-4 text-amber-500 mr-2.5 mt-0.5 flex-shrink-0" />
                     <span>
-                      <strong>No Filters:</strong> Skip beauty filters, heavy makeup, and photo effects.
+                      <strong>Good Natural Lighting:</strong> Daylight or a bright indoor room. Avoid dark spaces or harsh face shadows.
                     </span>
                   </li>
                   <li className="flex items-start">
-                    <Info className="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                    <ShieldAlert className="h-4 w-4 text-rose-500 mr-2.5 mt-0.5 flex-shrink-0" />
                     <span>
-                      <strong>Clear Background:</strong> Use a clean background that won't distract from your features.
+                      <strong>No Accessories on Face:</strong> Avoid sunglasses, masks, and hats or beanies covering your forehead.
                     </span>
                   </li>
                   <li className="flex items-start">
-                    <Info className="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                    <User className="h-4 w-4 text-blue-500 mr-2.5 mt-0.5 flex-shrink-0" />
                     <span>
-                      <strong>Good Lighting:</strong> Natural light is best! Ensure your face and body are well-lit.
+                      <strong>Solo Photos Only:</strong> No group pictures or pets. You must be the only person in frame.
                     </span>
                   </li>
                   <li className="flex items-start">
-                    <Info className="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                    <Sparkles className="h-4 w-4 text-indigo-500 mr-2.5 mt-0.5 flex-shrink-0" />
                     <span>
-                      <strong>No Accessories:</strong> Avoid hats, sunglasses, or anything that hides your features.
+                      <strong>Natural &amp; Unedited:</strong> Skip beauty filters, heavy retouching, and camera watermark stamps.
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <Camera className="h-4 w-4 text-emerald-500 mr-2.5 mt-0.5 flex-shrink-0" />
+                    <span>
+                      <strong>Current Appearance:</strong> Taken within the last 2 years matching your current hair and facial hair.
                     </span>
                   </li>
                 </ul>
@@ -197,188 +166,146 @@ export default function ImageUploadGuide({ className }: ImageUploadGuideProps) {
           </div>
         </TabsContent>
 
-        <TabsContent value="facial" className="mt-2">
+        {/* 1. FRONT PORTRAIT */}
+        <TabsContent value="front" className="mt-2">
           <Card>
             <CardHeader>
-              <CardTitle>5 Facial Images with Different Expressions</CardTitle>
+              <CardTitle className="text-xl">Photo 1: Front Portrait</CardTitle>
               <CardDescription>
-                Capture your natural expressions to help the AI understand your facial features
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
-                {[
-                  { name: "Casual Smile", desc: "A soft, relaxed smile", url: "/content/casual-smile.jpg" },
-                  { name: "Confident", desc: "A calm, self-assured look", url: "/content/confident.jpg" },
-                  { name: "Serious", desc: "Neutral expression, no smile", url: "/content/serious.jpg" },
-                  { name: "Sad", desc: "Slightly downcast expression", url: "/content/sad.jpg" },
-                  { name: "Happy", desc: "A big, genuine smile", url: "/content/laughing.jpg" },
-                ].map((expression, index) => (
-                  <div key={index} className="flex flex-col items-center">
-                    <div className="relative w-full aspect-square mb-3 bg-gray-100 rounded-lg overflow-hidden">
-                      <Image
-                        src={expression.url || "/placeholder.svg"}
-                        alt={`${expression.name} expression`}
-                        fill
-                        className="object-cover"
-                      />
-                      <Badge className="absolute top-2 left-2 bg-blue-500">{index + 1}</Badge>
-                    </div>
-                    <h3 className="font-medium text-gray-900">{expression.name}</h3>
-                    <p className="text-sm text-gray-500 text-center mt-1">{expression.desc}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-8 p-4 bg-blue-50 rounded-lg">
-                <p className="text-sm text-blue-700 flex items-start">
-                  <Info className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>
-                    <strong>Pro Tip:</strong> Make sure your entire face is clearly visible, with no filters,
-                    sunglasses, or hats blocking your features.
-                  </span>
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="half-body" className="mt-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>2 Half-Body Shots</CardTitle>
-              <CardDescription>These help the AI understand your posture and upper body proportions</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {[
-                  { num: 1, url: "/content/vishnuselfie.jpg" },
-                  { num: 2, url: "/content/half-body.jpg" },
-                ].map((shot) => (
-                  <div key={shot.num} className="flex flex-col items-center">
-                    <div className="relative w-full max-w-sm aspect-[3/4] mb-4 bg-gray-100 rounded-lg overflow-hidden">
-                      <Image
-                        src={shot.url || "/placeholder.svg"}
-                        alt={`Half body shot ${shot.num}`}
-                        fill
-                        className="object-cover"
-                      />
-                      <Badge className="absolute top-3 left-3 bg-blue-500">{shot.num}</Badge>
-                    </div>
-                    <div className="max-w-sm">
-                      <h3 className="font-medium text-gray-900 mb-2">Half-Body Shot {shot.num}</h3>
-                      <ul className="space-y-2">
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Stand naturally with a relaxed pose</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Include your face and torso in the frame</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                          <span>Ensure the background is not cluttered</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="profile" className="mt-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>2 Profile Images</CardTitle>
-              <CardDescription>
-                These profile shots help the AI understand your facial structure from different angles
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="flex flex-col items-center">
-                  <div className="relative w-full max-w-sm aspect-square mb-4 bg-gray-100 rounded-lg overflow-hidden">
-                    <Image src="/content/you-man.jpg" alt="Left profile" fill className="object-cover" />
-                    <Badge className="absolute top-3 left-3 bg-blue-500">Left</Badge>
-                  </div>
-                  <div className="max-w-sm">
-                    <h3 className="font-medium text-gray-900 mb-2">Left-Side Profile</h3>
-                    <p className="text-gray-600 mb-3">
-                      Turn your face slightly to the left to capture your profile from this angle.
-                    </p>
-                    <div className="flex items-center text-sm text-blue-700">
-                      <Camera className="h-4 w-4 mr-1" />
-                      <span>Ensure good lighting on this side of your face</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col items-center">
-                  <div className="relative w-full max-w-sm aspect-square mb-4 bg-gray-100 rounded-lg overflow-hidden">
-                    <Image src="/content/right-profile.jpg" alt="Right profile" fill className="object-cover" />
-                    <Badge className="absolute top-3 left-3 bg-blue-500">Right</Badge>
-                  </div>
-                  <div className="max-w-sm">
-                    <h3 className="font-medium text-gray-900 mb-2">Right-Side Profile</h3>
-                    <p className="text-gray-600 mb-3">
-                      Turn your face slightly to the right to capture your profile from this angle.
-                    </p>
-                    <div className="flex items-center text-sm text-blue-700">
-                      <Camera className="h-4 w-4 mr-1" />
-                      <span>Keep your hair away from your face if possible</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="full-body" className="mt-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>1 Full-Body Image</CardTitle>
-              <CardDescription>
-                A full-body shot is essential for AI to capture your body proportions and overall posture
+                Close-up head-and-shoulders portrait looking straight into the camera
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col md:flex-row gap-8 items-center">
-                <div className="relative w-full max-w-xs aspect-[2/3] bg-gray-100 rounded-lg overflow-hidden">
-                  <Image src="/content/full-body.jpg" alt="Full body" fill className="object-cover" />
-                  <Badge className="absolute top-3 left-3 bg-blue-500">Full Body</Badge>
+                <div className="relative w-full max-w-xs aspect-[3/4] bg-zinc-100 dark:bg-zinc-800 rounded-xl flex flex-col items-center justify-center p-6 border border-zinc-200 dark:border-zinc-700">
+                  <FrontPose className="w-24 h-32 text-zinc-700 dark:text-zinc-300" />
+                  <Badge className="mt-3 bg-blue-600">Front Shot</Badge>
                 </div>
 
-                <div className="max-w-lg">
-                  <h3 className="font-medium text-gray-900 mb-3">Full-Body Shot Guidelines</h3>
-                  <ul className="space-y-3">
+                <div className="max-w-lg space-y-4">
+                  <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 text-base">Guidelines for Front Portrait</h3>
+                  <ul className="space-y-2.5 text-sm text-zinc-700 dark:text-zinc-300">
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>Stand naturally in well-fitting clothes</span>
+                      <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Face directly centered towards the lens with both eyes clearly visible.</span>
                     </li>
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>Ensure your entire body is visible from head to toe</span>
+                      <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Head and shoulders in frame, relaxed natural expression or gentle smile.</span>
                     </li>
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>Avoid extreme poses – keep it natural and relaxed</span>
+                      <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Even lighting across the face without dark side shadows or bright lens flare.</span>
                     </li>
                     <li className="flex items-start">
-                      <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>Use a plain background if possible</span>
+                      <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>No hats, beanies, or glasses tinting the eyes.</span>
                     </li>
                   </ul>
 
-                  <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                    <p className="text-sm text-blue-700 flex items-start">
-                      <Info className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
+                  <div className="p-3.5 bg-blue-50 dark:bg-blue-950/40 rounded-lg border border-blue-200 dark:border-blue-900/50">
+                    <p className="text-xs text-blue-700 dark:text-blue-300 flex items-start gap-2">
+                      <Info className="h-4 w-4 shrink-0 mt-0.5" />
                       <span>
-                        <strong>Why This Matters:</strong> The full-body shot helps the AI understand your overall
-                        proportions and posture, allowing it to generate more accurate full-body images of you in
-                        various scenarios.
+                        <strong>Why This Matters:</strong> The front portrait anchors your facial identity, jawline, eye structure, and skin tone across all generated photoshoot scenes.
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* 2. FULL-BODY */}
+        <TabsContent value="full-body" className="mt-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl">Photo 2: Full-Body Shot</CardTitle>
+              <CardDescription>
+                Standing head-to-toe photo showing your full physique and body build
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col md:flex-row gap-8 items-center">
+                <div className="relative w-full max-w-xs aspect-[3/4] bg-zinc-100 dark:bg-zinc-800 rounded-xl flex flex-col items-center justify-center p-6 border border-zinc-200 dark:border-zinc-700">
+                  <FullBodyPose className="w-24 h-32 text-zinc-700 dark:text-zinc-300" />
+                  <Badge className="mt-3 bg-blue-600">Full-Body Shot</Badge>
+                </div>
+
+                <div className="max-w-lg space-y-4">
+                  <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 text-base">Guidelines for Full-Body Shot</h3>
+                  <ul className="space-y-2.5 text-sm text-zinc-700 dark:text-zinc-300">
+                    <li className="flex items-start">
+                      <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Standing upright naturally with space around you.</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Entire body visible from head to shoes without cropping at the knees or ankles.</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Wear well-fitting everyday clothes (e.g. jeans and t-shirt or casual shirt).</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Avoid extreme slouching or awkward angles.</span>
+                    </li>
+                  </ul>
+
+                  <div className="p-3.5 bg-blue-50 dark:bg-blue-950/40 rounded-lg border border-blue-200 dark:border-blue-900/50">
+                    <p className="text-xs text-blue-700 dark:text-blue-300 flex items-start gap-2">
+                      <Info className="h-4 w-4 shrink-0 mt-0.5" />
+                      <span>
+                        <strong>Why This Matters:</strong> Full-body shots teach the AI your height, build, and posture, allowing it to generate convincing full-length lifestyle scenes like coffee walks and outdoor dates.
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* 3. HALF-BODY */}
+        <TabsContent value="half-body" className="mt-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl">Photo 3: Half-Body Shot</CardTitle>
+              <CardDescription>
+                Waist-up portrait showing your chest, shoulders, and arms
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col md:flex-row gap-8 items-center">
+                <div className="relative w-full max-w-xs aspect-[3/4] bg-zinc-100 dark:bg-zinc-800 rounded-xl flex flex-col items-center justify-center p-6 border border-zinc-200 dark:border-zinc-700">
+                  <HalfBodyPose className="w-24 h-32 text-zinc-700 dark:text-zinc-300" />
+                  <Badge className="mt-3 bg-blue-600">Half-Body Shot</Badge>
+                </div>
+
+                <div className="max-w-lg space-y-4">
+                  <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 text-base">Guidelines for Half-Body Shot</h3>
+                  <ul className="space-y-2.5 text-sm text-zinc-700 dark:text-zinc-300">
+                    <li className="flex items-start">
+                      <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Captured from waist up, showing both shoulders, chest, and arms.</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Natural standing or relaxed sitting posture.</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="h-4 w-4 text-emerald-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Clear, uncluttered background with good light on your upper body.</span>
+                    </li>
+                  </ul>
+
+                  <div className="p-3.5 bg-blue-50 dark:bg-blue-950/40 rounded-lg border border-blue-200 dark:border-blue-900/50">
+                    <p className="text-xs text-blue-700 dark:text-blue-300 flex items-start gap-2">
+                      <Info className="h-4 w-4 shrink-0 mt-0.5" />
+                      <span>
+                        <strong>Why This Matters:</strong> Half-body framing is the primary shot type used on dating profiles (cafe dates, bar candids, restaurant tables). It bridges the gap between facial close-ups and full-body scenes.
                       </span>
                     </p>
                   </div>
@@ -389,18 +316,15 @@ export default function ImageUploadGuide({ className }: ImageUploadGuideProps) {
         </TabsContent>
       </Tabs>
 
-      <div className="mt-12 bg-gray-50 border border-gray-200 rounded-lg p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Why This Image Set Matters</h2>
-        <p className="text-gray-700 mb-4">
-          Uploading the right mix of images is crucial for getting AI-generated photos that truly resemble you. By
-          following this guide, you give the AI all the angles and expressions it needs to create stunning, high-quality
-          results.
-        </p>
-        <p className="text-gray-700 font-medium">
-          So, take your time, follow these steps, and get ready to see yourself like never before! 🎯
+      <div className="mt-8 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-1.5 font-oxanium">
+          Ready to Train Your Model?
+        </h2>
+        <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+          Having exactly these 3 photos (1 Front, 1 Full-Body, and 1 Half-Body) ensures your 100-photo dating suite retains your exact facial likeness, physique, and natural expressions in every scene.
         </p>
       </div>
     </div>
-  )
+  );
 }
 
