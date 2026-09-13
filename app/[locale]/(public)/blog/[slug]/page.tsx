@@ -78,6 +78,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
     }
   }
 
+  
   const paths = articlePaths(post)
   const alternatePaths = seoAlternatePathMap(paths)
   const canonical = publicUrl(`/blog/${post.slug}`, locale)
