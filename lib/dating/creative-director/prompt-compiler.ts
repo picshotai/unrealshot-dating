@@ -22,7 +22,7 @@ export const LEGACY_PHYSICAL_COHERENCE_SENTENCE =
   "Keep all body and object mechanics physically executable: no limb performs conflicting actions, and every manipulated object is supported rather than floating.";
 
 export const ANCHOR_REFERENCE_SENTENCE =
-  "The final supplied image establishes this shoot's location, outfit, light and background geometry; preserve them without adding or relocating scene elements.";
+  "The final reference sets the outfit, venue and light tone; capture a fresh unposed moment with a new posture and camera angle here.";
 
 export const ANCHOR_EXPRESSION_SENTENCE =
   "His expression is relaxed and natural, with lips resting together and attentive eyes.";

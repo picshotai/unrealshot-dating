@@ -48,6 +48,14 @@ Human variation comes from gaze direction, posture, physical task, head turn, li
 - Follower frames (isAnchor: false): Default to expressionType "neutral" (calm attentiveness, looking away, noticing something, mid-action, adjusting clothing/object, listening, or thinking). At most ONE follower frame per shoot may optionally have expressionType "warm", which represents subtle, understated, closed-mouth warmth only.
 - STRICT PROHIBITION: Laughter, laughing, grinning, beaming, open-mouth smiles, toothy expressions, or visible teeth are STRICTLY PROHIBITED in every frame. Never invent off-camera jokes or forced hilarity.
 
+CANDID DIVERSITY & SCENE VARIETY:
+The four frames must feel like four authentic, unposed photographs taken during the same occasion, NEVER crops or zoom levels of the same shot.
+- Diverse Viewpoints: Change the photographer's position and camera angle across the shoot (e.g. wide environmental, 45-degree angle, three-quarter view, over-the-shoulder). Do not shoot from the same coordinate or simply zoom in/out.
+- Varied Moments & Poses: The subject moves and lives in the space naturally across the occasion. Vary his pose and action across frames—do not lock him into the same stance or repeat the exact same hand contact (e.g. gripping the same wheel) across frames.
+- Natural Presence: Describe relaxed, unposed moments. Avoid stiff fashion-catalog commands (e.g. avoid "torso angled 20 degrees, weight on right leg"). Let body language be organic, relaxed, and casual.
+- Authentic Gaze: Gaze should naturally fit the moment—whether connecting with the friend behind the camera or taking in the environment and what he is doing.
+- No Artificial Props: Use only what authentically belongs in the location. Never invent artificial furniture or obstacles.
+
 Keep one location zone, outfit and lighting state. Use the brief's continuity essentials as private scene truth; do not repeat them as a paragraph in every capturePrompt. Mention a scene element only when the exact photograph needs it. Never invent or relocate architecture merely to support a pose.
 
 The referenced man must be the only visible person in all four photographs. The photographer, friend, companion, date, server and every bystander stay completely outside the frame. Do not name any secondary person in capturePrompt. Social provenance can be felt through his eyeline, subtle posture, or the occasion itself; never request another face, body, hand, reflection, crowd or partial person.
@@ -108,6 +116,14 @@ export function buildShootWriterRequest(args: {
     "- Follower frames (isAnchor: false): Default to expressionType 'neutral' (calm attentiveness, looking away, mid-action, listening). At most ONE follower frame may optionally have expressionType 'warm' (subtle closed-mouth warmth only).",
     "- Target shoot mix: 1 anchor neutral, 2 neutral followers, 1 optional subtle-warm follower.",
     "- STRICT BAN: No laugh, laughing, chuckle, grin, grinning, beaming, open-mouth smile, or visible teeth in ANY frame.",
+    "",
+    "CANDID DIVERSITY & SCENE VARIETY",
+    "- Four frames must NEVER be crops or zoom levels of the same shot or stance.",
+    "- Vary the viewpoint and camera position across the location (e.g. wide environmental, three-quarter, 45-degree flank).",
+    "- Vary the subject's pose, action, and physical moment naturally across the occasion; do not repeat the same hand contact or stance.",
+    "- Keep body language relaxed, natural, and unposed; avoid stiff catalog commands.",
+    "- Gaze and attention should feel spontaneous and fit the moment naturally.",
+    "- Never invent artificial props or furniture; use only what authentically exists in the location.",
     "",
     "AUTHORED PHOTOGRAPHIC-CRAFT FRAGMENTS",
     "Learn only their causal camera/body/light writing. Do not reuse their content.",
