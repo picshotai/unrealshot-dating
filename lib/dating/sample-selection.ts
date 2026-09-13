@@ -41,10 +41,15 @@ export function selectSampleShootIds(args: {
       left.shootId.localeCompare(right.shootId)
   );
 
+  // When testing a single sample shoot, pick 1 shoot randomly from the ordered candidates
+  if (limit === 1 && ordered.length > 0) {
+    return new Set([ordered[0].shootId]);
+  }
+
   // A two-shoot sample shows one requested candid and one activity-led shoot.
   // Larger samples may show both candid allocations while retaining room for
   // selected-interest QA. This affects sample choice only, never prompt craft.
-  const subjectSampleTarget = args.includeSimpleCandids && limit > 0
+  const subjectSampleTarget = args.includeSimpleCandids && limit > 1
     ? Math.min(2, Math.max(1, limit - 1))
     : 0;
   const subjectCandidates = ordered
