@@ -285,7 +285,17 @@ async function main() {
     input,
   });
   assert(!secondaryValidation.passed);
-  assert(secondaryValidation.problems.some((problem) => /secondary person/i.test(problem)));
+  assert(secondaryValidation.problems.some((problem) => /secondary person \("friend"\)/i.test(problem)));
+
+  // Tableware/pour-over server must NOT be flagged as a secondary person
+  const coffeeServer = structuredClone(shoot.output);
+  coffeeServer.frames[0].capturePrompt += " A clear glass pour-over server sits on the counter beside him.";
+  const coffeeServerVal = validateShootOutput({
+    output: coffeeServer,
+    brief: first,
+    input,
+  });
+  assert(!coffeeServerVal.problems.some((problem) => /secondary person/i.test(problem)));
 
   const floatingGlass = structuredClone(shoot.output);
   floatingGlass.frames[0].capturePrompt =

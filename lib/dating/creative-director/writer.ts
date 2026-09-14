@@ -40,7 +40,7 @@ export {
 export const SHOOT_WRITER_SYSTEM_INSTRUCTION = `
 You write four photographic capture events for one approved men's dating-profile shoot.
 
-The four images must feel like they were naturally taken during the same real occasion by the person named in the brief. Describe how each photograph happened: the cause of the body position and gaze/action, camera position, crop, light behavior and the few textures that matter. Treat centralMoment and fourFrameOpportunity as the locked action boundary; never invent a filler action outside them simply to make a frame different. Do not write an inventory of everything in the scene.
+The four images must feel like authentic, unposed candid moments from the approved occasion. The referenced man must be the only person visible or named in all four photographs. Never mention any photographer, friend, companion, date, waiter, server, or bystander in capturePrompt. Describe how each photograph happened: the cause of the body position and gaze/action, camera position, crop, light behavior and the few textures that matter. Treat centralMoment and fourFrameOpportunity as the locked action boundary; never invent a filler action outside them simply to make a frame different. Do not write an inventory of everything in the scene.
 
 EXPRESSION ALLOCATION POLICY:
 Human variation comes from gaze direction, posture, physical task, head turn, listening, and focus of attention—never from forced smiles or facial gymnastics. Candid does NOT mean smiling.
@@ -124,7 +124,7 @@ export function buildShootWriterRequest(args: {
     "- Keep body language relaxed, natural, and unposed; avoid stiff catalog commands.",
     "- Gaze and attention should feel spontaneous and fit the moment naturally (looking toward the lens, looking away, or on current action).",
     "- Never invent artificial props or furniture; use only what authentically exists in the location. Standing naturally is completely normal.",
-    "- STRICT PROHIBITION: Never name or mention any secondary person in capturePrompt (no friend, photographer, companion, bystander, etc.).",
+    "- STRICT PROHIBITION: Never name or mention any secondary person in capturePrompt (no friend, photographer, companion, bystander, waiter, etc.). Do not say 'his friend', 'his companion', or 'photographer'. If describing coffee equipment or tableware, use 'carafe', 'glass pot', or 'pitcher' rather than 'server'.",
     "",
     "AUTHORED PHOTOGRAPHIC-CRAFT FRAGMENTS",
     "Learn only their causal camera/body/light writing. Do not reuse their content.",
@@ -169,12 +169,26 @@ const EXCLUSION_PATTERNS: Record<CustomerCreativeInput["exclusions"][number], Re
 };
 
 const FACE_STRONG_DISTANCES = new Set(["close", "chest-up", "waist-up"]);
-const SECONDARY_PERSON_REFERENCE =
-  /\b(friend|companion|date|teammate|host|server|waiter|bartender|stranger|bystander|crowd|group of people|another person|someone else|photographer)\b/i;
+
+export const SECONDARY_PERSON_PATTERNS: readonly RegExp[] = [
+  /\b(friend|friends|companion|companions|teammate|teammates|waiter|waiters|waitress|waitresses|bartender|bartenders|stranger|strangers|bystander|bystanders|crowd|crowds|group of people|another person|someone else|photographer|photographers)\b/i,
+  /\b(?:his|her|their|a|with\s+(?:a|his|her))\s+date\b/i,
+  /\b(?:the|a|an)\s+host\b/i,
+  /(?<!\b(?:pour-over|coffee|glass|ceramic|tea|beverage|drink|water|salad|cake|pie|soup|food|v60|hario|stainless)\s+(?:carafe\s+|pot\s+|jug\s+)?)server\b(?!\s+(?:tray|rack|dish|vessel|stand|carafe|pot))/i,
+];
+
+export function findSecondaryPersonMatch(text: string): string | null {
+  for (const pattern of SECONDARY_PERSON_PATTERNS) {
+    const match = text.match(pattern);
+    if (match) return match[0];
+  }
+  return null;
+}
+
 const POURING_ACTION = /\bpour(?:s|ed|ing)?\b/i;
-const RECEIVING_VESSEL = /\b(glass|cup|mug|bowl|pitcher|carafe)\b/i;
+const RECEIVING_VESSEL = /\b(glass|cup|mug|bowl|pitcher|carafe|server)\b/i;
 const SUPPORTED_RECEIVING_VESSEL =
-  /\b(glass|cup|mug|bowl|pitcher|carafe)\b[^.!?]{0,80}\b(rests?|resting|stands?|standing|sits?|sitting|set|placed|supported|held|on (?:a|the) (?:table|counter|bench|tray|ground|floor))\b|\b(holds?|holding|supports?|supporting)\b[^.!?]{0,80}\b(glass|cup|mug|bowl|pitcher|carafe)\b/i;
+  /\b(glass|cup|mug|bowl|pitcher|carafe|server)\b[^.!?]{0,80}\b(rests?|resting|stands?|standing|sits?|sitting|set|placed|supported|held|on (?:a|the) (?:table|counter|bench|tray|ground|floor))\b|\b(holds?|holding|supports?|supporting)\b[^.!?]{0,80}\b(glass|cup|mug|bowl|pitcher|carafe|server)\b/i;
 
 const ANCHOR_FORBIDDEN_EXPRESSION_REGEX =
   /\b(smile|smiling|smiles|smirk|smirks|smirking|half-smile|faint smile|slight smile|subtle smile|grin|grinning|grins|laugh|laughing|laughs|laughter|chuckle|chortle|beaming|teeth|toothy|open-mouth|open-mouthed)\b/i;
@@ -241,8 +255,9 @@ export function validateShootOutput(args: {
     if (!frame.prompt.includes(PHYSICAL_COHERENCE_SENTENCE)) {
       problems.push(`${frame.frameId} was not compiled with the physical-coherence clause.`);
     }
-    if (SECONDARY_PERSON_REFERENCE.test(frame.capturePrompt)) {
-      problems.push(`${frame.frameId} names a secondary person; express the cause without putting another identity in the image prompt.`);
+    const secondaryMatch = findSecondaryPersonMatch(frame.capturePrompt);
+    if (secondaryMatch) {
+      problems.push(`${frame.frameId} names a secondary person ("${secondaryMatch}"); express the cause without putting another identity in the image prompt.`);
     }
     if (
       POURING_ACTION.test(frame.capturePrompt) &&
