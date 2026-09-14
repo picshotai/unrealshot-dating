@@ -340,7 +340,7 @@ export async function prepareDynamicOrder(args: {
   const input = customerCreativeInputSchema.parse({
     interests: creative.interests ?? [],
     exclusions: creative.excludeTags ?? [],
-    includeSimpleCandids: creative.includeSimpleCandids ?? false,
+    includeSimpleCandids: creative.includeSimpleCandids ?? true,
   });
   let shoots = await loadProductionShoots(args.db, args.order.id);
   const missingAtStart = missingShootCount(shoots, args.order.shoots_target);

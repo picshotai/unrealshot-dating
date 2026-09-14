@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
       modelId,
       interests: cleanInterests,
       excludeTags: cleanExclusions,
-      includeSimpleCandids: includeSimpleCandids !== false,
+      includeSimpleCandids: true,
     });
 
     return NextResponse.json({ success: true, ...result }, { status: 201 });

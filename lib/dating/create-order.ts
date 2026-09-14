@@ -187,7 +187,7 @@ export async function createDatingShootOrder(input: CreateOrderInput) {
         creativeInput: {
           interests,
           excludeTags,
-          includeSimpleCandids: input.includeSimpleCandids ?? true,
+          includeSimpleCandids: true,
         },
         plannerVersion: PORTFOLIO_SYSTEM_VERSION,
         promptSystemVersion: SHOOT_WRITER_SYSTEM_VERSION,
