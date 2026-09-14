@@ -50,15 +50,15 @@ Human variation comes from gaze direction, posture, physical task, head turn, li
 
 CANDID DIVERSITY & SCENE VARIETY:
 The four frames must feel like four authentic, unposed photographs taken during the same occasion, NEVER crops or zoom levels of the same shot.
-- Diverse Viewpoints: Change the photographer's position and camera angle across the shoot (e.g. wide environmental, 45-degree angle, three-quarter view, over-the-shoulder). Do not shoot from the same coordinate or simply zoom in/out.
-- Varied Moments & Poses: The subject moves and lives in the space naturally across the occasion. Vary his pose and action across frames—do not lock him into the same stance or repeat the exact same hand contact (e.g. gripping the same wheel) across frames.
-- Natural Presence: Describe relaxed, unposed moments. Avoid stiff fashion-catalog commands (e.g. avoid "torso angled 20 degrees, weight on right leg"). Let body language be organic, relaxed, and casual.
-- Authentic Gaze: Gaze should naturally fit the moment—whether connecting with the friend behind the camera or taking in the environment and what he is doing.
-- No Artificial Props: Use only what authentically belongs in the location. Never invent artificial furniture or obstacles.
+- Diverse Viewpoints & Framing: Change the camera position, distance, and angle across the shoot (e.g. environmental wide view, chest-up at a 45-degree angle, waist-up from the side, full-body). Do not shoot from the same coordinate or simply zoom in/out.
+- Varied Moments & Poses: The subject moves and lives in the space naturally across the occasion. Vary his body angle, physical moment, and activity naturally across frames—do not lock him into an identical stance or repeat the exact same hand position across frames.
+- Natural Presence: Describe relaxed, unposed moments. Avoid stiff fashion-catalog commands (e.g. avoid "torso angled 20 degrees, weight on right leg"). Let body language be organic, relaxed, and casual (e.g. standing comfortably, hands casually at his sides or in pockets, natural shift in balance).
+- Authentic Gaze: Gaze should naturally fit the moment—looking toward the lens, looking away into the distance, or absorbed in what he is doing.
+- No Artificial Props: Use only what authentically belongs in the location. Never invent artificial furniture, props, or obstacles merely to support a pose. A man can stand naturally on his own without leaning on objects.
 
 Keep one location zone, outfit and lighting state. Use the brief's continuity essentials as private scene truth; do not repeat them as a paragraph in every capturePrompt. Mention a scene element only when the exact photograph needs it. Never invent or relocate architecture merely to support a pose.
 
-The referenced man must be the only visible person in all four photographs. The photographer, friend, companion, date, server and every bystander stay completely outside the frame. Do not name any secondary person in capturePrompt. Social provenance can be felt through his eyeline, subtle posture, or the occasion itself; never request another face, body, hand, reflection, crowd or partial person.
+The referenced man must be the only visible person in all four photographs. Every other person stays completely outside the frame. STRICT PROHIBITION: Do NOT name or mention any secondary person in capturePrompt (never use words like "friend", "photographer", "companion", "date", "server", "waiter", "stranger", "crowd", or "bystander"). Describe only the man, the environment, and the camera viewpoint. Social provenance can be felt through his eyeline, subtle posture, or the occasion itself; never request another face, body, hand, reflection, crowd or partial person.
 
 The server inserts the brief's complete locked outfit verbatim into every final prompt. Do not replace it with vague continuity language such as "the same denim", "the same shirt" or "the same outfit", and do not introduce a different garment. Mention clothing in capturePrompt only when its physical movement is essential to that exact moment.
 
@@ -119,11 +119,12 @@ export function buildShootWriterRequest(args: {
     "",
     "CANDID DIVERSITY & SCENE VARIETY",
     "- Four frames must NEVER be crops or zoom levels of the same shot or stance.",
-    "- Vary the viewpoint and camera position across the location (e.g. wide environmental, three-quarter, 45-degree flank).",
-    "- Vary the subject's pose, action, and physical moment naturally across the occasion; do not repeat the same hand contact or stance.",
+    "- Vary camera angle, distance, and position across the location (e.g. environmental, waist-up, chest-up, full-body).",
+    "- Vary the subject's pose, body angle, and physical moment naturally across the occasion; do not repeat the same hand contact or stance.",
     "- Keep body language relaxed, natural, and unposed; avoid stiff catalog commands.",
-    "- Gaze and attention should feel spontaneous and fit the moment naturally.",
-    "- Never invent artificial props or furniture; use only what authentically exists in the location.",
+    "- Gaze and attention should feel spontaneous and fit the moment naturally (looking toward the lens, looking away, or on current action).",
+    "- Never invent artificial props or furniture; use only what authentically exists in the location. Standing naturally is completely normal.",
+    "- STRICT PROHIBITION: Never name or mention any secondary person in capturePrompt (no friend, photographer, companion, bystander, etc.).",
     "",
     "AUTHORED PHOTOGRAPHIC-CRAFT FRAGMENTS",
     "Learn only their causal camera/body/light writing. Do not reuse their content.",
@@ -131,6 +132,7 @@ export function buildShootWriterRequest(args: {
     "",
     "APPROVED DIMENSIONS",
     "3:4 = 1728x2304; 4:3 = 2304x1728; 9:16 = 1512x2688.",
+    "Every capturePrompt MUST include its matching aspect ratio explicitly (e.g. 'A 3:4 candid photograph') matching its dimensions.",
     "frameId uses lowercase letters, numbers and hyphens only.",
     ...(args.brief.subjectLed === true ? [
       "",

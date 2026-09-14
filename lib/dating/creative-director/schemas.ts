@@ -16,7 +16,7 @@ const text = (minimum: number, maximum: number) =>
 export const customerCreativeInputSchema = z.object({
   interests: z.array(z.enum(INTEREST_IDS)).min(1).max(6),
   exclusions: z.array(z.enum(EXCLUDABLE_TAGS)).max(EXCLUDABLE_TAGS.length),
-  includeSimpleCandids: z.boolean().default(false),
+  includeSimpleCandids: z.boolean().default(true),
 }).strict();
 
 /** A brief explains why a real photographic occasion exists, not four poses. */
