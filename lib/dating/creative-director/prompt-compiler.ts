@@ -4,9 +4,10 @@ import type {
   ExpressionType,
   ShootWriterOutput,
 } from "./schemas";
+import { CROP_PRIORITY_SENTENCE } from "./photographic-direction";
 
 export const IDENTITY_SENTENCE =
-  "The first supplied images all show the same man; preserve his facial geometry, skin tone, hair, beard pattern, age and natural asymmetry.";
+  "Use the first images for this man's identity: facial structure, skin tone, hair, beard pattern, age and natural asymmetry. Re-render him at the requested face view; the reference pose, gaze and head tilt are not fixed.";
 
 export const SINGLE_VISIBLE_IDENTITY_SENTENCE =
   "Only the referenced man is visible; no other face, body, hand or reflection appears in frame.";
@@ -22,7 +23,7 @@ export const LEGACY_PHYSICAL_COHERENCE_SENTENCE =
   "Keep all body and object mechanics physically executable: no limb performs conflicting actions, and every manipulated object is supported rather than floating.";
 
 export const ANCHOR_REFERENCE_SENTENCE =
-  "The final reference sets the outfit, venue and light tone; capture a fresh unposed moment with a new posture and camera angle here.";
+  "The final image supplies outfit, venue and light, not a fixed composition. Take a new photograph from the requested viewpoint, with the stated face view and crop; render the venue's corresponding perspective.";
 
 export const ANCHOR_EXPRESSION_SENTENCE =
   "His expression is relaxed and natural, with lips resting together and attentive eyes.";
@@ -58,10 +59,11 @@ export function compileCapturePrompt(
     SINGLE_VISIBLE_IDENTITY_SENTENCE,
     `${OUTFIT_SENTENCE_PREFIX} ${outfit.trim()}`,
     PHYSICAL_COHERENCE_SENTENCE,
+    CROP_PRIORITY_SENTENCE,
     isAnchor ? null : ANCHOR_REFERENCE_SENTENCE,
     capturePrompt.trim(),
     expressionSentence,
-  ].filter(Boolean).join(" ");
+  ].filter(Boolean).join("\n");
 }
 
 export function extractCompiledOutfit(prompt: string): string | null {

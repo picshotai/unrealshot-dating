@@ -223,7 +223,7 @@ async function main() {
       assert(follower.prompt.includes(NEUTRAL_FOLLOWER_EXPRESSION_SENTENCE));
     }
   }
-  assert(shoot.output.frames.every((frame) => frame.prompt.length < 1_200));
+  assert(shoot.output.frames.every((frame) => frame.prompt.length < 1_600));
   assert.equal(extractCompiledOutfit(anchor.prompt), first.outfit);
   assert.equal(
     extractCompiledOutfit(anchor.prompt.replace(
@@ -452,7 +452,7 @@ async function main() {
     {
       prompt: "provider contract",
       image_urls: ["https://example.com/reference.png"],
-      image_size: { width: 1024, height: 1536 },
+      image_size: { width: 1152, height: 1536 },
       background: "auto",
       quality: "medium",
       num_images: 1,
@@ -465,8 +465,19 @@ async function main() {
   );
   assert.deepEqual(
     resolveDatingProviderImageDimensions({ width: 2304, height: 1728 }),
-    { width: 1536, height: 1024 }
+    { width: 1536, height: 1152 }
   );
+  // The provider must honor the ratio that the writer and gallery advertise.
+  for (const size of [
+    { width: 1728, height: 2304 },
+    { width: 2304, height: 1728 },
+    { width: 1512, height: 2688 },
+  ]) {
+    const rendered = resolveDatingProviderImageDimensions(size);
+    assert.equal(rendered.width * size.height, rendered.height * size.width);
+    assert.equal(rendered.width % 16, 0);
+    assert.equal(rendered.height % 16, 0);
+  }
 
   const createOrder = readFileSync(resolve(process.cwd(), "lib/dating/create-order.ts"), "utf8");
   assert.match(createOrder, /testMode: productConfig\.testMode/);

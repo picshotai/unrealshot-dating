@@ -23,7 +23,8 @@
     "check:shoot-landings": "tsx scripts/check-shoot-landings.ts",
     "check:seo:production": "tsx scripts/check-production-seo.ts",
     "check:wordpress-plugin": "tsx scripts/check-wordpress-plugin.ts",
-    "test:anchor": "tsx scripts/test-anchor-chain.ts"
+    "test:anchor": "tsx scripts/test-anchor-chain.ts",
+    "test:shoot-direction": "tsx scripts/test-shoot-direction.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.917.0",

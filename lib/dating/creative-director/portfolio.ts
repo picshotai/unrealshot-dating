@@ -30,7 +30,7 @@ The image model receives identity references for the customer only, so the custo
 
 Choose clothing independently for every shoot from the activity, place, weather, time and social context. Sports use correct sports clothing; dinner, home, travel and nightlife use their own believable register. Avoid conspicuous logos, costume wealth and contextually absurd tailoring.
 
-Keep each shoot inside one small location zone, one outfit and one lighting state. Supply no object inventory. continuityEssentials contains at most three short physical facts whose stability actually matters. Do not manufacture furniture, props or poses merely to satisfy continuity.
+Keep each shoot inside one location zone that allows physically different camera positions, one outfit and one lighting state. fourFrameOpportunity should allow distinct views of the man and the location during the occasion, not just closer crops of a frozen instant. Supply no object inventory. continuityEssentials contains at most three short physical facts whose stability matters; these are properties of the place, not fixed screen positions. Do not manufacture furniture, props or poses merely to satisfy continuity.
 
 The portfolio must feel like varied evidence of an appealing life, not fifteen commercial mini-shoots. Simple candid photographs can be stronger than an activity. Reject fake luxury, product-catalogue staging, bleak service spaces and scenes in which equipment dominates the man.
 

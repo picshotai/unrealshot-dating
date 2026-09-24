@@ -6,6 +6,7 @@
   },
   "include": [
     "next-env.d.ts",
+    "scripts/test-shoot-direction.ts",
     "lib/auth/admin-access.ts",
     "lib/dating/config.ts",
     "lib/dating/creative-director/**/*.ts",

@@ -4,6 +4,7 @@ import { EXCLUDABLE_TAGS, INTEREST_IDS } from "@/lib/dating/types";
 
 export const DATING_CREATIVE_MODEL = "gemini-3.7-flash" as const;
 export const DATING_CREATIVE_THINKING_LEVEL = "low" as const;
+// Database compatibility versions; prompt wording revisions live with the guidance.
 export const PORTFOLIO_SYSTEM_VERSION = "dating-portfolio-director-v3" as const;
 export const SHOOT_WRITER_SYSTEM_VERSION = "dating-shoot-writer-v7" as const;
 

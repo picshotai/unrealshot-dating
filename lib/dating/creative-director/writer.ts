@@ -6,6 +6,7 @@ import {
 } from "./model";
 import { formatCraftReferences, selectCraftReferences } from "./craft-references";
 import { PHYSICAL_SCENE_REASONING_INSTRUCTION } from "./physical-scene";
+import { SHOOT_DIRECTION_INSTRUCTION } from "./photographic-direction";
 import {
   ANCHOR_REFERENCE_SENTENCE,
   IDENTITY_SENTENCE,
@@ -48,15 +49,9 @@ Human variation comes from gaze direction, posture, physical task, head turn, li
 - Follower frames (isAnchor: false): Default to expressionType "neutral" (calm attentiveness, looking away, noticing something, mid-action, adjusting clothing/object, listening, or thinking). At most ONE follower frame per shoot may optionally have expressionType "warm", which represents subtle, understated, closed-mouth warmth only.
 - STRICT PROHIBITION: Laughter, laughing, grinning, beaming, open-mouth smiles, toothy expressions, or visible teeth are STRICTLY PROHIBITED in every frame. Never invent off-camera jokes or forced hilarity.
 
-CANDID DIVERSITY & SCENE VARIETY:
-The four frames must feel like four authentic, unposed photographs taken during the same occasion, NEVER crops or zoom levels of the same shot.
-- Diverse Viewpoints & Framing: Change the camera position, distance, and angle across the shoot (e.g. environmental wide view, chest-up at a 45-degree angle, waist-up from the side, full-body). Do not shoot from the same coordinate or simply zoom in/out.
-- Varied Moments & Poses: The subject moves and lives in the space naturally across the occasion. Vary his body angle, physical moment, and activity naturally across frames—do not lock him into an identical stance or repeat the exact same hand position across frames.
-- Natural Presence: Describe relaxed, unposed moments. Avoid stiff fashion-catalog commands (e.g. avoid "torso angled 20 degrees, weight on right leg"). Let body language be organic, relaxed, and casual (e.g. standing comfortably, hands casually at his sides or in pockets, natural shift in balance).
-- Authentic Gaze: Gaze should naturally fit the moment—looking toward the lens, looking away into the distance, or absorbed in what he is doing.
-- No Artificial Props: Use only what authentically belongs in the location. Never invent artificial furniture, props, or obstacles merely to support a pose. A man can stand naturally on his own without leaning on objects.
+${SHOOT_DIRECTION_INSTRUCTION}
 
-Keep one location zone, outfit and lighting state. Use the brief's continuity essentials as private scene truth; do not repeat them as a paragraph in every capturePrompt. Mention a scene element only when the exact photograph needs it. Never invent or relocate architecture merely to support a pose.
+Keep one location zone, outfit and lighting state. Continuity essentials describe stable physical facts, not fixed screen positions. Move the camera within that zone and describe the resulting perspective. Mention only scene elements visible or relevant to that photograph; never relocate architecture merely to support a pose.
 
 The referenced man must be the only visible person in all four photographs. Every other person stays completely outside the frame. STRICT PROHIBITION: Do NOT name or mention any secondary person in capturePrompt (never use words like "friend", "photographer", "companion", "date", "server", "waiter", "stranger", "crowd", or "bystander"). Describe only the man, the environment, and the camera viewpoint. Social provenance can be felt through his eyeline, subtle posture, or the occasion itself; never request another face, body, hand, reflection, crowd or partial person.
 
@@ -117,13 +112,8 @@ export function buildShootWriterRequest(args: {
     "- Target shoot mix: 1 anchor neutral, 2 neutral followers, 1 optional subtle-warm follower.",
     "- STRICT BAN: No laugh, laughing, chuckle, grin, grinning, beaming, open-mouth smile, or visible teeth in ANY frame.",
     "",
-    "CANDID DIVERSITY & SCENE VARIETY",
-    "- Four frames must NEVER be crops or zoom levels of the same shot or stance.",
-    "- Vary camera angle, distance, and position across the location (e.g. environmental, waist-up, chest-up, full-body).",
-    "- Vary the subject's pose, body angle, and physical moment naturally across the occasion; do not repeat the same hand contact or stance.",
-    "- Keep body language relaxed, natural, and unposed; avoid stiff catalog commands.",
-    "- Gaze and attention should feel spontaneous and fit the moment naturally (looking toward the lens, looking away, or on current action).",
-    "- Never invent artificial props or furniture; use only what authentically exists in the location. Standing naturally is completely normal.",
+    "SET REVIEW",
+    "Apply the photographic direction guidance: compare face views, actual camera positions, resulting background perspectives and explicit crop boundaries across the four final capture prompts before returning them.",
     "- STRICT PROHIBITION: Never name or mention any secondary person in capturePrompt (no friend, photographer, companion, bystander, waiter, etc.). Do not say 'his friend', 'his companion', or 'photographer'. If describing coffee equipment or tableware, use 'carafe', 'glass pot', or 'pitcher' rather than 'server'.",
     "",
     "AUTHORED PHOTOGRAPHIC-CRAFT FRAGMENTS",
@@ -139,7 +129,7 @@ export function buildShootWriterRequest(args: {
       "SUBJECT-LED CAPTURE EMPHASIS",
       "The man, his face, complete clothing, body language, light and location carry these four images.",
       "Do not introduce a held or operated prop, or an activity, merely to justify a photograph. Background context may exist but must not drive his pose.",
-      "Let different camera positions, small body shifts and changes of attention occur naturally during the same occasion; do not create a formal pose sequence.",
+      "Let distinct camera positions and face views arise naturally during the occasion; keep the man prominent and do not create a formal pose sequence.",
     ] : []),
     "",
     "MECHANICAL CORRECTION",

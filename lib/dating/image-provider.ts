@@ -6,9 +6,9 @@ type DatingImageDimensions = {
   height: number;
 };
 
-const REDUCED_PORTRAIT_SIZE = { width: 1024, height: 1536 } as const;
+const REDUCED_PORTRAIT_SIZE = { width: 1152, height: 1536 } as const;
 const REDUCED_TALL_SIZE = { width: 864, height: 1536 } as const;
-const REDUCED_LANDSCAPE_SIZE = { width: 1536, height: 1024 } as const;
+const REDUCED_LANDSCAPE_SIZE = { width: 1536, height: 1152 } as const;
 
 /**
  * Keep authored composition metadata stable while requesting a cheaper canvas

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { FRAME_DIRECTION_INSTRUCTION } from "./photographic-direction";
 import {
   callDatingCreativeModel,
   type CreativeModelCall,
@@ -35,12 +36,15 @@ Your job is to rewrite an existing single-photo capture instruction to address c
 
 CRITICAL DIRECTIVES:
 1. POSITIVE ACTION ONLY: Describe what the man IS physically doing using executable photographic mechanics (e.g., "Both hands rest casually inside his trouser pockets" or "His left hand rests flat on the concrete balustrade"). NEVER use negative phrases like "no hand on leg", "without touching his thigh", or "don't put hands".
-2. PRESERVE SCENE TRUTH & CONTINUITY: Keep the exact same location, lighting, background, camera distance, and perspective. Do NOT invent new architecture, do NOT change garments, and do NOT add props.
+2. PRESERVE SCENE TRUTH & CONTINUITY: Keep the same physical location, light source and garments. Preserve the current camera position, face view and crop unless the feedback asks to change them. When it does, specify the new view and its physically consistent background perspective; do not invent architecture or props.
 3. SINGLE PERSON ONLY: The referenced man must be the only person in the frame.
 4. HAND & LIMB ANATOMY: Account for both visible hands naturally. No hand performs conflicting actions or floats unnaturally.
 5. EXPRESSION: Keep his face relaxed and natural. Strictly NO laughter, grinning, open-mouth smiles, or visible teeth.
 6. ASPECT RATIO: Preserve the exact aspect ratio (e.g. 3:4, 4:3, 9:16) stated in the original prompt.
 7. OUTPUT: Return only the required JSON containing the revised photographic capture instruction.
+
+${FRAME_DIRECTION_INSTRUCTION}
+For this single retake, apply that guidance to the requested correction; preserve unrelated photographic decisions. Output capture prose only. The server adds identity, outfit, crop-priority and anchor-reference clauses.
 `.trim();
 
 export function buildRetakeRefineRequest(args: {
