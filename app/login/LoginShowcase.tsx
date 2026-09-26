@@ -5,16 +5,16 @@ import { useEffect, useState } from "react"
 
 const slides = [
   {
-    src: "/new-landing/training-floor-morning-2.png",
-    alt: "A natural lifestyle portrait in a sunlit training space",
+    src: "/pages/outdoor_coffee_closeup.webp",
+    alt: "A natural lifestyle portrait at an outdoor neighborhood cafe",
   },
   {
-    src: "/new-landing/mountain-layby-motorcycle_4.png",
-    alt: "A candid portrait beside a motorcycle in the mountains",
+    src: "/pages/coastal_walk_closeup.webp",
+    alt: "A relaxed coastal travel portrait in bright natural light",
   },
   {
-    src: "/new-landing/ZvwZd8Jx-PREBesBKZF38_aa31a675ef8c43bcbc372bc78c2e2712.jpg",
-    alt: "A relaxed portrait by a bright kitchen window",
+    src: "/pages/rooftop3.webp",
+    alt: "A relaxed evening portrait on an urban terrace under string lights",
   },
 ]
 

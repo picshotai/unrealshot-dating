@@ -51,6 +51,12 @@ export type PlatformSection = {
   bullets?: string[]
 }
 
+export type PlatformHeroPhoto = {
+  src: string
+  alt: string
+  role?: string
+}
+
 export type PlatformLandingContent = {
   app: "Tinder" | "Hinge" | "Bumble"
   copy: PlatformPageCopy
@@ -61,6 +67,7 @@ export type PlatformLandingContent = {
   answer: string
   reviewed: string
   heroBullets: string[]
+  heroPhotos?: PlatformHeroPhoto[]
   problemIntro: string
   problems: Array<{ title: string; body: string }>
   solutionIntro: string

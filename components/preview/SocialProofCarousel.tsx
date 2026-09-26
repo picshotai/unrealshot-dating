@@ -6,14 +6,14 @@ import Image from 'next/image';
 // Sample images for social proof - using placeholder paths
 // These should be replaced with actual generated image examples
 const SAMPLE_IMAGES = [
-    '/showcase16.png',
-    '/showcase17.png',
-    '/showcase18.png',
-    '/showcase19.png',
-    '/showcase20.png',
-    '/showcase21.png',
-    '/showcase22.png',
-    '/showcase23.png',
+    '/pages/dating_gym_photo.webp',
+    '/pages/outdoor_coffee_closeup.webp',
+    '/pages/city_walk_closeup.webp',
+    '/pages/dinner_closeup.webp',
+    '/pages/coastal_walk_closeup.webp',
+    '/pages/kitchen_shot_cooking.webp',
+    '/pages/rooftop3.webp',
+    '/pages/hinge_closeup.webp',
 ];
 
 interface SocialProofCarouselProps {

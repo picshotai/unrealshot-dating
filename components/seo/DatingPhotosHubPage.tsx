@@ -5,15 +5,11 @@ import PublicHeader from "@/components/Header"
 import Footer from "@/components/main-landing/Footer"
 import { MultipleStructuredData } from "@/components/seo/StructuredData"
 import { datingShoots, getDatingShoot } from "@/lib/dating-shoot-content"
-import { datingHubSpokes } from "@/lib/dating-hub-content"
+import { datingHubHeroPhotos, datingHubSpokes } from "@/lib/dating-hub-content"
 import { datingHubCopy, type DatingHubLocale } from "@/lib/dating-hub-copy"
 import { makeBreadcrumbJsonLd, makeFaqJsonLd, makeWebPageJsonLd, publicUrl } from "@/lib/public-seo"
 
 const ctaClass = "inline-flex items-center justify-center gap-2 rounded-xl bg-[#ff6f00] px-6 py-3.5 font-bold text-white shadow-lg shadow-orange-500/20 transition hover:bg-[#e96500]"
-
-const heroShoots = ["outdoor-coffee", "city-walk", "home-cooking", "dinner"]
-  .map(getDatingShoot)
-  .filter(Boolean)
 
 export default function DatingPhotosHubPage({ locale = "en" }: { locale?: DatingHubLocale }) {
   const copy = datingHubCopy[locale]
@@ -50,17 +46,28 @@ export default function DatingPhotosHubPage({ locale = "en" }: { locale?: Dating
               <Link href="/login" className={ctaClass}>{copy.hero.primaryCta} <ArrowRight className="h-4 w-4" /></Link>
               <Link href="/dating-photos/examples" className="font-bold underline decoration-zinc-300 underline-offset-4">{copy.hero.examplesCta}</Link>
             </div>
-            <p className="mt-4 text-xs leading-5 text-zinc-500">{copy.hero.note}</p>
           </div>
 
           <div className="relative rounded-[2rem] bg-zinc-950 p-3 shadow-2xl">
             <div className="grid grid-cols-2 gap-3">
-              {heroShoots.map((shoot, index) => shoot && (
-                <figure key={shoot.slug} className="relative overflow-hidden rounded-2xl bg-zinc-800">
-                  <div className="relative aspect-[4/5]"><Image src={shoot.frames[index].src} alt={`${copy.imageAltPrefix} ${copy.shootNames[shoot.slug] ?? shoot.name}`} fill priority={index < 2} sizes="(max-width: 1024px) 50vw, 24vw" className="object-cover" /></div>
-                  <figcaption className="absolute inset-x-2 bottom-2 rounded-lg bg-black/75 px-2 py-1.5 text-[10px] font-black uppercase tracking-wide text-white backdrop-blur">{copy.examples.cardLabel}</figcaption>
-                </figure>
-              ))}
+              {datingHubHeroPhotos.map((photo, index) => {
+                const localized = copy.heroPhotos?.[index]
+                const altText = localized ? `${copy.imageAltPrefix} ${localized.alt}` : `${copy.imageAltPrefix} ${photo.alt}`
+                return (
+                  <figure key={photo.src} className="relative overflow-hidden rounded-2xl bg-zinc-800">
+                    <div className="relative aspect-[4/5]">
+                      <Image
+                        src={photo.src}
+                        alt={altText}
+                        fill
+                        priority={index < 2}
+                        sizes="(max-width: 1024px) 50vw, 24vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  </figure>
+                )
+              })}
             </div>
           </div>
         </section>
@@ -82,7 +89,7 @@ export default function DatingPhotosHubPage({ locale = "en" }: { locale?: Dating
           <p className="text-xs font-black uppercase tracking-[.2em] text-[#ff6f00]">{copy.spokes.eyebrow}</p>
           <h2 className="mt-3 max-w-4xl text-3xl font-black tracking-tight sm:text-5xl">{copy.spokes.heading}</h2>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-zinc-600">{copy.spokes.description}</p>
-          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{datingHubSpokes.map((spoke, index) => { const shoot = getDatingShoot(spoke.shoot); const translated = copy.spokes.items[index]; return <Link key={spoke.href} href={spoke.href} className="group overflow-hidden rounded-3xl border border-zinc-200 bg-white"><div className="relative aspect-[16/10] bg-zinc-100">{shoot && <Image src={shoot.frames[0].src} alt={`${copy.imageAltPrefix} ${copy.shootNames[shoot.slug] ?? shoot.name}`} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition duration-300 group-hover:scale-[1.02]" />}</div><div className="p-6"><h3 className="text-xl font-black">{translated.title}</h3><p className="mt-3 leading-7 text-zinc-600">{translated.description}</p><span className="mt-5 inline-flex items-center gap-1 font-bold text-[#ff6f00]">{copy.spokes.explore} <ArrowRight className="h-4 w-4" /></span></div></Link> })}</div>
+          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{datingHubSpokes.map((spoke, index) => { const shoot = getDatingShoot(spoke.shoot); const translated = copy.spokes.items[index]; return <Link key={spoke.href} href={spoke.href} className="group flex flex-col overflow-hidden rounded-3xl border border-zinc-200 bg-white transition duration-300 hover:shadow-lg"><div className="relative aspect-[4/5] bg-zinc-100">{shoot && <Image src={shoot.frames[1].src} alt={`${copy.imageAltPrefix} ${copy.shootNames[shoot.slug] ?? shoot.name}`} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition duration-300 group-hover:scale-[1.02]" />}</div><div className="flex flex-1 flex-col justify-between p-6"><h3 className="text-xl font-black">{translated.title}</h3><p className="mt-3 leading-7 text-zinc-600">{translated.description}</p><span className="mt-5 inline-flex items-center gap-1 font-bold text-[#ff6f00]">{copy.spokes.explore} <ArrowRight className="h-4 w-4" /></span></div></Link> })}</div>
           <div className="mt-8 flex flex-wrap gap-3">{copy.spokes.links.map((item) => <Link key={item.href} href={item.href} className="rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-bold hover:border-[#ff6f00]">{item.label} →</Link>)}</div>
         </section>
 
@@ -92,7 +99,7 @@ export default function DatingPhotosHubPage({ locale = "en" }: { locale?: Dating
 
         <section className="mx-auto max-w-7xl px-5 py-20"><p className="text-xs font-black uppercase tracking-[.2em] text-[#ff6f00]">{copy.method.eyebrow}</p><h2 className="mt-3 max-w-4xl text-3xl font-black tracking-tight sm:text-5xl">{copy.method.heading}</h2><p className="mt-6 max-w-3xl text-lg leading-8 text-zinc-600">{copy.method.description}</p><div className="mt-10 overflow-x-auto rounded-3xl border border-zinc-200 bg-white"><table className="w-full min-w-[760px] border-collapse text-left"><thead className="bg-zinc-950 text-white"><tr><th className="p-5 text-sm">{locale === "en" ? "Element" : locale === "fr" ? "Élément" : locale === "es" ? "Elemento" : locale === "de" ? "Element" : "Elemento"}</th><th className="p-5 text-sm">{locale === "en" ? "What weak lineups do" : locale === "fr" ? "Ce que font les profils faibles" : locale === "es" ? "Qué hacen los perfiles débiles" : locale === "de" ? "Was schwache Profile tun" : "O que perfis fracos fazem"}</th><th className="p-5 text-sm">{locale === "en" ? "UnrealShot’s approach" : locale === "fr" ? "L’approche UnrealShot" : locale === "es" ? "El enfoque de UnrealShot" : locale === "de" ? "Der UnrealShot-Ansatz" : "A abordagem da UnrealShot"}</th></tr></thead><tbody>{copy.method.items.map((row) => <tr key={row.element} className="border-t border-zinc-200 align-top"><th className="p-5 font-black">{row.element}</th><td className="p-5 leading-7 text-zinc-600">{row.weak}</td><td className="p-5 leading-7 text-zinc-700">{row.unrealshot}</td></tr>)}</tbody></table></div></section>
 
-        <section className="border-y border-zinc-200 bg-white py-20"><div className="mx-auto max-w-7xl px-5"><div className="flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><p className="text-xs font-black uppercase tracking-[.2em] text-[#ff6f00]">{copy.examples.eyebrow}</p><h2 className="mt-3 max-w-3xl text-3xl font-black tracking-tight sm:text-5xl">{copy.examples.heading}</h2><p className="mt-5 max-w-3xl text-lg leading-8 text-zinc-600">{copy.examples.description}</p></div><Link href="/dating-photos/examples" className="font-black text-[#ff6f00] underline decoration-2 underline-offset-4">{copy.examples.link}</Link></div><div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{datingShoots.map((shoot) => <Link key={shoot.slug} href={`/dating-photos/shoots/${shoot.slug}`} className="group overflow-hidden rounded-3xl border border-zinc-200 bg-[#f7f5f3]"><div className="relative aspect-[4/3]"><Image src={shoot.frames[0].src} alt={`${copy.imageAltPrefix} ${copy.shootNames[shoot.slug] ?? shoot.name}`} fill sizes="(max-width: 640px) 100vw, 25vw" className="object-cover transition duration-300 group-hover:scale-[1.02]" /></div><div className="p-5"><p className="text-xs font-bold uppercase text-[#ff6f00]">{copy.examples.cardLabel}</p><h3 className="mt-2 text-lg font-black">{copy.shootNames[shoot.slug] ?? shoot.name} {copy.examples.cardSuffix}</h3><span className="mt-3 inline-block text-sm font-bold">{copy.examples.cardLink}</span></div></Link>)}</div></div></section>
+        <section className="border-y border-zinc-200 bg-white py-20"><div className="mx-auto max-w-7xl px-5"><div className="flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><p className="text-xs font-black uppercase tracking-[.2em] text-[#ff6f00]">{copy.examples.eyebrow}</p><h2 className="mt-3 max-w-3xl text-3xl font-black tracking-tight sm:text-5xl">{copy.examples.heading}</h2><p className="mt-5 max-w-3xl text-lg leading-8 text-zinc-600">{copy.examples.description}</p></div><Link href="/dating-photos/examples" className="font-black text-[#ff6f00] underline decoration-2 underline-offset-4">{copy.examples.link}</Link></div><div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{datingShoots.map((shoot) => <Link key={shoot.slug} href={`/dating-photos/shoots/${shoot.slug}`} className="group flex flex-col overflow-hidden rounded-3xl border border-zinc-200 bg-[#f7f5f3] transition duration-300 hover:shadow-lg"><div className="relative aspect-[4/5] bg-zinc-100"><Image src={shoot.frames[1].src} alt={`${copy.imageAltPrefix} ${copy.shootNames[shoot.slug] ?? shoot.name}`} fill sizes="(max-width: 640px) 100vw, 25vw" className="object-cover transition duration-300 group-hover:scale-[1.02]" /></div><div className="flex flex-1 flex-col justify-between p-5"><h3 className="mt-2 text-lg font-black">{copy.shootNames[shoot.slug] ?? shoot.name} {copy.examples.cardSuffix}</h3><span className="mt-3 inline-block text-sm font-bold text-[#ff6f00]">{copy.examples.cardLink}</span></div></Link>)}</div></div></section>
 
         <section className="mx-auto max-w-6xl px-5 py-20"><div className="grid gap-10 rounded-[2rem] bg-zinc-950 p-8 text-white lg:grid-cols-[1fr_.8fr] lg:p-12"><div><p className="text-xs font-black uppercase tracking-[.2em] text-[#ff6f00]">{copy.process.eyebrow}</p><h2 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">{copy.process.heading}</h2><p className="mt-5 text-lg leading-8 text-zinc-300">{copy.process.descriptionOne}</p><p className="mt-5 text-lg leading-8 text-zinc-300">{copy.process.descriptionTwo}</p><div className="mt-8 flex flex-wrap gap-4"><Link href="/login" className={ctaClass}>{copy.process.cta}</Link><Link href="/how-it-works" className="rounded-xl border border-zinc-700 px-6 py-3.5 font-bold">{copy.process.processLink}</Link></div></div><dl className="grid grid-cols-2 overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900">{copy.process.stats.map(([label, value]) => <div key={label} className="border-b border-r border-zinc-800 p-5"><dt className="text-xs uppercase tracking-wide text-zinc-500">{label}</dt><dd className="mt-2 font-black">{value}</dd></div>)}</dl></div></section>
 

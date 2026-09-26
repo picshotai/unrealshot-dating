@@ -17,6 +17,28 @@ export const hingeLanding: PlatformLandingContent = {
   answer: "UnrealShot creates 15 coherent four-photo shoots for men who want a more complete Hinge profile. Your 4–6 current selfies guide likeness while three intake answers help shape varied creative directions. Each generated idea becomes four connected photos, giving you 60 results plus 15 individual Photo Retakes within 30 minutes for $39 once.",
   reviewed: "August 31, 2026",
   heroBullets: ["15 varied ideas with four related frames each", "Truthful intake guides the creative direction", "60 photos plus 15 Photo Retakes", "Delivered within 30 minutes · $39 once"],
+  heroPhotos: [
+    {
+      src: "/pages/hinge_closeup.webp",
+      alt: "Hinge close opener dating profile photo with natural lighting",
+      role: "Close opener",
+    },
+    {
+      src: "/pages/hinge_half_body.webp",
+      alt: "Hinge half-body dating photo supporting prompt conversations",
+      role: "Half body",
+    },
+    {
+      src: "/pages/hinge_full_body.webp",
+      alt: "Hinge full-length dating photo showing proportions and everyday setting",
+      role: "Full length",
+    },
+    {
+      src: "/pages/hinge_expression.webp",
+      alt: "Hinge candid expression photo with genuine relaxed smile",
+      role: "Candid expression",
+    },
+  ],
   problemIntro: "Hinge places photos and written prompts inside the same profile, so the images need to feel like they belong to the person behind the answers. Repeated selfies, outdated photos and disconnected AI images leave the profile with little visual personality or continuity.",
   problems: [
     { title: "Your photos add little to your prompts", body: "When every image is another close portrait, the visual side of the profile cannot support the personality, routine and interests described in your written answers." },

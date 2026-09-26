@@ -6,8 +6,6 @@ import type { ShootLandingCopy } from "@/lib/dating-shoot-landing-content"
 import type { ShootPageUiCopy } from "@/lib/dating-shoot-localized"
 
 export default function ShootLandingHero({ shoot, copy, ui }: { shoot: DatingShoot; copy: ShootLandingCopy; ui: ShootPageUiCopy }) {
-  const [primary, secondary, tertiary] = copy.gallery
-
   return (
     <section className="relative overflow-hidden bg-[linear-gradient(135deg,#fffaf6_0%,#f7f5f3_55%,#ffffff_100%)] pb-16 pt-32 text-zinc-950 sm:pb-24 sm:pt-36">
       <div aria-hidden="true" className="absolute -right-24 top-20 h-96 w-96 rounded-full bg-[#ff6f00]/10 blur-3xl" />
@@ -29,16 +27,26 @@ export default function ShootLandingHero({ shoot, copy, ui }: { shoot: DatingSho
           </div>
         </div>
 
-        <div className="relative mx-auto w-full max-w-2xl pb-9 sm:pb-12">
-          <div className="grid grid-cols-[1.15fr_.85fr] gap-3 rounded-[2rem] border border-zinc-200 bg-white p-3 shadow-[0_30px_80px_-36px_rgba(24,24,27,.35)] sm:gap-4 sm:p-4">
-            <figure className="relative row-span-2 overflow-hidden rounded-2xl bg-zinc-100"><div className="relative min-h-[430px] h-full"><Image src={primary.src} alt={primary.alt} fill priority sizes="(max-width: 1024px) 58vw, 33vw" className="object-cover" /></div></figure>
-            {secondary && <figure className="relative overflow-hidden rounded-2xl bg-zinc-100"><div className="relative aspect-[4/5]"><Image src={secondary.src} alt={secondary.alt} fill priority sizes="(max-width: 1024px) 38vw, 22vw" className="object-cover" /></div></figure>}
-            {tertiary && <figure className="relative overflow-hidden rounded-2xl bg-zinc-100"><div className="relative aspect-[4/5]"><Image src={tertiary.src} alt={tertiary.alt} fill sizes="(max-width: 1024px) 38vw, 22vw" className="object-cover" /></div></figure>}
-          </div>
-          <div className="absolute -bottom-1 left-4 right-4 rounded-2xl bg-zinc-950 px-5 py-4 text-white shadow-xl sm:left-8 sm:right-8">
-            <p className="text-xs font-black uppercase tracking-[.16em] text-[#ff6f00]">{ui.heroPanelLabel}</p>
-            <p className="mt-1 text-sm text-zinc-300">{ui.heroPanelDescription(shoot.name)}</p>
-          </div>
+        <div className="relative mx-auto w-full max-w-2xl">
+          <figure className="relative grid grid-cols-2 gap-3 rounded-[2rem] bg-zinc-950 p-3 shadow-2xl">
+            {copy.gallery.slice(0, 4).map((photo, index) => (
+              <div
+                key={photo.src}
+                className={`relative overflow-hidden rounded-2xl bg-zinc-800 ${index % 2 ? "translate-y-3" : "-translate-y-1"}`}
+              >
+                <div className="relative aspect-[4/5]">
+                  <Image
+                    src={photo.src}
+                    alt={photo.alt}
+                    fill
+                    priority={index < 2}
+                    sizes="(max-width: 1024px) 50vw, 25vw"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+            ))}
+          </figure>
         </div>
       </div>
     </section>

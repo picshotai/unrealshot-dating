@@ -22,6 +22,28 @@ export const tinderLanding: PlatformLandingContent = {
     "15 individual Photo Retakes included",
     "Delivered within 30 minutes · $39 once",
   ],
+  heroPhotos: [
+    {
+      src: "/pages/tinder_closeup.webp",
+      alt: "Tinder close opener dating profile photo with clear facial features",
+      role: "Close opener",
+    },
+    {
+      src: "/pages/tinder_half_body.webp",
+      alt: "Tinder half-body dating photo showing casual style and posture",
+      role: "Half body",
+    },
+    {
+      src: "/pages/tinder_full_body.webp",
+      alt: "Tinder full-length dating photo showing proportions and natural environment",
+      role: "Full length",
+    },
+    {
+      src: "/pages/tinder_expression_shoot.webp",
+      alt: "Tinder candid expression dating photo with approachable smile",
+      role: "Candid expression",
+    },
+  ],
   problemIntro: "Most men already have plenty of pictures. The problem is that the usable ones often come from the same angle, the same room or completely different stages of life. That makes it hard to build a Tinder profile that feels current, natural and visually complete.",
   problems: [
     { title: "Your best recent photo is still a selfie", body: "A clear selfie can show your face, but it rarely gives you the natural setting, body language and camera distance of a photo taken during a real moment." },

@@ -182,18 +182,31 @@ export default function DatingActivityPage({ locale }: { locale: PublishedPublic
                       )}
                     </div>
 
-                    {shoot && (
-                      <div className="grid grid-cols-2 gap-1 bg-zinc-100 p-2 sm:p-3">
-                        <figure className="relative aspect-[4/5] overflow-hidden rounded-xl bg-zinc-200">
-                          <Image src={shoot.frames[0].src} alt={shoot.frames[0].alt} fill sizes="(max-width: 1024px) 50vw, 22vw" className="object-cover" />
-                          <figcaption className="absolute inset-x-1.5 bottom-1.5 rounded bg-black/70 px-2 py-1 text-[9px] font-bold text-white uppercase">{shoot.frames[0].role}</figcaption>
-                        </figure>
-                        <figure className="relative aspect-[4/5] overflow-hidden rounded-xl bg-zinc-200">
-                          <Image src={shoot.frames[1].src} alt={shoot.frames[1].alt} fill sizes="(max-width: 1024px) 50vw, 22vw" className="object-cover" />
-                          <figcaption className="absolute inset-x-1.5 bottom-1.5 rounded bg-black/70 px-2 py-1 text-[9px] font-bold text-white uppercase">{shoot.frames[1].role}</figcaption>
-                        </figure>
-                      </div>
-                    )}
+                    {shoot && (() => {
+                      const pairIndices: [number, number][] = [
+                        [1, 3], // Category 1: Half-body + Candid / expression
+                        [1, 2], // Category 2: Half-body + Full-length
+                        [2, 3], // Category 3: Full-length + Candid / expression
+                        [1, 2], // Category 4: Half-body + Full-length
+                        [2, 3], // Category 5: Full-length + Candid / expression
+                      ]
+                      const [idx1, idx2] = pairIndices[idx % pairIndices.length]
+                      const frame1 = shoot.frames[idx1] ?? shoot.frames[0]
+                      const frame2 = shoot.frames[idx2] ?? shoot.frames[1]
+
+                      return (
+                        <div className="grid grid-cols-2 gap-1 bg-zinc-100 p-2 sm:p-3">
+                          <figure className="relative aspect-[4/5] overflow-hidden rounded-xl bg-zinc-200">
+                            <Image src={frame1.src} alt={frame1.alt} fill sizes="(max-width: 1024px) 50vw, 22vw" className="object-cover" />
+                            <figcaption className="absolute inset-x-1.5 bottom-1.5 rounded bg-black/70 px-2 py-1 text-[9px] font-bold text-white uppercase">{frame1.role}</figcaption>
+                          </figure>
+                          <figure className="relative aspect-[4/5] overflow-hidden rounded-xl bg-zinc-200">
+                            <Image src={frame2.src} alt={frame2.alt} fill sizes="(max-width: 1024px) 50vw, 22vw" className="object-cover" />
+                            <figcaption className="absolute inset-x-1.5 bottom-1.5 rounded bg-black/70 px-2 py-1 text-[9px] font-bold text-white uppercase">{frame2.role}</figcaption>
+                          </figure>
+                        </div>
+                      )
+                    })()}
                   </div>
                 </article>
               )
@@ -284,19 +297,21 @@ export default function DatingActivityPage({ locale }: { locale: PublishedPublic
 
             <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {heroShoots.map((shoot) => shoot && (
-                <PublicLink key={shoot.slug} href={`/dating-photos/shoots/${shoot.slug}`} className="group overflow-hidden rounded-3xl border border-zinc-200 bg-[#f7f5f3] transition hover:border-[#ff6f00]">
-                  <div className="relative aspect-[4/3]">
+                <PublicLink key={shoot.slug} href={`/dating-photos/shoots/${shoot.slug}`} className="group flex flex-col overflow-hidden rounded-3xl border border-zinc-200 bg-[#f7f5f3] transition hover:border-[#ff6f00] hover:shadow-lg">
+                  <div className="relative aspect-[4/5] bg-zinc-100">
                     <Image
-                      src={shoot.frames[0].src}
-                      alt={shoot.frames[0].alt}
+                      src={shoot.frames[1].src}
+                      alt={shoot.frames[1].alt}
                       fill
                       sizes="(max-width: 640px) 100vw, 25vw"
                       className="object-cover transition duration-300 group-hover:scale-[1.02]"
                     />
                   </div>
-                  <div className="p-5">
-                <p className="text-xs font-bold uppercase text-[#ff6f00]">{ui.relatedFrames}</p>
-                    <h3 className="mt-2 text-lg font-black">{shoot.name} {ui.shootSuffix}</h3>
+                  <div className="flex flex-1 flex-col justify-between p-5">
+                    <div>
+                      <p className="text-xs font-bold uppercase text-[#ff6f00]">{ui.relatedFrames}</p>
+                      <h3 className="mt-2 text-lg font-black">{shoot.name} {ui.shootSuffix}</h3>
+                    </div>
                     <span className="mt-3 inline-block text-sm font-bold text-zinc-900 group-hover:text-[#ff6f00]">{ui.viewShoot}</span>
                   </div>
                 </PublicLink>

@@ -85,7 +85,7 @@ export function HowItWorks() {
             </div>
             <div className="absolute bottom-0 right-0 z-10 w-[63%] rotate-5 border border-black/10 bg-white p-2 pb-10 shadow-[0_20px_65px_rgba(0,0,0,0.18)] sm:p-3 sm:pb-12">
               <div className="relative aspect-[3/4] overflow-hidden">
-                <Image src="/new-landing/29ecda7f13764ee595abe3c9be049ddb.jpg" alt="Example UnrealShot result from the same person" fill className="object-cover" sizes="310px" />
+                <Image src="/pages/dinner_closeup.webp" alt="Example UnrealShot result from the same person" fill className="object-cover" sizes="310px" />
                 <span className="absolute right-2 top-2 bg-[#25a882] px-2 py-1 font-mono text-[8px] font-bold tracking-[0.1em] text-black">RESULT</span>
               </div>
               <span className="absolute bottom-2 left-0 w-full text-center font-serif text-lg italic text-black">one of fifteen shoots</span>

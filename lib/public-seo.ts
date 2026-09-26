@@ -48,7 +48,7 @@ export function getLocalizedMetadata({
   title,
   description,
   keywords = [],
-  image = `${defaultSEO.siteUrl}/new-landing/29ecda7f13764ee595abe3c9be049ddb.jpg`,
+  image = `${defaultSEO.siteUrl}/pages/dinner_closeup.webp`,
   alternatePaths,
 }: {
   locale: PublishedPublicLocale

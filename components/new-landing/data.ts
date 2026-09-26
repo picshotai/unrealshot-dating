@@ -40,7 +40,7 @@ export const shootCards = [
     copy:
       "A close portrait, a half-body, a full-length, and a candid—generated against the same anchor so the room, clothes, and light hold still.",
     tags: ["4 FRAMES", "1 OUTFIT", "1 LIGHT"],
-    image: "/new-landing/training-floor-morning-2.png",
+    image: "/pages/dating_gym_photo.webp",
     bg: "#45c4f9",
     ink: "#080808",
   },
@@ -52,7 +52,7 @@ export const shootCards = [
     copy:
       "Every shoot moves to a different place, outfit, and light. The result has range, but still reads like one person with an actual life.",
     tags: ["15 SHOOTS", "60 PHOTOS", "TALL + WIDE"],
-    image: "/new-landing/mountain-layby-motorcycle_4.png",
+    image: "/pages/city_walk_mid_action.webp",
     bg: "#111111",
     ink: "#ffffff",
   },
@@ -64,7 +64,7 @@ export const shootCards = [
     copy:
       "Choose the look to lead with, what you actually do, and anything to leave out. Every delivery covers the range; your answers decide where it leans.",
     tags: ["YOUR LOOK", "22 INTERESTS", "4 EXCLUSIONS"],
-    image: "/new-landing/2ba004de6cf9475b82150b7bd1ff4807.jpg",
+    image: "/pages/outdoor_coffee_closeup.webp",
     bg: "#f7b733",
     ink: "#080808",
   },
@@ -76,7 +76,7 @@ export const shootCards = [
     copy:
       "Fifteen Photo Retakes are included. Replace one individual photo without breaking the three photographs around it—or turning your profile back into a folder of one-offs.",
     tags: ["15 PHOTO RETAKES", "ONE PHOTO EACH", "STAYS COHERENT"],
-    image: "/new-landing/29ecda7f13764ee595abe3c9be049ddb.jpg",
+    image: "/pages/dinner_closeup.webp",
     bg: "#ec2578",
     ink: "#ffffff",
   },

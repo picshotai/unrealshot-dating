@@ -3,6 +3,7 @@ import { bumbleGuide, bumbleLanding } from "./bumble"
 import { getPlatformPageCopy } from "./copy"
 import { hingeGuide, hingeLanding } from "./hinge"
 import { tinderGuide, tinderLanding } from "./tinder"
+import { getLocalizedPlatformHeroPhotos } from "./localized-photos"
 import type { PlatformGuideContent, PlatformLandingContent } from "./types"
 import type { LocalizedPlatformApp, PlatformLocalePack } from "./localized-types"
 
@@ -49,6 +50,7 @@ export function buildLocalizedPlatformPages(pack: PlatformLocalePack) {
       sources: localizedSources(pack, app),
       guidePath: baseLanding.guidePath,
       guideLabel: pack.guideLabel(app),
+      heroPhotos: getLocalizedPlatformHeroPhotos(app, pack.locale) ?? baseLanding.heroPhotos,
       ...pack.landing(app, variant),
     }
 

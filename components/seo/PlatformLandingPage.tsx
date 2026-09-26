@@ -37,11 +37,41 @@ export default function PlatformLandingPage({ content, locale }: { content: Plat
             </div>
           </div>
           <figure className="relative grid grid-cols-2 gap-3 rounded-[2rem] bg-zinc-950 p-3 pb-12 shadow-2xl">
-            {examples.slice(0, 4).map((shoot, index) => shoot && (
-              <div key={shoot.slug} className={`relative overflow-hidden rounded-2xl bg-zinc-800 ${index % 2 ? "translate-y-3" : "-translate-y-1"}`}>
-                <div className="relative aspect-[4/5]"><Image src={shoot.frames[0].src} alt={shoot.frames[0].alt} fill priority={index < 2} sizes="(max-width: 1024px) 50vw, 25vw" className="object-cover" /></div>
-              </div>
-            ))}
+            {content.heroPhotos && content.heroPhotos.length > 0
+              ? content.heroPhotos.slice(0, 4).map((photo, index) => (
+                  <div
+                    key={photo.src}
+                    className={`relative overflow-hidden rounded-2xl bg-zinc-800 ${index % 2 ? "translate-y-3" : "-translate-y-1"}`}
+                  >
+                    <div className="relative aspect-[4/5]">
+                      <Image
+                        src={photo.src}
+                        alt={photo.alt}
+                        fill
+                        priority={index < 2}
+                        sizes="(max-width: 1024px) 50vw, 25vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                ))
+              : examples.slice(0, 4).map((shoot, index) => shoot && (
+                  <div
+                    key={shoot.slug}
+                    className={`relative overflow-hidden rounded-2xl bg-zinc-800 ${index % 2 ? "translate-y-3" : "-translate-y-1"}`}
+                  >
+                    <div className="relative aspect-[4/5]">
+                      <Image
+                        src={shoot.frames[0].src}
+                        alt={shoot.frames[0].alt}
+                        fill
+                        priority={index < 2}
+                        sizes="(max-width: 1024px) 50vw, 25vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                ))}
             <figcaption className="absolute inset-x-4 bottom-3 text-center text-xs font-bold uppercase tracking-wide text-white">{copy.sampleCaption}</figcaption>
           </figure>
         </section>

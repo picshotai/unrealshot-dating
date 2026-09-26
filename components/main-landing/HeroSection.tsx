@@ -32,44 +32,44 @@ const marqueeShoots: ShootMarqueeItem[] = [
     shootNumber: "SHOOT 01",
     theme: "GYM / TRAINING",
     mainImage: {
-      src: "/new-landing/training-floor-morning-2.png",
+      src: "/pages/dating_gym_photo.webp",
       alt: "UnrealShot Gym Shoot - Frame 1: Mid-workout portrait with gym rack lighting"
     },
     thumbnails: [
       {
-        src: "/new-landing/training-floor-morning-1.png",
-        alt: "UnrealShot Gym Shoot - Frame 2: Full-length floor perspective"
+        src: "/pages/dating_gym_photo2.webp",
+        alt: "UnrealShot Gym Shoot - Frame 2: Resting between sets half-body"
       },
       {
-        src: "/new-landing/fa9c4cc3f3a3413c8ae0e898869f1f49.jpg",
-        alt: "UnrealShot Gym Shoot - Frame 3: Equipment training candid"
+        src: "/pages/dating_gym_photo3.webp",
+        alt: "UnrealShot Gym Shoot - Frame 3: Modern training floor full-length"
       },
       {
-        src: "/new-landing/01616e3c4bb24641b1f623e80cea9e12.jpg",
-        alt: "UnrealShot Gym Shoot - Frame 4: Rest interval water break"
+        src: "/pages/dating_gym_photo4.webp",
+        alt: "UnrealShot Gym Shoot - Frame 4: Natural workout candid smile"
       }
     ]
   },
   {
     id: "shoot-02",
     shootNumber: "SHOOT 02",
-    theme: "MOTORCYCLE / ROAD TRIP",
+    theme: "CASUAL / LIFESTYLE",
     mainImage: {
-      src: "/new-landing/mountain-layby-motorcycle_4.png",
-      alt: "UnrealShot Motorcycle Shoot - Frame 1: Highway layby portrait"
+      src: "/pages/hinge_closeup.webp",
+      alt: "UnrealShot Lifestyle Shoot - Frame 1: Warm approachable opener"
     },
     thumbnails: [
       {
-        src: "/new-landing/mountain-layby-motorcycle_2.png",
-        alt: "UnrealShot Motorcycle Shoot - Frame 2: Leaning against bike candid"
+        src: "/pages/hinge_half_body.webp",
+        alt: "UnrealShot Lifestyle Shoot - Frame 2: Relaxed casual half-body"
       },
       {
-        src: "/new-landing/3TZbYnm-kqNBZfoXDdx7W_f7197f805cd34f84b2252dcacd65ee49.jpg",
-        alt: "UnrealShot Motorcycle Shoot - Frame 3: Helmet off landscape"
+        src: "/pages/hinge_full_body.webp",
+        alt: "UnrealShot Lifestyle Shoot - Frame 3: Natural outdoor full-length"
       },
       {
-        src: "/new-landing/ZvwZd8Jx-PREBesBKZF38_aa31a675ef8c43bcbc372bc78c2e2712.jpg",
-        alt: "UnrealShot Motorcycle Shoot - Frame 4: Mountain ridge scenic view"
+        src: "/pages/hinge_expression.webp",
+        alt: "UnrealShot Lifestyle Shoot - Frame 4: Spontaneous candid reaction"
       }
     ]
   },
@@ -78,20 +78,20 @@ const marqueeShoots: ShootMarqueeItem[] = [
     shootNumber: "SHOOT 03",
     theme: "OUTDOOR COFFEE",
     mainImage: {
-      src: "/new-landing/2ba004de6cf9475b82150b7bd1ff4807.jpg",
+      src: "/pages/outdoor_coffee_closeup.webp",
       alt: "UnrealShot Outdoor Coffee Shoot - Frame 1: Espresso terrace opener"
     },
     thumbnails: [
       {
-        src: "/new-landing/49f810cc6e4344b480aadb5df98f6d7d.jpg",
+        src: "/pages/outdoor_coffee_half_body.webp",
         alt: "UnrealShot Outdoor Coffee Shoot - Frame 2: Relaxed table candid"
       },
       {
-        src: "/new-landing/519170ac2c004900af87f015bf5a1771.jpg",
-        alt: "UnrealShot Outdoor Coffee Shoot - Frame 3: Morning sunlight angle"
+        src: "/pages/outdoor_coffee_full_body.webp",
+        alt: "UnrealShot Outdoor Coffee Shoot - Frame 3: Walkable street full-length"
       },
       {
-        src: "/new-landing/5cc8c2fbbd9a4e8b92ebbe72530d367e.jpg",
+        src: "/pages/outdoor_coffee_expression.webp",
         alt: "UnrealShot Outdoor Coffee Shoot - Frame 4: Laughing natural candid"
       }
     ]
@@ -101,21 +101,21 @@ const marqueeShoots: ShootMarqueeItem[] = [
     shootNumber: "SHOOT 04",
     theme: "DINNER / DRESSED UP",
     mainImage: {
-      src: "/new-landing/29ecda7f13764ee595abe3c9be049ddb.jpg",
-      alt: "UnrealShot Evening Shoot - Frame 1: Cocktail lounge sharp opener"
+      src: "/pages/dinner_closeup.webp",
+      alt: "UnrealShot Evening Shoot - Frame 1: Warm ambient table opener"
     },
     thumbnails: [
       {
-        src: "/new-landing/4436e4eadfa843ab94ad12db98a8664b.jpg",
-        alt: "UnrealShot Evening Shoot - Frame 2: Smart tailored jacket candid"
+        src: "/pages/dinner_candid_half_body.webp",
+        alt: "UnrealShot Evening Shoot - Frame 2: Smart-casual evening half-body"
       },
       {
-        src: "/new-landing/7545cc16b7a94c059fb42bba5aa0ec03.jpg",
-        alt: "UnrealShot Evening Shoot - Frame 3: Ambient bar counter framing"
+        src: "/pages/dinner_candid_full_body.webp",
+        alt: "UnrealShot Evening Shoot - Frame 3: Restaurant arrival full-length"
       },
       {
-        src: "/new-landing/758bff1bb9d64242badcae3db5b9da54.jpg",
-        alt: "UnrealShot Evening Shoot - Frame 4: Low warm evening light portrait"
+        src: "/pages/dinner_candid_expression.webp",
+        alt: "UnrealShot Evening Shoot - Frame 4: Shared table smile candid"
       }
     ]
   },
@@ -124,21 +124,21 @@ const marqueeShoots: ShootMarqueeItem[] = [
     shootNumber: "SHOOT 05",
     theme: "CITY WALK",
     mainImage: {
-      src: "/new-landing/8cf00013ec6f459f986d903e2c55b6bd.jpg",
-      alt: "UnrealShot City Walk Shoot - Frame 1: Street crosswalk candid"
+      src: "/pages/city_walk_closeup.webp",
+      alt: "UnrealShot City Walk Shoot - Frame 1: Late afternoon urban portrait"
     },
     thumbnails: [
       {
-        src: "/new-landing/98d351a9c32544b6a6cf67f849b3709d.jpg",
-        alt: "UnrealShot City Walk Shoot - Frame 2: Downtown golden hour framing"
+        src: "/pages/city_walk_candid.webp",
+        alt: "UnrealShot City Walk Shoot - Frame 2: Downtown street half-body"
       },
       {
-        src: "/new-landing/9f8c395288d14566a2082aa1f97f1a8d.jpg",
-        alt: "UnrealShot City Walk Shoot - Frame 3: Brick wall half-body"
+        src: "/pages/city_walk_mid_action.webp",
+        alt: "UnrealShot City Walk Shoot - Frame 3: Pedestrian walkway full-length"
       },
       {
-        src: "/new-landing/b0e37df119704fc3a10d49b8eb3d3e05.jpg",
-        alt: "UnrealShot City Walk Shoot - Frame 4: Walking movement perspective"
+        src: "/pages/city_walk_looking_back.webp",
+        alt: "UnrealShot City Walk Shoot - Frame 4: Walking movement candid"
       }
     ]
   },
@@ -147,21 +147,21 @@ const marqueeShoots: ShootMarqueeItem[] = [
     shootNumber: "SHOOT 06",
     theme: "TRAVEL / COASTLINE",
     mainImage: {
-      src: "/new-landing/cf26ce46ee2b4559b3074b6df276b578.jpg",
-      alt: "UnrealShot Coastal Shoot - Frame 1: Ocean cliff portrait"
+      src: "/pages/coastal_walk_closeup.webp",
+      alt: "UnrealShot Coastal Shoot - Frame 1: Ocean cliffside portrait"
     },
     thumbnails: [
       {
-        src: "/new-landing/d46441e7fade4496ac0415207e1bd999.jpg",
-        alt: "UnrealShot Coastal Shoot - Frame 2: Sea breeze half-body"
+        src: "/pages/coastal_walk_mid_action.webp",
+        alt: "UnrealShot Coastal Shoot - Frame 2: Breezy coastal path half-body"
       },
       {
-        src: "/new-landing/d8800712954d45639eb5caa2ab54f3e4.jpg",
-        alt: "UnrealShot Coastal Shoot - Frame 3: Boardwalk shoreline candid"
+        src: "/pages/coastal_walks_full_body.webp",
+        alt: "UnrealShot Coastal Shoot - Frame 3: Coastal walkway full-length"
       },
       {
-        src: "/new-landing/e6dc622a63504a7bab9846e0c904750b.jpg",
-        alt: "UnrealShot Coastal Shoot - Frame 4: Sunset beach walk"
+        src: "/pages/coastal_walk_candid.webp",
+        alt: "UnrealShot Coastal Shoot - Frame 4: Wind-blown candid smile"
       }
     ]
   },
@@ -170,21 +170,21 @@ const marqueeShoots: ShootMarqueeItem[] = [
     shootNumber: "SHOOT 07",
     theme: "HOME / COOKING",
     mainImage: {
-      src: "/new-landing/ed0d2abb04e84ccca0af74ac8c4b4838.jpg",
-      alt: "UnrealShot Home Shoot - Frame 1: Sunlit kitchen casual opener"
+      src: "/pages/kitchen_shot_cooking.webp",
+      alt: "UnrealShot Home Shoot - Frame 1: Sunlit kitchen cooking opener"
     },
     thumbnails: [
       {
-        src: "/new-landing/jzimL01q4n-HYR3LGOpNd_edd9c15406384b23a4881168a98275d2.jpg",
-        alt: "UnrealShot Home Shoot - Frame 2: Window sofa coffee moment"
+        src: "/pages/kitchen_shot_chopping.webp",
+        alt: "UnrealShot Home Shoot - Frame 2: Fresh ingredient preparation half-body"
       },
       {
-        src: "/new-landing/qypjwusLmXPBiDK6QDNwN_185eda5c96bc4c2ba32d238a42ba51a9.jpg",
-        alt: "UnrealShot Home Shoot - Frame 3: Cooking prep natural laugh"
+        src: "/pages/kitchen_shot_moving_out.webp",
+        alt: "UnrealShot Home Shoot - Frame 3: Domestic kitchen full-length"
       },
       {
-        src: "/new-landing/SHnKUu0hqzogDc12-W8eP_24713af628db4f8b95aba0dc06caf9a6.jpg",
-        alt: "UnrealShot Home Shoot - Frame 4: Relaxed indoor smile"
+        src: "/pages/kitchen_shot_food_testing.webp",
+        alt: "UnrealShot Home Shoot - Frame 4: Spontaneous spoon tasting candid"
       }
     ]
   },
@@ -193,21 +193,21 @@ const marqueeShoots: ShootMarqueeItem[] = [
     shootNumber: "SHOOT 08",
     theme: "SUNSET / ROOFTOP",
     mainImage: {
-      src: "/showcase1.png",
-      alt: "UnrealShot Rooftop Shoot - Frame 1: Skyline golden hour opener"
+      src: "/pages/rooftop3.webp",
+      alt: "UnrealShot Rooftop Shoot - Frame 1: Skyline evening terrace portrait"
     },
     thumbnails: [
       {
-        src: "/showcase2.png",
-        alt: "UnrealShot Rooftop Shoot - Frame 2: Balcony railing half-body"
+        src: "/pages/rooftop2.webp",
+        alt: "UnrealShot Rooftop Shoot - Frame 2: Sunset plant watering half-body"
       },
       {
-        src: "/showcase3.png",
-        alt: "UnrealShot Rooftop Shoot - Frame 3: Natural laughing candid"
+        src: "/pages/rooftop4.webp",
+        alt: "UnrealShot Rooftop Shoot - Frame 3: City skyline terrace full-length"
       },
       {
-        src: "/showcase4.png",
-        alt: "UnrealShot Rooftop Shoot - Frame 4: City overlook sunset view"
+        src: "/pages/rooftop.webp",
+        alt: "UnrealShot Rooftop Shoot - Frame 4: Rooftop night lights candid"
       }
     ]
   }

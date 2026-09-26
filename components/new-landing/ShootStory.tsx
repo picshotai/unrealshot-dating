@@ -50,7 +50,7 @@ export function ShootStory() {
             className="absolute left-0 md:left-4 xl:left-12 top-4 hidden w-[190px] bg-white p-2.5 pb-12 shadow-[0_8px_30px_rgb(0,0,0,0.12)] md:block lg:w-[230px] z-20"
           >
             <div className="relative aspect-[3/4] overflow-hidden">
-              <Image src="/new-landing/training-floor-morning-2.png" alt="Second frame" fill className="object-cover" sizes="230px" />
+              <Image src="/pages/dating_gym_photo2.webp" alt="Second frame" fill className="object-cover" sizes="230px" />
             </div>
             <span className="absolute bottom-2.5 left-0 w-full text-center font-serif text-[1.1rem] italic text-black/90">same morning</span>
           </motion.div>
@@ -62,7 +62,7 @@ export function ShootStory() {
             className="absolute right-0 md:right-4 xl:right-12 top-20 hidden w-[190px] bg-white p-2.5 pb-12 shadow-[0_8px_30px_rgb(0,0,0,0.12)] md:block lg:w-[230px] z-20"
           >
             <div className="relative aspect-[3/4] overflow-hidden">
-              <Image src="/new-landing/training-floor-morning-1.png" alt="Full-length frame" fill className="object-cover" sizes="230px" />
+              <Image src="/pages/dating_gym_photo3.webp" alt="Full-length frame" fill className="object-cover" sizes="230px" />
             </div>
             <span className="absolute bottom-2.5 left-0 w-full text-center font-serif text-[1.1rem] italic text-black/90">same clothes</span>
           </motion.div>

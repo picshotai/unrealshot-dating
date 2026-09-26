@@ -1,3 +1,26 @@
+export const datingHubHeroPhotos = [
+  {
+    src: "/pages/dating_photos_hero_closeup.webp",
+    alt: "Hero closeup",
+    role: "Closeup",
+  },
+  {
+    src: "/pages/dating_photos_half_body.webp",
+    alt: "Half body",
+    role: "Half Body",
+  },
+  {
+    src: "/pages/dating_photos_candid.webp",
+    alt: "Candid portrait",
+    role: "Candid",
+  },
+  {
+    src: "/pages/dating_photos_expression.webp",
+    alt: "Natural expression",
+    role: "Expression",
+  },
+]
+
 export const datingHubProblems = [
   {
     title: "Your camera roll repeats one version of you",

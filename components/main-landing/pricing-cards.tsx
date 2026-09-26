@@ -26,10 +26,10 @@ export default function PricingCards() {
   const features = t.raw("features") as string[]
 
   const sampleShootImages = [
-    { src: "/new-landing/5cc8c2fbbd9a4e8b92ebbe72530d367e.jpg", alt: t("sampleFrameAlt", { index: 1 }) },
-    { src: "/new-landing/4436e4eadfa843ab94ad12db98a8664b.jpg", alt: t("sampleFrameAlt", { index: 2 }) },
-    { src: "/new-landing/519170ac2c004900af87f015bf5a1771.jpg", alt: t("sampleFrameAlt", { index: 3 }) },
-    { src: "/new-landing/cf26ce46ee2b4559b3074b6df276b578.jpg", alt: t("sampleFrameAlt", { index: 4 }) },
+    { src: "/pages/outdoor_coffee_closeup.webp", alt: t("sampleFrameAlt", { index: 1 }) },
+    { src: "/pages/kitchen_shot_chopping.webp", alt: t("sampleFrameAlt", { index: 2 }) },
+    { src: "/pages/city_walk_mid_action.webp", alt: t("sampleFrameAlt", { index: 3 }) },
+    { src: "/pages/dinner_candid_expression.webp", alt: t("sampleFrameAlt", { index: 4 }) },
   ]
 
   return (

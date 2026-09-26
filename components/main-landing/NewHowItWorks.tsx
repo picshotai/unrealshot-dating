@@ -8,12 +8,50 @@ import { useTranslations } from "next-intl"
 // Using your specific image requests
 const leftInputImages = ["/images/demo1.jpg", "/images/demo2.jpg", "/images/demo3.jpg"];
 const rightInputImages = ["/images/demo7.jpg", "/images/demo5.jpg", "/images/demo11.jpg"];
-const womanOutputImages = ["/images/aimodel1.jpg", "/images/aimodel2.jpg", "/images/aimodel3.jpg", "/images/aimodel4.jpg"];
-const manOutputImages = ["/images/aimodel5.jpg", "/images/aimodel6.jpg", "/images/aimodel7.jpg", "/images/aimodel8.jpg"];
+// Strategically curated Step 3 results from authentic generated shoots
+// Row 1: High-impact openers and stylish half-body portraits
+const resultsRow1 = [
+  "/pages/outdoor_coffee_closeup.webp",
+  "/pages/dating_gym_photo.webp",
+  "/pages/city_walk_closeup.webp",
+  "/pages/dinner_closeup.webp",
+  "/pages/coastal_walk_closeup.webp",
+  "/pages/kitchen_shot_cooking.webp",
+  "/pages/rooftop3.webp",
+  "/pages/hinge_closeup.webp",
+  "/pages/tinder_closeup.webp",
+  "/pages/dating_photos_hero_closeup.webp",
+  "/pages/outdoor_coffee_half_body.webp",
+  "/pages/dating_gym_photo2.webp",
+  "/pages/city_walk_candid.webp",
+  "/pages/dinner_candid_half_body.webp",
+  "/pages/rooftop2.webp",
+  "/pages/kitchen_shot_chopping.webp",
+  "/pages/coastal_walk_mid_action.webp",
+  "/pages/hinge_half_body.webp",
+];
 
-// Create arrays for carousel - combining both woman and man output images
-const humans = [...womanOutputImages, ...manOutputImages];
-const humans2 = [...manOutputImages, ...womanOutputImages]; // Different order for second carousel
+// Row 2: Full-length body context and candid expressions with natural movement
+const resultsRow2 = [
+  "/pages/city_walk_mid_action.webp",
+  "/pages/outdoor_coffee_full_body.webp",
+  "/pages/dating_gym_photo3.webp",
+  "/pages/dinner_candid_full_body.webp",
+  "/pages/coastal_walks_full_body.webp",
+  "/pages/kitchen_shot_moving_out.webp",
+  "/pages/rooftop4.webp",
+  "/pages/hinge_full_body.webp",
+  "/pages/tinder_full_body.webp",
+  "/pages/city_walk_looking_back.webp",
+  "/pages/outdoor_coffee_expression.webp",
+  "/pages/dating_gym_photo4.webp",
+  "/pages/dinner_candid_expression.webp",
+  "/pages/coastal_walk_candid.webp",
+  "/pages/kitchen_shot_food_testing.webp",
+  "/pages/rooftop.webp",
+  "/pages/hinge_expression.webp",
+  "/pages/tinder_expression_shoot.webp",
+];
 
 export default function HowItWorksShowcase() {
   const t = useTranslations("Home.howItWorks")
@@ -285,8 +323,8 @@ export default function HowItWorksShowcase() {
             {t("step3Description")}
           </p>
           <div className="animate-fadeIn container mx-auto pt-10">
-            <Carousal images={humans} imageAlt={t("resultsAlt")} overlayLabel={t("generated")} />
-            <Carousal images={humans2} reverse={true} imageAlt={t("resultsAlt")} overlayLabel={t("generated")} />
+            <Carousal images={resultsRow1} imageAlt={t("resultsAlt")} overlayLabel={t("generated")} />
+            <Carousal images={resultsRow2} reverse={true} imageAlt={t("resultsAlt")} overlayLabel={t("generated")} />
           </div>
           <div className="text-center justify-center flex text-sm font-md px-10 uppercase tracking-wider text-slate-400">
             {t("resultCaption")}
