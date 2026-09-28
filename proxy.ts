@@ -362,6 +362,6 @@ export const config = {
      * /api is still matched so session refresh reaches route handlers; the
      * handler above returns early for it rather than ever redirecting.
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|mp4|webm)$).*)',
   ],
 }

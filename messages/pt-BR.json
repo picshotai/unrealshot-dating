@@ -145,7 +145,32 @@
       "proof": "15 sessões",
       "summary": "60 fotos · 15 sessões convincentes · 15 refações · US$ 39 uma vez",
       "showcaseAlt": "Exemplo de foto de perfil de namoro UnrealShot",
-      "photoCount": "4 FOTOS"
+      "photoCount": "4 FOTOS",
+      "video": {
+        "label": "Filme de apresentação da UnrealShot",
+        "watch": "Assistir ao filme",
+        "meta": "0:40 · com som",
+        "play": "Reproduzir o filme de 40 segundos da UnrealShot com som",
+        "resume": "Reproduzir",
+        "pause": "Pausar",
+        "mute": "Silenciar",
+        "unmute": "Ativar som",
+        "fullscreen": "Tela cheia",
+        "exitFullscreen": "Sair da tela cheia",
+        "seek": "Avançar ou voltar",
+        "replay": "Assistir de novo",
+        "chapters": [
+          "Você",
+          "O swipe",
+          "As “soluções”",
+          "Conheça a UnrealShot",
+          "A configuração",
+          "O ensaio",
+          "O resultado",
+          "O preço",
+          "Sua vez"
+        ]
+      }
     },
     "pain": {
       "title": "As pessoas não rejeitam a versão de você que conheceriam.",

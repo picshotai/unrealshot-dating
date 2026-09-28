@@ -7,6 +7,7 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 import { Caveat } from 'next/font/google';
 import { useTranslations } from 'next-intl';
+import { HeroVideoPlayer } from "@/components/main-landing/HeroVideoPlayer";
 
 // Configure the Caveat font
 const caveat = Caveat({
@@ -408,6 +409,8 @@ export function HeroSection() {
             </div>
             <p className="text-gray-400 text-md">{t('summary')}</p>
           </div>
+
+          <HeroVideoPlayer />
         </div>
       </div>
 

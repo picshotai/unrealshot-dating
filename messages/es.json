@@ -145,7 +145,32 @@
       "proof": "15 sesiones",
       "summary": "60 fotos · 15 sesiones creíbles · 15 repeticiones · 39 $ una sola vez",
       "showcaseAlt": "Ejemplo de foto de perfil de citas de UnrealShot",
-      "photoCount": "4 FOTOS"
+      "photoCount": "4 FOTOS",
+      "video": {
+        "label": "Vídeo de presentación de UnrealShot",
+        "watch": "Ver el vídeo",
+        "meta": "0:40 · con sonido",
+        "play": "Reproducir el vídeo de 40 segundos de UnrealShot con sonido",
+        "resume": "Reproducir",
+        "pause": "Pausa",
+        "mute": "Silenciar",
+        "unmute": "Activar sonido",
+        "fullscreen": "Pantalla completa",
+        "exitFullscreen": "Salir de pantalla completa",
+        "seek": "Buscar",
+        "replay": "Ver de nuevo",
+        "chapters": [
+          "Tú",
+          "El swipe",
+          "Las «soluciones»",
+          "Conoce UnrealShot",
+          "La configuración",
+          "La sesión",
+          "El resultado",
+          "El precio",
+          "Tu turno"
+        ]
+      }
     },
     "pain": {
       "title": "No rechazan a la persona que conocerían.",

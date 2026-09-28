@@ -145,7 +145,32 @@
       "proof": "15 shoots",
       "summary": "60 photos · 15 believable shoots · 15 Photo Retakes · $39 once",
       "showcaseAlt": "UnrealShot dating profile photo example",
-      "photoCount": "4 PHOTOS"
+      "photoCount": "4 PHOTOS",
+      "video": {
+        "label": "UnrealShot product film",
+        "watch": "Watch the film",
+        "meta": "0:40 · sound on",
+        "play": "Play the 40-second UnrealShot film with sound",
+        "resume": "Play",
+        "pause": "Pause",
+        "mute": "Mute",
+        "unmute": "Unmute",
+        "fullscreen": "Full screen",
+        "exitFullscreen": "Exit full screen",
+        "seek": "Seek",
+        "replay": "Watch again",
+        "chapters": [
+          "You",
+          "The swipe",
+          "The “fixes”",
+          "Meet UnrealShot",
+          "The setup",
+          "The shoot",
+          "The result",
+          "The price",
+          "Your move"
+        ]
+      }
     },
     "pain": {
       "title": "People aren’t rejecting the version of you they’d meet.",

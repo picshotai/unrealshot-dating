@@ -145,7 +145,32 @@
       "proof": "15 Shootings",
       "summary": "60 Fotos · 15 glaubwürdige Shootings · 15 Neuanfertigungen · Einmalig 39 $",
       "showcaseAlt": "Beispiel für ein UnrealShot-Datingprofilfoto",
-      "photoCount": "4 FOTOS"
+      "photoCount": "4 FOTOS",
+      "video": {
+        "label": "UnrealShot Produktfilm",
+        "watch": "Film ansehen",
+        "meta": "0:40 · mit Ton",
+        "play": "Den 40-Sekunden-Film von UnrealShot mit Ton abspielen",
+        "resume": "Abspielen",
+        "pause": "Pause",
+        "mute": "Stummschalten",
+        "unmute": "Ton an",
+        "fullscreen": "Vollbild",
+        "exitFullscreen": "Vollbild beenden",
+        "seek": "Spulen",
+        "replay": "Nochmal ansehen",
+        "chapters": [
+          "Du",
+          "Der Swipe",
+          "Die „Lösungen“",
+          "Das ist UnrealShot",
+          "Die Einrichtung",
+          "Das Shooting",
+          "Das Ergebnis",
+          "Der Preis",
+          "Du bist dran"
+        ]
+      }
     },
     "pain": {
       "title": "Abgelehnt wird nicht die Person, die man kennenlernen würde.",

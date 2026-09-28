@@ -145,7 +145,32 @@
       "proof": "15 séances",
       "summary": "60 photos · 15 séances crédibles · 15 reprises photo · 39 $ une seule fois",
       "showcaseAlt": "Exemple de photo de profil de rencontre UnrealShot",
-      "photoCount": "4 PHOTOS"
+      "photoCount": "4 PHOTOS",
+      "video": {
+        "label": "Film de présentation UnrealShot",
+        "watch": "Voir le film",
+        "meta": "0:40 · avec le son",
+        "play": "Lire le film UnrealShot de 40 secondes avec le son",
+        "resume": "Lecture",
+        "pause": "Pause",
+        "mute": "Couper le son",
+        "unmute": "Activer le son",
+        "fullscreen": "Plein écran",
+        "exitFullscreen": "Quitter le plein écran",
+        "seek": "Avancer ou reculer",
+        "replay": "Revoir",
+        "chapters": [
+          "Vous",
+          "Le swipe",
+          "Les « solutions »",
+          "Voici UnrealShot",
+          "La configuration",
+          "Le shooting",
+          "Le résultat",
+          "Le prix",
+          "À vous"
+        ]
+      }
     },
     "pain": {
       "title": "On ne rejette pas la personne que l’on rencontrerait.",
