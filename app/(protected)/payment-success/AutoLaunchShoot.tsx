@@ -95,7 +95,7 @@ export function AutoLaunchShoot({
   return (
     <div className="w-full space-y-4 pt-2">
       <div className="p-5 rounded-2xl bg-zinc-900/80 border border-emerald-500/30 text-zinc-200 text-center space-y-3 shadow-xl">
-        <div className="flex items-center justify-center gap-2 font-oxanium font-bold text-base text-emerald-400">
+        <div className="flex items-center justify-center gap-2 font-inter-tight font-bold text-base text-emerald-400">
           {isRedirecting ? (
             <CheckCircle2 className="w-5 h-5 text-emerald-400" />
           ) : (
@@ -132,7 +132,7 @@ export function AutoLaunchShoot({
           <Button
             onClick={handleManualCheck}
             disabled={isCheckingManual || isRedirecting}
-            className="flex-1 bg-white hover:bg-zinc-200 text-black font-bold h-11 rounded-xl flex items-center justify-center gap-2 font-oxanium transition-all shadow-md active:scale-95 cursor-pointer"
+            className="flex-1 bg-white hover:bg-zinc-200 text-black font-bold h-11 rounded-xl flex items-center justify-center gap-2 font-inter-tight transition-all shadow-md active:scale-95 cursor-pointer"
           >
             <RotateCw
               className={`w-4 h-4 ${isCheckingManual ? 'animate-spin' : ''}`}
@@ -144,7 +144,7 @@ export function AutoLaunchShoot({
             onClick={handleReviewSettings}
             variant="outline"
             disabled={isRedirecting}
-            className="sm:w-auto border-zinc-700 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium h-11 px-5 rounded-xl font-oxanium cursor-pointer"
+            className="sm:w-auto border-zinc-700 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium h-11 px-5 rounded-xl font-inter-tight cursor-pointer"
           >
             Review Setup
           </Button>

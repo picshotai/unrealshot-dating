@@ -1,9 +1,9 @@
 // lib/fonts.ts
-import { Bricolage_Grotesque } from 'next/font/google';
+import { Inter_Tight } from 'next/font/google';
 
-// Configure the Bricolage Grotesque font
-export const bricolageGrotesque = Bricolage_Grotesque({
-  subsets: ['latin'], // Specify the character subsets you need
-  weight: ['200', '300', '400', '500', '600', '700', '800'], // Include all weights you might use
-  variable: '--font-bricolage-grotesque', // CSS variable for flexibility
+// Configure the Inter Tight font
+export const interTight = Inter_Tight({
+  subsets: ['latin'],
+  variable: '--font-inter-tight',
+  display: 'swap',
 });

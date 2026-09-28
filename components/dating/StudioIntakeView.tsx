@@ -266,7 +266,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                   </div>
                   <div>
                     <div className="flex items-center gap-1">
-                      <span className="text-xs sm:text-sm font-semibold text-white tracking-tight font-oxanium">
+                      <span className="text-xs sm:text-sm font-semibold text-white tracking-tight font-inter-tight">
                         {currentModel?.name || 'Select Face Model'}
                       </span>
                       {step === 'configure' && (
@@ -287,7 +287,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                 {/* Dropdown Menu */}
                 {isModelDropdownOpen && (
                   <div className="absolute left-0 top-full mt-1.5 w-72 bg-zinc-950 border border-zinc-800 rounded-lg p-1.5 shadow-2xl z-40 space-y-1 animate-in fade-in zoom-in-95 duration-150">
-                    <div className="px-2.5 py-1 text-[10px] font-mono text-zinc-500 uppercase tracking-wider font-oxanium">
+                    <div className="px-2.5 py-1 text-[10px] font-mono text-zinc-500 uppercase tracking-wider font-inter-tight">
                       Select Face Model ({models.length})
                     </div>
                     {models.map((model) => {
@@ -321,7 +321,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                             )}
                           </div>
                           <div className="min-w-0 flex-1">
-                            <p className="text-xs truncate font-oxanium">
+                            <p className="text-xs truncate font-inter-tight">
                               {model.name || 'Model'}
                             </p>
                             <p className="text-[10px] text-zinc-500 font-mono">
@@ -363,7 +363,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs sm:text-sm font-semibold text-white tracking-tight font-oxanium">
+                    <span className="text-xs sm:text-sm font-semibold text-white tracking-tight font-inter-tight">
                       {models[0]?.name || 'Trained Face Model'}
                     </span>
                     <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded border ${
@@ -385,7 +385,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
           {showCancel && (
             <button
               onClick={onCancel}
-              className="h-12 text-xs text-zinc-400 hover:text-white border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 font-oxanium"
+              className="h-12 text-xs text-zinc-400 hover:text-white border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 font-inter-tight"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -394,7 +394,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
 
         {ownerDiagnostics && (
           <div className="rounded-lg border border-emerald-500/25 bg-emerald-500/10 px-3.5 py-3 text-xs text-emerald-200">
-            <p className="font-semibold font-oxanium">
+            <p className="font-semibold font-inter-tight">
               Intelligent portfolio → Gemini prompts
             </p>
             <p className="mt-1 opacity-80 font-mono text-[10px] leading-relaxed">
@@ -414,7 +414,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
             <div className="space-y-2">
               <div>
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xs sm:text-sm font-medium text-zinc-200 font-oxanium">
+                  <h2 className="text-xs sm:text-sm font-medium text-zinc-200 font-inter-tight">
                     What do you actually do?
                   </h2>
                   <span
@@ -462,7 +462,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
             {/* Section 3: Exclusions */}
             <div className="space-y-2">
               <div>
-                <h2 className="text-xs sm:text-sm font-medium text-zinc-200 font-oxanium">
+                <h2 className="text-xs sm:text-sm font-medium text-zinc-200 font-inter-tight">
                   Anything to leave out?{' '}
                   <span className="text-zinc-500 font-normal font-sans">
                     (Optional)
@@ -501,7 +501,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
               <div className="p-3.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-start gap-2.5 text-xs">
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-semibold font-oxanium">Insufficient Credits</p>
+                  <p className="font-semibold font-inter-tight">Insufficient Credits</p>
                   <p className="opacity-90 mt-0.5">{creditError}</p>
                 </div>
               </div>
@@ -511,7 +511,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
               <div className="p-3.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 flex items-start gap-2.5 text-xs">
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-semibold font-oxanium">Error</p>
+                  <p className="font-semibold font-inter-tight">Error</p>
                   <p className="opacity-90 mt-0.5">{generalError}</p>
                 </div>
               </div>
@@ -531,7 +531,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
               <Button
                 onClick={() => setStep('confirm')}
                 disabled={!canProceed}
-                className={`w-full sm:w-auto font-semibold text-xs sm:text-sm h-10 px-6 rounded-lg transition-all active:scale-95 flex items-center justify-center gap-2 font-oxanium ${
+                className={`w-full sm:w-auto font-semibold text-xs sm:text-sm h-10 px-6 rounded-lg transition-all active:scale-95 flex items-center justify-center gap-2 font-inter-tight ${
                   canProceed
                     ? 'bg-white text-black hover:bg-zinc-200 shadow-sm cursor-pointer'
                     : 'bg-zinc-900 text-zinc-500 border border-zinc-800 cursor-not-allowed opacity-60'
@@ -560,7 +560,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                   <Sparkles className="w-5 h-5 text-accent" strokeWidth={1.5} />
                 </div>
                 <div>
-                  <h2 className="text-base sm:text-lg font-bold text-white font-oxanium tracking-tight">
+                  <h2 className="text-base sm:text-lg font-bold text-white font-inter-tight tracking-tight">
                     Photoshoot Blueprint Confirmation
                   </h2>
                   <p className="text-xs text-zinc-400">
@@ -573,7 +573,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Card A: Model */}
                 <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80 space-y-3">
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 font-oxanium">
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 font-inter-tight">
                     Model &amp; context-aware wardrobe
                   </span>
                   <div className="flex items-center gap-3">
@@ -585,7 +585,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                       )}
                     </div>
                     <div>
-                      <div className="text-sm font-semibold text-white font-oxanium">
+                      <div className="text-sm font-semibold text-white font-inter-tight">
                         {currentModel?.name || 'Trained Model'}
                       </div>
                       <div className="text-[11px] text-zinc-500 mt-0.5 leading-relaxed">
@@ -597,7 +597,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
 
                 {/* Card B: Lifestyle & Custom Hobbies */}
                 <div className="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80 space-y-3">
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 font-oxanium">
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 font-inter-tight">
                     Lifestyle &amp; Exclusions
                   </span>
                   <div className="space-y-1.5 text-xs">
@@ -626,7 +626,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
 
               {/* Card C: Delivery breakdown */}
               <div className="p-4 rounded-xl bg-zinc-900/40 border border-zinc-800/60 space-y-2.5">
-                <div className="flex items-center justify-between text-xs font-oxanium font-medium text-zinc-300">
+                <div className="flex items-center justify-between text-xs font-inter-tight font-medium text-zinc-300">
                   <span className="flex items-center gap-1.5">
                     <Layers className="w-3.5 h-3.5 text-zinc-400" />
                     {shootsPerDelivery} shoots · {totalPhotos} photos
@@ -649,7 +649,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                       key={frame.label}
                       className="p-2 rounded-lg bg-zinc-950 border border-zinc-800/80"
                     >
-                      <div className="text-white font-bold font-oxanium text-sm">
+                      <div className="text-white font-bold font-inter-tight text-sm">
                         {frame.label}
                       </div>
                       <div className="text-[10px] text-zinc-400">{frame.hint}</div>
@@ -662,7 +662,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
               {isPaymentPendingSync ? (
                 <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 shadow-lg space-y-2">
                   <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2 text-amber-300 font-semibold font-oxanium text-sm">
+                    <div className="flex items-center gap-2 text-amber-300 font-semibold font-inter-tight text-sm">
                       <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
                       Payment received. Synchronizing your photoshoot pack…
                     </div>
@@ -674,7 +674,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
               ) : needsPurchase ? (
                 <div className="p-4 rounded-xl bg-zinc-900/90 border border-emerald-500/30 text-zinc-200 shadow-lg">
                   <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2 text-emerald-400 font-semibold font-oxanium text-sm">
+                    <div className="flex items-center gap-2 text-emerald-400 font-semibold font-inter-tight text-sm">
                       <Sparkles className="w-4 h-4 text-emerald-400" />
                       Your {shootsPerDelivery} shoots are ready to start
                     </div>
@@ -692,7 +692,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                 <div className="p-3.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-start gap-2.5 text-xs">
                   <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-semibold font-oxanium">Checkout Error</p>
+                    <p className="font-semibold font-inter-tight">Checkout Error</p>
                     <p className="opacity-90 mt-0.5">{checkoutError}</p>
                   </div>
                 </div>
@@ -704,7 +704,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                   variant="outline"
                   onClick={() => setStep('configure')}
                   disabled={isLoading || isCheckingOut}
-                  className="w-full sm:w-auto border-zinc-700 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium text-xs sm:text-sm h-11 px-5 rounded-lg font-oxanium flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full sm:w-auto border-zinc-700 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium text-xs sm:text-sm h-11 px-5 rounded-lg font-inter-tight flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   Edit Parameters
@@ -714,7 +714,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                   <Button
                     onClick={onRefreshPackStatus}
                     disabled={isLoading}
-                    className="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs sm:text-sm h-11 px-7 rounded-lg shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 font-oxanium cursor-pointer"
+                    className="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs sm:text-sm h-11 px-7 rounded-lg shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 font-inter-tight cursor-pointer"
                   >
                     <RotateCw className="w-4 h-4" />
                     Check Sync Status
@@ -723,7 +723,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                   <Button
                     onClick={handleFinalSubmit}
                     disabled={isLoading || isCheckingOut}
-                    className="w-full sm:w-auto bg-white text-black hover:bg-zinc-200 font-bold text-xs sm:text-sm h-11 px-7 rounded-lg shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 font-oxanium cursor-pointer"
+                    className="w-full sm:w-auto bg-white text-black hover:bg-zinc-200 font-bold text-xs sm:text-sm h-11 px-7 rounded-lg shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 font-inter-tight cursor-pointer"
                   >
                     {isLoading ? (
                       <>
@@ -742,7 +742,7 @@ export const StudioIntakeView: React.FC<StudioIntakeViewProps> = ({
                   <Button
                     onClick={handleUnlockAndCheckout}
                     disabled={isLoading || isCheckingOut}
-                    className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs sm:text-sm h-11 px-7 rounded-lg shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 font-oxanium cursor-pointer"
+                    className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs sm:text-sm h-11 px-7 rounded-lg shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 font-inter-tight cursor-pointer"
                   >
                     {isCheckingOut ? (
                       <>

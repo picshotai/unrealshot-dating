@@ -15,204 +15,9 @@ const caveat = Caveat({
   weight: '500',
 });
 
-interface ShootMarqueeItem {
-  id: string;
-  shootNumber: string;
-  theme: string;
-  mainImage: { src: string; alt: string };
-  thumbnails: [
-    { src: string; alt: string },
-    { src: string; alt: string },
-    { src: string; alt: string }
-  ];
-}
 
-const marqueeShoots: ShootMarqueeItem[] = [
-  {
-    id: "shoot-01",
-    shootNumber: "SHOOT 01",
-    theme: "GYM / TRAINING",
-    mainImage: {
-      src: "/pages/dating_gym_photo.webp",
-      alt: "UnrealShot Gym Shoot - Frame 1: Mid-workout portrait with gym rack lighting"
-    },
-    thumbnails: [
-      {
-        src: "/pages/dating_gym_photo2.webp",
-        alt: "UnrealShot Gym Shoot - Frame 2: Resting between sets half-body"
-      },
-      {
-        src: "/pages/dating_gym_photo3.webp",
-        alt: "UnrealShot Gym Shoot - Frame 3: Modern training floor full-length"
-      },
-      {
-        src: "/pages/dating_gym_photo4.webp",
-        alt: "UnrealShot Gym Shoot - Frame 4: Natural workout candid smile"
-      }
-    ]
-  },
-  {
-    id: "shoot-02",
-    shootNumber: "SHOOT 02",
-    theme: "CASUAL / LIFESTYLE",
-    mainImage: {
-      src: "/pages/hinge_closeup.webp",
-      alt: "UnrealShot Lifestyle Shoot - Frame 1: Warm approachable opener"
-    },
-    thumbnails: [
-      {
-        src: "/pages/hinge_half_body.webp",
-        alt: "UnrealShot Lifestyle Shoot - Frame 2: Relaxed casual half-body"
-      },
-      {
-        src: "/pages/hinge_full_body.webp",
-        alt: "UnrealShot Lifestyle Shoot - Frame 3: Natural outdoor full-length"
-      },
-      {
-        src: "/pages/hinge_expression.webp",
-        alt: "UnrealShot Lifestyle Shoot - Frame 4: Spontaneous candid reaction"
-      }
-    ]
-  },
-  {
-    id: "shoot-03",
-    shootNumber: "SHOOT 03",
-    theme: "OUTDOOR COFFEE",
-    mainImage: {
-      src: "/pages/outdoor_coffee_closeup.webp",
-      alt: "UnrealShot Outdoor Coffee Shoot - Frame 1: Espresso terrace opener"
-    },
-    thumbnails: [
-      {
-        src: "/pages/outdoor_coffee_half_body.webp",
-        alt: "UnrealShot Outdoor Coffee Shoot - Frame 2: Relaxed table candid"
-      },
-      {
-        src: "/pages/outdoor_coffee_full_body.webp",
-        alt: "UnrealShot Outdoor Coffee Shoot - Frame 3: Walkable street full-length"
-      },
-      {
-        src: "/pages/outdoor_coffee_expression.webp",
-        alt: "UnrealShot Outdoor Coffee Shoot - Frame 4: Laughing natural candid"
-      }
-    ]
-  },
-  {
-    id: "shoot-04",
-    shootNumber: "SHOOT 04",
-    theme: "DINNER / DRESSED UP",
-    mainImage: {
-      src: "/pages/dinner_closeup.webp",
-      alt: "UnrealShot Evening Shoot - Frame 1: Warm ambient table opener"
-    },
-    thumbnails: [
-      {
-        src: "/pages/dinner_candid_half_body.webp",
-        alt: "UnrealShot Evening Shoot - Frame 2: Smart-casual evening half-body"
-      },
-      {
-        src: "/pages/dinner_candid_full_body.webp",
-        alt: "UnrealShot Evening Shoot - Frame 3: Restaurant arrival full-length"
-      },
-      {
-        src: "/pages/dinner_candid_expression.webp",
-        alt: "UnrealShot Evening Shoot - Frame 4: Shared table smile candid"
-      }
-    ]
-  },
-  {
-    id: "shoot-05",
-    shootNumber: "SHOOT 05",
-    theme: "CITY WALK",
-    mainImage: {
-      src: "/pages/city_walk_closeup.webp",
-      alt: "UnrealShot City Walk Shoot - Frame 1: Late afternoon urban portrait"
-    },
-    thumbnails: [
-      {
-        src: "/pages/city_walk_candid.webp",
-        alt: "UnrealShot City Walk Shoot - Frame 2: Downtown street half-body"
-      },
-      {
-        src: "/pages/city_walk_mid_action.webp",
-        alt: "UnrealShot City Walk Shoot - Frame 3: Pedestrian walkway full-length"
-      },
-      {
-        src: "/pages/city_walk_looking_back.webp",
-        alt: "UnrealShot City Walk Shoot - Frame 4: Walking movement candid"
-      }
-    ]
-  },
-  {
-    id: "shoot-06",
-    shootNumber: "SHOOT 06",
-    theme: "TRAVEL / COASTLINE",
-    mainImage: {
-      src: "/pages/coastal_walk_closeup.webp",
-      alt: "UnrealShot Coastal Shoot - Frame 1: Ocean cliffside portrait"
-    },
-    thumbnails: [
-      {
-        src: "/pages/coastal_walk_mid_action.webp",
-        alt: "UnrealShot Coastal Shoot - Frame 2: Breezy coastal path half-body"
-      },
-      {
-        src: "/pages/coastal_walks_full_body.webp",
-        alt: "UnrealShot Coastal Shoot - Frame 3: Coastal walkway full-length"
-      },
-      {
-        src: "/pages/coastal_walk_candid.webp",
-        alt: "UnrealShot Coastal Shoot - Frame 4: Wind-blown candid smile"
-      }
-    ]
-  },
-  {
-    id: "shoot-07",
-    shootNumber: "SHOOT 07",
-    theme: "HOME / COOKING",
-    mainImage: {
-      src: "/pages/kitchen_shot_cooking.webp",
-      alt: "UnrealShot Home Shoot - Frame 1: Sunlit kitchen cooking opener"
-    },
-    thumbnails: [
-      {
-        src: "/pages/kitchen_shot_chopping.webp",
-        alt: "UnrealShot Home Shoot - Frame 2: Fresh ingredient preparation half-body"
-      },
-      {
-        src: "/pages/kitchen_shot_moving_out.webp",
-        alt: "UnrealShot Home Shoot - Frame 3: Domestic kitchen full-length"
-      },
-      {
-        src: "/pages/kitchen_shot_food_testing.webp",
-        alt: "UnrealShot Home Shoot - Frame 4: Spontaneous spoon tasting candid"
-      }
-    ]
-  },
-  {
-    id: "shoot-08",
-    shootNumber: "SHOOT 08",
-    theme: "SUNSET / ROOFTOP",
-    mainImage: {
-      src: "/pages/rooftop3.webp",
-      alt: "UnrealShot Rooftop Shoot - Frame 1: Skyline evening terrace portrait"
-    },
-    thumbnails: [
-      {
-        src: "/pages/rooftop2.webp",
-        alt: "UnrealShot Rooftop Shoot - Frame 2: Sunset plant watering half-body"
-      },
-      {
-        src: "/pages/rooftop4.webp",
-        alt: "UnrealShot Rooftop Shoot - Frame 3: City skyline terrace full-length"
-      },
-      {
-        src: "/pages/rooftop.webp",
-        alt: "UnrealShot Rooftop Shoot - Frame 4: Rooftop night lights candid"
-      }
-    ]
-  }
-];
+
+
 
 export function HeroSection() {
   const t = useTranslations('Home.hero');
@@ -253,7 +58,7 @@ export function HeroSection() {
               <div className="flex items-center bg-black rounded-full p-[2px]">
 
                 {/* Left Side: The Hook (High Contrast Orange) */}
-                <div className="bg-[#ff6f00] text-white text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
+                <div className="bg-[#ff6f00] text-white text-[11px] font-semibold px-3 py-1 rounded-full flex items-center gap-1.5">
                   <Sparkles size={12} className="text-white" />
                   <span className="tracking-wide uppercase">{t('badge')}</span>
                 </div>
@@ -266,7 +71,7 @@ export function HeroSection() {
                 >
                   <span className="text-gray-300 text-xs font-medium mr-1 transition-all duration-300">
                     {isCopied ? (
-                      <span className="text-green-400 font-bold">{t('discountCopied')}</span>
+                      <span className="text-green-400 font-semibold">{t('discountCopied')}</span>
                     ) : (
                       <>
                         {t('discount', { discount: 15 })}
@@ -285,7 +90,7 @@ export function HeroSection() {
 
               </div>
             </div>
-            <h1 className="text-4xl sm:text-6xl max-w-4xl mx-auto font-bold leading-[1.1] mb-4 font-[var(--font-inter-tight)]">
+            <h1 className="text-4xl sm:text-6xl max-w-4xl mx-auto font-semibold leading-[1.1] mb-4 font-[var(--font-inter-tight)]">
               <span className="text-white">
                 {t('title')}
               </span>
@@ -396,7 +201,7 @@ export function HeroSection() {
                   className="w-8 h-8 rounded-full border-2 border-white object-cover"
                 />
                 <div className="w-8 h-8 rounded-full bg-gray-900 border-2 border-white flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">{t('proof')}</span>
+                  <span className="text-white text-xs font-semibold">{t('proof')}</span>
                 </div>
               </div>
               <div className="flex text-yellow-400">
@@ -414,198 +219,6 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Slider Section with Right-to-Left Animation */}
-      <div className="w-full pt-4 sm:pt-12 overflow-hidden">
-        <div className="hidden md:flex w-full">
-          <div className="flex animate-slide-rtl">
-            {/* Duplicate shoots for seamless loop */}
-            {[...marqueeShoots, ...marqueeShoots].map((shoot, index) => (
-              <div
-                key={`${shoot.id}-${index}`}
-                className="min-w-[200px] p-2 relative flex-shrink-0"
-                style={{ padding: "0 10px" }}
-              >
-                {/* 1 Moving Card = 1 Shoot = 4 Photos (200 x 280 footprint) */}
-                <div className="relative w-[200px] h-[280px] rounded-xl overflow-hidden bg-[#141414] border border-white/15 shadow-2xl flex flex-col p-1.5 gap-1.5 group">
-                  {/* Top Main Photo (~65%) */}
-                  <div className="relative w-full h-[180px] rounded-lg overflow-hidden bg-neutral-900">
-                    <Image
-                      src={shoot.mainImage.src}
-                       alt={t('showcaseAlt')}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      sizes="200px"
-                    />
-                    {/* Subtle Shoot Badge with Logo */}
-                    <div className="absolute bottom-2 left-2 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-2 py-0.5 rounded border border-white/15">
-                      <Image
-                        src="/site-logo.png"
-                         alt={common('footer.logoAlt')}
-                        width={14}
-                        height={14}
-                        className="w-3.5 h-3.5 rounded"
-                      />
-                      <span className="font-mono text-[9px] font-bold tracking-wider text-white uppercase">
-                         {shoot.shootNumber} · {t('photoCount')}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Bottom 3 Frames (~35%, 3:4 each) */}
-                  <div className="grid grid-cols-3 gap-1.5 h-[84px] w-full">
-                    {shoot.thumbnails.map((thumb, tIdx) => (
-                      <div key={tIdx} className="relative w-full h-full rounded-md overflow-hidden bg-neutral-900 border border-white/10">
-                        <Image
-                          src={thumb.src}
-                           alt={t('showcaseAlt')}
-                          fill
-                          className="object-cover"
-                          sizes="60px"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Mobile Image Slider - Infinite loop with no gaps */}
-        <div className="block md:hidden w-full overflow-hidden">
-          <div
-            className="flex animate-slide-rtl-mobile"
-            style={{
-              width: `${marqueeShoots.length * 2 * 220}px` // Double width for seamless loop
-            }}
-          >
-            {/* First set of shoots */}
-            {marqueeShoots.map((shoot, index) => (
-              <div
-                key={`mobile-first-${shoot.id}-${index}`}
-                className="w-[200px] p-2 relative flex-shrink-0"
-              >
-                <div className="relative w-[200px] h-[280px] rounded-xl overflow-hidden bg-[#141414] border border-white/15 shadow-2xl flex flex-col p-1.5 gap-1.5">
-                  {/* Top Main Photo (~65%) */}
-                  <div className="relative w-full h-[180px] rounded-lg overflow-hidden bg-neutral-900">
-                    <Image
-                      src={shoot.mainImage.src}
-                       alt={t('showcaseAlt')}
-                      fill
-                      className="object-cover"
-                      sizes="200px"
-                    />
-                    <div className="absolute bottom-2 left-2 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-2 py-0.5 rounded border border-white/15">
-                      <Image
-                        src="/site-logo.png"
-                         alt={common('footer.logoAlt')}
-                        width={14}
-                        height={14}
-                        className="w-3.5 h-3.5 rounded"
-                      />
-                      <span className="font-mono text-[9px] font-bold tracking-wider text-white uppercase">
-                         {shoot.shootNumber} · {t('photoCount')}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Bottom 3 Frames */}
-                  <div className="grid grid-cols-3 gap-1.5 h-[84px] w-full">
-                    {shoot.thumbnails.map((thumb, tIdx) => (
-                      <div key={tIdx} className="relative w-full h-full rounded-md overflow-hidden bg-neutral-900 border border-white/10">
-                        <Image
-                          src={thumb.src}
-                           alt={t('showcaseAlt')}
-                          fill
-                          className="object-cover"
-                          sizes="60px"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-            {/* Second set of shoots for seamless loop */}
-            {marqueeShoots.map((shoot, index) => (
-              <div
-                key={`mobile-second-${shoot.id}-${index}`}
-                className="w-[200px] p-2 relative flex-shrink-0"
-              >
-                <div className="relative w-[200px] h-[280px] rounded-xl overflow-hidden bg-[#141414] border border-white/15 shadow-2xl flex flex-col p-1.5 gap-1.5">
-                  {/* Top Main Photo (~65%) */}
-                  <div className="relative w-full h-[180px] rounded-lg overflow-hidden bg-neutral-900">
-                    <Image
-                      src={shoot.mainImage.src}
-                       alt={t('showcaseAlt')}
-                      fill
-                      className="object-cover"
-                      sizes="200px"
-                    />
-                    <div className="absolute bottom-2 left-2 flex items-center gap-1.5 bg-black/80 backdrop-blur-md px-2 py-0.5 rounded border border-white/15">
-                      <Image
-                        src="/site-logo.png"
-                         alt={common('footer.logoAlt')}
-                        width={14}
-                        height={14}
-                        className="w-3.5 h-3.5 rounded"
-                      />
-                      <span className="font-mono text-[9px] font-bold tracking-wider text-white uppercase">
-                         {shoot.shootNumber} · {t('photoCount')}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Bottom 3 Frames */}
-                  <div className="grid grid-cols-3 gap-1.5 h-[84px] w-full">
-                    {shoot.thumbnails.map((thumb, tIdx) => (
-                      <div key={tIdx} className="relative w-full h-full rounded-md overflow-hidden bg-neutral-900 border border-white/10">
-                        <Image
-                          src={thumb.src}
-                           alt={t('showcaseAlt')}
-                          fill
-                          className="object-cover"
-                          sizes="60px"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <style jsx>{`
-        @keyframes slide-rtl {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        
-        .animate-slide-rtl {
-          animation: slide-rtl 60s linear infinite;
-        }
-        
-        .animate-slide-rtl-mobile {
-          animation: slide-rtl-mobile 38s linear infinite;
-        }
-        
-        @keyframes slide-rtl-mobile {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-      `}</style>
-
-      
     </section>
   )
 }

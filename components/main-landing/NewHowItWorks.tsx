@@ -1,9 +1,10 @@
 "use client"
 
 import Image from "next/image"
-import { UploadCloud, Play } from "lucide-react"
+import { UploadCloud } from "lucide-react"
 import Carousal from "@/components/Carousal"
 import { useTranslations } from "next-intl"
+import { FilmPlayer, type FilmCopy } from "@/components/main-landing/FilmPlayer"
 
 // Using your specific image requests
 const leftInputImages = ["/images/demo1.jpg", "/images/demo2.jpg", "/images/demo3.jpg"];
@@ -55,16 +56,17 @@ const resultsRow2 = [
 
 export default function HowItWorksShowcase() {
   const t = useTranslations("Home.howItWorks")
+  const hero = useTranslations("Home.hero")
 
   return (
     <section id="how-it-works" className="relative mx-auto py-16 sm:py-24 overflow-hidden bg-[#F7F5F3]">
       <div className="px-4 max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 sm:mb-20">
-            <p className="text-orange-500 font-bold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
+          <p className="text-orange-500 font-semibold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
             {t("eyebrow")}
           </p>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl max-w-4xl mx-auto font-bold leading-none mb-4 font-[var(--font-inter-tight)] text-gray-900">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl max-w-4xl mx-auto font-semibold leading-none mb-4 font-[var(--font-inter-tight)] text-gray-900">
             {t("title")} <span className="text-[#ff6f00]">{t("titleAccent")}</span>
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
@@ -78,7 +80,7 @@ export default function HowItWorksShowcase() {
           {/* --- STEP 1: UPLOAD --- */}
           <div className="relative flex flex-col items-center">
             {/* Circle with gradient and number */}
-            <div className="bg-gradient-to-l from-[#ff6f00] to-orange-400 text-white rounded-full h-12 w-12 flex items-center justify-center font-bold z-10">
+            <div className="bg-gradient-to-l from-[#ff6f00] to-orange-400 text-white rounded-full h-12 w-12 flex items-center justify-center font-semibold z-10">
               1
             </div>
             {/* Gradient stroke line with fade out at the end */}
@@ -86,7 +88,7 @@ export default function HowItWorksShowcase() {
           </div>
 
           {/* Text element */}
-          <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold text-center mt-2 mb-4">
+          <h3 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-center mt-2 mb-4">
             {t("step1Title")}
           </h3>
           <p className="text-center text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
@@ -99,39 +101,39 @@ export default function HowItWorksShowcase() {
               {/* Row with images on left, center, and right */}
               <div className="flex justify-between w-full max-w-7xl">
                 {/* Left side - Woman images */}
-                 <div className="flex items-center justify-center">
-                   <div className="hidden lg:flex gap-6">
-                     <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
-                       <Image 
-                         src={leftInputImages[0]}
-                         width={105} 
-                         height={140} 
-                         className="w-full h-full object-cover"
-                         alt={t("inputImageAlt", { index: 1 })}
-                       />
-                     </div>
-                     <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
-                       <Image 
-                         src={leftInputImages[1]}
-                         width={105} 
-                         height={140} 
-                         className="w-full h-full object-cover"
-                         alt={t("inputImageAlt", { index: 2 })}
-                       />
-                     </div>
-                     <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
-                       <Image 
-                         src={leftInputImages[2]}
-                         width={105} 
-                         height={140} 
-                         className="w-full h-full object-cover"
-                         alt={t("inputImageAlt", { index: 3 })}
-                       />
-                     </div>
-                   </div>
-                 </div>
+                <div className="flex items-center justify-center">
+                  <div className="hidden lg:flex gap-6">
+                    <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
+                      <Image
+                        src={leftInputImages[0]}
+                        width={105}
+                        height={140}
+                        className="w-full h-full object-cover"
+                        alt={t("inputImageAlt", { index: 1 })}
+                      />
+                    </div>
+                    <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
+                      <Image
+                        src={leftInputImages[1]}
+                        width={105}
+                        height={140}
+                        className="w-full h-full object-cover"
+                        alt={t("inputImageAlt", { index: 2 })}
+                      />
+                    </div>
+                    <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
+                      <Image
+                        src={leftInputImages[2]}
+                        width={105}
+                        height={140}
+                        className="w-full h-full object-cover"
+                        alt={t("inputImageAlt", { index: 3 })}
+                      />
+                    </div>
+                  </div>
+                </div>
 
-                 {/* Center image - Phone mockup */}
+                {/* Center image - Phone mockup */}
                 <div className="relative mx-8 w-[250px] h-[480px]">
                   {/* Phone frame */}
                   <div className="w-full h-full bg-gray-900 rounded-[3rem] p-2 shadow-2xl">
@@ -139,9 +141,9 @@ export default function HowItWorksShowcase() {
                       {/* Upload interface mockup */}
                       <div className="absolute inset-0 flex flex-col p-4 bg-white">
                         {/* Header */}
-                          <h3 className="text-lg font-semibold text-gray-900 mb-1 mt-4">{t("trainingImages")}</h3>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-1 mt-4">{t("trainingImages")}</h3>
 
-                        
+
                         {/* Upload area - smaller since we have file list */}
                         <div className="border border-dashed border-[#ff6f00]/50 rounded-lg p-3 mb-4 bg-gray-50/50">
                           <div className="flex flex-col items-center text-center">
@@ -152,19 +154,19 @@ export default function HowItWorksShowcase() {
                             <p className="text-xs text-gray-500">{t("fileTypes")}</p>
                           </div>
                         </div>
-                        
+
                         {/* File list - realistic display like TrainModelZone */}
                         <div className="space-y-2 flex-1 overflow-y-auto">
                           {leftInputImages.slice(0, 4).map((src, i) => (
                             <div key={i} className="bg-white flex items-center justify-between gap-2 rounded-lg border border-gray-200 p-2">
                               <div className="flex items-center gap-2 overflow-hidden">
                                 <div className="bg-gray-100 aspect-square shrink-0 rounded w-8 h-8">
-                                  <Image 
-                                    src={src} 
-                            alt={t("inputImageAlt", { index: i + 1 })}
-                                    width={32} 
-                                    height={32} 
-                                    className="w-full h-full rounded object-cover" 
+                                  <Image
+                                    src={src}
+                                    alt={t("inputImageAlt", { index: i + 1 })}
+                                    width={32}
+                                    height={32}
+                                    className="w-full h-full rounded object-cover"
                                   />
                                 </div>
                                 <div className="flex min-w-0 flex-col">
@@ -184,7 +186,7 @@ export default function HowItWorksShowcase() {
                             </div>
                           ))}
                         </div>
-                        
+
                         {/* Footer info */}
                         <div className="mt-3 pt-2 border-t border-gray-100">
                           <p className="text-xs text-gray-500 text-center">
@@ -196,37 +198,37 @@ export default function HowItWorksShowcase() {
                   </div>
                 </div>
                 {/* Right side - Man images */}
-                 <div className="flex items-center justify-center">
-                   <div className="hidden lg:flex gap-6">
-                     <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
-                       <Image 
-                         src={rightInputImages[0]}
-                         width={105} 
-                         height={140} 
-                         className="w-full h-full object-cover"
-                         alt={t("inputImageAlt", { index: 4 })}
-                       />
-                     </div>
-                     <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
-                       <Image 
-                         src={rightInputImages[1]}
-                         width={105} 
-                         height={140} 
-                         className="w-full h-full object-cover"
-                         alt={t("inputImageAlt", { index: 5 })}
-                       />
-                     </div>
-                     <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
-                       <Image 
-                         src={rightInputImages[2]}
-                         width={105} 
-                         height={140} 
-                         className="w-full h-full object-cover"
-                         alt={t("inputImageAlt", { index: 6 })}
-                       />
-                     </div>
-                   </div>
-                 </div>
+                <div className="flex items-center justify-center">
+                  <div className="hidden lg:flex gap-6">
+                    <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
+                      <Image
+                        src={rightInputImages[0]}
+                        width={105}
+                        height={140}
+                        className="w-full h-full object-cover"
+                        alt={t("inputImageAlt", { index: 4 })}
+                      />
+                    </div>
+                    <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
+                      <Image
+                        src={rightInputImages[1]}
+                        width={105}
+                        height={140}
+                        className="w-full h-full object-cover"
+                        alt={t("inputImageAlt", { index: 5 })}
+                      />
+                    </div>
+                    <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
+                      <Image
+                        src={rightInputImages[2]}
+                        width={105}
+                        height={140}
+                        className="w-full h-full object-cover"
+                        alt={t("inputImageAlt", { index: 6 })}
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -235,7 +237,7 @@ export default function HowItWorksShowcase() {
           {/* Circle element */}
           <div className="relative flex flex-col items-center mt-8">
             {/* Circle with gradient and number */}
-            <div className="bg-gradient-to-l from-slate-700 to-[#ff6f00] text-white rounded-full h-12 w-12 flex items-center justify-center font-bold z-10">
+            <div className="bg-gradient-to-l from-slate-700 to-[#ff6f00] text-white rounded-full h-12 w-12 flex items-center justify-center font-semibold z-10">
               2
             </div>
             {/* Gradient stroke line with fade out at the end */}
@@ -243,7 +245,7 @@ export default function HowItWorksShowcase() {
           </div>
 
           {/* Text element */}
-          <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold text-center mt-2 mb-4">
+          <h3 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-center mt-2 mb-4">
             {t("step2Title")}
           </h3>
           <p className="text-center text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
@@ -251,64 +253,28 @@ export default function HowItWorksShowcase() {
           </p>
 
 
-          {/* AI Visual element */}
-          <div className="flex justify-center items-center mt-8">
-            <div 
-              className="relative w-[95%] xl:w-[1050px] border-[#ff6f00] border-4 h-[200px] sm:h-[350px] md:h-[400px] lg:h-[500px] xl:h-[600px] rounded-2xl overflow-hidden shadow-2xl group cursor-pointer"
-              onClick={() => {
-                const iframe = document.getElementById('video-iframe') as HTMLIFrameElement;
-                const thumbnail = document.getElementById('video-thumbnail') as HTMLElement;
-                if (iframe && thumbnail) {
-                  iframe.classList.remove('opacity-0', 'pointer-events-none');
-                  iframe.classList.add('opacity-100');
-                  thumbnail.classList.add('opacity-0', 'pointer-events-none');
-                }
-              }}
-            >
-              {/* Custom Thumbnail Background */}
-              <div id="video-thumbnail" className="absolute inset-0 transition-opacity duration-300">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#ff6f00]/20 via-orange-100/50 to-[#ff6f00]/30">
-                  <div className="w-full h-full bg-[url('/images/howtothumbnail.webp')] bg-cover bg-center opacity-80"></div>
-                </div>
-                
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-black/20"></div>
-                
-               <div className="absolute inset-0 flex items-center justify-center group-hover:scale-100 scale-[0.9] transition-all duration-200 ease-out rounded-2xl">
-          <div className="bg-[#ff6f00]/10 flex items-center justify-center rounded-full backdrop-blur-md size-28">
-            <div
-              className={`flex items-center justify-center bg-gradient-to-b from-primary/30 to-primary shadow-md rounded-full size-20 transition-all ease-out duration-200 relative group-hover:scale-[1.2] scale-100`}
-            >
-              <Play
-                className="size-8 text-white fill-white group-hover:scale-105 scale-100 transition-transform duration-200 ease-out"
-                style={{
-                  filter:
-                    "drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06))",
-                }}
-              />
-            </div>
-          </div>
-        </div>
-              </div>
-              
-              {/* Hidden iframe that will be shown on click */}
-              <iframe
-                className="w-full h-full opacity-0 pointer-events-none transition-opacity duration-300"
-                src="https://www.youtube.com/embed/UL357H91Gc0?rel=0"
-                title={t("videoTitle")}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                id="video-iframe"
-              ></iframe>
-            </div>
-          </div>
+          {/* Step 2 film: the mascot walks through the process */}
+          <FilmPlayer
+            className="mt-10 w-[95%] max-w-[1050px]"
+            copy={{
+              label: t("video.label"),
+              watch: t("video.watch"),
+              meta: t("video.meta"),
+              play: t("video.play"),
+              chapters: t.raw("video.chapters") as FilmCopy["chapters"],
+            }}
+            sources={{ desktop: "/videos/how-it-works-film-1080.mp4", mobile: "/videos/how-it-works-film-720.mp4" }}
+            poster="/videos/how-it-works-film-poster.webp"
+            chapterStarts={[0, 5.85, 10.32, 13.1, 17.32, 22.18, 24.92]}
+            fallbackDuration={27.82}
+            ctaLabel={hero("primaryCta")}
+          />
 
           {/* --- STEP 3: GET RESULTS --- */}
           {/* Circle element */}
           <div className="relative flex flex-col items-center mt-16">
             {/* Circle with gradient and number */}
-            <div className="bg-gradient-to-l from-black to-slate-100 text-white rounded-full h-12 w-12 flex items-center justify-center font-bold z-10">
+            <div className="bg-gradient-to-l from-black to-slate-100 text-white rounded-full h-12 w-12 flex items-center justify-center font-semibold z-10">
               3
             </div>
             {/* Gradient stroke line with fade out at the end */}
@@ -316,7 +282,7 @@ export default function HowItWorksShowcase() {
           </div>
 
           {/* Text element */}
-          <h3 className="text-4xl sm:text-5xl md:text-6xl font-bold text-center mt-10 mb-4">
+          <h3 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-center mt-10 mb-4">
             {t("step3Title")}
           </h3>
           <p className="text-center text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">

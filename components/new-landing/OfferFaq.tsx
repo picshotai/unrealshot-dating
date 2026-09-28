@@ -13,7 +13,7 @@ export function OfferFaq() {
         <div className="mx-auto grid max-w-[1240px] overflow-hidden border border-black bg-[#25a882] shadow-[0_24px_70px_rgba(0,0,0,0.12)] lg:grid-cols-[1fr_0.9fr]">
           <div className="border-b border-black p-7 sm:p-10 lg:border-b-0 lg:border-r lg:p-14">
             <span className="inline-flex bg-black px-3 py-2 font-mono text-[9px] font-bold tracking-[0.13em] text-[#25a882]">THE COMPLETE PROFILE</span>
-            <h2 className="mt-7 font-oxanium text-[clamp(3.2rem,7vw,7rem)] font-medium leading-[0.84] tracking-[-0.08em] text-black">
+            <h2 className="mt-7 font-inter-tight text-[clamp(3.2rem,7vw,7rem)] font-medium leading-[0.84] tracking-[-0.08em] text-black">
               15 shoots.<br />$39 once.
             </h2>
             <p className="mt-7 max-w-xl text-[15px] leading-7 text-black/65 sm:text-[17px]">
@@ -25,7 +25,7 @@ export function OfferFaq() {
             <div>
               <div className="flex items-end justify-between border-b border-black/15 pb-6">
                 <span className="font-mono text-[10px] font-bold tracking-[0.13em] text-black/45">UNREALSHOT / DATING</span>
-                <span className="font-oxanium text-6xl font-medium tracking-[-0.08em] text-black">$39</span>
+                <span className="font-inter-tight text-6xl font-medium tracking-[-0.08em] text-black">$39</span>
               </div>
               <ul className="mt-7 space-y-4">
                 {["15 different photoshoots", "60 photos in tall + wide crops", "4 frames from every shoot", "15 individual Photo Retakes", "Profile filters + ZIP download"].map((item, index) => (
@@ -55,7 +55,7 @@ export function OfferFaq() {
         <div className="mx-auto grid max-w-[1240px] gap-12 lg:grid-cols-[0.65fr_1.35fr] lg:gap-20">
           <div>
             <span className="font-serif text-2xl italic text-black">the honest answers</span>
-            <h2 className="mt-2 font-oxanium text-[clamp(3rem,6vw,6rem)] font-medium leading-[0.9] tracking-[-0.07em] text-black">Before you upload anything.</h2>
+            <h2 className="mt-2 font-inter-tight text-[clamp(3rem,6vw,6rem)] font-medium leading-[0.9] tracking-[-0.07em] text-black">Before you upload anything.</h2>
             <p className="mt-6 max-w-sm text-[15px] leading-7 text-black/55">No outcome promises. No “indistinguishable from real” theatre. Just what the system does and where Photo Retakes help.</p>
           </div>
 
@@ -72,7 +72,7 @@ export function OfferFaq() {
                   >
                     <span className="flex gap-4 sm:gap-6">
                       <span className="pt-1 font-mono text-[9px] font-bold tracking-[0.1em] text-black/35">0{index + 1}</span>
-                      <span className="font-oxanium text-xl font-medium leading-tight tracking-[-0.035em] text-black sm:text-2xl">{item.question}</span>
+                      <span className="font-inter-tight text-xl font-medium leading-tight tracking-[-0.035em] text-black sm:text-2xl">{item.question}</span>
                     </span>
                     <span className={`grid h-8 w-8 shrink-0 place-items-center border border-black font-mono text-lg transition-colors ${open ? "bg-[#f7b733]" : "bg-white"}`}>{open ? "−" : "+"}</span>
                   </button>

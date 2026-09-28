@@ -22,11 +22,11 @@ export function FeaturesSection() {
       <div className="mx-auto w-full max-w-7xl space-y-10 px-4">
         {/* Header */}
         <div className="mx-auto max-w-4xl text-center mb-10">
-          <p className="text-orange-500 font-bold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
+          <p className="text-orange-500 font-semibold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
             {t("eyebrow")}
           </p>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white font-bold mb-4 tracking-tight leading-[1.08]">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white font-semibold mb-4 tracking-tight leading-[1.08]">
             {t("title")} <span className="text-[#ff6f00]">{t("titleAccent")}</span>
           </h2>
 
@@ -44,7 +44,7 @@ export function FeaturesSection() {
 
         {/* Bottom Line */}
         <div className="pt-4 text-center max-w-3xl mx-auto">
-          <p className="text-xl md:text-2xl font-bold text-white leading-snug">
+          <p className="text-xl md:text-2xl font-semibold text-white leading-snug">
             {t("goal")} {" "}
             <span className="text-[#ff6f00]">
               {t("goalAccent")}

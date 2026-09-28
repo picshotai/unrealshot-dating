@@ -149,16 +149,8 @@
       "video": {
         "label": "Filme de apresentação da UnrealShot",
         "watch": "Assistir ao filme",
-        "meta": "0:40 · com som",
-        "play": "Reproduzir o filme de 40 segundos da UnrealShot com som",
-        "resume": "Reproduzir",
-        "pause": "Pausar",
-        "mute": "Silenciar",
-        "unmute": "Ativar som",
-        "fullscreen": "Tela cheia",
-        "exitFullscreen": "Sair da tela cheia",
-        "seek": "Avançar ou voltar",
-        "replay": "Assistir de novo",
+        "meta": "0:50 · com som",
+        "play": "Reproduzir o filme de 50 segundos da UnrealShot com som",
         "chapters": [
           "Você",
           "O swipe",
@@ -312,12 +304,26 @@
       "inputImageAlt": "Exemplo de selfie de referência {index}",
       "step2Title": "A UnrealShot AI começa a trabalhar",
       "step2Description": "Geração de semelhança guiada por referências, sem treinar um modelo personalizado",
-      "videoTitle": "Vídeo do processamento de IA",
       "step3Title": "Receba 15 sessões completas",
       "step3Description": "Receba 60 fotos organizadas em cenas coerentes de 4 imagens. Escolha suas 6 favoritas para Tinder, Hinge ou Bumble com 15 refações grátis incluídas.",
       "resultsAlt": "Resultado de foto de namoro da UnrealShot AI",
       "resultCaption": "Resultados das fotos de namoro UnrealShot AI.",
-      "generated": "Gerado por IA"
+      "generated": "Gerado por IA",
+      "video": {
+        "label": "Como a UnrealShot funciona",
+        "watch": "Como funciona",
+        "meta": "0:28 · com som",
+        "play": "Reproduzir o vídeo de 28 segundos sobre como funciona, com som",
+        "chapters": [
+          "O problema",
+          "A solução",
+          "Suas fotos",
+          "Sua vibe",
+          "O ensaio",
+          "Refações",
+          "Sua vez"
+        ]
+      }
     },
     "testimonials": {
       "eyebrow": "AVALIAÇÕES DE USUÁRIOS REAIS",
@@ -421,6 +427,16 @@
       "emphasis": "Melhore sua galeria hoje à noite.",
       "button": "Melhorar meu perfil — US$ 39",
       "summary": "⚡ 60 fotos · 15 sessões · 15 refações incluídas · Compra única"
+    },
+    "filmPlayer": {
+      "resume": "Reproduzir",
+      "pause": "Pausar",
+      "mute": "Silenciar",
+      "unmute": "Ativar som",
+      "fullscreen": "Tela cheia",
+      "exitFullscreen": "Sair da tela cheia",
+      "seek": "Avançar ou voltar",
+      "replay": "Assistir de novo"
     }
   },
   "Pricing": {

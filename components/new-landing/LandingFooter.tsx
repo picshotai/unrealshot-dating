@@ -6,7 +6,7 @@ export function LandingFooter() {
       <div className="mx-auto max-w-[1240px]">
         <div className="flex flex-col items-center text-center">
           <span className="font-serif text-2xl italic text-[#45c4f9]">the profile can be done now</span>
-          <h2 className="mt-4 max-w-5xl font-oxanium text-[clamp(3.4rem,9vw,9rem)] font-medium leading-[0.82] tracking-[-0.085em]">
+          <h2 className="mt-4 max-w-5xl font-inter-tight text-[clamp(3.4rem,9vw,9rem)] font-medium leading-[0.82] tracking-[-0.085em]">
             Stop putting off your photos.
           </h2>
           <Link

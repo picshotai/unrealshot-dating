@@ -149,16 +149,8 @@
       "video": {
         "label": "UnrealShot Produktfilm",
         "watch": "Film ansehen",
-        "meta": "0:40 · mit Ton",
-        "play": "Den 40-Sekunden-Film von UnrealShot mit Ton abspielen",
-        "resume": "Abspielen",
-        "pause": "Pause",
-        "mute": "Stummschalten",
-        "unmute": "Ton an",
-        "fullscreen": "Vollbild",
-        "exitFullscreen": "Vollbild beenden",
-        "seek": "Spulen",
-        "replay": "Nochmal ansehen",
+        "meta": "0:50 · mit Ton",
+        "play": "Den 50-Sekunden-Film von UnrealShot mit Ton abspielen",
         "chapters": [
           "Du",
           "Der Swipe",
@@ -312,12 +304,26 @@
       "inputImageAlt": "Beispiel für ein Referenz-Selfie {index}",
       "step2Title": "UnrealShot AI legt los",
       "step2Description": "Referenzgestützte Ähnlichkeitserzeugung ohne Training eines eigenen Modells",
-      "videoTitle": "KI-Verarbeitungsvideo",
       "step3Title": "15 vollständige Shootings erhalten",
       "step3Description": "Du erhältst 60 Fotos in stimmigen Szenen mit jeweils 4 Bildern. Wähle deine 6 Favoriten für Tinder, Hinge oder Bumble – 15 kostenlose Neuanfertigungen inklusive.",
       "resultsAlt": "UnrealShot-AI-Datingfoto-Ergebnis",
       "resultCaption": "Ergebnisse der UnrealShot-AI-Datingfotos.",
-      "generated": "KI-generiert"
+      "generated": "KI-generiert",
+      "video": {
+        "label": "So funktioniert UnrealShot",
+        "watch": "So funktioniert's",
+        "meta": "0:28 · mit Ton",
+        "play": "Den 28-Sekunden-Film zur Funktionsweise mit Ton abspielen",
+        "chapters": [
+          "Das Problem",
+          "Die Lösung",
+          "Deine Fotos",
+          "Dein Vibe",
+          "Das Shooting",
+          "Neuanfertigungen",
+          "Los geht's"
+        ]
+      }
     },
     "testimonials": {
       "eyebrow": "ECHTE BEWERTUNGEN",
@@ -421,6 +427,16 @@
       "emphasis": "Verbessere deine Galerie noch heute.",
       "button": "Mein Dating-Profil verbessern — 39 $",
       "summary": "⚡ 60 Fotos · 15 Shootings · 15 Neuanfertigungen inklusive · Einmaliger Kauf"
+    },
+    "filmPlayer": {
+      "resume": "Abspielen",
+      "pause": "Pause",
+      "mute": "Stummschalten",
+      "unmute": "Ton an",
+      "fullscreen": "Vollbild",
+      "exitFullscreen": "Vollbild beenden",
+      "seek": "Spulen",
+      "replay": "Nochmal ansehen"
     }
   },
   "Pricing": {

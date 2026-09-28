@@ -6,7 +6,7 @@ export default function ShowCase() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex flex-col items-center max-w-4xl mb-12 mx-auto text-center">
           {/* The strong, refined headline stays. */}
-          <h2 className="text-4xl sm:text-6xl max-w-4xl mx-auto font-bold leading-[1.1] mb-4 font-[var(--font-inter-tight)] text-white">
+          <h2 className="text-4xl sm:text-6xl max-w-4xl mx-auto font-semibold leading-[1.1] mb-4 font-[var(--font-inter-tight)] text-white">
             From Casual Selfies to
             <span className="text-[#ff6f00] ml-3">Professional Photoshoots.</span>
           </h2>
@@ -18,7 +18,7 @@ export default function ShowCase() {
 
         {/* The Visual Showcase - This is the "Proof" */}
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-8">
-          
+
           <div className="w-full max-w-xl text-center md:text-left">
             <h3 className="text-2xl font-semibold text-gray-400 mb-4">1. Upload Your Photos</h3>
             <div className="grid grid-cols-2 gap-4">
@@ -41,7 +41,7 @@ export default function ShowCase() {
           </div>
 
           <div className="w-full max-w-xl text-center md:text-left">
-             <h3 className="text-2xl font-semibold text-gray-400 mb-4">2. Get Professional Results</h3>
+            <h3 className="text-2xl font-semibold text-gray-400 mb-4">2. Get Professional Results</h3>
             <div className="relative w-full aspect-[3/4] rounded-lg overflow-hidden">
               <Image src="/content/real-user.jpg" alt="AI Generated professional photo" layout="fill" className="object-cover" />
               <div className="absolute left-4 bottom-4 bg-black/50 backdrop-blur-sm text-white text-xs font-medium px-3 py-1.5 rounded-full">
@@ -53,12 +53,12 @@ export default function ShowCase() {
             </div>
           </div>
         </div>
-        
+
         {/* --- CTA IS NOW CORRECTLY PLACED AT THE BOTTOM --- */}
         <div className="mt-16 text-center">
-            <a href="#" className="bg-[#ff6f00] text-black font-bold text-lg px-8 py-4 rounded-lg hover:bg-orange-400 transition-colors">
-                Start Your Photoshoot →
-            </a>
+          <a href="#" className="bg-[#ff6f00] text-black font-semibold text-lg px-8 py-4 rounded-lg hover:bg-orange-400 transition-colors">
+            Start Your Photoshoot →
+          </a>
         </div>
 
       </div>

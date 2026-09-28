@@ -19,10 +19,10 @@ export default function FAQSection() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12 sm:mb-16">
-          <p className="text-orange-500 font-bold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
+          <p className="text-orange-500 font-semibold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
             {t("eyebrow")}
           </p>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl max-w-4xl mx-auto font-bold mb-4 font-[var(--font-inter-tight)] tracking-tight leading-[1.08] text-gray-900">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl max-w-4xl mx-auto font-semibold mb-4 font-[var(--font-inter-tight)] tracking-tight leading-[1.08] text-gray-900">
             {t("title")} <span className="text-[#ff6f00]">{t("titleAccent")}</span>
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-normal mb-1 font-medium">
@@ -46,7 +46,7 @@ export default function FAQSection() {
                     onClick={() => setOpenIndex(isOpen ? null : index)}
                     aria-expanded={isOpen}
                   >
-                    <h3 className="text-base sm:text-lg font-bold text-gray-900 pr-4 leading-snug">
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 pr-4 leading-snug">
                       {faq.question}
                     </h3>
                     <div className="flex-shrink-0 ml-2">
@@ -90,7 +90,7 @@ export default function FAQSection() {
                     onClick={() => setOpenIndex(isOpen ? null : actualIndex)}
                     aria-expanded={isOpen}
                   >
-                    <h3 className="text-base sm:text-lg font-bold text-gray-900 pr-4 leading-snug">
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 pr-4 leading-snug">
                       {faq.question}
                     </h3>
                     <div className="flex-shrink-0 ml-2">

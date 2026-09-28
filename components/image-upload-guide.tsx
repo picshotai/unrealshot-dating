@@ -317,7 +317,7 @@ export default function ImageUploadGuide({ className }: ImageUploadGuideProps) {
       </Tabs>
 
       <div className="mt-8 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5">
-        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-1.5 font-oxanium">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-1.5 font-inter-tight">
           Ready to Train Your Model?
         </h2>
         <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">

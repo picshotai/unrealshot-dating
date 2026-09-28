@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Space_Grotesk, JetBrains_Mono, Oxanium } from "next/font/google"
+import { Inter, Inter_Tight, Space_Grotesk, JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 import { Suspense } from "react"
 import Script from "next/script"
@@ -21,6 +21,13 @@ const inter = Inter({
   preload: true,
 })
 
+const interTight = Inter_Tight({
+  subsets: ["latin"],
+  variable: "--font-inter-tight",
+  display: "swap",
+  preload: true,
+})
+
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-space-grotesk",
@@ -30,13 +37,6 @@ const spaceGrotesk = Space_Grotesk({
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
-  display: "swap",
-})
-
-const oxanium = Oxanium({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-oxanium",
   display: "swap",
 })
 
@@ -64,7 +64,7 @@ export default async function RootLayout({
   const locale = await getLocale() as PublishedPublicLocale
 
   return (
-    <html lang={getHtmlLang(locale)} className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${oxanium.variable} antialiased`}>
+    <html lang={getHtmlLang(locale)} className={`${inter.variable} ${interTight.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}>
       <head>
         {/* Favicon and App Icons */}
         <link rel="icon" href="/favicon.ico" sizes="32x32" />

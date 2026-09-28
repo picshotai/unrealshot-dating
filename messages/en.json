@@ -149,16 +149,8 @@
       "video": {
         "label": "UnrealShot product film",
         "watch": "Watch the film",
-        "meta": "0:40 · sound on",
-        "play": "Play the 40-second UnrealShot film with sound",
-        "resume": "Play",
-        "pause": "Pause",
-        "mute": "Mute",
-        "unmute": "Unmute",
-        "fullscreen": "Full screen",
-        "exitFullscreen": "Exit full screen",
-        "seek": "Seek",
-        "replay": "Watch again",
+        "meta": "0:50 · sound on",
+        "play": "Play the 50-second UnrealShot film with sound",
         "chapters": [
           "You",
           "The swipe",
@@ -312,12 +304,26 @@
       "inputImageAlt": "Reference selfie example {index}",
       "step2Title": "UnrealShot AI gets to work",
       "step2Description": "Reference-guided likeness generation; no custom model training",
-      "videoTitle": "AI processing video",
       "step3Title": "Get 15 complete shoots",
       "step3Description": "Receive 60 photos organized into coherent 4-shot scenes. Pick your favorite 6 for Tinder, Hinge, or Bumble with 15 free Photo Retakes included.",
       "resultsAlt": "UnrealShot AI dating photo result",
       "resultCaption": "Results from UnrealShot AI dating photos.",
-      "generated": "AI Generated"
+      "generated": "AI Generated",
+      "video": {
+        "label": "How UnrealShot works",
+        "watch": "How it works",
+        "meta": "0:28 · sound on",
+        "play": "Play the 28-second how-it-works film with sound",
+        "chapters": [
+          "The problem",
+          "The fix",
+          "Your photos",
+          "Your vibe",
+          "The shoot",
+          "Retakes",
+          "Go"
+        ]
+      }
     },
     "testimonials": {
       "eyebrow": "REAL USER REVIEWS",
@@ -421,6 +427,16 @@
       "emphasis": "Fix the camera roll tonight.",
       "button": "Build My Dating Profile — $39",
       "summary": "⚡ 60 photos · 15 shoots · 15 Photo Retakes included · One-time purchase"
+    },
+    "filmPlayer": {
+      "resume": "Play",
+      "pause": "Pause",
+      "mute": "Mute",
+      "unmute": "Unmute",
+      "fullscreen": "Full screen",
+      "exitFullscreen": "Exit full screen",
+      "seek": "Seek",
+      "replay": "Watch again"
     }
   },
   "Pricing": {

@@ -111,7 +111,7 @@ export default async function PaymentSuccessPage({ searchParams }: PaymentSucces
             <div className="mx-auto w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4">
               <Sparkles className="w-8 h-8 text-emerald-400" />
             </div>
-            <CardTitle className="text-2xl font-bold font-oxanium text-white">
+            <CardTitle className="text-2xl font-bold font-inter-tight text-white">
               Payment Successful
             </CardTitle>
             <CardDescription className="text-zinc-400 text-sm mt-1">

@@ -22,7 +22,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description }) =
   <div className="bg-white rounded-2xl p-8 shadow-[0_12px_50px_-15px_rgba(0,0,0,0.1)] border border-gray-200/60 flex flex-col justify-between">
     <div>
       <div className="mb-4">{icon}</div>
-      <h3 className="text-xl font-bold text-gray-900 tracking-tight mb-3">{title}</h3>
+      <h3 className="text-xl font-semibold text-gray-900 tracking-tight mb-3">{title}</h3>
       <p className="text-gray-600 leading-relaxed">{description}</p>
     </div>
   </div>
@@ -37,7 +37,7 @@ export function PainSection() {
       <div className="px-4 md:px-0 py-16 sm:py-24 max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight leading-[1.08]">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold mb-4 tracking-tight leading-[1.08]">
             {t("title")}
             <span className="block mt-2 text-[#ff6f00]">
               {t("titleAccent")}

@@ -77,7 +77,7 @@ export default function ShootsShowcase() {
 
   return (
     <section id="style-packs" className="relative w-full h-screen min-h-[700px] max-h-[1200px] bg-[#111111] overflow-hidden flex items-center justify-center">
-      
+
       {/* 
         Explicit vh-based sizing ensures 4 rows fit perfectly vertically 
         on EVERY screen, making photos beautifully large. 
@@ -85,21 +85,21 @@ export default function ShootsShowcase() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-3 sm:gap-4">
         {[...Array(columns)].map((_, colIndex) => {
           const columnImages = allImages.slice((colIndex * rows) % allImages.length, ((colIndex * rows) % allImages.length) + rows);
-          
+
           return (
-            <div 
-              key={colIndex} 
+            <div
+              key={colIndex}
               className={`flex flex-col gap-3 sm:gap-4 transition-transform duration-500 ${colIndex % 2 === 0 ? 'translate-y-[6%]' : '-translate-y-[6%]'}`}
             >
               {columnImages.map((img, i) => (
-                <div 
-                  key={i} 
+                <div
+                  key={i}
                   className="relative h-[20vh] lg:h-[23vh] aspect-[3/4] rounded-lg sm:rounded-2xl overflow-hidden opacity-75 hover:opacity-100 transition-opacity duration-300 shadow-xl shrink-0"
                 >
-                  <Image 
-                    src={img} 
+                  <Image
+                    src={img}
                     alt={t('showcaseAlt')}
-                    fill 
+                    fill
                     className="object-cover"
                     sizes="(max-width: 640px) 250px, 400px"
                   />
@@ -113,7 +113,7 @@ export default function ShootsShowcase() {
       {/* Much lighter fade overlay just on the top and bottom to blend with the page */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#111111] via-transparent to-[#111111] pointer-events-none opacity-80" style={{ backgroundImage: 'linear-gradient(to bottom, #111111 0%, transparent 15%, transparent 85%, #111111 100%)' }} />
       <div className="absolute inset-0 bg-gradient-to-r from-[#111111] via-transparent to-[#111111] pointer-events-none opacity-40" style={{ backgroundImage: 'linear-gradient(to right, #111111 0%, transparent 5%, transparent 95%, #111111 100%)' }} />
-      
+
     </section>
   );
 }

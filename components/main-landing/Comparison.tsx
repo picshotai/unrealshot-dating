@@ -14,7 +14,7 @@ export default function TheVerdictFinal() {
       <div className="px-4 max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10 sm:mb-12">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-5xl mx-auto font-bold mb-4 font-[var(--font-inter-tight)] tracking-tight leading-[1.08] text-gray-900">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl max-w-5xl mx-auto font-semibold mb-4 font-[var(--font-inter-tight)] tracking-tight leading-[1.08] text-gray-900">
             {t("title")} <span className="text-[#ff6f00]">{t("titleAccent")}</span>
           </h2>
 
@@ -29,7 +29,7 @@ export default function TheVerdictFinal() {
             {/* --- Left Pane: The Pain --- */}
             <div className="p-4 sm:p-6 flex flex-col justify-between">
               <div>
-                <h3 className="text-xl text-center font-bold text-gray-500 mb-6">
+                <h3 className="text-xl text-center font-semibold text-gray-500 mb-6">
                   {t("randomTitle")}
                 </h3>
                 <div className="p-4 sm:p-6 border border-dashed border-gray-300 rounded-2xl bg-gray-50/50">
@@ -47,7 +47,7 @@ export default function TheVerdictFinal() {
                     <p className="text-xs font-mono uppercase tracking-wider text-gray-400 mb-1">
                       {t("outcomeLabel")}
                     </p>
-                    <p className="text-xl sm:text-2xl font-bold text-gray-700">
+                    <p className="text-xl sm:text-2xl font-semibold text-gray-700">
                       {t("randomOutcome")}
                     </p>
                   </div>
@@ -58,7 +58,7 @@ export default function TheVerdictFinal() {
             {/* --- Right Pane: The Solution --- */}
             <div className="p-4 sm:p-6 flex flex-col justify-between">
               <div>
-                <h3 className="text-center text-xl font-bold text-[#ff6f00] mb-6">
+                <h3 className="text-center text-xl font-semibold text-[#ff6f00] mb-6">
                   {t("unrealshotTitle")}
                 </h3>
                 <div className="p-4 sm:p-6 bg-zinc-950 border border-dashed border-zinc-700 rounded-2xl shadow-xl">
@@ -76,7 +76,7 @@ export default function TheVerdictFinal() {
                     <p className="text-xs font-mono uppercase tracking-wider text-[#ff6f00] mb-1">
                       {t("outcomeLabel")}
                     </p>
-                    <p className="text-xl sm:text-2xl font-bold text-white">
+                    <p className="text-xl sm:text-2xl font-semibold text-white">
                       {t("unrealshotOutcome")}
                     </p>
                   </div>

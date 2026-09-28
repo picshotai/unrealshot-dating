@@ -37,10 +37,10 @@ export default function PricingCards() {
       <div className="w-full max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-10 sm:mb-12">
-          <p className="text-orange-500 font-bold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
+          <p className="text-orange-500 font-semibold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
             {t("eyebrow")}
           </p>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl max-w-4xl mx-auto font-bold mb-4 font-[var(--font-inter-tight)] tracking-tight leading-[1.08] text-white">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl max-w-4xl mx-auto font-semibold mb-4 font-[var(--font-inter-tight)] tracking-tight leading-[1.08] text-white">
             {t("title")} <br />
             <span className="text-[#ff6f00]">{t("titleAccent")}</span>
           </h2>
@@ -59,7 +59,7 @@ export default function PricingCards() {
             <div className="lg:col-span-7 p-6 sm:p-8 flex flex-col justify-between border border-dashed border-zinc-700/60 rounded-2xl bg-[#1c1c1c]">
               <div>
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-[#ff6f00]/15 text-[#ff6f00] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                  <span className="bg-[#ff6f00]/15 text-[#ff6f00] text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
                     {t("packageLabel")}
                   </span>
                   <span className="bg-zinc-800 text-zinc-300 text-xs font-semibold px-2.5 py-1 rounded-full border border-zinc-700">
@@ -67,7 +67,7 @@ export default function PricingCards() {
                   </span>
                 </div>
 
-                <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-2">
+                <h3 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight mb-2">
                   {t("heading")}
                 </h3>
                 <p className="text-zinc-400 text-sm sm:text-base leading-relaxed mb-6">
@@ -89,7 +89,7 @@ export default function PricingCards() {
               <div className="pt-4 border-t border-zinc-800">
                 <div className="flex items-center justify-between text-xs sm:text-sm">
                   <span className="text-zinc-400 font-mono uppercase">{t("deliverableLabel")}</span>
-                  <span className="font-bold text-white">{t("deliverable")}</span>
+                  <span className="font-semibold text-white">{t("deliverable")}</span>
                 </div>
               </div>
             </div>
@@ -101,7 +101,7 @@ export default function PricingCards() {
                   {t("investment")}
                 </p>
                 <div className="flex items-baseline justify-center mb-1">
-                  <span className="text-5xl sm:text-6xl font-bold text-white tracking-tighter">{pricingT("package.price")}</span>
+                  <span className="text-5xl sm:text-6xl font-semibold text-white tracking-tighter">{pricingT("package.price")}</span>
                   <span className="text-zinc-400 text-base sm:text-lg ml-2 font-medium">{t("priceSuffix")}</span>
                 </div>
                 <p className="text-zinc-400 text-xs sm:text-sm mb-4">

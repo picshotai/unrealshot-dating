@@ -22,7 +22,7 @@ export default function NicheFAQ({ faqItems, title, subtitle }: NicheFAQProps) {
     <section className="px-4 py-24 bg-[#111111]">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold mb-6" dangerouslySetInnerHTML={{ __html: title }}></h2>
+          <h2 className="text-white text-4xl md:text-5xl lg:text-6xl font-semibold mb-6" dangerouslySetInnerHTML={{ __html: title }}></h2>
           <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-tight">
             {subtitle}
           </p>

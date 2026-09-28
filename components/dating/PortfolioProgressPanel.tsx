@@ -18,7 +18,7 @@ function ShootRecoveryState({
     <section className="flex min-h-[420px] items-center px-5 py-16">
       <div className="mx-auto w-full max-w-xl font-[family-name:var(--font-inter)]">
         <AlertTriangle className="size-5 text-amber-300" />
-        <h2 className="mt-5 font-[family-name:var(--font-inter)] text-2xl font-medium tracking-[-0.025em] text-white sm:text-3xl">
+        <h2 className="mt-5 font-[family-name:var(--font-inter-tight)] text-2xl font-medium tracking-[-0.025em] text-white sm:text-3xl">
           Your shoot needs another take
         </h2>
         <p className="mt-3 max-w-lg text-sm leading-6 text-zinc-500">
@@ -82,7 +82,7 @@ export function PortfolioProgressPanel({
               <span className="size-1.5 rounded-full bg-amber-300" />
               Shoot in progress
             </p>
-            <h2 className="mt-3 font-[family-name:var(--font-inter)] text-2xl font-medium tracking-[-0.025em] text-white sm:text-3xl">
+            <h2 className="mt-3 font-[family-name:var(--font-inter-tight)] text-2xl font-medium tracking-[-0.025em] text-white sm:text-3xl">
               Creating your photos
             </h2>
             <p className="mt-2 text-sm text-zinc-500">{customerStatus}</p>

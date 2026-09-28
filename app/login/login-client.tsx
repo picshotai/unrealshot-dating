@@ -115,7 +115,7 @@ function LoginFormWithSearchParams() {
                   <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.18em] text-[#e86400]">
                     Your studio is waiting
                   </p>
-                  <h1 id="login-title" className="font-[family-name:var(--font-space-grotesk)] text-[2.15rem] font-semibold leading-[1.05] tracking-[-0.045em] text-[#191817] sm:text-[2.55rem]">
+                  <h1 id="login-title" className="font-[family-name:var(--font-inter-tight)] text-[2.15rem] font-semibold leading-[1.05] tracking-[-0.045em] text-[#191817] sm:text-[2.55rem]">
                     Welcome back.
                   </h1>
                   <p className="mt-3 text-[15px] leading-6 text-[#706b66]">

@@ -328,7 +328,7 @@ export function CreateModelClient() {
             <Camera className="w-3.5 h-3.5 text-accent" />
             AI Face Model Training
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight font-oxanium">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight font-inter-tight">
             Dating Photoshoot Setup
           </h1>
           <p className="text-zinc-400 text-xs sm:text-sm max-w-md mx-auto">
@@ -345,7 +345,7 @@ export function CreateModelClient() {
           ].map(({ num, label }) => (
             <div
               key={num}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-oxanium transition-all border ${
+              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-inter-tight transition-all border ${
                 step === num
                   ? 'bg-white text-black border-white font-bold shadow-sm'
                   : step > num
@@ -363,7 +363,7 @@ export function CreateModelClient() {
         {step === 1 && (
           <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 sm:p-6 space-y-5 shadow-xl animate-in fade-in duration-200">
             <div className="space-y-1">
-              <label className="text-xs font-medium text-zinc-200 font-oxanium">
+              <label className="text-xs font-medium text-zinc-200 font-inter-tight">
                 Photoshoot Model Name
               </label>
               <p className="text-[11px] text-zinc-500">
@@ -385,7 +385,7 @@ export function CreateModelClient() {
             <Button
               onClick={() => setStep(2)}
               disabled={!name.trim()}
-              className="w-full bg-white text-black hover:bg-zinc-200 font-semibold text-xs sm:text-sm h-11 rounded-lg shadow-sm font-oxanium flex items-center justify-center gap-2"
+              className="w-full bg-white text-black hover:bg-zinc-200 font-semibold text-xs sm:text-sm h-11 rounded-lg shadow-sm font-inter-tight flex items-center justify-center gap-2"
             >
               Continue to Photo Guide
               <ArrowRight className="w-4 h-4" strokeWidth={2} />
@@ -397,7 +397,7 @@ export function CreateModelClient() {
         {step === 2 && (
           <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 sm:p-6 space-y-5 shadow-xl animate-in fade-in duration-200">
             <div>
-              <h2 className="text-base font-bold text-white font-oxanium">
+              <h2 className="text-base font-bold text-white font-inter-tight">
                 Photo Upload Guide
               </h2>
               <p className="text-zinc-500 text-xs mt-0.5">
@@ -433,7 +433,7 @@ export function CreateModelClient() {
               <Button
                 variant="outline"
                 onClick={() => setStep(1)}
-                className="flex-1 border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium text-xs h-11 rounded-lg font-oxanium flex items-center justify-center gap-1.5"
+                className="flex-1 border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium text-xs h-11 rounded-lg font-inter-tight flex items-center justify-center gap-1.5"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 Back
@@ -441,7 +441,7 @@ export function CreateModelClient() {
               <Button
                 onClick={() => setStep(3)}
                 disabled={!guideAccepted}
-                className="flex-1 bg-white text-black hover:bg-zinc-200 font-semibold text-xs h-11 rounded-lg shadow-sm font-oxanium flex items-center justify-center gap-1.5 disabled:opacity-50"
+                className="flex-1 bg-white text-black hover:bg-zinc-200 font-semibold text-xs h-11 rounded-lg shadow-sm font-inter-tight flex items-center justify-center gap-1.5 disabled:opacity-50"
               >
                 Continue to Upload (3 Photos)
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -457,7 +457,7 @@ export function CreateModelClient() {
           <div className="bg-zinc-950 border border-zinc-800 rounded-xl p-5 sm:p-6 space-y-4 shadow-xl animate-in fade-in duration-200">
             <div className="flex justify-between items-center">
               <div>
-                <label className="text-xs font-semibold text-white font-oxanium">
+                <label className="text-xs font-semibold text-white font-inter-tight">
                   Upload Reference Photos
                 </label>
                 <p className="text-[11px] text-zinc-500">
@@ -465,7 +465,7 @@ export function CreateModelClient() {
                 </p>
               </div>
               <span
-                className={`text-xs font-mono px-2.5 py-0.5 rounded-full font-oxanium ${
+                className={`text-xs font-mono px-2.5 py-0.5 rounded-full font-inter-tight ${
                   uploadedCount === 3
                     ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                     : 'bg-zinc-900 text-zinc-500 border border-zinc-800'
@@ -492,7 +492,7 @@ export function CreateModelClient() {
                       className="aspect-[3/4] border border-zinc-800 border-dashed rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-zinc-500 hover:bg-zinc-900/50 bg-zinc-900/30 p-2 text-center transition-all group"
                     >
                       <guide.Icon className="w-8 h-8 text-zinc-600 group-hover:text-zinc-400 transition-colors" />
-                      <span className="text-[11px] text-zinc-200 mt-1.5 font-medium font-oxanium">
+                      <span className="text-[11px] text-zinc-200 mt-1.5 font-medium font-inter-tight">
                         {guide.label}
                       </span>
                       <span className="text-[9px] text-zinc-500 leading-tight truncate w-full">
@@ -601,7 +601,7 @@ export function CreateModelClient() {
                 variant="outline"
                 onClick={() => setStep(2)}
                 disabled={isLoading}
-                className="flex-1 border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium text-xs h-11 rounded-lg font-oxanium flex items-center justify-center gap-1.5"
+                className="flex-1 border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800 text-zinc-300 hover:text-white font-medium text-xs h-11 rounded-lg font-inter-tight flex items-center justify-center gap-1.5"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 Back
@@ -609,7 +609,7 @@ export function CreateModelClient() {
               <Button
                 onClick={handleSubmit}
                 disabled={isLoading || uploadedCount < 3}
-                className="flex-1 bg-white text-black hover:bg-zinc-200 font-semibold text-xs h-11 rounded-lg shadow-sm font-oxanium flex items-center justify-center gap-1.5 disabled:opacity-50"
+                className="flex-1 bg-white text-black hover:bg-zinc-200 font-semibold text-xs h-11 rounded-lg shadow-sm font-inter-tight flex items-center justify-center gap-1.5 disabled:opacity-50"
               >
                 {isLoading ? (
                   <>

@@ -149,16 +149,8 @@
       "video": {
         "label": "Film de présentation UnrealShot",
         "watch": "Voir le film",
-        "meta": "0:40 · avec le son",
-        "play": "Lire le film UnrealShot de 40 secondes avec le son",
-        "resume": "Lecture",
-        "pause": "Pause",
-        "mute": "Couper le son",
-        "unmute": "Activer le son",
-        "fullscreen": "Plein écran",
-        "exitFullscreen": "Quitter le plein écran",
-        "seek": "Avancer ou reculer",
-        "replay": "Revoir",
+        "meta": "0:50 · avec le son",
+        "play": "Lire le film UnrealShot de 50 secondes avec le son",
         "chapters": [
           "Vous",
           "Le swipe",
@@ -312,12 +304,26 @@
       "inputImageAlt": "Exemple de selfie de référence {index}",
       "step2Title": "UnrealShot AI se met au travail",
       "step2Description": "Génération guidée par vos références, sans entraînement de modèle personnalisé",
-      "videoTitle": "Vidéo du traitement IA",
       "step3Title": "Recevez 15 séances complètes",
       "step3Description": "Recevez 60 photos organisées en scènes cohérentes de 4 images. Choisissez vos 6 préférées pour Tinder, Hinge ou Bumble, avec 15 reprises photo gratuites incluses.",
       "resultsAlt": "Résultat photo de rencontre UnrealShot AI",
       "resultCaption": "Résultats de photos de rencontre UnrealShot AI.",
-      "generated": "Généré par IA"
+      "generated": "Généré par IA",
+      "video": {
+        "label": "Comment fonctionne UnrealShot",
+        "watch": "Comment ça marche",
+        "meta": "0:28 · avec le son",
+        "play": "Lire la vidéo de 28 secondes sur le fonctionnement, avec le son",
+        "chapters": [
+          "Le problème",
+          "La solution",
+          "Vos photos",
+          "Votre style",
+          "Le shooting",
+          "Reprises",
+          "À vous"
+        ]
+      }
     },
     "testimonials": {
       "eyebrow": "AVIS DE VRAIS UTILISATEURS",
@@ -421,6 +427,16 @@
       "emphasis": "Améliorez votre galerie ce soir.",
       "button": "Améliorer mon profil — 39 $",
       "summary": "⚡ 60 photos · 15 séances · 15 reprises incluses · Achat unique"
+    },
+    "filmPlayer": {
+      "resume": "Lecture",
+      "pause": "Pause",
+      "mute": "Couper le son",
+      "unmute": "Activer le son",
+      "fullscreen": "Plein écran",
+      "exitFullscreen": "Quitter le plein écran",
+      "seek": "Avancer ou reculer",
+      "replay": "Revoir"
     }
   },
   "Pricing": {

@@ -12,7 +12,7 @@ export function CTASection() {
           {/* The Final Offer Card */}
           <div className="bg-[#161616] rounded-3xl border-2 border-dashed border-zinc-800 shadow-2xl p-8 sm:p-14 text-center">
             {/* The Headline */}
-            <h2 className="text-4xl sm:text-5xl md:text-6xl max-w-4xl mx-auto font-bold leading-tight mb-4 font-[var(--font-inter-tight)] text-white">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl max-w-4xl mx-auto font-semibold leading-tight mb-4 font-[var(--font-inter-tight)] text-white">
               {t("title")} <span className="text-[#ff6f00]">{t("titleAccent")}</span>
             </h2>
 
@@ -20,7 +20,7 @@ export function CTASection() {
             <p className="text-lg md:text-xl text-zinc-300 max-w-2xl mx-auto mb-2 leading-relaxed">
               {t("description")}
             </p>
-            <p className="text-xl md:text-2xl font-bold text-white mb-8">
+            <p className="text-xl md:text-2xl font-semibold text-white mb-8">
               {t("emphasis")}
             </p>
 

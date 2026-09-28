@@ -141,7 +141,7 @@ export function LandingHero() {
           DATING PROFILE STUDIO
         </div>
 
-        <h1 className="font-oxanium text-[clamp(1.5rem,4vw,3rem)] font-semibold leading-[1.05] tracking-tight text-white">
+        <h1 className="font-inter-tight text-[clamp(1.5rem,4vw,3rem)] font-semibold leading-[1.05] tracking-tight text-white">
           Your camera roll should look like a life, <br />
           <span className="text-white/80">not a stock library.</span>
         </h1>

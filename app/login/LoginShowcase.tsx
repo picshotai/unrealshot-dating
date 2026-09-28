@@ -62,7 +62,7 @@ export function LoginShowcase() {
         <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#ff9a4d]">
           Your face. Better photos.
         </p>
-        <h2 className="max-w-md font-[family-name:var(--font-space-grotesk)] text-3xl font-semibold leading-[1.04] tracking-[-0.035em] lg:text-[2.55rem]">
+        <h2 className="max-w-md font-[family-name:var(--font-inter-tight)] text-3xl font-semibold leading-[1.04] tracking-[-0.035em] lg:text-[2.55rem]">
           Look like yourself. On your best day.
         </h2>
         <p className="mt-3 max-w-sm text-sm leading-6 text-white/75">
