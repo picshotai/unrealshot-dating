@@ -90,7 +90,9 @@
       "shootPacks": "Shoot Packs",
       "pricing": "Pricing",
       "blog": "Blog",
-      "startDatingShoot": "Start Your Dating Shoot"
+      "startDatingShoot": "Start Your Dating Shoot",
+      "openMenu": "Open menu",
+      "closeMenu": "Close menu"
     },
     "footer": {
       "about": "About",
@@ -120,7 +122,7 @@
   "Home": {
     "meta": {
       "title": "AI Dating Photos for Men | Realistic Profile Pictures | UnrealShot",
-      "description": "Turn 4–6 selfies into 60 realistic dating photos across 15 coherent shoots. Built for Tinder, Hinge and Bumble. 15 free Photo Retakes included. $39 once.",
+      "description": "Turn a few recent photos into 60 realistic dating photos across 15 coherent shoots. Built for Tinder, Hinge and Bumble. 15 free Photo Retakes included. $39 once.",
       "keywords": [
         "AI dating photos for men",
         "AI dating photoshoot generator for men",
@@ -140,7 +142,7 @@
       "description": "Bad photos make you easy to swipe past. UnrealShot gives you natural dating photos that look like you, show your life, and make your profile worth stopping for.",
       "primaryCta": "Fix My Dating Profile",
       "signIn": "Sign in with Google",
-      "floatingNote": "Just 4–6 selfies. We do the rest.",
+      "floatingNote": "Just a few recent photos. We do the rest.",
       "userPhotoAlt": "UnrealShot customer profile photo",
       "proof": "15 shoots",
       "summary": "60 photos · 15 believable shoots · 15 Photo Retakes · $39 once",
@@ -173,10 +175,17 @@
         ]
       }
     },
+    "showcase": {
+      "eyebrow": "One person · 15 shoots",
+      "title": "60 photos.",
+      "titleAccent": "Still one person.",
+      "description": "Every photo on this wall is the same man, created by UnrealShot across different shoots, places and light."
+    },
     "pain": {
-      "title": "People aren’t rejecting the version of you they’d meet.",
-      "titleAccent": "They’re judging your photos first.",
-      "description": "You can be funny, confident, interesting and look great in person. None of that matters if your profile is five bad selfies, an old group photo and the one picture of yourself you’ve been recycling for three years.",
+      "eyebrow": "The real problem",
+      "title": "They’re judging",
+      "titleAccent": "your photos first.",
+      "description": "People aren’t rejecting the version of you they’d meet. You can be funny, confident and look great in person, but not if your profile is five bad selfies, an old group photo and the one picture you’ve been recycling for three years.",
       "cards": [
         {
           "title": "You look better in person",
@@ -231,39 +240,37 @@
       "exampleAlt": "{title} example"
     },
     "comparison": {
+      "eyebrow": "Why UnrealShot",
       "title": "Good photos still need to",
       "titleAccent": "belong together.",
-      "description": "They should look like the same person, living the same life, across different real moments. Not like a stack of unrelated AI generations.",
-      "randomTitle": "Random AI Photo Packs",
-      "unrealshotTitle": "UnrealShot AI",
-      "outcomeLabel": "THE OUTCOME",
-      "randomOutcome": "Looks like an AI folder.",
-      "unrealshotOutcome": "Reference-guided, coherent dating photos.",
-      "randomPoints": [
-        "Different version of you in every photo",
-        "Random lifestyles you do not actually live",
-        "Outfits that make no sense together",
-        "Every image feels deliberately generated",
-        "Too many polished portraits and not enough real moments",
-        "Photos look like they came from different people, places and days",
-        "Nothing gives someone a feel for what being around you is actually like",
-        "You still have to figure out which six photos make a good profile",
-        "Hundreds of images to sort through",
-        "The final profile can still feel fake even when individual photos look good"
+      "description": "The same person, a life that feels familiar, and moments that belong together.",
+      "columns": [
+        "UnrealShot",
+        "AI photo apps",
+        "Photographer",
+        "Your camera roll"
       ],
-      "solutions": [
-        "One recognizable version of you throughout",
-        "Shoots based around things that actually fit your life",
-        "4 photos from the same place, outfit and moment",
-        "A mix of close-ups, full-body shots, candids and lifestyle photos",
-        "Photos that look like someone was actually there taking them",
-        "Different moods and situations without looking like different people",
-        "Enough variety to show more than just your face",
-        "Photos that naturally give people things to ask you about",
-        "15 complete shoots for a total of 60 photos",
-        "Enough strong options to build a believable six-photo profile",
-        "15 Photo Retakes if an individual image misses"
-      ]
+      "rows": [
+        "Looks like you in every photo",
+        "Photos that belong together",
+        "Variety of places and outfits",
+        "Natural, not posed",
+        "No planning or awkward posing",
+        "Made for dating profiles"
+      ],
+      "priceLabel": "Price",
+      "prices": [
+        "$39 once",
+        "Per pack or subscription",
+        "$400–$800",
+        "Free"
+      ],
+      "status": {
+        "yes": "Yes",
+        "partial": "Partly",
+        "no": "No"
+      },
+      "note": "Compared with typical AI photo apps and local dating-photographer rates."
     },
     "features": {
       "eyebrow": "WHEN YOUR PHOTOS FINALLY WORK",
@@ -304,7 +311,7 @@
       "title": "Fixing your dating profile shouldn’t",
       "titleAccent": "become another project.",
       "description": "No photographer hunt. No asking your friends to take 200 photos of you. No prompt engineering.",
-      "step1Title": "Upload 4–6 selfies",
+      "step1Title": "Upload a few recent photos",
       "step1Description": "Use normal photos already on your phone. Different angles and clear views of your face work best. And tell us what actually feels like you.",
       "trainingImages": "Reference selfies",
       "dropImages": "Drop your images here",
@@ -344,27 +351,6 @@
       "trusted": "",
       "avatarAlt": "{name} profile photo"
     },
-    "privacy": {
-      "title": "Still you.",
-      "titleAccent": "Just finally photographed well.",
-      "description": "The goal isn’t to make you taller, richer, younger or mysteriously turn you into a model. It’s to create the photos you could realistically have taken on a good day.",
-      "cards": [
-        {
-          "title": "Realistic, Not Uncanny",
-          "description": "Better light, better clothes, better setting, better timing. Authentic photos that look natural and grounded on dating apps."
-        },
-        {
-          "title": "Same Person. Better Camera Roll.",
-          "description": "One continuous identity across 15 believable shoots with 4 frames each, so you don’t look like 60 different people."
-        },
-        {
-          "title": "15 Photo Retakes Included",
-          "description": "And if one photo misses? Retake it. Every order includes 15 individual Photo Retakes so you can replace misses without rebuilding."
-        }
-      ],
-      "cta": "Build My Dating Profile — $39",
-      "note": "15 individual Photo Retakes included"
-    },
     "pricing": {
       "eyebrow": "SIMPLE, TRANSPARENT PRICING",
       "title": "Your entire dating profile shoot.",
@@ -373,7 +359,7 @@
       "descriptionAccent": "We’re giving you 60 so you can choose them.",
       "packageLabel": "Full Profile Shoot",
       "popular": "Most Popular",
-      "heading": "Everything You Need for a Complete Profile",
+      "heading": "Everything you need for a complete profile",
       "packageDescription": "15 believable shoots with 4 frames each, designed to build a complete dating profile from scratch, plus 15 free Photo Retakes included so you never settle.",
       "features": [
         "15 complete shoots (60 photos total)",
@@ -382,30 +368,45 @@
         "One coherent identity throughout",
         "Designed for Tinder, Hinge & Bumble profiles",
         "No prompt engineering needed",
-        "4–6 normal selfies needed",
+        "Start with a few recent photos",
         "One-time purchase · No subscription"
       ],
-      "deliverableLabel": "THE DELIVERABLE:",
-      "deliverable": "60 Photos (15 Shoots) · 15 Retakes",
+      "deliverableLabel": "The deliverable",
+      "deliverable": "60 photos · 15 shoots · 15 Photo Retakes",
       "investment": "ONE-TIME INVESTMENT",
       "priceSuffix": "one-time",
       "vsPhotographer": "vs $400–$800 for a traditional dating photographer",
-      "sampleShoot": "Sample Shoot (4 Frames)",
-      "sampleCount": "1 of 15 Shoots",
+      "sampleShoot": "Sample shoot · 4 frames",
+      "sampleCount": "1 of 15 shoots",
       "sampleFrameAlt": "Shoot Frame {index}",
       "cta": "Build My Dating Profile — $39",
-      "delivery": "⚡ 30 Minutes Delivery · 15 Photo Retakes Included",
-      "secure": "Payments are processed securely with"
+      "delivery": "⚡ Delivered in 30 minutes · 15 Photo Retakes included",
+      "secure": "Payments are processed securely with",
+      "stats": [
+        {
+          "value": "60",
+          "label": "photos"
+        },
+        {
+          "value": "15",
+          "label": "shoots"
+        },
+        {
+          "value": "15",
+          "label": "Photo Retakes"
+        }
+      ],
+      "deliveryTime": "Delivered in 30 minutes"
     },
     "faq": {
-      "eyebrow": "FREQUENTLY ASKED QUESTIONS",
+      "eyebrow": "FAQ",
       "title": "Frequently asked",
       "titleAccent": "dating shoot questions",
       "description": "Everything you need to know about UnrealShot AI dating photos, retakes, and profile results.",
       "items": [
         {
           "question": "Will the photos still look like me?",
-          "answer": "That is what your 4–6 reference selfies are for. UnrealShot keeps one identity across all 60 photos. A small amount of drift can happen in individual frames, which is why every pack includes 15 Photo Retakes."
+          "answer": "That is what your reference photos are for. UnrealShot keeps one identity across all 60 photos. A small amount of drift can happen in individual frames, which is why every pack includes 15 Photo Retakes."
         },
         {
           "question": "Why four photos from the same shoot?",
@@ -430,6 +431,7 @@
       ]
     },
     "cta": {
+      "eyebrow": "Your move",
       "title": "Stop letting bad photos",
       "titleAccent": "make the decision for you.",
       "description": "You already know what it’s like to scroll through your camera roll and realize none of it truly represents you on dating apps.",

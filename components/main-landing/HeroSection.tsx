@@ -1,10 +1,9 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Check, Sparkles } from "lucide-react"
+import { Check } from "lucide-react"
 import Link from "next/link"
-import { useState, useEffect } from "react"
-import Image from "next/image"
+import { useState } from "react"
 import { Caveat } from 'next/font/google';
 import { useTranslations } from 'next-intl';
 import { HeroVideoPlayer } from "@/components/main-landing/HeroVideoPlayer";
@@ -21,7 +20,6 @@ const caveat = Caveat({
 
 export function HeroSection() {
   const t = useTranslations('Home.hero');
-  const common = useTranslations('Common');
   const [isCopied, setIsCopied] = useState(false)
   const couponCode = "WELCOME15"
 
@@ -58,42 +56,9 @@ export function HeroSection() {
       <div className="px-4 pt-[150px] max-w-6xl mx-auto text-center flex flex-col justify-center">
         <div className="relative z-10 space-y-6">
           <div className="space-y-6">
-            <div className="inline-flex p-[3px] rounded-full bg-gradient-to-r from-[#ff6f00] via-orange-400 to-[#ff6f00] shadow-[0_0_15px_rgba(255,111,0,0.3)] animate-pulse-subtle">
-              <div className="flex items-center bg-black rounded-full p-[2px]">
-
-                {/* Left Side: The Hook (High Contrast Orange) */}
-                <div className="bg-[#ff6f00] text-white text-[11px] font-semibold px-3 py-1 rounded-full flex items-center gap-1.5">
-                  <Sparkles size={12} className="text-white" />
-                  <span className="tracking-wide uppercase">{t('badge')}</span>
-                </div>
-
-                {/* --- The NEW Interactive Right Side --- */}
-                <div
-                  className="flex items-center px-3 cursor-pointer"
-                  onClick={handleCopy}
-                  title={t('discountLabel')}
-                >
-                  <span className="text-gray-300 text-xs font-medium mr-1 transition-all duration-300">
-                    {isCopied ? (
-                      <span className="text-green-400 font-semibold">{t('discountCopied')}</span>
-                    ) : (
-                      <>
-                        {t('discount', { discount: 15 })}
-                      </>
-                    )}
-                  </span>
-
-                  {/* The icon now changes based on the state */}
-                  {isCopied ? (
-                    <Check size={14} className="text-green-400" />
-                  ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-[#ff6f00] opacity-80"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
-                  )}
-                </div>
-
-
-              </div>
-            </div>
+            <p className="text-xs font-semibold uppercase leading-none tracking-[0.12em] text-[#ff6f00]">
+              {t('badge')}
+            </p>
             <h1 className="text-4xl sm:text-6xl max-w-4xl mx-auto font-semibold leading-[1.1] mb-4 font-[var(--font-inter-tight)]">
               <span className="text-white">
                 {t('title')}
@@ -103,7 +68,7 @@ export function HeroSection() {
               </span>
             </h1>
 
-            <p className="text-lg text-gray-300 max-w-3xl mx-auto mb-8">
+            <p className="mx-auto mb-8 max-w-[38rem] text-base leading-normal text-[#b4b4bb] sm:text-lg">
               {t('description')}
             </p>
           </div>
@@ -216,7 +181,26 @@ export function HeroSection() {
                 ))}
               </div>
             </div>
-            <p className="text-gray-400 text-md">{t('summary')}</p>
+            <p className="text-sm leading-normal text-[#b4b4bb]">{t('summary')}</p>
+            {/* Launch discount: a quiet, tap-to-copy code instead of a badge */}
+            <button
+              type="button"
+              onClick={handleCopy}
+              title={t('discountLabel')}
+              className="inline-flex cursor-pointer items-center gap-2 pt-1 text-sm leading-normal text-[#b4b4bb] transition-colors hover:text-white"
+            >
+              <span className="rounded-md border border-dashed border-white/25 px-2 py-0.5 font-mono text-xs font-medium tracking-wider text-white">
+                {couponCode}
+              </span>
+              {isCopied ? (
+                <span className="inline-flex items-center gap-1 text-green-400">
+                  <Check size={14} aria-hidden="true" />
+                  {t('discountCopied')}
+                </span>
+              ) : (
+                <span>{t('discount', { discount: 15 })}</span>
+              )}
+            </button>
           </div>
 
           {/* The dark stage ends partway down the film; the next section's light starts behind it */}

@@ -5,6 +5,7 @@ import { UploadCloud } from "lucide-react"
 import Carousal from "@/components/Carousal"
 import { useTranslations } from "next-intl"
 import { FilmPlayer, type FilmCopy } from "@/components/main-landing/FilmPlayer"
+import typography from "./landing-system.module.css"
 
 // Using your specific image requests
 const leftInputImages = ["/images/demo1.jpg", "/images/demo2.jpg", "/images/demo3.jpg"];
@@ -63,13 +64,13 @@ export default function HowItWorksShowcase() {
       <div className="px-4 max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 sm:mb-20">
-          <p className="text-orange-500 font-semibold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
+          <p className="mb-4 block text-xs font-semibold uppercase leading-none tracking-[0.12em] text-[#c95200]">
             {t("eyebrow")}
           </p>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl max-w-4xl mx-auto font-semibold leading-none mb-4 font-[var(--font-inter-tight)] text-gray-900">
+          <h2 className={`${typography.title} max-w-4xl mx-auto mb-4 text-[#18181b]`}>
             {t("title")} <span className="text-[#ff6f00]">{t("titleAccent")}</span>
           </h2>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="mx-auto max-w-[38rem] text-center text-base leading-normal text-[#5f5f66] sm:text-lg">
             {t("description")}
           </p>
         </div>
@@ -88,10 +89,10 @@ export default function HowItWorksShowcase() {
           </div>
 
           {/* Text element */}
-          <h3 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-center mt-2 mb-4">
+          <h3 className={`${typography.h3} text-center mt-2 mb-3`}>
             {t("step1Title")}
           </h3>
-          <p className="text-center text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="mx-auto max-w-[38rem] text-center text-base leading-normal text-[#5f5f66] sm:text-lg">
             {t("step1Description")}
           </p>
 
@@ -245,10 +246,10 @@ export default function HowItWorksShowcase() {
           </div>
 
           {/* Text element */}
-          <h3 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-center mt-2 mb-4">
+          <h3 className={`${typography.h3} text-center mt-2 mb-3`}>
             {t("step2Title")}
           </h3>
-          <p className="text-center text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="mx-auto max-w-[38rem] text-center text-base leading-normal text-[#5f5f66] sm:text-lg">
             {t("step2Description")}
           </p>
 
@@ -282,17 +283,17 @@ export default function HowItWorksShowcase() {
           </div>
 
           {/* Text element */}
-          <h3 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-center mt-10 mb-4">
+          <h3 className={`${typography.h3} text-center mt-10 mb-3`}>
             {t("step3Title")}
           </h3>
-          <p className="text-center text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="mx-auto max-w-[38rem] text-center text-base leading-normal text-[#5f5f66] sm:text-lg">
             {t("step3Description")}
           </p>
           <div className="animate-fadeIn container mx-auto pt-10">
             <Carousal images={resultsRow1} imageAlt={t("resultsAlt")} overlayLabel={t("generated")} />
             <Carousal images={resultsRow2} reverse={true} imageAlt={t("resultsAlt")} overlayLabel={t("generated")} />
           </div>
-          <div className="text-center justify-center flex text-sm font-md px-10 uppercase tracking-wider text-slate-400">
+          <div className="mt-2 flex justify-center px-10 text-center text-sm leading-normal text-[#5f5f66]">
             {t("resultCaption")}
           </div>
         </div>

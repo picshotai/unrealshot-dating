@@ -1,57 +1,38 @@
 "use client";
 
-import {
-  UserCheck,
-  Compass,
-  Sparkles,
-  Layers,
-  MessageCircle,
-  ShieldCheck,
-} from "lucide-react";
-import { FeatureCard } from "@/components/ui/grid-feature-cards";
+import { UserCheck, Compass, Sparkles, Layers, MessageCircle, ShieldCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { LandingHeading, LandingSection, landingStyles } from "./LandingSection";
 
 export function FeaturesSection() {
   const t = useTranslations("Home.features");
-  const copy = t.raw("cards") as Array<{ title: string; description: string }>;
+  const cards = t.raw("cards") as Array<{ title: string; description: string }>;
   const icons = [UserCheck, Compass, Sparkles, Layers, MessageCircle, ShieldCheck];
-  const features = copy.map((feature, index) => ({ ...feature, icon: icons[index] }));
 
   return (
-    <section id="features" className="py-16 md:py-20 bg-[#111111] text-white">
-      <div className="mx-auto w-full max-w-7xl space-y-10 px-4">
-        {/* Header */}
-        <div className="mx-auto max-w-4xl text-center mb-10">
-          <p className="text-orange-500 font-semibold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
-            {t("eyebrow")}
-          </p>
+    <LandingSection id="features" dark>
+      <LandingHeading eyebrow={t("eyebrow")} title={t("title")} accent={t("titleAccent")} description={t("description")} />
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white font-semibold mb-4 tracking-tight leading-[1.08]">
-            {t("title")} <span className="text-[#ff6f00]">{t("titleAccent")}</span>
-          </h2>
-
-          <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            {t("description")}
-          </p>
-        </div>
-
-        {/* 6-Card Grid */}
-        <div className="grid grid-cols-1 divide-x divide-y divide-dashed border border-dashed border-gray-600/30 sm:grid-cols-2 md:grid-cols-3">
-          {features.map((feature, i) => (
-            <FeatureCard key={i} feature={feature} />
-          ))}
-        </div>
-
-        {/* Bottom Line */}
-        <div className="pt-4 text-center max-w-3xl mx-auto">
-          <p className="text-xl md:text-2xl font-semibold text-white leading-snug">
-            {t("goal")} {" "}
-            <span className="text-[#ff6f00]">
-              {t("goalAccent")}
-            </span>
-          </p>
-        </div>
+      {/* Hairline grid: 1px gaps over the line colour draw the rules between cells */}
+      <div className="grid gap-px overflow-hidden rounded-2xl border border-[var(--landing-line)] bg-[var(--landing-line)] sm:grid-cols-2 lg:grid-cols-3">
+        {cards.map((card, index) => {
+          const Icon = icons[index];
+          return (
+            <div key={card.title} className="bg-[#0b0b0b] p-5 transition-colors hover:bg-[#101010] sm:p-8">
+              {/* Icon sits beside the title on phones, above it from sm up */}
+              <div className="flex items-start gap-3 sm:block">
+                <Icon className="mt-0.5 size-5 shrink-0 text-[var(--landing-accent)] sm:mt-0" strokeWidth={1.5} aria-hidden="true" />
+                <h3 className={`${landingStyles.itemTitle} sm:mt-8`}>{card.title}</h3>
+              </div>
+              <p className={`${landingStyles.body} mt-2 sm:mt-2`}>{card.description}</p>
+            </div>
+          );
+        })}
       </div>
-    </section>
+
+      <p className={`${landingStyles.statement} mt-12 sm:mt-14`}>
+        {t("goal")} <span className="text-[var(--landing-accent)]">{t("goalAccent")}</span>
+      </p>
+    </LandingSection>
   );
 }

@@ -90,7 +90,9 @@
       "shootPacks": "Fotoshootings",
       "pricing": "Preise",
       "blog": "Blog",
-      "startDatingShoot": "Dating-Shooting starten"
+      "startDatingShoot": "Dating-Shooting starten",
+      "openMenu": "Menü öffnen",
+      "closeMenu": "Menü schließen"
     },
     "footer": {
       "about": "Über uns",
@@ -120,7 +122,7 @@
   "Home": {
     "meta": {
       "title": "KI-Datingfotos für Männer | Realistische Profilbilder | UnrealShot",
-      "description": "Verwandle 4–6 Selfies in 60 realistische Datingfotos aus 15 stimmigen Shootings. Für Tinder, Hinge und Bumble. 15 kostenlose Neuanfertigungen inklusive. Einmalig 39 $.",
+      "description": "Verwandle ein paar aktuelle Fotos in 60 realistische Datingfotos aus 15 stimmigen Shootings. Für Tinder, Hinge und Bumble. 15 kostenlose Neuanfertigungen inklusive. Einmalig 39 $.",
       "keywords": [
         "KI-Datingfotos für Männer",
         "KI-Fotoshooting-Generator",
@@ -140,7 +142,7 @@
       "description": "Schlechte Fotos lassen dich schnell wegwischen. UnrealShot gibt dir natürliche Datingfotos, die nach dir aussehen, dein Leben zeigen und dein Profil sehenswert machen.",
       "primaryCta": "Mein Dating-Profil verbessern",
       "signIn": "Mit Google anmelden",
-      "floatingNote": "Nur 4–6 Selfies. Wir erledigen den Rest.",
+      "floatingNote": "Nur ein paar aktuelle Fotos. Wir erledigen den Rest.",
       "userPhotoAlt": "Profilfoto eines UnrealShot-Kunden",
       "proof": "15 Shootings",
       "summary": "60 Fotos · 15 glaubwürdige Shootings · 15 Neuanfertigungen · Einmalig 39 $",
@@ -173,10 +175,17 @@
         ]
       }
     },
+    "showcase": {
+      "eyebrow": "Eine Person · 15 Shootings",
+      "title": "60 Fotos.",
+      "titleAccent": "Immer dieselbe Person.",
+      "description": "Jedes Foto auf dieser Wand zeigt denselben Mann – erstellt von UnrealShot in verschiedenen Shootings, Orten und Lichtstimmungen."
+    },
     "pain": {
-      "title": "Abgelehnt wird nicht die Person, die man kennenlernen würde.",
-      "titleAccent": "Zuerst werden deine Fotos beurteilt.",
-      "description": "Du kannst witzig, selbstbewusst und interessant sein und persönlich großartig aussehen. Das hilft nicht, wenn dein Profil aus fünf schlechten Selfies, einem alten Gruppenfoto und demselben recycelten Bild seit drei Jahren besteht.",
+      "eyebrow": "Das eigentliche Problem",
+      "title": "Zuerst werden",
+      "titleAccent": "deine Fotos beurteilt.",
+      "description": "Abgelehnt wird nicht die Person, die man kennenlernen würde. Du kannst witzig, selbstbewusst und persönlich großartig sein – aber nicht, wenn dein Profil aus fünf schlechten Selfies, einem alten Gruppenfoto und demselben recycelten Bild seit drei Jahren besteht.",
       "cards": [
         {
           "title": "Du siehst persönlich besser aus",
@@ -231,39 +240,37 @@
       "exampleAlt": "{title}-Beispiel"
     },
     "comparison": {
+      "eyebrow": "Warum UnrealShot",
       "title": "Gute Fotos müssen trotzdem",
       "titleAccent": "zusammenpassen.",
       "description": "Sie sollten dieselbe Person zeigen, die dasselbe Leben in verschiedenen echten Momenten lebt. Keine Sammlung unzusammenhängender KI-Generationen.",
-      "randomTitle": "Zufällige KI-Fotopakete",
-      "unrealshotTitle": "UnrealShot AI",
-      "outcomeLabel": "DAS ERGEBNIS",
-      "randomOutcome": "Sieht wie ein KI-Ordner aus.",
-      "unrealshotOutcome": "Stimmige, durch Referenzen gestützte Datingfotos.",
-      "randomPoints": [
-        "In jedem Foto eine andere Version von dir",
-        "Zufällige Lebensstile, die du nicht wirklich lebst",
-        "Outfits, die nicht zusammenpassen",
-        "Jedes Bild wirkt absichtlich generiert",
-        "Zu viele polierte Porträts und zu wenige echte Momente",
-        "Die Fotos wirken wie von verschiedenen Menschen, Orten und Tagen",
-        "Nichts vermittelt, wie es ist, mit dir zusammen zu sein",
-        "Du musst immer noch sechs passende Profilfotos zusammensuchen",
-        "Hunderte Bilder zum Sortieren",
-        "Das Profil kann trotz guter Einzelbilder künstlich wirken"
+      "columns": [
+        "UnrealShot",
+        "KI-Foto-Apps",
+        "Fotograf",
+        "Deine Galerie"
       ],
-      "solutions": [
-        "Überall eine wiedererkennbare Version von dir",
-        "Shootings rund um Dinge, die wirklich zu deinem Leben passen",
-        "4 Fotos vom gleichen Ort, Outfit und Moment",
-        "Nahaufnahmen, Ganzkörperfotos, Schnappschüsse und Lifestyle-Fotos gemischt",
-        "Fotos, als wäre wirklich jemand vor Ort gewesen",
-        "Unterschiedliche Stimmungen, ohne wie verschiedene Menschen auszusehen",
-        "Genug Vielfalt, um mehr als nur dein Gesicht zu zeigen",
-        "Fotos, die ganz natürlich Gesprächsanlässe liefern",
-        "15 vollständige Shootings mit insgesamt 60 Fotos",
-        "Genug starke Optionen für ein glaubwürdiges Profil mit sechs Fotos",
-        "15 Neuanfertigungen, falls ein Bild nicht passt"
-      ]
+      "rows": [
+        "Sieht auf jedem Foto aus wie du",
+        "Fotos, die zusammenpassen",
+        "Verschiedene Orte und Outfits",
+        "Natürlich statt gestellt",
+        "Keine Planung, kein steifes Posieren",
+        "Für Dating-Profile gemacht"
+      ],
+      "priceLabel": "Preis",
+      "prices": [
+        "Einmalig 39 $",
+        "Pro Paket oder Abo",
+        "400–800 $",
+        "Kostenlos"
+      ],
+      "status": {
+        "yes": "Ja",
+        "partial": "Teilweise",
+        "no": "Nein"
+      },
+      "note": "Verglichen mit typischen KI-Foto-Apps und üblichen Fotografenpreisen."
     },
     "features": {
       "eyebrow": "WENN DEINE FOTOS ENDLICH FUNKTIONIEREN",
@@ -304,7 +311,7 @@
       "title": "Dein Dating-Profil zu verbessern sollte",
       "titleAccent": "kein weiteres Projekt werden.",
       "description": "Keine Fotografensuche. Keine Freunde um 200 Fotos bitten. Kein Prompt-Schreiben.",
-      "step1Title": "4–6 Selfies hochladen",
+      "step1Title": "Ein paar aktuelle Fotos hochladen",
       "step1Description": "Nutze normale Fotos von deinem Handy. Verschiedene Winkel und klare Ansichten deines Gesichts funktionieren am besten. Sag uns außerdem, was wirklich zu dir passt.",
       "trainingImages": "Referenzgestützte Ähnlichkeitserzeugung ohne Training eines eigenen Modells",
       "dropImages": "Bilder hier ablegen",
@@ -344,27 +351,6 @@
       "trusted": "",
       "avatarAlt": "Profilfoto von {name}"
     },
-    "privacy": {
-      "title": "Immer noch du.",
-      "titleAccent": "Nur endlich gut fotografiert.",
-      "description": "Das Ziel ist nicht, dich größer, reicher oder jünger zu machen oder dich mysteriös in ein Model zu verwandeln. Es geht um Fotos, die du an einem guten Tag realistisch hättest aufnehmen können.",
-      "cards": [
-        {
-          "title": "Realistisch, nicht unheimlich",
-          "description": "Besseres Licht, bessere Kleidung, besserer Ort, besseres Timing. Authentische Fotos, die auf Dating-Apps natürlich wirken."
-        },
-        {
-          "title": "Dieselbe Person. Eine bessere Galerie.",
-          "description": "Eine durchgehende Identität in 15 glaubwürdigen Shootings mit je 4 Bildern, damit du nicht wie 60 verschiedene Personen aussiehst."
-        },
-        {
-          "title": "15 Neuanfertigungen inklusive",
-          "description": "Passt ein Foto nicht? Erstelle es neu. Jede Bestellung enthält 15 einzelne Neuanfertigungen, ohne das ganze Shooting neu aufzubauen."
-        }
-      ],
-      "cta": "Mein Dating-Profil verbessern — 39 $",
-      "note": "15 einzelne Neuanfertigungen inklusive"
-    },
     "pricing": {
       "eyebrow": "EINFACHE, TRANSPARENTE PREISE",
       "title": "Dein komplettes Profil-Shooting.",
@@ -382,7 +368,7 @@
         "Eine stimmige Identität überall",
         "Optimiert für Tinder, Hinge und Bumble",
         "Keine Prompt-Erstellung nötig",
-        "4–6 normale Selfies erforderlich",
+        "Ein paar aktuelle Fotos genügen",
         "Einmaliger Kauf · Kein Abo"
       ],
       "deliverableLabel": "DAS ERGEBNIS:",
@@ -395,17 +381,32 @@
       "sampleFrameAlt": "Shooting-Bild {index}",
       "cta": "Mein Dating-Profil verbessern — 39 $",
       "delivery": "⚡ Lieferung in 30 Minuten · 15 Neuanfertigungen inklusive",
-      "secure": "Zahlungen werden sicher verarbeitet mit"
+      "secure": "Zahlungen werden sicher verarbeitet mit",
+      "stats": [
+        {
+          "value": "60",
+          "label": "Fotos"
+        },
+        {
+          "value": "15",
+          "label": "Shootings"
+        },
+        {
+          "value": "15",
+          "label": "Neuanfertigungen"
+        }
+      ],
+      "deliveryTime": "Lieferung in 30 Minuten"
     },
     "faq": {
-      "eyebrow": "HÄUFIGE FRAGEN",
+      "eyebrow": "FAQ",
       "title": "Fragen zu",
       "titleAccent": "Dating-Shootings",
       "description": "Alles über UnrealShot-AI-Datingfotos, Neuanfertigungen und Profil-Ergebnisse.",
       "items": [
         {
           "question": "Sehen die Fotos wirklich nach mir aus?",
-          "answer": "Dafür sind deine 4–6 Referenz-Selfies da. UnrealShot hält eine Identität über alle 60 Fotos hinweg. Kleine Abweichungen sind möglich, deshalb enthält jedes Paket 15 Neuanfertigungen."
+          "answer": "Dafür sind deine Referenzfotos da. UnrealShot hält eine Identität über alle 60 Fotos hinweg. Kleine Abweichungen sind möglich, deshalb enthält jedes Paket 15 Neuanfertigungen."
         },
         {
           "question": "Warum vier Fotos aus demselben Shooting?",
@@ -430,6 +431,7 @@
       ]
     },
     "cta": {
+      "eyebrow": "Du bist dran",
       "title": "Lass nicht länger schlechte Fotos",
       "titleAccent": "für dich entscheiden.",
       "description": "Du kennst das Gefühl: Du scrollst durch deine Galerie und keine Aufnahme repräsentiert dich wirklich auf Dating-Apps.",

@@ -90,7 +90,9 @@
       "shootPacks": "Packs photo",
       "pricing": "Tarifs",
       "blog": "Blog",
-      "startDatingShoot": "Commencer ma séance"
+      "startDatingShoot": "Commencer ma séance",
+      "openMenu": "Ouvrir le menu",
+      "closeMenu": "Fermer le menu"
     },
     "footer": {
       "about": "À propos",
@@ -120,7 +122,7 @@
   "Home": {
     "meta": {
       "title": "Photos de rencontre IA pour hommes | Profils réalistes | UnrealShot",
-      "description": "Transformez 4 à 6 selfies en 60 photos de rencontre réalistes réparties en 15 séances cohérentes. Pour Tinder, Hinge et Bumble. 15 reprises gratuites incluses. 39 $ une seule fois.",
+      "description": "Transformez quelques photos récentes en 60 photos de rencontre réalistes réparties en 15 séances cohérentes. Pour Tinder, Hinge et Bumble. 15 reprises gratuites incluses. 39 $ une seule fois.",
       "keywords": [
         "photos de rencontre IA pour hommes",
         "générateur de séance photo IA",
@@ -140,7 +142,7 @@
       "description": "De mauvaises photos vous font passer inaperçu. UnrealShot crée des photos naturelles qui vous ressemblent, montrent votre vie et donnent envie de s’arrêter sur votre profil.",
       "primaryCta": "Améliorer mon profil",
       "signIn": "Se connecter avec Google",
-      "floatingNote": "4 à 6 selfies suffisent. Nous faisons le reste.",
+      "floatingNote": "Quelques photos récentes suffisent. Nous faisons le reste.",
       "userPhotoAlt": "Photo de profil d’un client UnrealShot",
       "proof": "15 séances",
       "summary": "60 photos · 15 séances crédibles · 15 reprises photo · 39 $ une seule fois",
@@ -173,10 +175,17 @@
         ]
       }
     },
+    "showcase": {
+      "eyebrow": "Une personne · 15 shootings",
+      "title": "60 photos.",
+      "titleAccent": "Toujours la même personne.",
+      "description": "Chaque photo de ce mur montre le même homme, créé par UnrealShot à travers différents shootings, lieux et lumières."
+    },
     "pain": {
-      "title": "On ne rejette pas la personne que l’on rencontrerait.",
-      "titleAccent": "On juge d’abord vos photos.",
-      "description": "Vous pouvez être drôle, sûr de vous, intéressant et très bien paraître en personne. Rien de tout cela ne compte si votre profil contient cinq mauvais selfies, une vieille photo de groupe et la même photo recyclée depuis trois ans.",
+      "eyebrow": "Le vrai problème",
+      "title": "On juge d’abord",
+      "titleAccent": "vos photos.",
+      "description": "On ne rejette pas la personne que l’on rencontrerait. Vous pouvez être drôle, sûr de vous et très bien en personne, mais pas si votre profil se résume à cinq mauvais selfies, une vieille photo de groupe et la même photo recyclée depuis trois ans.",
       "cards": [
         {
           "title": "Vous êtes plus séduisant en personne",
@@ -231,39 +240,37 @@
       "exampleAlt": "Exemple : {title}"
     },
     "comparison": {
+      "eyebrow": "Pourquoi UnrealShot",
       "title": "De bonnes photos doivent aussi",
       "titleAccent": "aller ensemble.",
       "description": "Elles doivent montrer la même personne, vivant la même vie, dans différents moments réels. Pas une pile de générations IA sans rapport.",
-      "randomTitle": "Packs photo IA aléatoires",
-      "unrealshotTitle": "UnrealShot AI",
-      "outcomeLabel": "RÉSULTAT",
-      "randomOutcome": "On dirait un dossier IA.",
-      "unrealshotOutcome": "Des photos cohérentes guidées par vos références.",
-      "randomPoints": [
-        "Une version différente de vous sur chaque photo",
-        "Des styles de vie que vous ne vivez pas vraiment",
-        "Des tenues qui ne vont pas ensemble",
-        "Chaque image semble générée volontairement",
-        "Trop de portraits soignés et pas assez de vrais moments",
-        "Les photos semblent venir de personnes, lieux et jours différents",
-        "Rien ne donne une idée de ce que c’est que d’être avec vous",
-        "Vous devez encore trouver les six photos qui composent un bon profil",
-        "Des centaines d’images à trier",
-        "Le profil peut sembler faux même si chaque photo est réussie"
+      "columns": [
+        "UnrealShot",
+        "Applis photo IA",
+        "Photographe",
+        "Votre pellicule"
       ],
-      "solutions": [
-        "Une version reconnaissable de vous partout",
-        "Des séances basées sur des choses qui correspondent à votre vie",
-        "4 photos du même lieu, de la même tenue et du même moment",
-        "Un mélange de gros plans, photos en pied, clichés spontanés et photos lifestyle",
-        "Des photos qui semblent prises par quelqu’un présent sur place",
-        "Des ambiances différentes sans donner l’impression de personnes différentes",
-        "Assez de variété pour montrer plus que votre visage",
-        "Des photos qui donnent naturellement des sujets de conversation",
-        "15 séances complètes, soit 60 photos",
-        "Assez de choix solides pour un profil crédible de six photos",
-        "15 reprises photo si une image ne convient pas"
-      ]
+      "rows": [
+        "Vous ressemble sur chaque photo",
+        "Des photos qui vont ensemble",
+        "Variété de lieux et de tenues",
+        "Naturel, pas posé",
+        "Sans organisation ni poses gênantes",
+        "Pensé pour les profils de rencontre"
+      ],
+      "priceLabel": "Prix",
+      "prices": [
+        "39 $ une fois",
+        "Par pack ou abonnement",
+        "400–800 $",
+        "Gratuit"
+      ],
+      "status": {
+        "yes": "Oui",
+        "partial": "En partie",
+        "no": "Non"
+      },
+      "note": "Comparé aux applis photo IA courantes et aux tarifs habituels des photographes."
     },
     "features": {
       "eyebrow": "QUAND VOS PHOTOS FONCTIONNENT ENFIN",
@@ -304,7 +311,7 @@
       "title": "Améliorer votre profil ne devrait pas",
       "titleAccent": "devenir un projet de plus.",
       "description": "Pas de recherche de photographe. Pas besoin de demander à vos amis de prendre 200 photos. Pas de prompts à écrire.",
-      "step1Title": "Importez 4 à 6 selfies",
+      "step1Title": "Importez quelques photos récentes",
       "step1Description": "Utilisez des photos normales déjà sur votre téléphone. Plusieurs angles et une vue nette de votre visage donnent les meilleurs résultats. Dites-nous aussi ce qui vous ressemble vraiment.",
       "trainingImages": "Génération guidée par vos références, sans entraînement de modèle personnalisé",
       "dropImages": "Déposez vos images ici",
@@ -344,27 +351,6 @@
       "trusted": "",
       "avatarAlt": "Photo de profil de {name}"
     },
-    "privacy": {
-      "title": "Toujours vous.",
-      "titleAccent": "Enfin photographié sous votre meilleur jour.",
-      "description": "Le but n’est pas de vous rendre plus grand, plus riche, plus jeune ou de vous transformer mystérieusement en mannequin. Il s’agit de créer les photos que vous auriez réellement pu prendre un bon jour.",
-      "cards": [
-        {
-          "title": "Réaliste, jamais étrange",
-          "description": "Une meilleure lumière, de meilleurs vêtements, un meilleur décor, un meilleur timing. Des photos authentiques et naturelles sur les applications de rencontre."
-        },
-        {
-          "title": "La même personne. Une meilleure galerie.",
-          "description": "Une identité continue dans 15 séances crédibles de 4 images, pour ne pas ressembler à 60 personnes différentes."
-        },
-        {
-          "title": "15 reprises photo incluses",
-          "description": "Une photo ne convient pas ? Reprenez-la. Chaque commande inclut 15 reprises individuelles sans refaire toute la séance."
-        }
-      ],
-      "cta": "Améliorer mon profil — 39 $",
-      "note": "15 reprises photo individuelles incluses"
-    },
     "pricing": {
       "eyebrow": "TARIFICATION SIMPLE ET TRANSPARENTE",
       "title": "Votre séance de profil complète.",
@@ -382,7 +368,7 @@
         "Une identité cohérente partout",
         "Optimisé pour Tinder, Hinge et Bumble",
         "Aucun prompt à rédiger",
-        "4 à 6 selfies ordinaires nécessaires",
+        "Quelques photos récentes pour commencer",
         "Achat unique · Pas d’abonnement"
       ],
       "deliverableLabel": "LIVRABLE :",
@@ -395,17 +381,32 @@
       "sampleFrameAlt": "Image de séance {index}",
       "cta": "Améliorer mon profil — 39 $",
       "delivery": "⚡ Livraison en 30 minutes · 15 reprises incluses",
-      "secure": "Paiements traités en toute sécurité avec"
+      "secure": "Paiements traités en toute sécurité avec",
+      "stats": [
+        {
+          "value": "60",
+          "label": "photos"
+        },
+        {
+          "value": "15",
+          "label": "séances"
+        },
+        {
+          "value": "15",
+          "label": "reprises photo"
+        }
+      ],
+      "deliveryTime": "Livré en 30 minutes"
     },
     "faq": {
-      "eyebrow": "QUESTIONS FRÉQUENTES",
+      "eyebrow": "FAQ",
       "title": "Les questions sur",
       "titleAccent": "les séances de rencontre",
       "description": "Tout ce qu’il faut savoir sur les photos de rencontre UnrealShot AI, les reprises et les résultats de profil.",
       "items": [
         {
           "question": "Les photos me ressembleront-elles vraiment ?",
-          "answer": "C’est le rôle de vos 4 à 6 selfies de référence. UnrealShot conserve une seule identité sur les 60 photos. Un léger écart peut apparaître sur certaines images, c’est pourquoi chaque pack comprend 15 reprises."
+          "answer": "C’est le rôle de vos photos de référence. UnrealShot conserve une seule identité sur les 60 photos. Un léger écart peut apparaître sur certaines images, c’est pourquoi chaque pack comprend 15 reprises."
         },
         {
           "question": "Pourquoi quatre photos de la même séance ?",
@@ -430,6 +431,7 @@
       ]
     },
     "cta": {
+      "eyebrow": "À vous de jouer",
       "title": "Ne laissez plus de mauvaises photos",
       "titleAccent": "prendre la décision à votre place.",
       "description": "Vous savez déjà ce que l’on ressent en parcourant sa galerie et en réalisant qu’aucune photo ne nous représente vraiment sur les applications.",

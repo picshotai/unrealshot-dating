@@ -51,14 +51,14 @@ interface MobileNavMenuProps {
 }
 
 export const Navbar = ({ children, className }: NavbarProps) => {
-  return <motion.div className={cn("fixed inset-x-0 top-0 z-60 w-full pt-4 px-4", className)}>{children}</motion.div>
+  return <motion.div className={cn("fixed inset-x-0 top-0 z-60 w-full pt-3 px-3 sm:pt-4 sm:px-4", className)}>{children}</motion.div>
 }
 
 export const NavBody = ({ children, className }: NavBodyProps) => {
   return (
     <motion.div
       className={cn(
-        "relative z-[60] mx-auto max-w-5xl xl:max-w-6xl w-full flex flex-row items-center justify-between rounded-lg bg-white/95 border border-gray-200 px-3 py-2 hidden backdrop-blur-lg lg:flex",
+        "relative z-[60] mx-auto max-w-6xl w-full flex-row items-center justify-between rounded-lg bg-white/95 border border-gray-200 px-3 py-2 hidden backdrop-blur-lg xl:flex",
         className,
       )}
     >
@@ -76,13 +76,13 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
     <motion.div
       onMouseLeave={() => setHovered(null)}
       className={cn(
-        "flex flex-row items-center justify-center gap-1 text-sm font-semibold text-gray-600 transition duration-200 whitespace-nowrap mx-4",
+        "flex flex-row items-center justify-center gap-1 text-sm font-semibold text-gray-600 transition duration-200 whitespace-nowrap mx-2",
         className,
       )}
     >
       {items.map((item, idx) => {
         const content = <>{hovered === idx && <motion.div layoutId="hovered" className="absolute inset-0 h-full w-full rounded-md bg-gray-100" />}<span className="relative z-20">{item.name}</span></>
-        const props = { onMouseEnter: () => setHovered(idx), onClick: onItemClick, className: "relative px-3 py-2 font-semibold transition-colors cursor-pointer" }
+        const props = { onMouseEnter: () => setHovered(idx), onClick: onItemClick, className: "relative px-2 py-2 font-semibold transition-colors cursor-pointer" }
         return item.englishOnly ? <Link key={`link-${idx}`} href={item.link} {...props}>{content}</Link> : <PublicLink key={`link-${idx}`} href={item.link} {...props}>{content}</PublicLink>
       })}
     </motion.div>
@@ -93,7 +93,7 @@ export const MobileNav = ({ children, className }: MobileNavProps) => {
   return (
     <motion.div
       className={cn(
-        "relative z-50 mx-auto flex w-[95%] max-w-[calc(100vw-1rem)] flex-col items-center justify-between bg-white/95 border border-gray-200 rounded-lg backdrop-blur-lg py-3 px-4 lg:hidden",
+        "relative z-50 mx-auto flex w-full max-w-6xl flex-col items-center justify-between bg-white/95 border border-gray-200 rounded-lg backdrop-blur-lg py-2 px-3 xl:hidden",
         className,
       )}
     >
@@ -103,7 +103,7 @@ export const MobileNav = ({ children, className }: MobileNavProps) => {
 }
 
 export const MobileNavHeader = ({ children, className }: MobileNavHeaderProps) => {
-  return <div className={cn("flex w-full flex-row items-center justify-between", className)}>{children}</div>
+  return <div className={cn("flex w-full flex-row items-center justify-between gap-2", className)}>{children}</div>
 }
 
 export const MobileNavMenu = ({ children, className, isOpen, onClose }: MobileNavMenuProps) => {
@@ -111,6 +111,7 @@ export const MobileNavMenu = ({ children, className, isOpen, onClose }: MobileNa
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          id="public-mobile-navigation"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
@@ -129,12 +130,14 @@ export const MobileNavMenu = ({ children, className, isOpen, onClose }: MobileNa
 export const MobileNavToggle = ({
   isOpen,
   onClick,
+  label,
 }: {
   isOpen: boolean
   onClick: () => void
+  label: string
 }) => {
   return (
-    <Button onClick={onClick} className="text-sm py-1 group overflow-hidden bg-white hover:bg-gray-50 border border-gray-200">
+    <Button onClick={onClick} aria-label={label} aria-expanded={isOpen} aria-controls={isOpen ? "public-mobile-navigation" : undefined} className="size-10 shrink-0 p-0 group overflow-hidden bg-white hover:bg-gray-50 border border-gray-200">
       {isOpen ? <X className="h-8 w-8 text-black" /> : <Menu className="h-8 w-8 text-black" />}
     </Button>
   )
@@ -163,7 +166,7 @@ function Header({ localeSwitcher }: HeaderProps = {}) {
         {/* Logo */}
         <div className="flex items-center shrink-0">
           <PublicLink href="/" className="flex items-center gap-2 cursor-pointer">
-            <FolioLogo className="w-32 h-8" />
+            <FolioLogo className="w-auto h-8" />
           </PublicLink>
         </div>
 
@@ -194,12 +197,12 @@ function Header({ localeSwitcher }: HeaderProps = {}) {
         <MobileNavHeader>
           <div className="flex items-center shrink-0">
             <PublicLink href="/" className="flex items-center gap-2">
-              <FolioLogo className="w-24 h-7" />
+              <FolioLogo className="w-auto h-8" />
             </PublicLink>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <LocaleSwitcher {...localeSwitcher} />
-            <MobileNavToggle isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
+            <MobileNavToggle isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} label={t(isOpen ? "navigation.closeMenu" : "navigation.openMenu")} />
           </div>
         </MobileNavHeader>
 

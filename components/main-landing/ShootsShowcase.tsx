@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import landing from './landing-system.module.css';
 
 const baseImages = [
   // Col 1: Coffee, Gym, City, Dinner
@@ -72,6 +73,7 @@ const allImages = [...baseImages, ...baseImages, ...baseImages];
 
 export default function ShootsShowcase() {
   const t = useTranslations('Home.hero');
+  const showcase = useTranslations('Home.showcase');
   const columns = 25; // increased columns slightly to ensure we still fill wide screens since photos are fewer
   const rows = 4;
 
@@ -113,6 +115,16 @@ export default function ShootsShowcase() {
       {/* Much lighter fade overlay just on the top and bottom to blend with the page */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#111111] via-transparent to-[#111111] pointer-events-none opacity-80" style={{ backgroundImage: 'linear-gradient(to bottom, #111111 0%, transparent 15%, transparent 85%, #111111 100%)' }} />
       <div className="absolute inset-0 bg-gradient-to-r from-[#111111] via-transparent to-[#111111] pointer-events-none opacity-40" style={{ backgroundImage: 'linear-gradient(to right, #111111 0%, transparent 5%, transparent 95%, #111111 100%)' }} />
+
+      {/* Headline over the wall: a soft radial scrim keeps the photos visible at the edges */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_62%_48%_at_center,rgba(10,10,10,0.9)_0%,rgba(10,10,10,0.7)_45%,rgba(10,10,10,0)_78%)] sm:bg-[radial-gradient(ellipse_46%_44%_at_center,rgba(10,10,10,0.9)_0%,rgba(10,10,10,0.68)_50%,rgba(10,10,10,0)_80%)]" />
+      <div className={`${landing.onDark} relative z-10 mx-auto max-w-2xl px-6 text-center`}>
+        <p className={landing.eyebrow}>{showcase('eyebrow')}</p>
+        <h2 className={landing.title}>
+          {showcase('title')} <span className={landing.accent}>{showcase('titleAccent')}</span>
+        </h2>
+        <p className={landing.lead}>{showcase('description')}</p>
+      </div>
 
     </section>
   );

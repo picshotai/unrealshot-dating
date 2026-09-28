@@ -1,170 +1,92 @@
-"use client"
+"use client";
 
-import { Shield } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import { useTranslations } from "next-intl"
-import { Button } from "@/components/ui/button"
+import { Check, ShieldCheck, Zap } from "lucide-react";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { LandingCta, LandingHeading, LandingSection, landingStyles } from "./LandingSection";
+
+// Items 0 and 2 (shoots/photos, retakes) are shown as the numbers row, so the list skips them.
+const LIST_ITEMS = [1, 3, 4, 5, 6, 7];
+
+// Punched half-circles where the perforation meets the card edge.
+const NOTCH = "absolute size-6 rounded-full border border-zinc-800 bg-[#0b0b0b]";
 
 export default function PricingCards() {
-  const t = useTranslations("Home.pricing")
-  const pricingT = useTranslations("Pricing")
-  const DarkCheckIcon = ({ className }: { className?: string }) => (
-    <svg
-      className={className}
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <circle cx="8" cy="8" r="7.5" fill="#27272a" stroke="#ff6f00" strokeWidth="1" />
-      <path d="M5.5 8.5L7 10L11 6" stroke="#ff6f00" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-
-  const features = t.raw("features") as string[]
-
-  const sampleShootImages = [
-    { src: "/pages/outdoor_coffee_closeup.webp", alt: t("sampleFrameAlt", { index: 1 }) },
-    { src: "/pages/kitchen_shot_chopping.webp", alt: t("sampleFrameAlt", { index: 2 }) },
-    { src: "/pages/city_walk_mid_action.webp", alt: t("sampleFrameAlt", { index: 3 }) },
-    { src: "/pages/dinner_candid_expression.webp", alt: t("sampleFrameAlt", { index: 4 }) },
-  ]
+  const t = useTranslations("Home.pricing");
+  const pricingT = useTranslations("Pricing");
+  const features = t.raw("features") as string[];
+  const stats = t.raw("stats") as Array<{ value: string; label: string }>;
 
   return (
-    <section id="pricing" className="relative mx-auto py-16 sm:py-24 overflow-hidden bg-[#111111] px-4">
-      <div className="w-full max-w-7xl mx-auto">
-        {/* Section Header */}
-        <div className="text-center mb-10 sm:mb-12">
-          <p className="text-orange-500 font-semibold uppercase tracking-wider text-xs sm:text-sm mb-3 block">
-            {t("eyebrow")}
-          </p>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl max-w-4xl mx-auto font-semibold mb-4 font-[var(--font-inter-tight)] tracking-tight leading-[1.08] text-white">
-            {t("title")} <br />
-            <span className="text-[#ff6f00]">{t("titleAccent")}</span>
-          </h2>
-          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-normal mb-1 font-medium">
-            {t("description")}
-          </p>
-          <p className="text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-tight">
-            {t("descriptionAccent")}
-          </p>
-        </div>
+    <LandingSection id="pricing" dark>
+      <LandingHeading
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        accent={t("titleAccent")}
+        description={<>{t("description")} {t("descriptionAccent")}</>}
+      />
 
-        {/* Master Split Card with Left and Right Panes */}
-        <div className="max-w-6xl mx-auto bg-[#161616] rounded-3xl border-2 border-dashed border-zinc-800 shadow-2xl p-2.5 sm:p-4">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4 items-stretch">
-            {/* Left Pane: What's Included */}
-            <div className="lg:col-span-7 p-6 sm:p-8 flex flex-col justify-between border border-dashed border-zinc-700/60 rounded-2xl bg-[#1c1c1c]">
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-[#ff6f00]/15 text-[#ff6f00] text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
-                    {t("packageLabel")}
-                  </span>
-                  <span className="bg-zinc-800 text-zinc-300 text-xs font-semibold px-2.5 py-1 rounded-full border border-zinc-700">
-                    {t("popular")}
-                  </span>
-                </div>
-
-                <h3 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight mb-2">
-                  {t("heading")}
-                </h3>
-                <p className="text-zinc-400 text-sm sm:text-base leading-relaxed mb-6">
-                  {t("packageDescription")}
-                </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3.5 gap-x-4 mb-6">
-                  {features.map((feature) => (
-                    <div key={feature} className="flex items-start gap-2.5">
-                      <DarkCheckIcon className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                      <span className="text-zinc-200 text-sm font-medium leading-snug">
-                        {feature}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-zinc-800">
-                <div className="flex items-center justify-between text-xs sm:text-sm">
-                  <span className="text-zinc-400 font-mono uppercase">{t("deliverableLabel")}</span>
-                  <span className="font-semibold text-white">{t("deliverable")}</span>
-                </div>
-              </div>
+      {/* One product, one ticket. Phones: stub on top, tear line, details below.
+          Desktop: a landscape ticket, stub (price + action) left, details right. */}
+      <div className="relative mx-auto w-full max-w-md lg:max-w-[60rem]">
+        <div aria-hidden="true" className="pointer-events-none absolute -inset-x-10 -top-10 h-56 rounded-full bg-[#ff6f00]/10 blur-3xl lg:-left-16 lg:right-auto lg:top-1/2 lg:h-72 lg:w-[26rem] lg:-translate-y-1/2" />
+        <div className="relative rounded-3xl border border-zinc-800 bg-[#141414] lg:grid lg:grid-cols-[minmax(0,24rem)_1px_minmax(0,1fr)]">
+          <div className="flex flex-col gap-6 p-6 sm:p-8 lg:justify-between lg:p-10">
+            <div>
+              <p className={landingStyles.eyebrow}>{t("packageLabel")}</p>
+              <p className="flex items-baseline gap-3">
+                <span className="font-[family-name:var(--font-inter-tight)] text-6xl font-semibold leading-none tracking-[-0.045em] sm:text-7xl">
+                  {pricingT("package.price")}
+                </span>
+                <span className={landingStyles.note}>{t("priceSuffix")}</span>
+              </p>
+              <p className={`${landingStyles.note} mt-3`}>{t("vsPhotographer")}</p>
             </div>
+            <LandingCta className="w-full">{t("cta")}</LandingCta>
+          </div>
 
-            {/* Right Pane: Dark Checkout & Shoot Preview */}
-            <div className="lg:col-span-5 p-6 sm:p-8 bg-black border border-dashed border-zinc-800 rounded-2xl shadow-xl flex flex-col justify-between text-center">
-              <div>
-                <p className="text-xs font-mono uppercase tracking-wider text-[#ff6f00] mb-2 font-semibold">
-                  {t("investment")}
-                </p>
-                <div className="flex items-baseline justify-center mb-1">
-                  <span className="text-5xl sm:text-6xl font-semibold text-white tracking-tighter">{pricingT("package.price")}</span>
-                  <span className="text-zinc-400 text-base sm:text-lg ml-2 font-medium">{t("priceSuffix")}</span>
-                </div>
-                <p className="text-zinc-400 text-xs sm:text-sm mb-4">
-                  {t("vsPhotographer")}
-                </p>
+          {/* Perforation: horizontal on phones, vertical on desktop */}
+          <div aria-hidden="true" className="relative h-px lg:h-auto lg:w-px">
+            <span className="absolute inset-x-6 top-0 border-t border-dashed border-zinc-700 lg:inset-x-auto lg:inset-y-6 lg:left-0 lg:border-l lg:border-t-0" />
+            <span className={`${NOTCH} -left-3 -top-3 [clip-path:inset(0_0_0_50%)] lg:[clip-path:inset(50%_0_0_0)]`} />
+            <span className={`${NOTCH} -right-3 -top-3 [clip-path:inset(0_50%_0_0)] lg:-bottom-3 lg:-left-3 lg:right-auto lg:top-auto lg:[clip-path:inset(0_0_50%_0)]`} />
+          </div>
 
-                {/* 4 Photos of 1 Shoot Preview */}
-                <div className="bg-zinc-900/90 rounded-xl p-3 border border-dashed border-zinc-800 my-4 text-left">
-                  <div className="flex items-center justify-between mb-2.5 px-1">
-                    <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-300 font-medium">
-                      {t("sampleShoot")}
-                    </span>
-                    <span className="text-[10px] bg-orange-500/20 text-orange-400 font-semibold px-2 py-0.5 rounded">
-                      {t("sampleCount")}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-4 gap-1.5">
-                    {sampleShootImages.map((img, i) => (
-                      <div key={i} className="aspect-[3/4] rounded-lg overflow-hidden border border-zinc-700/60 shadow-sm relative">
-                        <Image
-                          src={img.src}
-                          alt={img.alt}
-                          fill
-                          sizes="(max-width: 768px) 25vw, 100px"
-                          className="object-cover"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+          <div className="p-6 sm:p-8 lg:p-10">
+            <ul className="grid grid-cols-3 gap-4 sm:gap-6">
+              {stats.map((stat) => (
+                <li key={stat.label} className="min-w-0">
+                  <span className="block font-[family-name:var(--font-inter-tight)] text-4xl font-semibold leading-none tracking-[-0.04em] text-white sm:text-5xl">
+                    {stat.value}
+                  </span>
+                  <span className={`${landingStyles.note} mt-2 block`}>{stat.label}</span>
+                </li>
+              ))}
+            </ul>
 
-              <div className="space-y-4">
-                <Link href="/login" className="w-full block">
-                  <Button className="w-full group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer pr-12 py-6 font-semibold text-base shadow-[0_4px_20px_-5px_rgba(0,0,0,0.2)]">
-                    {t("cta")}
-                    <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">
-                      <img
-                        src="/arrow.svg"
-                        alt="arrow-right"
-                        className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
-                      />
-                    </div>
-                  </Button>
-                </Link>
-
-                <div className="pt-3 border-t border-zinc-800">
-                  <p className="text-xs text-zinc-400 font-medium">
-                    {t("delivery")}
-                  </p>
-                </div>
-              </div>
-            </div>
+            <ul className="mt-7 grid gap-y-3 border-t border-zinc-800 pt-7">
+              {LIST_ITEMS.map((i) => features[i]).filter(Boolean).map((feature) => (
+                <li key={feature} className="flex items-start gap-3 text-base leading-normal text-zinc-200">
+                  <Check className="mt-1 size-4 shrink-0 text-[#ff6f00]" aria-hidden="true" />
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
-        {/* Security / Trust Footer */}
-        <p className="text-center text-zinc-400 text-sm sm:text-base leading-relaxed mt-8 flex items-center justify-center gap-1.5">
-          <Shield className="w-4 h-4 text-[#ff6f00] inline-block mr-1" />
-          {t("secure")}
-          <Image src="/dodo-logo.png" alt="dodopayments" width={96} height={96} className="inline-block ml-1 bg-black px-1.5 py-0.5 rounded border border-zinc-800" />
-        </p>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-center text-xs leading-relaxed text-zinc-400 sm:text-sm">
+          <span className="inline-flex items-center gap-1.5">
+            <Zap className="size-3.5 text-[#ff6f00]" aria-hidden="true" />
+            {t("deliveryTime")}
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <ShieldCheck className="size-4 shrink-0 text-[#ff6f00]" aria-hidden="true" />
+            {t("secure")}
+            <Image src="/dodo-logo.png" alt="Dodo Payments" width={96} height={24} className="h-auto w-20" />
+          </span>
+        </div>
       </div>
-    </section>
-  )
+    </LandingSection>
+  );
 }

@@ -90,7 +90,9 @@
       "shootPacks": "Sessões de fotos",
       "pricing": "Preços",
       "blog": "Blog",
-      "startDatingShoot": "Começar minha sessão"
+      "startDatingShoot": "Começar minha sessão",
+      "openMenu": "Abrir menu",
+      "closeMenu": "Fechar menu"
     },
     "footer": {
       "about": "Sobre nós",
@@ -120,7 +122,7 @@
   "Home": {
     "meta": {
       "title": "Fotos de namoro com IA para homens | Perfis realistas | UnrealShot",
-      "description": "Transforme 4–6 selfies em 60 fotos de namoro realistas distribuídas em 15 sessões coerentes. Para Tinder, Hinge e Bumble. 15 refações grátis incluídas. US$ 39 uma única vez.",
+      "description": "Transforme algumas fotos recentes em 60 fotos de namoro realistas distribuídas em 15 sessões coerentes. Para Tinder, Hinge e Bumble. 15 refações grátis incluídas. US$ 39 uma única vez.",
       "keywords": [
         "fotos de namoro com IA para homens",
         "gerador de sessão de fotos com IA",
@@ -140,7 +142,7 @@
       "description": "Fotos ruins fazem as pessoas passarem direto. A UnrealShot cria fotos naturais que parecem com você, mostram sua vida e fazem seu perfil merecer atenção.",
       "primaryCta": "Melhorar meu perfil",
       "signIn": "Entrar com o Google",
-      "floatingNote": "Apenas 4–6 selfies. Nós fazemos o resto.",
+      "floatingNote": "Apenas algumas fotos recentes. Nós fazemos o resto.",
       "userPhotoAlt": "Foto de perfil de um cliente UnrealShot",
       "proof": "15 sessões",
       "summary": "60 fotos · 15 sessões convincentes · 15 refações · US$ 39 uma vez",
@@ -173,10 +175,17 @@
         ]
       }
     },
+    "showcase": {
+      "eyebrow": "Uma pessoa · 15 ensaios",
+      "title": "60 fotos.",
+      "titleAccent": "Sempre a mesma pessoa.",
+      "description": "Cada foto deste mural é o mesmo homem, criado pela UnrealShot em diferentes ensaios, lugares e luzes."
+    },
     "pain": {
-      "title": "As pessoas não rejeitam a versão de você que conheceriam.",
-      "titleAccent": "Elas julgam suas fotos primeiro.",
-      "description": "Você pode ser engraçado, confiante, interessante e muito bem-apessoado pessoalmente. Nada disso importa se seu perfil tem cinco selfies ruins, uma foto de grupo antiga e a mesma imagem reciclada há três anos.",
+      "eyebrow": "O verdadeiro problema",
+      "title": "Elas julgam",
+      "titleAccent": "suas fotos primeiro.",
+      "description": "As pessoas não rejeitam a versão de você que conheceriam. Você pode ser engraçado, confiante e ótimo pessoalmente, mas não se seu perfil tem cinco selfies ruins, uma foto de grupo antiga e a mesma imagem reciclada há três anos.",
       "cards": [
         {
           "title": "Você fica melhor pessoalmente",
@@ -231,39 +240,37 @@
       "exampleAlt": "Exemplo de {title}"
     },
     "comparison": {
+      "eyebrow": "Por que a UnrealShot",
       "title": "Fotos boas ainda precisam",
       "titleAccent": "combinar entre si.",
       "description": "Elas devem parecer da mesma pessoa, vivendo a mesma vida, em diferentes momentos reais. Não uma pilha de gerações de IA sem relação.",
-      "randomTitle": "Packs aleatórios de fotos com IA",
-      "unrealshotTitle": "UnrealShot AI",
-      "outcomeLabel": "O RESULTADO",
-      "randomOutcome": "Parece uma pasta de IA.",
-      "unrealshotOutcome": "Fotos coerentes guiadas pelas suas referências.",
-      "randomPoints": [
-        "Uma versão diferente de você em cada foto",
-        "Estilos de vida que você não vive de verdade",
-        "Roupas que não combinam",
-        "Cada imagem parece gerada de propósito",
-        "Retratos polidos demais e poucos momentos reais",
-        "As fotos parecem vir de pessoas, lugares e dias diferentes",
-        "Nada mostra como é estar perto de você",
-        "Você ainda precisa descobrir quais seis fotos formam um bom perfil",
-        "Centenas de imagens para organizar",
-        "O perfil pode parecer falso mesmo quando cada foto é boa"
+      "columns": [
+        "UnrealShot",
+        "Apps de fotos com IA",
+        "Fotógrafo",
+        "Sua galeria"
       ],
-      "solutions": [
-        "Uma versão reconhecível de você em todas as fotos",
-        "Sessões baseadas em coisas que realmente combinam com sua vida",
-        "4 fotos do mesmo lugar, roupa e momento",
-        "Mistura de closes, corpo inteiro, fotos espontâneas e lifestyle",
-        "Fotos que parecem ter sido tiradas por alguém presente",
-        "Climas diferentes sem parecerem pessoas diferentes",
-        "Variedade suficiente para mostrar mais que seu rosto",
-        "Fotos que naturalmente dão assuntos para conversar",
-        "15 sessões completas, totalizando 60 fotos",
-        "Opções fortes para montar um perfil convincente de seis fotos",
-        "15 refações se uma imagem não funcionar"
-      ]
+      "rows": [
+        "Parece você em todas as fotos",
+        "Fotos que combinam entre si",
+        "Variedade de lugares e roupas",
+        "Natural, não posado",
+        "Sem planejar nem posar sem jeito",
+        "Feito para perfis de namoro"
+      ],
+      "priceLabel": "Preço",
+      "prices": [
+        "US$ 39 uma vez",
+        "Por pacote ou assinatura",
+        "US$ 400–800",
+        "Grátis"
+      ],
+      "status": {
+        "yes": "Sim",
+        "partial": "Em parte",
+        "no": "Não"
+      },
+      "note": "Comparado com apps de fotos com IA comuns e preços típicos de fotógrafos."
     },
     "features": {
       "eyebrow": "QUANDO SUAS FOTOS FINALMENTE FUNCIONAM",
@@ -304,7 +311,7 @@
       "title": "Melhorar seu perfil de namoro não deveria",
       "titleAccent": "virar mais um projeto.",
       "description": "Nada de procurar fotógrafo. Nada de pedir 200 fotos aos amigos. Nada de escrever prompts.",
-      "step1Title": "Envie 4–6 selfies",
+      "step1Title": "Envie algumas fotos recentes",
       "step1Description": "Use fotos normais que já estejam no seu celular. Ângulos diferentes e uma visão clara do rosto dão os melhores resultados. Conte também o que realmente combina com você.",
       "trainingImages": "Geração de semelhança guiada por referências, sem treinar um modelo personalizado",
       "dropImages": "Solte suas imagens aqui",
@@ -344,27 +351,6 @@
       "trusted": "",
       "avatarAlt": "Foto de perfil de {name}"
     },
-    "privacy": {
-      "title": "Ainda é você.",
-      "titleAccent": "Só que finalmente bem fotografado.",
-      "description": "O objetivo não é deixar você mais alto, rico ou jovem, nem transformá-lo misteriosamente em modelo. É criar fotos que você poderia realisticamente ter tirado em um bom dia.",
-      "cards": [
-        {
-          "title": "Realista, nunca estranho",
-          "description": "Melhor luz, roupa, cenário e momento. Fotos autênticas e naturais para aplicativos de namoro."
-        },
-        {
-          "title": "A mesma pessoa. Uma galeria melhor.",
-          "description": "Uma identidade contínua em 15 sessões convincentes de 4 imagens, para você não parecer 60 pessoas diferentes."
-        },
-        {
-          "title": "15 refações incluídas",
-          "description": "Uma foto não ficou boa? Refaça. Cada pedido inclui 15 refações individuais sem reconstruir a sessão inteira."
-        }
-      ],
-      "cta": "Melhorar meu perfil — US$ 39",
-      "note": "15 refações individuais incluídas"
-    },
     "pricing": {
       "eyebrow": "PREÇO SIMPLES E TRANSPARENTE",
       "title": "Sua sessão completa para o perfil.",
@@ -382,7 +368,7 @@
         "Uma identidade coerente em todas as fotos",
         "Otimizado para Tinder, Hinge e Bumble",
         "Sem necessidade de escrever prompts",
-        "Apenas 4–6 selfies normais para começar",
+        "Apenas algumas fotos recentes para começar",
         "Compra única · Sem assinatura"
       ],
       "deliverableLabel": "O QUE VOCÊ RECEBE:",
@@ -395,17 +381,32 @@
       "sampleFrameAlt": "Imagem da sessão {index}",
       "cta": "Melhorar meu perfil — US$ 39",
       "delivery": "⚡ Entrega em 30 minutos · 15 refações incluídas",
-      "secure": "Pagamentos processados com segurança com"
+      "secure": "Pagamentos processados com segurança com",
+      "stats": [
+        {
+          "value": "60",
+          "label": "fotos"
+        },
+        {
+          "value": "15",
+          "label": "sessões"
+        },
+        {
+          "value": "15",
+          "label": "refações"
+        }
+      ],
+      "deliveryTime": "Entrega em 30 minutos"
     },
     "faq": {
-      "eyebrow": "PERGUNTAS FREQUENTES",
+      "eyebrow": "FAQ",
       "title": "Perguntas sobre",
       "titleAccent": "sessões de namoro",
       "description": "Tudo o que você precisa saber sobre as fotos de namoro da UnrealShot AI, refações e resultados no perfil.",
       "items": [
         {
           "question": "As fotos ainda vão parecer comigo?",
-          "answer": "É para isso que servem suas 4–6 selfies de referência. A UnrealShot mantém uma identidade nas 60 fotos. Pequenas diferenças podem acontecer em imagens individuais, por isso cada pack inclui 15 refações."
+          "answer": "É para isso que servem suas fotos de referência. A UnrealShot mantém uma identidade nas 60 fotos. Pequenas diferenças podem acontecer em imagens individuais, por isso cada pack inclui 15 refações."
         },
         {
           "question": "Por que quatro fotos da mesma sessão?",
@@ -430,6 +431,7 @@
       ]
     },
     "cta": {
+      "eyebrow": "Sua vez",
       "title": "Pare de deixar fotos ruins",
       "titleAccent": "decidirem por você.",
       "description": "Você já sabe como é percorrer sua galeria e perceber que nenhuma foto representa você de verdade nos aplicativos de namoro.",

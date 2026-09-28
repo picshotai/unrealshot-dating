@@ -1,115 +1,52 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
-import { UserX, CameraOff, EyeOff } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Caveat } from "next/font/google";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { LandingCta, LandingHeading, LandingSection, landingStyles } from "./LandingSection";
 
-const caveat = Caveat({
-  subsets: ["latin"],
-  weight: "500",
-});
-
-interface FeatureCardProps {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}
-
-const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description }) => (
-  <div className="bg-white rounded-2xl p-8 shadow-[0_12px_50px_-15px_rgba(0,0,0,0.1)] border border-gray-200/60 flex flex-col justify-between">
-    <div>
-      <div className="mb-4">{icon}</div>
-      <h3 className="text-xl font-semibold text-gray-900 tracking-tight mb-3">{title}</h3>
-      <p className="text-gray-600 leading-relaxed">{description}</p>
-    </div>
-  </div>
-);
+// The camera roll we're replacing: one real "before" photo per point, in the same order as Home.pain.cards.
+const EVIDENCE = [
+  { src: "/landing/problem-blurry.webp", file: "IMG_2019.JPG" }, //  you look better in person
+  { src: "/landing/problem-far.webp", file: "IMG_0847.JPG" }, //     nobody takes good photos of you
+  { src: "/landing/problem-flash.webp", file: "IMG_1123.JPG" }, //   your photos say nothing about your life
+];
 
 export function PainSection() {
   const t = useTranslations("Home.pain");
-  const cards = t.raw("cards") as Array<{ title: string; description: string }>;
+  const points = t.raw("cards") as Array<{ title: string; description: string }>;
 
   return (
-    <section className="w-full relative bg-[#F7F5F3]">
-      <div className="px-4 md:px-0 py-16 sm:py-24 max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold mb-4 tracking-tight leading-[1.08]">
-            {t("title")}
-            <span className="block mt-2 text-[#ff6f00]">
-              {t("titleAccent")}
-            </span>
-          </h2>
-          <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-3xl mx-auto text-center leading-relaxed">
-            {t("description")}
-          </p>
-        </div>
+    <LandingSection>
+      <LandingHeading eyebrow={t("eyebrow")} title={t("title")} accent={t("titleAccent")} description={t("description")} />
 
-        {/* 3 Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <FeatureCard
-            icon={<UserX className="text-red-500" size={24} />}
-            title={cards[0].title}
-            description={cards[0].description}
-          />
-          <FeatureCard
-            icon={<CameraOff className="text-blue-500" size={24} />}
-            title={cards[1].title}
-            description={cards[1].description}
-          />
-          <FeatureCard
-            icon={<EyeOff className="text-purple-500" size={24} />}
-            title={cards[2].title}
-            description={cards[2].description}
-          />
-        </div>
-
-        {/* Bottom CTA & Psychological Bridge */}
-        <div className="text-center relative">
-          <div className="inline-block relative">
-            <Link href="/login">
-              <Button className="group relative bg-[#ff6f00] hover:bg-[#ff6f00]/90 text-white rounded-md overflow-hidden cursor-pointer px-6 pr-16 py-6 font-semibold text-base shadow-[0_4px_20px_-5px_rgba(0,0,0,0.2)]">
-                {t("cta")}
-                <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">
-                  <img
-                    src="/arrow.svg"
-                    alt="arrow-right"
-                    className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
-                  />
-                </div>
-              </Button>
-            </Link>
-
-            {/* Whirl Arrow pointing to floating text */}
-            <div className="hidden md:block absolute -right-12 top-8 mt-4 -translate-y-1/2 w-16 h-20 pointer-events-none">
-              <svg
-                viewBox="0 0 59 42"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-full h-full text-orange-500 opacity-70 transform -rotate-20"
-              >
-                <path
-                  d="M7.66614 22.083C8.61245 23.967 9.50382 25.809 10.5502 27.8855C9.46822 27.9516 8.62906 27.273 8.11869 26.4189C6.58755 23.8566 5.08123 21.2357 3.75924 18.5229C2.99812 16.9739 3.65927 15.9282 5.04612 16.172C7.36079 16.5421 9.68076 17.0712 12.0256 17.5417C12.1602 17.5669 12.3348 17.5838 12.4048 17.6759C12.7097 17.9858 12.9498 18.3626 13.2298 18.7311C12.9958 18.9402 12.8221 19.3502 12.5678 19.35C11.6851 19.3744 10.8123 19.29 9.95444 19.2559C9.48565 19.2471 9.04169 19.1798 8.47894 19.5644C9.09834 20.0754 9.7328 20.6367 10.3522 21.1477C23.4279 31.1179 38.4176 30.6525 47.7967 20.0973C48.9958 18.7256 50.015 17.178 51.1441 15.7141C51.5421 15.2039 51.955 14.7439 52.353 14.2337C52.5027 14.3091 52.6277 14.4431 52.7774 14.5186C52.7934 14.9956 52.9342 15.6067 52.7454 15.9665C52.1844 17.2048 51.6234 18.443 50.8975 19.5556C43.7187 30.665 30.0661 33.8934 16.8279 27.4803C14.2971 26.248 11.87 24.5135 9.42336 22.9967C8.90409 22.6783 8.44951 22.2929 7.95505 21.9159C7.86023 21.8823 7.75566 21.9576 7.66614 22.083Z"
-                  fill="currentColor"
-                  stroke="currentColor"
-                  strokeWidth="0.5"
-                />
-              </svg>
+      {/* Phones: photo beside text in compact rows. Desktop: three columns, photo above text. */}
+      <ul className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3 md:gap-8">
+        {points.map((point, i) => (
+          <li key={point.title} className="flex items-start gap-5 md:block">
+            <div className="relative aspect-[4/5] w-28 shrink-0 overflow-hidden rounded-xl bg-zinc-200 shadow-[0_1px_2px_rgba(0,0,0,0.06),0_12px_28px_-14px_rgba(0,0,0,0.35)] sm:w-32 md:w-full md:rounded-2xl">
+              <Image
+                src={EVIDENCE[i].src}
+                alt=""
+                fill
+                sizes="(min-width: 768px) 300px, 128px"
+                className="object-cover saturate-[.85]"
+              />
+              <span className="absolute bottom-2 left-2 rounded-md bg-black/55 px-1.5 py-0.5 font-mono text-[10px] font-medium tracking-wide text-white/90 backdrop-blur-sm md:bottom-3 md:left-3 md:text-[11px]">
+                {EVIDENCE[i].file}
+              </span>
             </div>
+            <div className="min-w-0 pt-1 md:pt-6">
+              <h3 className={landingStyles.h3}>{point.title}</h3>
+              <p className={`${landingStyles.body} mt-2`}>{point.description}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
 
-            <p
-              className={`text-gray-600 ${caveat.className} text-xl font-semibold leading-none 
-                          md:absolute md:transform md:rotate-6 md:-right-72 md:top-1/2 md:-translate-y-1/2 md:w-64
-                          sm:static sm:mt-4 sm:transform-none sm:rotate-0 sm:text-center sm:w-auto`}
-            >
-              {t("note")}
-            </p>
-          </div>
-        </div>
+      <div className="mt-14 flex flex-col items-center gap-6 sm:mt-16">
+        <p className={landingStyles.statement}>{t("note")}</p>
+        <LandingCta>{t("cta")}</LandingCta>
       </div>
-    </section>
+    </LandingSection>
   );
 }
