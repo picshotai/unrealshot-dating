@@ -25,7 +25,6 @@ import { datingShoots } from "../lib/dating-shoot-content"
 import { getLocalizedActivityPageData } from "../lib/seo-pages/activity-localized"
 import { examplesPageCopy } from "../lib/seo-pages/examples-localized"
 import { getLocalizedAuthorityPage } from "../lib/seo-pages/authority-localized"
-import { authorityLinksCopy } from "../lib/authority-links-copy"
 
 assert.deepEqual(appLocales, ["en", "fr", "es", "de", "pt-BR"])
 assert.deepEqual(publishedPublicLocales, ["en", "fr", "es", "de", "pt-BR"])
@@ -159,8 +158,6 @@ for (const path of localizedMarketingPaths) {
 }
 
 for (const locale of publishedPublicLocales) {
-  assert.equal(authorityLinksCopy[locale].pages.length, 4, `${locale} homepage authority links are incomplete`)
-  if (locale !== "en") assert.notEqual(authorityLinksCopy[locale].heading, authorityLinksCopy.en.heading, `${locale} homepage authority links are still English`)
   if (locale === "en") continue
   for (const path of Object.keys(authorityPages)) {
     const localized = getLocalizedAuthorityPage(path, locale)

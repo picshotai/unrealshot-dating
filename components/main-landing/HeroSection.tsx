@@ -31,7 +31,7 @@ export function HeroSection() {
     }, 2000) // Revert back to the original text after 2 seconds
   }
   return (
-    <section className="relative mx-auto pb-16 sm:pb-24 overflow-hidden min-h-screen bg-[#0b0b0b]">
+    <section className="relative mx-auto pb-16 overflow-hidden min-h-screen bg-[#0b0b0b]">
       {/* Paper Texture */}
       <div
         className="absolute inset-0 z-2 -pt-8"
@@ -147,42 +147,9 @@ export function HeroSection() {
             </p>
           </div>
           <div className="flex flex-col items-center space-y-2 pt-2">
-            <div className="flex items-center space-x-2">
-              <div className="flex -space-x-2">
-                <img
-                  src="/content/sachin.webp"
-                  alt={t('userPhotoAlt')}
-                  className="w-8 h-8 rounded-full border-2 border-white object-cover"
-                />
-                <img
-                  src="/content/sumesh.webp"
-                  alt={t('userPhotoAlt')}
-                  className="w-8 h-8 rounded-full border-2 border-white object-cover"
-                />
-                <img
-                  src="/content/manoj.jpg"
-                  alt={t('userPhotoAlt')}
-                  className="w-8 h-8 rounded-full border-2 border-white object-cover"
-                />
-                <img
-                  src="/content/emma-thopmson.jpg"
-                  alt={t('userPhotoAlt')}
-                  className="w-8 h-8 rounded-full border-2 border-white object-cover"
-                />
-                <div className="w-8 h-8 rounded-full bg-gray-900 border-2 border-white flex items-center justify-center">
-                  <span className="text-white text-xs font-semibold">{t('proof')}</span>
-                </div>
-              </div>
-              <div className="flex text-yellow-400">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-lg">
-                    ★
-                  </span>
-                ))}
-              </div>
-            </div>
+           
             <p className="text-sm leading-normal text-[#b4b4bb]">{t('summary')}</p>
-            {/* Launch discount: a quiet, tap-to-copy code instead of a badge */}
+            {/* Launch discount: a quiet, tap-to-copy code instead of a badge 
             <button
               type="button"
               onClick={handleCopy}
@@ -201,6 +168,7 @@ export function HeroSection() {
                 <span>{t('discount', { discount: 15 })}</span>
               )}
             </button>
+            */}
           </div>
 
           {/* The dark stage ends partway down the film; the next section's light starts behind it */}

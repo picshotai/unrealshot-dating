@@ -90,7 +90,7 @@ export default function PremiumComparison() {
           <div
             aria-hidden="true"
             className={cn(
-              "absolute inset-y-0 rounded-2xl bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04),0_10px_30px_-12px_rgba(0,0,0,0.18)]",
+              "absolute inset-y-0 rounded-2xl bg-white",
               FEATURED_POS,
             )}
           />

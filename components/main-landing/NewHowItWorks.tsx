@@ -8,8 +8,8 @@ import { FilmPlayer, type FilmCopy } from "@/components/main-landing/FilmPlayer"
 import typography from "./landing-system.module.css"
 
 // Using your specific image requests
-const leftInputImages = ["/images/demo1.jpg", "/images/demo2.jpg", "/images/demo3.jpg"];
-const rightInputImages = ["/images/demo7.jpg", "/images/demo5.jpg", "/images/demo11.jpg"];
+const leftInputImages = ["/landing/selfie-a1.webp", "/landing/selfie-a2.webp", "/landing/selfie-a3.webp"];
+const rightInputImages = ["/landing/selfie-b1.webp", "/landing/selfie-b2.webp", "/landing/selfie-b3.webp"];
 // Strategically curated Step 3 results from authentic generated shoots
 // Row 1: High-impact openers and stylish half-body portraits
 const resultsRow1 = [
@@ -64,7 +64,7 @@ export default function HowItWorksShowcase() {
       <div className="px-4 max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 sm:mb-20">
-          <p className="mb-4 block text-xs font-semibold uppercase leading-none tracking-[0.12em] text-[#c95200]">
+          <p className="mb-4 block text-xs font-semibold uppercase leading-none tracking-[0.12em] text-[#ff6f00]">
             {t("eyebrow")}
           </p>
           <h2 className={`${typography.title} max-w-4xl mx-auto mb-4 text-[#18181b]`}>
@@ -101,7 +101,7 @@ export default function HowItWorksShowcase() {
             <div className="flex flex-row items-center">
               {/* Row with images on left, center, and right */}
               <div className="flex justify-between w-full max-w-7xl">
-                {/* Left side - Woman images */}
+                {/* Left side - the first person's three reference photos (also listed in the phone) */}
                 <div className="flex items-center justify-center">
                   <div className="hidden lg:flex gap-6">
                     <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">
@@ -158,7 +158,7 @@ export default function HowItWorksShowcase() {
 
                         {/* File list - realistic display like TrainModelZone */}
                         <div className="space-y-2 flex-1 overflow-y-auto">
-                          {leftInputImages.slice(0, 4).map((src, i) => (
+                          {leftInputImages.map((src, i) => (
                             <div key={i} className="bg-white flex items-center justify-between gap-2 rounded-lg border border-gray-200 p-2">
                               <div className="flex items-center gap-2 overflow-hidden">
                                 <div className="bg-gray-100 aspect-square shrink-0 rounded w-8 h-8">
@@ -198,7 +198,7 @@ export default function HowItWorksShowcase() {
                     </div>
                   </div>
                 </div>
-                {/* Right side - Man images */}
+                {/* Right side - a second person's three reference photos */}
                 <div className="flex items-center justify-center">
                   <div className="hidden lg:flex gap-6">
                     <div className="w-[105px] h-[140px] rounded-2xl shadow-custom-shadow overflow-hidden">

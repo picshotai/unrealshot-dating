@@ -145,7 +145,7 @@
       "floatingNote": "Apenas algumas fotos recentes. Nós fazemos o resto.",
       "userPhotoAlt": "Foto de perfil de um cliente UnrealShot",
       "proof": "15 sessões",
-      "summary": "60 fotos · 15 sessões convincentes · 15 refações · US$ 39 uma vez",
+      "summary": "60 fotos · 15 sessões convincentes · US$ 39 uma vez",
       "showcaseAlt": "Exemplo de foto de perfil de namoro UnrealShot",
       "photoCount": "4 FOTOS",
       "video": {
@@ -316,7 +316,7 @@
       "trainingImages": "Geração de semelhança guiada por referências, sem treinar um modelo personalizado",
       "dropImages": "Solte suas imagens aqui",
       "fileTypes": "PNG, JPG ou JPEG",
-      "selected": "4 de 6 imagens selecionadas",
+      "selected": "3 de 3 fotos adicionadas",
       "inputImageAlt": "Exemplo de selfie de referência {index}",
       "step2Title": "A UnrealShot AI começa a trabalhar",
       "step2Description": "Geração de semelhança guiada por referências, sem treinar um modelo personalizado",

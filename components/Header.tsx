@@ -1,146 +1,42 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
-import { Link as PublicLink } from "@/i18n/navigation"
-import { cn } from "@/lib/utils"
-import { motion, AnimatePresence } from "framer-motion"
-import type React from "react"
-import { useState } from "react"
-import { Menu, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { FolioLogo } from "@/components/icons/FolioLogo"
-import { LocaleSwitcher, type LocaleSwitcherProps } from "@/components/LocaleSwitcher"
+import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react"
+import { AnimatePresence, MotionConfig, motion } from "framer-motion"
+import { ArrowRight } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
+import { Link as PublicLink, usePathname } from "@/i18n/navigation"
 import { isPublishedBlogLocale } from "@/i18n/config"
+import { LocaleSwitcher, type LocaleSwitcherProps } from "@/components/LocaleSwitcher"
+import { cn } from "@/lib/utils"
 
-interface NavbarProps {
-  children: React.ReactNode
+/*
+ * One dark capsule on every public page.
+ *   rest      sized to its content plus a little room, wordmark visible
+ *   scrolled  tucks in to fit its content (wordmark folds away) and lifts off the page
+ *   mobile    the same capsule grows into the menu sheet
+ */
+
+const EASE = [0.16, 1, 0.3, 1] as const
+const SCROLL_THRESHOLD = 24
+const MARK = 36 // logo mark, px
+const BREATHING_ROOM = 40 // px between the links and the actions when compact
+const REST_ROOM = 72 // extra px the resting capsule gets on top of its content
+
+type NavItem = { name: string; href: string; englishOnly?: boolean }
+
+function NavLink({ item, className, children, ...props }: {
+  item: NavItem
   className?: string
-}
-
-interface NavBodyProps {
-  children: React.ReactNode
-  className?: string
-}
-
-interface NavItemsProps {
-  items: {
-    name: string
-    link: string
-    englishOnly?: boolean
-  }[]
-  className?: string
-  onItemClick?: () => void
-}
-
-interface MobileNavProps {
-  children: React.ReactNode
-  className?: string
-}
-
-interface MobileNavHeaderProps {
-  children: React.ReactNode
-  className?: string
-}
-
-interface MobileNavMenuProps {
-  children: React.ReactNode
-  className?: string
-  isOpen: boolean
-  onClose: () => void
-}
-
-export const Navbar = ({ children, className }: NavbarProps) => {
-  return <motion.div className={cn("fixed inset-x-0 top-0 z-60 w-full pt-3 px-3 sm:pt-4 sm:px-4", className)}>{children}</motion.div>
-}
-
-export const NavBody = ({ children, className }: NavBodyProps) => {
-  return (
-    <motion.div
-      className={cn(
-        "relative z-[60] mx-auto max-w-6xl w-full flex-row items-center justify-between rounded-lg bg-white/95 border border-gray-200 px-3 py-2 hidden backdrop-blur-lg xl:flex",
-        className,
-      )}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-export default Header
-export { Header }
-
-export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
-  const [hovered, setHovered] = useState<number | null>(null)
-  return (
-    <motion.div
-      onMouseLeave={() => setHovered(null)}
-      className={cn(
-        "flex flex-row items-center justify-center gap-1 text-sm font-semibold text-gray-600 transition duration-200 whitespace-nowrap mx-2",
-        className,
-      )}
-    >
-      {items.map((item, idx) => {
-        const content = <>{hovered === idx && <motion.div layoutId="hovered" className="absolute inset-0 h-full w-full rounded-md bg-gray-100" />}<span className="relative z-20">{item.name}</span></>
-        const props = { onMouseEnter: () => setHovered(idx), onClick: onItemClick, className: "relative px-2 py-2 font-semibold transition-colors cursor-pointer" }
-        return item.englishOnly ? <Link key={`link-${idx}`} href={item.link} {...props}>{content}</Link> : <PublicLink key={`link-${idx}`} href={item.link} {...props}>{content}</PublicLink>
-      })}
-    </motion.div>
-  )
-}
-
-export const MobileNav = ({ children, className }: MobileNavProps) => {
-  return (
-    <motion.div
-      className={cn(
-        "relative z-50 mx-auto flex w-full max-w-6xl flex-col items-center justify-between bg-white/95 border border-gray-200 rounded-lg backdrop-blur-lg py-2 px-3 xl:hidden",
-        className,
-      )}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-export const MobileNavHeader = ({ children, className }: MobileNavHeaderProps) => {
-  return <div className={cn("flex w-full flex-row items-center justify-between gap-2", className)}>{children}</div>
-}
-
-export const MobileNavMenu = ({ children, className, isOpen, onClose }: MobileNavMenuProps) => {
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          id="public-mobile-navigation"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          className={cn(
-            "absolute inset-x-0 top-16 z-50 flex w-full text-black font-semibold flex-col justify-start gap-2 rounded-lg bg-white border border-gray-200 px-4 py-6",
-            className,
-          )}
-        >
-          {children}
-        </motion.div>
-      )}
-    </AnimatePresence>
-  )
-}
-
-export const MobileNavToggle = ({
-  isOpen,
-  onClick,
-  label,
-}: {
-  isOpen: boolean
-  onClick: () => void
-  label: string
-}) => {
-  return (
-    <Button onClick={onClick} aria-label={label} aria-expanded={isOpen} aria-controls={isOpen ? "public-mobile-navigation" : undefined} className="size-10 shrink-0 p-0 group overflow-hidden bg-white hover:bg-gray-50 border border-gray-200">
-      {isOpen ? <X className="h-8 w-8 text-black" /> : <Menu className="h-8 w-8 text-black" />}
-    </Button>
-  )
+  children: ReactNode
+  onClick?: () => void
+  onMouseEnter?: () => void
+  "aria-current"?: "page"
+}) {
+  return item.englishOnly
+    ? <Link href={item.href} className={className} {...props}>{children}</Link>
+    : <PublicLink href={item.href} className={className} {...props}>{children}</PublicLink>
 }
 
 export interface HeaderProps {
@@ -148,89 +44,264 @@ export interface HeaderProps {
 }
 
 function Header({ localeSwitcher }: HeaderProps = {}) {
-  const [isOpen, setIsOpen] = useState(false)
   const t = useTranslations("Common")
   const locale = useLocale()
+  const pathname = usePathname()
+  const menuId = useId()
 
-  const navItems = [
-    { name: t("navigation.datingPhotos"), link: "/dating-photos" },
-    { name: t("navigation.examples"), link: "/dating-photos/examples" },
-    { name: t("navigation.howItWorks"), link: "/how-it-works" },
-    { name: t("navigation.pricing"), link: "/pricing" },
-    ...(isPublishedBlogLocale(locale) ? [{ name: t("navigation.blog"), link: "/blog", englishOnly: true }] : []),
+  const [scrolled, setScrolled] = useState(false)
+  const [open, setOpen] = useState(false)
+  const [hovered, setHovered] = useState<number | null>(null)
+  const [widths, setWidths] = useState<{ compact: number; rest: number } | null>(null)
+  const linksRef = useRef<HTMLDivElement>(null)
+  const wordmarkRef = useRef<HTMLSpanElement>(null)
+  const actionsRef = useRef<HTMLDivElement>(null)
+  const toggleRef = useRef<HTMLButtonElement>(null)
+
+  const items: NavItem[] = [
+    { name: t("navigation.examples"), href: "/dating-photos/examples" },
+    { name: t("navigation.howItWorks"), href: "/how-it-works" },
+    { name: t("navigation.pricing"), href: "/pricing" },
+    ...(isPublishedBlogLocale(locale) ? [{ name: t("navigation.blog"), href: "/blog", englishOnly: true }] : []),
   ]
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`)
+
+  // Rest vs scrolled
+  useEffect(() => {
+    let frame = 0
+    const update = () => {
+      frame = 0
+      setScrolled(window.scrollY > SCROLL_THRESHOLD)
+    }
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update)
+    }
+    update()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      cancelAnimationFrame(frame)
+    }
+  }, [])
+
+  // Both desktop widths come from the content itself, so the capsule fits every locale and never runs long
+  useEffect(() => {
+    const measure = () => {
+      const links = linksRef.current
+      const actions = actionsRef.current
+      if (!links || !actions || !links.offsetWidth) return
+      const compact = Math.ceil(8 + MARK + 16 + links.offsetWidth + BREATHING_ROOM + actions.offsetWidth + 8 + 2)
+      setWidths({ compact, rest: compact + (wordmarkRef.current?.scrollWidth ?? 0) + REST_ROOM })
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    if (linksRef.current) observer.observe(linksRef.current)
+    if (actionsRef.current) observer.observe(actionsRef.current)
+    return () => observer.disconnect()
+  }, [])
+
+  // Mobile sheet: Escape closes, and it closes if the window grows to desktop.
+  // No scroll lock: hiding the page scrollbar shifts the layout, and the scrim already blocks the page.
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return
+      setOpen(false)
+      toggleRef.current?.focus()
+    }
+    const desktop = window.matchMedia("(min-width: 1024px)")
+    const onDesktop = () => desktop.matches && setOpen(false)
+    window.addEventListener("keydown", onKey)
+    desktop.addEventListener("change", onDesktop)
+    return () => {
+      window.removeEventListener("keydown", onKey)
+      desktop.removeEventListener("change", onDesktop)
+    }
+  }, [open])
+
+  const compact = scrolled && !open
+  const close = () => setOpen(false)
 
   return (
-    <Navbar>
-      <NavBody>
-        {/* Logo */}
-        <div className="flex items-center shrink-0">
-          <PublicLink href="/" className="flex items-center gap-2 cursor-pointer">
-            <FolioLogo className="w-auto h-8" />
-          </PublicLink>
-        </div>
+    <MotionConfig reducedMotion="user">
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-60 px-3 pt-3 sm:px-4 sm:pt-4">
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              key="scrim"
+              aria-hidden="true"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={close}
+              className="pointer-events-auto fixed inset-0 bg-black/50 backdrop-blur-[2px] lg:hidden"
+            />
+          )}
+        </AnimatePresence>
 
-        {/* Streamlined Navigation Items */}
-        <NavItems items={navItems} />
-
-        {/* CTA & Language Switcher */}
-        <div className="flex items-center gap-3 shrink-0">
-          <LocaleSwitcher {...localeSwitcher} />
-          <Link href="/login" className="shrink-0">
-            <Button
-              className="text-sm py-5 group relative bg-[#ff6f00] text-white rounded-md overflow-hidden cursor-pointer pr-10 whitespace-nowrap"
-            >
-              {t("navigation.startDatingShoot")}
-              <div className="bg-white rounded-sm p-[10px] absolute right-1 top-1/2 -translate-y-1/2">
-                <img
-                  src="/arrow.svg"
-                  alt=""
-                  className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-1"
-                />
-              </div>
-            </Button>
-          </Link>
-        </div>
-      </NavBody>
-
-      <MobileNav>
-        <MobileNavHeader>
-          <div className="flex items-center shrink-0">
-            <PublicLink href="/" className="flex items-center gap-2">
-              <FolioLogo className="w-auto h-8" />
-            </PublicLink>
-          </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <LocaleSwitcher {...localeSwitcher} />
-            <MobileNavToggle isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} label={t(isOpen ? "navigation.closeMenu" : "navigation.openMenu")} />
-          </div>
-        </MobileNavHeader>
-
-        <MobileNavMenu isOpen={isOpen} onClose={() => setIsOpen(false)}>
-          <div className="flex flex-col items-center w-full">
-            {navItems.map((item, idx) => {
-              const props = { className: "w-full px-2 py-2 text-gray-600 hover:text-black transition-colors cursor-pointer text-center", onClick: () => setIsOpen(false) }
-              return item.englishOnly ? <Link key={idx} href={item.link} {...props}>{item.name}</Link> : <PublicLink key={idx} href={item.link} {...props}>{item.name}</PublicLink>
-            })}
-            <div className="flex flex-col gap-2 mt-4 w-full items-center">
-              <Link href="/login" className="w-full">
-                <Button
-                  className="text-md py-6 group relative bg-[#ff6f00] text-white rounded-md overflow-hidden cursor-pointer pr-12 w-full"
+        <nav
+          aria-label="Main"
+          style={{ "--nav-compact": widths ? `${widths.compact}px` : "50rem", "--nav-rest": widths ? `${widths.rest}px` : "58rem" } as CSSProperties}
+          className={cn(
+            "pointer-events-auto relative mx-auto w-full max-w-[72rem] overflow-hidden rounded-[28px] border border-white/[0.08] bg-[#0f0f0f]/[0.97] text-white backdrop-blur-xl backdrop-saturate-150",
+            "shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition-[max-width,background-color,box-shadow] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none",
+            scrolled && "shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_14px_36px_-14px_rgba(0,0,0,0.6)]",
+            compact ? "lg:max-w-(--nav-compact)" : "lg:max-w-(--nav-rest)",
+          )}
+        >
+          <div className="flex h-14 items-center justify-between gap-3 px-2">
+            <div className="flex min-w-0 items-center">
+              <PublicLink href="/" onClick={close} aria-label="Unrealshot" className="flex shrink-0 items-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff6f00]">
+                <Image src="/site-logo.png" alt="" width={MARK} height={MARK} priority className="size-9 shrink-0 rounded-full ring-1 ring-white/10" />
+                {/* The wordmark folds away when the capsule tucks in */}
+                <span
+                  className={cn(
+                    "grid grid-cols-[1fr] transition-[grid-template-columns,opacity] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none max-[359px]:hidden",
+                    compact && "lg:grid-cols-[0fr] lg:opacity-0",
+                  )}
                 >
-                  {t("navigation.startDatingShoot")}
-                  <div className="bg-white rounded-sm p-3 absolute right-1 top-1/2 -translate-y-1/2">
-                    <img
-                      src="/arrow.svg"
-                      alt=""
-                      className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
-                    />
-                  </div>
-                </Button>
+                  <span ref={wordmarkRef} className="overflow-hidden whitespace-nowrap pl-2.5 pr-1 font-mono text-lg font-bold tracking-tight text-white">Unrealshot</span>
+                </span>
+              </PublicLink>
+
+              <div ref={linksRef} onMouseLeave={() => setHovered(null)} className="ml-4 hidden shrink-0 items-center lg:flex">
+                {items.map((item, i) => {
+                  const active = isActive(item.href)
+                  return (
+                    <NavLink
+                      key={item.href}
+                      item={item}
+                      onMouseEnter={() => setHovered(i)}
+                      aria-current={active ? "page" : undefined}
+                      className={cn(
+                        "relative whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff6f00]",
+                        active ? "text-white" : "text-white/65 hover:text-white",
+                      )}
+                    >
+                      {hovered === i && (
+                        <motion.span layoutId="nav-hover" transition={{ duration: 0.3, ease: EASE }} className="absolute inset-0 rounded-full bg-white/[0.08]" />
+                      )}
+                      <span className="relative">{item.name}</span>
+                      {active && <span aria-hidden="true" className="absolute bottom-1 left-1/2 size-1 -translate-x-1/2 rounded-full bg-[#ff6f00]" />}
+                    </NavLink>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Desktop actions */}
+            <div ref={actionsRef} className="hidden shrink-0 items-center gap-1 lg:flex">
+              <LocaleSwitcher {...localeSwitcher} />
+              <Link
+                href="/login"
+                className="group inline-flex h-10 items-center gap-3 rounded-full bg-[#ff6f00] pl-4 pr-1 text-sm font-semibold text-white transition-colors hover:bg-[#f26800] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff6f00]"
+              >
+                <span className="whitespace-nowrap">{t("navigation.startDatingShoot")}</span>
+                <span className="grid size-8 place-items-center rounded-full bg-white text-[#101010]">
+                  <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
+                </span>
               </Link>
             </div>
+
+            {/* Mobile actions: the CTA stays one tap away, the menu sits beside it */}
+            <div className="flex shrink-0 items-center gap-1 lg:hidden">
+              <Link
+                href="/login"
+                aria-label={t("navigation.startDatingShoot")}
+                className={cn(
+                  "grid size-10 place-items-center rounded-full bg-[#ff6f00] text-white transition-[opacity,transform] duration-300",
+                  open && "pointer-events-none scale-90 opacity-0",
+                )}
+                tabIndex={open ? -1 : undefined}
+              >
+                <ArrowRight className="size-[18px]" aria-hidden="true" />
+              </Link>
+              <button
+                ref={toggleRef}
+                type="button"
+                onClick={() => setOpen((v) => !v)}
+                aria-expanded={open}
+                aria-controls={menuId}
+                aria-label={t(open ? "navigation.closeMenu" : "navigation.openMenu")}
+                className="grid size-10 place-items-center rounded-full text-white transition-colors hover:bg-white/[0.08] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff6f00]"
+              >
+                <span aria-hidden="true" className="relative block h-4 w-4">
+                  <span
+                    className="absolute inset-x-0 top-1/2 -mt-px h-[1.5px] rounded-full bg-current transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                    style={{ transform: open ? "rotate(45deg)" : "translateY(-3.5px)" }}
+                  />
+                  <span
+                    className="absolute inset-x-0 top-1/2 -mt-px h-[1.5px] rounded-full bg-current transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                    style={{ transform: open ? "rotate(-45deg)" : "translateY(3.5px)" }}
+                  />
+                </span>
+              </button>
+            </div>
           </div>
-        </MobileNavMenu>
-      </MobileNav>
-    </Navbar>
+
+          {/* Mobile sheet: the capsule itself grows downward */}
+          <AnimatePresence initial={false}>
+            {open && (
+              <motion.div
+                id={menuId}
+                key="sheet"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.35, ease: EASE }}
+                className="lg:hidden"
+              >
+                <div className="px-2 pb-2">
+                  <ul className="border-t border-white/[0.08] pt-2">
+                    {items.map((item, i) => {
+                      const active = isActive(item.href)
+                      return (
+                        <motion.li
+                          key={item.href}
+                          initial={{ opacity: 0, y: -6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3, ease: EASE, delay: 0.04 * i + 0.05 }}
+                        >
+                          <NavLink
+                            item={item}
+                            onClick={close}
+                            aria-current={active ? "page" : undefined}
+                            className={cn(
+                              "flex items-center justify-between rounded-2xl px-3 py-3 font-[family-name:var(--font-inter-tight)] text-xl font-semibold tracking-[-0.02em] transition-colors hover:bg-white/[0.06]",
+                              active ? "text-white" : "text-white/85",
+                            )}
+                          >
+                            {item.name}
+                            {active && <span aria-hidden="true" className="size-1.5 rounded-full bg-[#ff6f00]" />}
+                          </NavLink>
+                        </motion.li>
+                      )
+                    })}
+                  </ul>
+
+                  <div className="mt-2 flex items-center gap-2 border-t border-white/[0.08] pt-3">
+                    <LocaleSwitcher {...localeSwitcher} />
+                    <Link
+                      href="/login"
+                      onClick={close}
+                      className="flex h-12 min-w-0 flex-1 items-center justify-between gap-3 rounded-full bg-[#ff6f00] pl-5 pr-1.5 text-[15px] font-semibold text-white transition-colors hover:bg-[#f26800]"
+                    >
+                      <span className="truncate">{t("navigation.startDatingShoot")}</span>
+                      <span className="grid size-9 shrink-0 place-items-center rounded-full bg-white text-[#101010]">
+                        <ArrowRight className="size-4" aria-hidden="true" />
+                      </span>
+                    </Link>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </nav>
+      </header>
+    </MotionConfig>
   )
 }
+
+export default Header
+export { Header }

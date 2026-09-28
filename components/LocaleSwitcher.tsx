@@ -83,21 +83,20 @@ export function LocaleSwitcher({
     <div className={cn("relative inline-flex items-center", className)}>
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger
-          className="group inline-flex items-center gap-1.5 rounded-full border border-gray-200/90 bg-white/90 px-2.5 py-1.5 text-xs font-semibold text-gray-700 shadow-2xs backdrop-blur-md transition-all hover:border-gray-300 hover:bg-gray-50/90 hover:text-gray-950 focus:outline-hidden focus-visible:ring-2 focus-visible:ring-[#ff6f00]/30 cursor-pointer select-none"
+          className="group inline-flex h-10 cursor-pointer select-none items-center gap-1.5 rounded-full px-3 text-[13px] font-medium text-white/65 transition-colors hover:bg-white/[0.07] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff6f00] data-[state=open]:bg-white/[0.07] data-[state=open]:text-white"
           aria-label={t("language")}
         >
-          <Globe className="h-3.5 w-3.5 text-gray-500 transition-colors group-hover:text-gray-700" />
-          <span className="hidden sm:inline font-medium">{currentBadge.flag}</span>
-          <span className="font-semibold text-gray-800">{currentBadge.code}</span>
-          <ChevronDown className="h-3 w-3 text-gray-400 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+          <Globe className="size-4" aria-hidden="true" />
+          <span>{currentBadge.code}</span>
+          <ChevronDown className="size-3 opacity-60 transition-transform duration-200 group-data-[state=open]:rotate-180" aria-hidden="true" />
         </DropdownMenuTrigger>
 
         <DropdownMenuContent
           align="end"
           sideOffset={8}
-          className="min-w-[190px] rounded-xl border border-gray-200/80 bg-white/98 p-1.5 shadow-xl backdrop-blur-xl z-70 animate-in fade-in-0 zoom-in-95"
+          className="z-70 min-w-[180px] rounded-2xl border border-white/10 bg-[#141414]/95 p-1.5 text-zinc-300 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.6)] backdrop-blur-xl"
         >
-          <div className="px-2.5 py-1.5 text-[11px] font-medium tracking-wide text-gray-400 uppercase">
+          <div className="px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-white/40">
             {t("language")}
           </div>
           {availableLocales.map((locale) => {
@@ -108,14 +107,12 @@ export function LocaleSwitcher({
                 key={locale}
                 onClick={() => handleSelect(locale)}
                 className={cn(
-                  "flex items-center justify-between rounded-lg px-2.5 py-2 text-xs font-medium cursor-pointer transition-colors outline-hidden",
-                  isCurrent
-                    ? "bg-orange-50/80 font-semibold text-[#ff6f00]"
-                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-950"
+                  "flex cursor-pointer items-center justify-between rounded-xl px-2.5 py-2 text-[13px] outline-hidden transition-colors focus:bg-white/[0.06] focus:text-white",
+                  isCurrent ? "font-medium text-white" : "text-zinc-300"
                 )}
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="text-sm">{badge?.flag || "🌐"}</span>
+                  <span className="w-6 font-mono text-[11px] text-white/40">{badge?.code}</span>
                   <span>{badge?.label || localeDefinitions[locale]?.nativeName}</span>
                 </div>
                 {isCurrent && <Check className="h-3.5 w-3.5 text-[#ff6f00]" />}

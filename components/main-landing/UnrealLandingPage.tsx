@@ -10,7 +10,6 @@ import PricingCards from '@/components/main-landing/pricing-cards'
 import FAQSection from '@/components/main-landing/FAQSection'
 import { CTASection } from '@/components/main-landing/CTASection'
 import  Footer  from '@/components/main-landing/Footer'
-import AuthorityLinks from "@/components/main-landing/AuthorityLinks";
 
 export function UnrealLandingPage() {
   return (
@@ -27,7 +26,6 @@ export function UnrealLandingPage() {
         <PricingCards />
         <FAQSection />
         <CTASection />
-        <AuthorityLinks />
       </main>
       <Footer />
     </div>

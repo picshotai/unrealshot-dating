@@ -145,7 +145,7 @@
       "floatingNote": "Just a few recent photos. We do the rest.",
       "userPhotoAlt": "UnrealShot customer profile photo",
       "proof": "15 shoots",
-      "summary": "60 photos · 15 believable shoots · 15 Photo Retakes · $39 once",
+      "summary": "60 photos · 15 believable shoots · $39 once",
       "showcaseAlt": "UnrealShot dating profile photo example",
       "photoCount": "4 PHOTOS",
       "video": {
@@ -316,7 +316,7 @@
       "trainingImages": "Reference selfies",
       "dropImages": "Drop your images here",
       "fileTypes": "PNG, JPG or JPEG",
-      "selected": "4 of 6 images selected",
+      "selected": "3 of 3 photos added",
       "inputImageAlt": "Reference selfie example {index}",
       "step2Title": "UnrealShot AI gets to work",
       "step2Description": "Reference-guided likeness generation; no custom model training",
