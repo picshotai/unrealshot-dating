@@ -33,7 +33,7 @@ export function HeroSection() {
     }, 2000) // Revert back to the original text after 2 seconds
   }
   return (
-    <section className="relative mx-auto pb-12 overflow-hidden min-h-screen bg-black">
+    <section className="relative mx-auto pb-16 sm:pb-24 overflow-hidden min-h-screen bg-[#0b0b0b]">
       {/* Paper Texture */}
       <div
         className="absolute inset-0 z-2 -pt-8"
@@ -44,13 +44,17 @@ export function HeroSection() {
           backgroundSize: 'auto'
         }}
       />
+      {/* Starfield from the top of the texture, faded out so the stage stays one continuous dark */}
       <div
-        className="absolute inset-0 z-0"
+        className="absolute inset-x-0 top-0 z-0 h-[1131px]"
         style={{
           backgroundImage: `url('/bg-image.webp')`,
+          backgroundPosition: 'top center',
+          backgroundRepeat: 'repeat-x',
+          maskImage: 'linear-gradient(to bottom, black 0%, black 30%, transparent 52%)',
+          WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 30%, transparent 52%)',
         }}
       />
-
       <div className="px-4 pt-[150px] max-w-6xl mx-auto text-center flex flex-col justify-center">
         <div className="relative z-10 space-y-6">
           <div className="space-y-6">
@@ -215,7 +219,11 @@ export function HeroSection() {
             <p className="text-gray-400 text-md">{t('summary')}</p>
           </div>
 
-          <HeroVideoPlayer />
+          {/* The dark stage ends partway down the film; the next section's light starts behind it */}
+          <div className="relative">
+            <div aria-hidden="true" className="absolute -bottom-[40rem] left-1/2 top-[62%] w-[300vw] -translate-x-1/2 bg-[#F7F5F3]" />
+            <HeroVideoPlayer />
+          </div>
         </div>
       </div>
 

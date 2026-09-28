@@ -161,6 +161,15 @@
           "Le résultat",
           "Le prix",
           "À vous"
+        ],
+        "tabsLabel": "Chapitres du film",
+        "tabs": [
+          "Le problème",
+          "Voici UnrealShot",
+          "La configuration",
+          "Le shooting",
+          "Le résultat",
+          "Le prix"
         ]
       }
     },

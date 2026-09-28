@@ -161,6 +161,15 @@
           "O resultado",
           "O preço",
           "Sua vez"
+        ],
+        "tabsLabel": "Capítulos do filme",
+        "tabs": [
+          "O problema",
+          "Conheça a UnrealShot",
+          "A configuração",
+          "O ensaio",
+          "O resultado",
+          "O preço"
         ]
       }
     },

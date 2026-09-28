@@ -161,6 +161,15 @@
           "Das Ergebnis",
           "Der Preis",
           "Du bist dran"
+        ],
+        "tabsLabel": "Filmkapitel",
+        "tabs": [
+          "Das Problem",
+          "Das ist UnrealShot",
+          "Die Einrichtung",
+          "Das Shooting",
+          "Das Ergebnis",
+          "Der Preis"
         ]
       }
     },

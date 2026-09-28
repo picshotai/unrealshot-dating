@@ -49,6 +49,32 @@ function ControlButton({ label, onClick, children }: { label: string; onClick: (
   )
 }
 
+const NOTCH_R = 18
+
+/** Concave corner that joins the tab notch to the frame: filled shape + hairline that
+ *  continues the frame's top border into the notch wall. */
+function NotchCorner({ side }: { side: "left" | "right" }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox={`0 0 ${NOTCH_R} ${NOTCH_R}`}
+      className={cn(
+        "pointer-events-none absolute bottom-0 overflow-visible",
+        side === "left" ? "right-[calc(100%-1px)]" : "left-[calc(100%-1px)] -scale-x-100",
+      )}
+      style={{ width: NOTCH_R, height: NOTCH_R }}
+    >
+      <path d={`M0 ${NOTCH_R}A${NOTCH_R} ${NOTCH_R} 0 0 0 ${NOTCH_R} 0V${NOTCH_R}Z`} fill="#141414" />
+      <path
+        d={`M0 ${NOTCH_R - 0.5}A${NOTCH_R - 0.5} ${NOTCH_R - 0.5} 0 0 0 ${NOTCH_R - 0.5} 0`}
+        fill="none"
+        stroke="rgba(255,255,255,0.15)"
+        strokeWidth="1"
+      />
+    </svg>
+  )
+}
+
 function PlayDisc({ large = false }: { large?: boolean }) {
   return (
     <span className={cn("relative grid place-items-center", large ? "size-[76px] sm:size-[92px]" : "size-16 sm:size-[72px]")}>
@@ -84,7 +110,16 @@ type FilmPlayerProps = {
   ctaLabel: string
   ctaHref?: string
   className?: string
+  /** Story tabs shown in a notch above the frame; each jumps to its start time */
+  tabs?: { label: string; start: number }[]
+  tabsLabel?: string
+  /** Soft glow behind the frame that follows the colours of the playing video */
+  ambient?: boolean
+  /** Muted preview loops only this [start, end] range (seconds) instead of the whole film */
+  previewLoop?: [number, number]
 }
+
+const DEFAULT_GLOW = "255 111 0"
 
 export function FilmPlayer({
   copy,
@@ -95,6 +130,10 @@ export function FilmPlayer({
   ctaLabel,
   ctaHref = "/login",
   className,
+  tabs,
+  tabsLabel,
+  ambient = false,
+  previewLoop,
 }: FilmPlayerProps) {
   const t = useTranslations("Home.filmPlayer")
   const chapters = copy.chapters
@@ -103,6 +142,9 @@ export function FilmPlayer({
   const videoRef = useRef<FullscreenVideo>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const hideTimer = useRef<number | undefined>(undefined)
+  const glowRef = useRef<HTMLDivElement>(null)
+  const tabsRef = useRef<HTMLDivElement>(null)
+  const [tabsEdge, setTabsEdge] = useState({ left: false, right: false })
 
   const [mode, setMode] = useState<Mode>("preview")
   const [playing, setPlaying] = useState(false)
@@ -160,6 +202,34 @@ export function FilmPlayer({
     return () => cancelAnimationFrame(frame)
   }, [mode, playing])
 
+  // Ambient glow: sample the frame a few times a second and let the glow follow its colour.
+  useEffect(() => {
+    if (!ambient) return
+    const video = videoRef.current
+    const glow = glowRef.current
+    if (!video || !glow) return
+    const canvas = document.createElement("canvas")
+    canvas.width = 16
+    canvas.height = 9
+    const ctx = canvas.getContext("2d", { willReadFrequently: true })
+    if (!ctx) return
+    const sample = () => {
+      if (video.paused || video.readyState < 2) return
+      try {
+        ctx.drawImage(video, 0, 0, 16, 9)
+        const data = ctx.getImageData(0, 0, 16, 9).data
+        let r = 0, g = 0, b = 0
+        for (let i = 0; i < data.length; i += 4) { r += data[i]; g += data[i + 1]; b += data[i + 2] }
+        const n = data.length / 4
+        glow.style.setProperty("--glow", `${Math.round(r / n)} ${Math.round(g / n)} ${Math.round(b / n)}`)
+      } catch {
+        // Frame not readable (e.g. a cross-origin source): keep the brand glow.
+      }
+    }
+    const id = window.setInterval(sample, 250)
+    return () => window.clearInterval(id)
+  }, [ambient])
+
   useEffect(() => {
     const onChange = () => setFullscreen(document.fullscreenElement === frameRef.current)
     document.addEventListener("fullscreenchange", onChange)
@@ -175,15 +245,15 @@ export function FilmPlayer({
     hideTimer.current = window.setTimeout(() => setControlsVisible(false), HIDE_CONTROLS_AFTER_MS)
   }, [])
 
-  const startFilm = () => {
+  const startFilm = (at = 0) => {
     const video = videoRef.current
     if (!video) return
     video.loop = false
-    video.currentTime = 0
+    video.currentTime = at
     video.muted = false
     setMuted(false)
     setEnded(false)
-    setTime(0)
+    setTime(at)
     setMode("active")
     revealControls()
     video.play().catch(() => {
@@ -292,15 +362,109 @@ export function FilmPlayer({
   const fillFor = (start: number, end: number, value: number) =>
     `${clamp((value - start) / (end - start), 0, 1) * 100}%`
   const showControls = mode === "active" && (!playing || scrubbing || controlsVisible || ended)
+  let tabIndex = 0
+  tabs?.forEach((tab, i) => {
+    if (time >= tab.start - 0.05) tabIndex = i
+  })
+  const tabProgress = (i: number) => {
+    if (!tabs || mode !== "active") return 0
+    const end = tabs[i + 1]?.start ?? duration
+    return clamp((time - tabs[i].start) / (end - tabs[i].start), 0, 1)
+  }
+  const updateTabsEdge = useCallback(() => {
+    const el = tabsRef.current
+    if (!el) return
+    setTabsEdge({ left: el.scrollLeft > 2, right: el.scrollLeft + el.clientWidth < el.scrollWidth - 2 })
+  }, [])
+
+  useEffect(() => {
+    const el = tabsRef.current
+    if (!el) return
+    updateTabsEdge()
+    const ro = new ResizeObserver(updateTabsEdge)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [updateTabsEdge])
+
+  // Keep the active tab centred in the notch when the tabs overflow (small screens).
+  useEffect(() => {
+    const el = tabsRef.current
+    const tab = el?.children[tabIndex] as HTMLElement | undefined
+    if (!el || !tab || el.scrollWidth <= el.clientWidth) return
+    el.scrollTo({ left: tab.offsetLeft - (el.clientWidth - tab.offsetWidth) / 2, behavior: "smooth" })
+  }, [tabIndex])
+
+  const openTab = (start: number) => {
+    if (mode === "preview" || ended) {
+      startFilm(start)
+    } else {
+      seekTo(start)
+      videoRef.current?.play().catch(() => {})
+    }
+  }
 
   return (
-    <div className={cn("relative isolate mx-auto w-full text-left", className)}>
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -inset-x-10 -top-12 bottom-6 -z-10 rounded-[48px] bg-[radial-gradient(ellipse_at_center,rgba(255,111,0,0.22),transparent_68%)] blur-2xl"
-      />
+    <div className={cn("relative mx-auto w-full text-left", className)}>
+      {ambient ? (
+        <div
+          ref={glowRef}
+          aria-hidden="true"
+          style={{ ["--glow" as string]: DEFAULT_GLOW }}
+          className="pointer-events-none absolute -inset-x-6 inset-y-8 rounded-[64px] bg-[rgb(var(--glow)/0.4)] mix-blend-screen blur-[80px] transition-[background-color] duration-700 ease-out sm:-inset-x-16"
+        />
+      ) : (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -inset-x-10 -top-12 bottom-6 rounded-[48px] bg-[radial-gradient(ellipse_at_center,rgba(255,111,0,0.22),transparent_68%)] blur-2xl"
+        />
+      )}
 
-      <div className="rounded-[22px] border border-white/15 bg-[#141414] p-1.5 shadow-[0_40px_120px_-30px_rgba(0,0,0,0.9)] sm:rounded-[26px] sm:p-2">
+      {tabs && (
+        // Capped so the notch (and its curved corners) always sits on the frame's straight top edge
+        <div className="relative z-10 mx-auto -mb-px flex w-fit max-w-[calc(100%-92px)] sm:max-w-[calc(100%-104px)]">
+          <div className="relative min-w-0 rounded-t-[18px] border border-b-0 border-white/15 bg-[#141414]">
+            <div
+              ref={tabsRef}
+              role="tablist"
+              aria-label={tabsLabel}
+              onScroll={updateTabsEdge}
+              className="flex snap-x snap-mandatory gap-0.5 overflow-x-auto scroll-px-2 px-1.5 pb-1 pt-1.5 [scrollbar-width:none] sm:gap-1 sm:px-2 sm:pt-2 [&::-webkit-scrollbar]:hidden"
+              style={{
+                maskImage: `linear-gradient(to right, ${tabsEdge.left ? "transparent" : "#000"} 0, #000 28px, #000 calc(100% - 28px), ${tabsEdge.right ? "transparent" : "#000"} 100%)`,
+                WebkitMaskImage: `linear-gradient(to right, ${tabsEdge.left ? "transparent" : "#000"} 0, #000 28px, #000 calc(100% - 28px), ${tabsEdge.right ? "transparent" : "#000"} 100%)`,
+              }}
+            >
+              {tabs.map((tab, i) => {
+                const active = i === tabIndex
+                return (
+                  <button
+                    key={tab.start}
+                    type="button"
+                    role="tab"
+                    aria-selected={active}
+                    onClick={() => openTab(tab.start)}
+                    className={cn(
+                      "relative shrink-0 cursor-pointer snap-center whitespace-nowrap rounded-full px-3 py-1.5 text-[12.5px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/50 sm:px-3.5 sm:text-[13.5px]",
+                      active ? "bg-white/[0.09] text-white" : "text-white/50 hover:text-white/85",
+                    )}
+                  >
+                    {tab.label}
+                    {active && mode === "active" && (
+                      <span aria-hidden="true" className="absolute inset-x-3 bottom-0 h-[2px] overflow-hidden rounded-full bg-white/10">
+                        <span className="block h-full rounded-full bg-[#ff6f00]" style={{ width: `${tabProgress(i) * 100}%` }} />
+                      </span>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+          <NotchCorner side="left" />
+          <NotchCorner side="right" />
+        </div>
+      )}
+
+      <div className="relative rounded-[22px] border border-white/15 bg-[#141414] p-1.5 shadow-[0_30px_80px_-24px_rgba(0,0,0,0.55)] sm:rounded-[26px] sm:p-2">
         <div
           ref={frameRef}
           role="region"
@@ -318,7 +482,7 @@ export function FilmPlayer({
             className="absolute inset-0 h-full w-full object-contain"
             poster={poster}
             muted={muted}
-            loop={mode === "preview"}
+            loop={mode === "preview" && !previewLoop}
             playsInline
             preload="metadata"
             aria-label={copy.label}
@@ -332,7 +496,9 @@ export function FilmPlayer({
             }}
             onLoadedMetadata={(e) => setDuration(e.currentTarget.duration || fallbackDuration)}
             onTimeUpdate={(e) => {
-              if (mode === "active" && !playing) setTime(e.currentTarget.currentTime)
+              const v = e.currentTarget
+              if (mode === "active" && !playing) setTime(v.currentTime)
+              if (mode === "preview" && previewLoop && v.currentTime >= previewLoop[1]) v.currentTime = previewLoop[0]
             }}
             onProgress={(e) => {
               const ranges = e.currentTarget.buffered
@@ -348,9 +514,9 @@ export function FilmPlayer({
           {mode === "preview" && (
             <button
               type="button"
-              onClick={startFilm}
+              onClick={() => startFilm()}
               aria-label={copy.play}
-              className="group/cta absolute inset-0 z-10 flex cursor-pointer flex-col items-center justify-center gap-4 bg-gradient-to-t from-black/60 via-black/15 to-black/0 transition-colors duration-300 hover:from-black/70 focus-visible:outline-none"
+              className="group/cta absolute inset-0 z-10 flex cursor-pointer flex-col items-center justify-center gap-4 bg-gradient-to-t from-black/45 via-black/5 to-black/0 transition-colors duration-300 hover:from-black/60 focus-visible:outline-none"
             >
               <PlayDisc large />
 
@@ -387,7 +553,7 @@ export function FilmPlayer({
               </Link>
               <button
                 type="button"
-                onClick={startFilm}
+                onClick={() => startFilm()}
                 className="inline-flex cursor-pointer items-center gap-2 rounded-full px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.2em] text-white/75 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
               >
                 <RotateCcw className="size-3.5" />

@@ -161,6 +161,15 @@
           "El resultado",
           "El precio",
           "Tu turno"
+        ],
+        "tabsLabel": "Capítulos del vídeo",
+        "tabs": [
+          "El problema",
+          "Conoce UnrealShot",
+          "La configuración",
+          "La sesión",
+          "El resultado",
+          "El precio"
         ]
       }
     },

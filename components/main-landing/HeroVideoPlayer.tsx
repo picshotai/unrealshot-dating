@@ -16,6 +16,10 @@ export function HeroVideoPlayer() {
       chapterStarts={[0, 5.75, 14.75, 19.75, 22.75, 28.75, 35.25, 41.5, 45.25]}
       fallbackDuration={49.75}
       ctaLabel={hero("primaryCta")}
+      ambient
+      previewLoop={[0, 5.7]}
+      tabsLabel={t("tabsLabel")}
+      tabs={(t.raw("tabs") as string[]).map((label, i) => ({ label, start: [0, 19.75, 22.75, 28.75, 35.25, 41.5][i] }))}
     />
   )
 }

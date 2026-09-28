@@ -161,6 +161,15 @@
           "The result",
           "The price",
           "Your move"
+        ],
+        "tabsLabel": "Film chapters",
+        "tabs": [
+          "The problem",
+          "Meet UnrealShot",
+          "The setup",
+          "The shoot",
+          "The result",
+          "The price"
         ]
       }
     },
