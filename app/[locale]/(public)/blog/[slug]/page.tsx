@@ -23,6 +23,7 @@ import {
 import { getPublicAlternates, publicUrl, makeBlogPostingJsonLd } from "@/lib/public-seo"
 import { serializeJsonLd } from "@/lib/json-ld"
 import { defaultSEO } from "@/config/seo"
+import { gonePaths } from "@/config/legacy-urls"
 import {
   isPublishedBlogLocale,
   localizePublicPathname,
@@ -37,6 +38,7 @@ type ArticlePageProps = { params: Promise<{ locale: string; slug: string }> }
 
 export async function generateStaticParams(): Promise<Array<{ locale: PublishedBlogLocale; slug: string }>> {
   return (await getAllPublishedPostPaths())
+    .filter(({ slug }) => !gonePaths.has(`/blog/${slug}`) && !gonePaths.has(`/blog/${slug}`.toLowerCase()))
     .map(({ locale, slug }) => ({ locale, slug }))
 }
 
@@ -65,6 +67,9 @@ function isoDate(dateString: string): string {
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const { locale: routeLocale, slug } = await params
+  if (gonePaths.has(`/blog/${slug}`) || gonePaths.has(`/blog/${slug}`.toLowerCase())) {
+    return { robots: { index: false, follow: false } }
+  }
   if (!isPublishedBlogLocale(routeLocale)) return { robots: { index: false, follow: false } }
   const locale = routeLocale as PublishedBlogLocale
   const t = await getTranslations({ locale, namespace: "Blog.article" })
@@ -118,10 +123,12 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 
 export default async function BlogArticlePage({ params }: ArticlePageProps) {
   const { locale: routeLocale, slug } = await params
+  if (gonePaths.has(`/blog/${slug}`) || gonePaths.has(`/blog/${slug}`.toLowerCase())) notFound()
   if (!isPublishedBlogLocale(routeLocale)) notFound()
   const locale = routeLocale as PublishedBlogLocale
   const canonicalSlug = slug.replace(/[\s,]+$/g, "")
   if (canonicalSlug !== slug) redirect(localizePublicPathname(`/blog/${canonicalSlug}`, locale))
+  if (gonePaths.has(`/blog/${canonicalSlug}`) || gonePaths.has(`/blog/${canonicalSlug}`.toLowerCase())) notFound()
 
   const post = await getPostBySlugAndLocale(canonicalSlug, locale)
   if (!post) notFound()

@@ -147,6 +147,17 @@ These URLs intentionally have no replacement. Every exact path below also return
 - https://www.unrealshot.com/linkedin-headline-generator
 - https://www.unrealshot.com/linkedin-post-generator
 
+### Legacy blog posts
+
+- https://www.unrealshot.com/blog/how-to-create-a-professional-ai-headshot-in-2025
+- https://www.unrealshot.com/blog/ai-headshots-vs-professional-photographer-pros-and-cons
+- https://www.unrealshot.com/blog/the-best-ai-headshot-generators-of-2026
+- https://www.unrealshot.com/blog/best-ai-headshot-generators-in-2026
+- https://www.unrealshot.com/blog/best-aragon-ai-alternatives-in-2025
+- https://www.unrealshot.com/blog/how-to-use-ai-headshots-to-level-up-your-resume
+- https://www.unrealshot.com/blog/creative-christmas-photo-ideas-to-create-with-ai
+- https://www.unrealshot.com/blog/creative-christmas-photo-ideas-with-ai
+
 ## Non-indexable application routes
 
 The unpublished `/new-landing` design preview is explicitly `noindex` and is not part of the published localization surface. Authenticated product routes such as `/dating-shoot`, `/models`, `/account`, `/buy-credits`, checkout flows, APIs and generated-user content are also intentionally not part of this SEO inventory or sitemap.

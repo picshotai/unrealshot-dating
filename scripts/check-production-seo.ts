@@ -105,7 +105,24 @@ async function main() {
     assert.equal(new URL(response.headers.get("location")!, serverOrigin).pathname, expectedLocation)
   }
 
-  for (const pathname of ["/professional-headshots", "/fr/linkedin-headshots", "/blog/best-ai-headshot-generators-in-2026"]) {
+  for (const pathname of [
+    "/professional-headshots",
+    "/fr/linkedin-headshots",
+    "/blog/best-ai-headshot-generators-in-2026",
+    "/blog/how-to-create-a-professional-ai-headshot-in-2025",
+    "/blog/ai-headshots-vs-professional-photographer-pros-and-cons",
+    "/blog/the-best-ai-headshot-generators-of-2026",
+    "/blog/best-aragon-ai-alternatives-in-2025",
+    "/blog/how-to-use-ai-headshots-to-level-up-your-resume",
+    "/blog/creative-christmas-photo-ideas-to-create-with-ai",
+    "/use-case/couple-photos",
+    "/use-case/creative-headshots",
+    "/ai-chef-headshots",
+    "/ai-christmas-photoshoot",
+    "/vintage-photoshoot",
+    "/ai-glamour-photoshoot",
+    "/ai-influencer-generator",
+  ]) {
     const response = await request(pathname, "manual")
     assert.equal(response.status, 410, `${pathname} should return Gone`)
     assert.match(response.headers.get("x-robots-tag") ?? "", /noindex, follow/)
@@ -130,6 +147,7 @@ async function main() {
   assert.ok(sitemap.includes(`<loc>${expectedEnglishUrl}</loc>`), "English article missing from sitemap")
   assert.equal(sitemap.includes("/use-case/dating-photos"), false)
   assert.equal(sitemap.includes("/professional-headshots"), false)
+  assert.equal(sitemap.includes("/creative-christmas-photo-ideas-to-create-with-ai"), false)
 
   const sitemapUrls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1])
   for (const sitemapUrl of sitemapUrls) {

@@ -36,20 +36,20 @@ function goneResponse() {
 
 function legacyResponse(request: NextRequest): NextResponse | undefined {
   const localePath = splitLocalePathname(request.nextUrl.pathname)
+  const normalizedPath = localePath.pathname.toLowerCase()
 
-  if (gonePaths.has(localePath.pathname)) return goneResponse()
+  if (gonePaths.has(localePath.pathname) || gonePaths.has(normalizedPath)) return goneResponse()
 
-  const replacement = permanentRedirects.get(localePath.pathname)
+  const replacement = permanentRedirects.get(localePath.pathname) || permanentRedirects.get(normalizedPath)
   if (replacement) {
     const target = request.nextUrl.clone()
     target.pathname =
-      localePath.pathname === '/use-case/dating-photos'
+      normalizedPath === '/use-case/dating-photos'
         ? localizePublicPathname(replacement, localePath.locale)
         : replacement
     target.search = ''
     return NextResponse.redirect(target, 308)
   }
-
 }
 
 /** Signed-in users have no business here; they belong in the studio or onboarding. */
