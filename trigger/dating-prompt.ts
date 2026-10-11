@@ -39,7 +39,7 @@ export const generateDatingShootPrompts = task({
   run: async (
     payload: GenerateDatingPromptPayload
   ): Promise<GenerateDatingPromptResult> => {
-    const db = getServiceDb() as any;
+    const db = getServiceDb();
     const attempt = await loadProductionAttempt(
       db,
       payload.orderShootId,
@@ -105,6 +105,13 @@ export const generateDatingShootPrompts = task({
       attempt,
       generation,
     });
+    if (!result.passed) {
+      logger.warn("Production dating prompt validation rejected", {
+        orderShootId: payload.orderShootId,
+        attemptNumber: payload.attemptNumber,
+        validationErrors: generation.validation.problems,
+      });
+    }
     logger.info("Production dating prompt attempt completed", {
       orderShootId: payload.orderShootId,
       attemptNumber: payload.attemptNumber,

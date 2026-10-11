@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { getServiceDb } from "./db";
+import { resolveDatingNotificationSender, sendDatingReadyEmail } from "./notification-delivery";
 import {
   CUSTOM_CREDITS_DEFAULT,
   FRAMES_PER_SHOOT,
@@ -13,7 +14,7 @@ import {
 export async function sendDatingShootReadyNotification(
   userId: string,
   orderId: string
-): Promise<{ ok: boolean; message?: string }> {
+): Promise<{ ok: boolean; message?: string; emailId?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.warn("[dating-shoot] RESEND_API_KEY is missing, skipping email notification");
@@ -24,7 +25,7 @@ export async function sendDatingShootReadyNotification(
     const db = getServiceDb();
     
     // Fetch user email from Supabase Auth admin
-    const { data: userData, error: userError } = await (db as any).auth.admin.getUserById(userId);
+    const { data: userData, error: userError } = await db.auth.admin.getUserById(userId);
     const userEmail = userData?.user?.email;
 
     if (userError || !userEmail) {
@@ -35,12 +36,15 @@ export async function sendDatingShootReadyNotification(
       return { ok: false, message: "User email not found" };
     }
 
-    const { data: order } = await (db as any)
+    const { data: order, error: orderError } = await db
       .from("user_shoot_orders")
       .select("shoots_target, photos_target, custom_credits_remaining")
       .eq("id", orderId)
       .eq("user_id", userId)
       .single();
+    if (orderError || !order) {
+      return { ok: false, message: orderError?.message ?? "Order not found" };
+    }
     const shootsTarget = Number(order?.shoots_target ?? SHOOTS_PER_DELIVERY);
     const photosTarget = Number(order?.photos_target ?? shootsTarget * FRAMES_PER_SHOOT);
     const reshoots = Number(order?.custom_credits_remaining ?? CUSTOM_CREDITS_DEFAULT);
@@ -52,9 +56,9 @@ export async function sendDatingShootReadyNotification(
     const dashboardUrl = `${appUrl}/dating-shoot?orderId=${orderId}`;
 
     const resend = new Resend(apiKey);
-    const fromEmail = process.env.RESEND_FROM_EMAIL || "Unrealshot AI <photos@unrealshot.com>";
+    const fromEmail = resolveDatingNotificationSender();
 
-    await resend.emails.send({
+    const result = await sendDatingReadyEmail(resend.emails.send.bind(resend.emails), {
       from: fromEmail,
       to: userEmail,
       subject: `Your ${photosTarget} dating photos are ready 📸`,
@@ -96,12 +100,17 @@ export async function sendDatingShootReadyNotification(
         </body>
         </html>
       `,
-    });
+    }, orderId);
 
-    console.log("[dating-shoot] Ready email sent successfully to", userEmail);
-    return { ok: true };
-  } catch (err: any) {
-    console.error("[dating-shoot] Error sending ready email notification:", err?.message);
-    return { ok: false, message: err?.message };
+    if (!result.ok) {
+      console.error("[dating-shoot] Ready email rejected", { orderId, message: result.message });
+      return result;
+    }
+    console.log("[dating-shoot] Ready email accepted", { orderId, emailId: result.emailId });
+    return result;
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("[dating-shoot] Error sending ready email notification:", message);
+    return { ok: false, message };
   }
 }

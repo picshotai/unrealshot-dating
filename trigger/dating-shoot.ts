@@ -901,7 +901,8 @@ async function finalizeBatch(
     });
 
     try {
-      await sendDatingShootReadyNotification(userId, batchId);
+      const notification = await sendDatingShootReadyNotification(userId, batchId);
+      if (!notification.ok) logger.warn("Ready notification failed", { batchId, message: notification.message });
     } catch (e) {
       logger.warn("Ready notification failed", { error: String(e) });
     }
@@ -932,7 +933,8 @@ async function finalizeBatch(
   logger.info("Batch complete — ready for delivery", { batchId, completed });
 
   try {
-    await sendDatingShootReadyNotification(userId, batchId);
+    const notification = await sendDatingShootReadyNotification(userId, batchId);
+    if (!notification.ok) logger.warn("Ready notification failed", { batchId, message: notification.message });
   } catch (e) {
     logger.warn("Ready notification failed", { error: String(e) });
   }

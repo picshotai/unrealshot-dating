@@ -15,6 +15,8 @@
     "check:prompt-lab": "tsx scripts/check-prompt-lab.ts",
     "check:recipes": "tsx scripts/check-scene-recipes.ts",
     "check:production-prompts": "tsx scripts/check-production-prompts.ts",
+    "check:expression-validation": "tsx scripts/check-expression-validation.ts",
+    "check:ready-notification": "tsx scripts/check-ready-notification.ts",
     "check:production-types": "tsc -p tsconfig.dating-pipeline.json --pretty false",
     "check:i18n": "tsx scripts/check-i18n.ts",
     "check:seo": "tsx scripts/check-seo-contract.ts",

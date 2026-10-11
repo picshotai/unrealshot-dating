@@ -7,6 +7,9 @@
   "include": [
     "next-env.d.ts",
     "scripts/test-shoot-direction.ts",
+    "scripts/check-expression-validation.ts",
+    "scripts/check-ready-notification.ts",
+    "scripts/recover-prompt-validation-order.ts",
     "lib/auth/admin-access.ts",
     "lib/dating/config.ts",
     "lib/dating/creative-director/**/*.ts",

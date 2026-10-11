@@ -7,6 +7,7 @@ import {
 import { formatCraftReferences, selectCraftReferences } from "./craft-references";
 import { PHYSICAL_SCENE_REASONING_INSTRUCTION } from "./physical-scene";
 import { SHOOT_DIRECTION_INSTRUCTION } from "./photographic-direction";
+import { affirmativeExpressionText } from "./expression-validation";
 import {
   ANCHOR_REFERENCE_SENTENCE,
   IDENTITY_SENTENCE,
@@ -207,7 +208,7 @@ export function validateShootOutput(args: {
     if (anchor.expressionType !== "neutral") {
       problems.push("The anchor frame must have expressionType 'neutral'.");
     }
-    if (ANCHOR_FORBIDDEN_EXPRESSION_REGEX.test(anchor.capturePrompt)) {
+    if (ANCHOR_FORBIDDEN_EXPRESSION_REGEX.test(affirmativeExpressionText(anchor.capturePrompt))) {
       problems.push("The anchor frame must have a calm, neutral, relaxed expression and cannot contain smile, laugh, grin, smirk, or teeth wording.");
     }
   }
@@ -267,10 +268,11 @@ export function validateShootOutput(args: {
         problems.push(`${frame.frameId} violates the ${exclusion} exclusion.`);
       }
     }
-    if (OVERT_EXPRESSION_REGEX.test(frame.capturePrompt)) {
+    const expressionText = affirmativeExpressionText(frame.capturePrompt);
+    if (OVERT_EXPRESSION_REGEX.test(expressionText)) {
       problems.push(`${frame.frameId} contains overt laughter, grinning, teeth, or open-mouth expressions which are strictly prohibited.`);
     }
-    if (frame.expressionType === "warm" || SMILE_FAMILY_REGEX.test(frame.capturePrompt)) {
+    if (frame.expressionType === "warm" || SMILE_FAMILY_REGEX.test(expressionText)) {
       warmOrSmilingFrames += 1;
     }
     const expectedExpressionSentence = getDeterministicExpressionSentence(frame.isAnchor, frame.expressionType);
