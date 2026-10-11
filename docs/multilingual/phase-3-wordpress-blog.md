@@ -52,6 +52,8 @@ Next.js must map application locale `pt-BR` to WordPress code `PT`; it must not 
 ## Cache and publication
 
 - Retain ISR as the baseline and define a single cache-tag strategy for archives, articles, and sitemap data.
+- Generate articles on the first request with an empty `generateStaticParams` list and `dynamicParams = true`, retaining the 600-second ISR interval. Application builds must not enumerate live WordPress content.
+- Generate the sitemap at request time with `connection()`, retaining the WordPress fetch cache and invalidation tags. A CMS failure must throw at runtime rather than emit an incomplete sitemap or block an unrelated application deployment.
 - Use the authenticated, timestamped HMAC WordPress revalidation webhook for publish-time consistency.
 - A new WordPress translation is not considered live until the Next.js route, metadata, switcher, and sitemap all resolve.
 

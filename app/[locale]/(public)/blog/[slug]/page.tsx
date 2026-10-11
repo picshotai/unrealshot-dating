@@ -14,7 +14,6 @@ import {
   calculateReadingMinutes,
   cleanWordPressExcerpt,
   formatDate,
-  getAllPublishedPostPaths,
   getPostBySlugAndLocale,
   getPostTranslationPaths,
   type WordPressPost,
@@ -33,13 +32,14 @@ import {
 } from "@/i18n/config"
 
 export const revalidate = 600
+export const dynamicParams = true
 
 type ArticlePageProps = { params: Promise<{ locale: string; slug: string }> }
 
-export async function generateStaticParams(): Promise<Array<{ locale: PublishedBlogLocale; slug: string }>> {
-  return (await getAllPublishedPostPaths())
-    .filter(({ slug }) => !gonePaths.has(`/blog/${slug}`) && !gonePaths.has(`/blog/${slug}`.toLowerCase()))
-    .map(({ locale, slug }) => ({ locale, slug }))
+export function generateStaticParams(): Array<{ locale: PublishedBlogLocale; slug: string }> {
+  // Generate and cache articles on their first request. A CMS outage must not
+  // prevent deploying unrelated application and worker fixes.
+  return []
 }
 
 function articlePaths(post: WordPressPost): PublishedPostPath[] {

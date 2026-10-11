@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next"
+import { connection } from "next/server"
 import { defaultSEO } from "@/config/seo"
 import {
   localizePublicPathname,
@@ -43,6 +44,9 @@ function safeDate(value: string): Date | undefined {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Query the CMS at request time; its tagged 600-second data cache still applies.
+  // Do not require WordPress availability to build the application.
+  await connection()
   const staticEntries = publicRoutes
     .filter((route) => route.indexable && route.sitemap)
     .flatMap((route) => route.locales.map((locale) => publicEntry(route.path, locale, route.locales)))

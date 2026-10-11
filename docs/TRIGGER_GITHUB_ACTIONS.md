@@ -4,15 +4,12 @@
 
 | File | When | Env |
 |---|---|---|
-| `.github/workflows/deploy-trigger-prod.yml` | Push to `main` (path-filtered) or manual | prod |
+| `.github/workflows/deploy-trigger-prod.yml` | Every push to `main` or manual | prod |
 | `.github/workflows/deploy-trigger-staging.yml` | Manual only | staging |
 
-Prod deploys only when these paths change:
-- `trigger/**`
-- `trigger.config.ts`
-- `lib/dating/**`
-- `lib/r2.ts`
-- `package.json` / `package-lock.json`
+Production task deployments must go through this GitHub Actions workflow, not a
+direct local CLI deployment. Push approved changes to `main` and verify the
+workflow result. The connected Vercel project separately builds that same commit.
 
 ## Required GitHub secrets
 

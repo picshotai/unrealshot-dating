@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
 
         // Map aspect ratio to fal.ai supported sizes
         // Fal supports: portrait_4_3, portrait_16_9, landscape_4_3, landscape_16_9, or custom { width, height }
-        let imageSize: string | { width: number; height: number };
+        let imageSize: "portrait_16_9" | "landscape_16_9" | "portrait_4_3" | "landscape_4_3" | { width: number; height: number };
 
         switch (aspectRatio) {
             case "9:16":
