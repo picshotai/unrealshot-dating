@@ -89,15 +89,16 @@ async function searchUsersAction(formData: FormData) {
   redirect(uq ? `/superpanel?users_q=${encodeURIComponent(uq)}` : '/superpanel')
 }
 
-export default async function AdminDashboard({ searchParams }: { searchParams?: { subs_page?: string; users_page?: string; users_q?: string } }) {
+export default async function AdminDashboard({ searchParams }: { searchParams?: Promise<{ subs_page?: string; users_page?: string; users_q?: string }> }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
   if (!isAdminEmail(user.email)) notFound()
 
-  const usersQuery = (searchParams?.users_q || '').trim()
-  const subsPage = Math.max(1, parseInt(searchParams?.subs_page || '1', 10) || 1)
-  const usersPage = Math.max(1, parseInt(searchParams?.users_page || '1', 10) || 1)
+  const query = await searchParams
+  const usersQuery = (query?.users_q || '').trim()
+  const subsPage = Math.max(1, parseInt(query?.subs_page || '1', 10) || 1)
+  const usersPage = Math.max(1, parseInt(query?.users_page || '1', 10) || 1)
   const pageSize = 50
 
   // Build admin client with graceful fallback if env is missing

@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
+import { connection } from "next/server"
 import { getTranslations } from "next-intl/server"
 import { ArrowLeft, Calendar, Clock, User } from "lucide-react"
 import { Link as PublicLink } from "@/i18n/navigation"
@@ -36,12 +37,6 @@ export const dynamicParams = true
 
 type ArticlePageProps = { params: Promise<{ locale: string; slug: string }> }
 
-export function generateStaticParams(): Array<{ locale: PublishedBlogLocale; slug: string }> {
-  // Generate and cache articles on their first request. A CMS outage must not
-  // prevent deploying unrelated application and worker fixes.
-  return []
-}
-
 function articlePaths(post: WordPressPost): PublishedPostPath[] {
   const unique = new Map<string, PublishedPostPath>()
   for (const path of getPostTranslationPaths(post)) unique.set(path.locale, path)
@@ -66,6 +61,7 @@ function isoDate(dateString: string): string {
 }
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+  await connection()
   const { locale: routeLocale, slug } = await params
   if (gonePaths.has(`/blog/${slug}`) || gonePaths.has(`/blog/${slug}`.toLowerCase())) {
     return { robots: { index: false, follow: false } }
@@ -122,6 +118,9 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 }
 
 export default async function BlogArticlePage({ params }: ArticlePageProps) {
+  // The shared locale layout reads request headers. Render at request time and
+  // retain the CMS data cache, without fetching article paths during builds.
+  await connection()
   const { locale: routeLocale, slug } = await params
   if (gonePaths.has(`/blog/${slug}`) || gonePaths.has(`/blog/${slug}`.toLowerCase())) notFound()
   if (!isPublishedBlogLocale(routeLocale)) notFound()
