@@ -8,6 +8,7 @@ import {
   REQUIRED_SAMPLES,
   type OnboardingStage,
 } from '@/lib/auth/stage'
+import { isAdminUser } from '@/lib/auth/admin-access'
 import {
   isPublicPathname,
   isBlogPathname,
@@ -195,6 +196,12 @@ async function runAuthProxy(request: NextRequest) {
       return redirectTo('/login')
     }
     return response
+  }
+
+  // The super panel is for ADMIN_EMAILS only. Turn everyone else away here,
+  // before any admin code runs; the pages and actions check again themselves.
+  if (matches(pathname, ['/superpanel']) && !isAdminUser(user)) {
+    return redirectTo(STUDIO_ROUTE)
   }
 
   // ── Signed in. Work out where they belong, cheaply. ──────────────────────

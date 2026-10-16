@@ -17,6 +17,7 @@ import {
   MessageCircleCodeIcon,
   WandSparklesIcon,
   FlaskConicalIcon,
+  ShieldCheckIcon,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -115,6 +116,10 @@ export function AppSidebar({
       title: "Prompt Lab",
       url: "/prompt-lab",
       icon: FlaskConicalIcon,
+    }, {
+      title: "Super Panel",
+      url: "/superpanel",
+      icon: ShieldCheckIcon,
     }] : []),
     {
       title: "Create Model",

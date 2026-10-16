@@ -10,7 +10,7 @@ export default function CopyTextButton({ text, className }: { text: string; clas
       await navigator.clipboard.writeText(text)
       setCopied(true)
       setTimeout(() => setCopied(false), 1500)
-    } catch (e) {
+    } catch {
       // ignore copy errors
     }
   }

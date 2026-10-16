@@ -13,7 +13,7 @@ import { createClient } from "@/utils/supabase/server"
 import { creditService } from "@/lib/credits"
 import { redirect } from "next/navigation"
 import ClarityInit from "@/components/ClarityInit"
-import { isAdminEmail } from "@/lib/auth/admin-access"
+import { isAdminUser } from "@/lib/auth/admin-access"
 
 export default async function DashboardLayout({
   children,
@@ -40,7 +40,7 @@ export default async function DashboardLayout({
       <ClarityInit projectId={process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID || ""} userId={user.id} />
       <SidebarProvider>
         <AppSidebar
-          showPromptLab={isAdminEmail(user.email)}
+          showPromptLab={isAdminUser(user)}
           user={{
             name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
             email: user.email || '',
