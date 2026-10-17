@@ -17,7 +17,7 @@ export type PublishedPublicLocale = (typeof publishedPublicLocales)[number]
  * Blog locales are promoted independently from the translated marketing site.
  * A locale belongs here only after its archive has reviewed, published posts.
  */
-export const publishedBlogLocales = ["en", "fr"] as const satisfies readonly PublishedPublicLocale[]
+export const publishedBlogLocales = ["en", "fr", "es", "de", "pt-BR"] as const satisfies readonly PublishedPublicLocale[]
 
 export type PublishedBlogLocale = (typeof publishedBlogLocales)[number]
 

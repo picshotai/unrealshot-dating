@@ -28,7 +28,7 @@ import { getLocalizedAuthorityPage } from "../lib/seo-pages/authority-localized"
 
 assert.deepEqual(appLocales, ["en", "fr", "es", "de", "pt-BR"])
 assert.deepEqual(publishedPublicLocales, ["en", "fr", "es", "de", "pt-BR"])
-assert.deepEqual(publishedBlogLocales, ["en", "fr"])
+assert.deepEqual(publishedBlogLocales, ["en", "fr", "es", "de", "pt-BR"])
 assert.equal(
   new Set(publicRoutes.map((route) => route.path)).size,
   publicRoutes.length,
@@ -40,15 +40,15 @@ assert.equal(isAppLocale("pt-br"), false)
 assert.equal(isPublishedPublicLocale("en"), true)
 assert.equal(isPublishedPublicLocale("fr"), true)
 assert.equal(isPublishedBlogLocale("fr"), true)
-assert.equal(isPublishedBlogLocale("es"), false)
-assert.equal(isPublishedBlogLocale("de"), false)
-assert.equal(isPublishedBlogLocale("pt-BR"), false)
+assert.equal(isPublishedBlogLocale("es"), true)
+assert.equal(isPublishedBlogLocale("de"), true)
+assert.equal(isPublishedBlogLocale("pt-BR"), true)
 assert.equal(localeDefinitions["pt-BR"].wordpressCode, "PT")
 assert.equal(localeDefinitions["pt-BR"].pathnamePrefix, "/pt-br")
 assert.equal(getLocaleForWordPressCode("FR"), "fr")
-assert.equal(getLocaleForWordPressCode("ES"), undefined)
-assert.equal(getLocaleForWordPressCode("DE"), undefined)
-assert.equal(getLocaleForWordPressCode("PT"), undefined)
+assert.equal(getLocaleForWordPressCode("ES"), "es")
+assert.equal(getLocaleForWordPressCode("DE"), "de")
+assert.equal(getLocaleForWordPressCode("PT"), "pt-BR")
 assert.equal(getLocaleForWordPressCode("pt-BR"), undefined)
 assert.equal(localeDefinitions.fr.hrefLang, "fr")
 assert.equal(localeDefinitions.es.hrefLang, "es")
@@ -143,7 +143,7 @@ for (const [locale, expectedProof] of Object.entries(localizedHeroProof)) {
 }
 
 // WordPress blog routes are enabled for locales with published CMS content.
-assert.deepEqual(publicRoutes.find((route) => route.path === "/blog")?.locales, ["en", "fr"])
+assert.deepEqual(publicRoutes.find((route) => route.path === "/blog")?.locales, ["en", "fr", "es", "de", "pt-BR"])
 assert.equal(isBlogArchivePathname("/fr/blog"), true)
 
 const localizedMarketingPaths = publicRoutes
