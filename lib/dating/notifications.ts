@@ -61,6 +61,7 @@ export async function sendDatingShootReadyNotification(
     const result = await sendDatingReadyEmail(resend.emails.send.bind(resend.emails), {
       from: fromEmail,
       to: userEmail,
+      replyTo: process.env.ADMIN_EMAIL_REPLY_TO?.trim() || "support@unrealshot.com",
       subject: `Your ${photosTarget} dating photos are ready 📸`,
       html: `
         <!DOCTYPE html>
@@ -93,8 +94,11 @@ export async function sendDatingShootReadyNotification(
                 View & Download Your Photos →
               </a>
             </div>
-            <p style="font-size: 13px; color: #71717a; text-align: center; margin-bottom: 0;">
+            <p style="font-size: 13px; color: #71717a; text-align: center; margin-bottom: 16px;">
               You also have ${reshoots} Photo Retakes in your dashboard if you want to redo any individual photo.
+            </p>
+            <p style="font-size: 13px; color: #a1a1aa; text-align: center; margin-bottom: 0;">
+              One quick question: how did you find UnrealShot? Just reply to this email with a line or two.
             </p>
           </div>
         </body>
